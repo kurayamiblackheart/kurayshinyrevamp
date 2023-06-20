@@ -49,6 +49,19 @@ class PokemonBox
   def clear
     @pokemon.clear
   end
+
+  #Sylvi Items
+  def clone
+    ret = super
+    ret.pokemon = @pokemon.clone
+    return ret
+  end
+
+  #Sylvi Items
+  def make_vanilla
+    @pokemon.map! { |pkmn| !pkmn.nil? ? pkmn.clone.make_vanilla : pkmn }
+    return self
+  end
 end
 
 
@@ -341,6 +354,29 @@ class PokemonStorage
     for i in 0...self.maxBoxes
       @boxes[i].clear
     end
+  end
+
+  #Sylvi Items
+  def cloneBoxes(boxes)
+    @boxes = []
+    for i in 0...boxes.length
+      @boxes[i] = boxes[i].clone
+    end
+  end
+
+  #Sylvi Items
+  def clone
+    ret = super
+    ret.cloneBoxes(@boxes)
+    return ret
+  end
+
+  #Sylvi Items
+  def make_vanilla
+    for i in 0...self.maxBoxes
+      @boxes[i].make_vanilla
+    end
+    return self
   end
 end
 
