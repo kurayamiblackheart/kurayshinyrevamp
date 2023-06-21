@@ -1659,6 +1659,14 @@ class Pokemon
     jsonparse['moves'].each_with_index { |m, i| @moves[i].load_json(m) }
   end
 
+  #Sylvi Items
+  def make_vanilla
+    @item = nil if hasItem? && item.modded?
+    mail # Resets mail, if the held item was mail
+    @poke_ball = :POKEBALL if GameData::Item.get(@poke_ball).modded?
+    return self
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES
   # Creates a new Pokémon object.
   # @param species [Symbol, String, Integer] Pokémon species
