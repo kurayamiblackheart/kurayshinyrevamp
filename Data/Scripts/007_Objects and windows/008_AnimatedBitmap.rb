@@ -193,8 +193,10 @@ class AnimatedBitmap
 
   def scale_bitmap(scale)
     return if scale == 1
-    new_width = @bitmap.bitmap.width * scale
-    new_height = @bitmap.bitmap.height * scale
+    new_width = (@bitmap.bitmap.width * scale).floor #Sylvi Big Icons
+    new_height = (@bitmap.bitmap.height * scale).floor #Sylvi Big Icons
+
+    return if new_width <= 0 || new_height <= 0 #Sylvi Big Icons
 
     destination_rect = Rect.new(0, 0, new_width, new_height)
     source_rect = Rect.new(0, 0, @bitmap.bitmap.width, @bitmap.bitmap.height)

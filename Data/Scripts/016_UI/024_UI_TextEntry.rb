@@ -140,6 +140,9 @@ class PokemonEntryScene
         @sprites["shadow"].x=33*2
         @sprites["shadow"].y=32*2
         @sprites["subject"]=PokemonIconSprite.new(pokemon,@viewport)
+        #Sylvi Big Icons
+        @sprites["subject"].icon_offset_x = 0
+        @sprites["subject"].icon_offset_y = 0
         @sprites["subject"].setOffset(PictureOrigin::Center)
         @sprites["subject"].x=88
         @sprites["subject"].y=54
@@ -445,6 +448,9 @@ class PokemonEntryScene2
         @sprites["shadow"].x = 66
         @sprites["shadow"].y = 64
         @sprites["subject"] = PokemonIconSprite.new(pokemon, @viewport)
+        #Sylvi Big Icons
+        @sprites["subject"].icon_offset_x = 0
+        @sprites["subject"].icon_offset_y = 0
         @sprites["subject"].setOffset(PictureOrigin::Center)
         @sprites["subject"].x = 88
         @sprites["subject"].y = 54

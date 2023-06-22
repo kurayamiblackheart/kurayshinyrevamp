@@ -221,10 +221,13 @@ class PokemonPartyPanel < SpriteWrapper
     @hpbgsprite.addBitmap("able", "Graphics/Pictures/Party/overlay_hp_back")
     @hpbgsprite.addBitmap("fainted", "Graphics/Pictures/Party/overlay_hp_back_faint")
     @hpbgsprite.addBitmap("swap", "Graphics/Pictures/Party/overlay_hp_back_swap")
-    @ballsprite = ChangelingSprite.new(0, 0, viewport)
-    @ballsprite.z = self.z + 1
-    @ballsprite.addBitmap("desel", "Graphics/Pictures/Party/icon_ball")
-    @ballsprite.addBitmap("sel", "Graphics/Pictures/Party/icon_ball_sel")
+    #Sylvi Big Icons
+    if $PokemonSystem.kuraybigicons == 0 || !@pokemon then
+      @ballsprite = ChangelingSprite.new(0, 0, viewport)
+      @ballsprite.z = self.z + 1
+      @ballsprite.addBitmap("desel", "Graphics/Pictures/Party/icon_ball")
+      @ballsprite.addBitmap("sel", "Graphics/Pictures/Party/icon_ball_sel")
+    end
     @pkmnsprite = PokemonIconSprite.new(pokemon, viewport)
     @pkmnsprite.setOffset(PictureOrigin::Center)
     @pkmnsprite.active = @active
@@ -247,7 +250,7 @@ class PokemonPartyPanel < SpriteWrapper
   def dispose
     @panelbgsprite.dispose
     @hpbgsprite.dispose
-    @ballsprite.dispose
+    @ballsprite.dispose if @ballsprite #Sylvi Big Icons
     @pkmnsprite.dispose
     @helditemsprite.dispose
     @overlaysprite.bitmap.dispose

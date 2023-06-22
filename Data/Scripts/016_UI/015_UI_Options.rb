@@ -29,6 +29,7 @@ class PokemonSystem
   attr_accessor :kurayshinyanim
   attr_accessor :kurayfonts
   attr_accessor :shenanigans
+  attr_accessor :kuraybigicons
 
   def initialize
     @textspeed = 1 # Text speed (0=slow, 1=normal, 2=fast)
@@ -58,6 +59,7 @@ class PokemonSystem
     @kuraygambleodds = 100
     @kurayqol = 1
     @shenanigans = 0
+    @kuraybigicons = 0
 
   end
 end
@@ -629,6 +631,14 @@ class PokemonOption_Scene
                                  "Uses the same party icon for all fusions"]
       )
     end
+    #Sylvi Big Icons
+    options << EnumOption.new(_INTL("Big Pokémon Icons"), [_INTL("Off"), _INTL("Limited"), _INTL("All")],
+                              proc { $PokemonSystem.kuraybigicons },
+                              proc { |value| $PokemonSystem.kuraybigicons = value },
+                              ["Pokémon will use their small box sprites for icons",
+                               "Pokémon icons will use their full-size battle sprites (except in boxes)",
+                               "Pokémon icons will use their full-size battle sprites"]
+    )
     options << EnumOption.new(_INTL("Screen Size"), [_INTL("S"), _INTL("M"), _INTL("L"), _INTL("XL"), _INTL("Full")],
                               proc { [$PokemonSystem.screensize, 4].min },
                               proc { |value|
