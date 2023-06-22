@@ -103,6 +103,9 @@ class PokemonIconSprite < SpriteWrapper
   attr_accessor :selected
   attr_accessor :active
   attr_reader :pokemon
+  #Sylvi Big Icons
+  attr_accessor :icon_offset_x
+  attr_accessor :icon_offset_y
 
   def initialize(pokemon, viewport = nil)
     super(viewport)
@@ -111,11 +114,15 @@ class PokemonIconSprite < SpriteWrapper
     @numFrames = 0
     @currentFrame = 0
     @counter = 0
-    self.pokemon = pokemon
+    #self.pokemon = pokemon
     @logical_x = 0 # Actual x coordinate
     @logical_y = 0 # Actual y coordinate
     @adjusted_x = 0 # Offset due to "jumping" animation in party screen
     @adjusted_y = 0 # Offset due to "jumping" animation in party screen
+    #Sylvi Big Icons
+    @icon_offset_x = -16 # Offset to center big sprite icons (if enabled)
+    @icon_offset_y = 0 # Offset to center big sprite icons (if enabled)
+    self.pokemon = pokemon
   end
 
   def dispose
@@ -133,16 +140,39 @@ class PokemonIconSprite < SpriteWrapper
 
   def x=(value)
     @logical_x = value
-    super(@logical_x + @adjusted_x)
+    #Sylvi Big Icons
+    ret = @logical_x + @adjusted_x
+    if self.use_big_icon?
+      if @pokemon && @pokemon.egg?
+        ret += (@icon_offset_x / 2)
+      else
+        ret += @icon_offset_x
+      end
+    end
+    super(ret)
   end
 
   def y=(value)
     @logical_y = value
-    super(@logical_y + @adjusted_y)
+    #Sylvi Big Icons
+    ret = @logical_y + @adjusted_y
+    if self.use_big_icon?
+      if @pokemon && @pokemon.egg?
+        ret += (@icon_offset_y / 2)
+      else
+        ret += @icon_offset_y
+      end
+    end
+    super(ret)
   end
 
   def animBitmap=(value)
     @animBitmap = value
+  end
+
+  #Sylvi Big Icons
+  def use_big_icon?
+    return $PokemonSystem.kuraybigicons == 1 || $PokemonSystem.kuraybigicons == 2
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
@@ -157,7 +187,16 @@ class PokemonIconSprite < SpriteWrapper
       @counter = 0
       return
     end
-    if @pokemon.egg?
+
+    if self.use_big_icon?
+      #Sylvi Big Icons
+      @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+      if @pokemon.egg?
+        @animBitmap.scale_bitmap(1.0/2.0)
+      else
+        @animBitmap.scale_bitmap(1.0/3.0)
+      end
+    elsif @pokemon.egg?
       @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(@pokemon))
     elsif useRegularIcon(@pokemon.species)
       # @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename(@pokemon.species, @pokemon.form, @pokemon.gender, @pokemon.shiny?))

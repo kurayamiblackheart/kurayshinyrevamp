@@ -7,6 +7,11 @@ class PokemonBoxIcon < IconSprite
   attr_accessor :pokemon
 
   def initialize(pokemon, viewport = nil)
+    #Sylvi Big Icons
+    @logical_x = 0 # Actual x coordinate
+    @logical_y = 0 # Actual y coordinate
+    @icon_offset_x = 0 # Offset to center big sprite icons (if enabled)
+    @icon_offset_y = 0 # Offset to center big sprite icons (if enabled)
     super(0, 0, viewport)
     @pokemon = pokemon
     @release = Interpolator.new
@@ -14,6 +19,33 @@ class PokemonBoxIcon < IconSprite
     @heldox = 0
     @heldoy = 0
     refresh
+  end
+  
+  #Sylvi Big Icons
+  def x
+    return @logical_x
+  end
+
+  #Sylvi Big Icons
+  def y
+    return @logical_y
+  end
+
+  #Sylvi Big Icons
+  def x=(value)
+    @logical_x = value
+    super(@logical_x + @icon_offset_x)
+  end
+
+  #Sylvi Big Icons
+  def y=(value)
+    @logical_y = value
+    super(@logical_y + @icon_offset_y)
+  end
+
+  #Sylvi Big Icons
+  def use_big_icon?
+    return $PokemonSystem && $PokemonSystem.kuraybigicons == 2
   end
 
   def releasing?
@@ -219,7 +251,20 @@ class PokemonBoxIcon < IconSprite
   #KurayX - KURAYX_ABOUT_SHINIES
   def refresh(fusion_enabled = true)
     return if !@pokemon
-    if @pokemon.egg?
+    if self.use_big_icon?
+      #Sylvi Big Icons
+      tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+      if @pokemon.egg?
+        tempBitmap.scale_bitmap(1.0/2.0)
+        @icon_offset_x = -8
+        @icon_offset_y = -8
+      else
+        tempBitmap.scale_bitmap(1.0/3.0)
+        @icon_offset_x = -16
+        @icon_offset_y = -16
+      end
+      self.setBitmapDirectly(tempBitmap)
+    elsif @pokemon.egg?
       self.setBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon))
     elsif useRegularIcon(@pokemon.species)
       self.setBitmapDirectly(createRBGableShiny(@pokemon))
@@ -911,6 +956,20 @@ class PokemonBoxPartySprite < SpriteWrapper
     refresh
   end
 
+  #Sylvi Big Icons
+  def hidePokemon
+    for i in 0...Settings::MAX_PARTY_SIZE
+      @pokemonsprites[i].visible = false if @pokemonsprites[i]
+    end
+  end
+
+  #Sylvi Big Icons
+  def showPokemon
+    for i in 0...Settings::MAX_PARTY_SIZE
+      @pokemonsprites[i].visible = true if @pokemonsprites[i]
+    end
+  end
+
   def refresh
     @contents.blt(0, 0, @boxbitmap.bitmap, Rect.new(0, 0, 172, 352))
     pbDrawTextPositions(self.bitmap, [
@@ -1004,6 +1063,7 @@ class PokemonStorageScene
     if command != 2 # Drop down tab only on Deposit
       @sprites["boxparty"].x = 182
       @sprites["boxparty"].y = Graphics.height
+      @sprites["boxparty"].hidePokemon #Sylvi Big Icons
     end
     @markingbitmap = AnimatedBitmap.new("Graphics/Pictures/Storage/markings")
     @sprites["markingbg"] = IconSprite.new(292, 68, @boxsidesviewport)
@@ -1512,6 +1572,7 @@ class PokemonStorageScene
 
   def pbShowPartyTab
     pbSEPlay("GUI storage show party panel")
+    @sprites["boxparty"].showPokemon #Sylvi Big Icons
     distancePerFrame = 48 * 20 / Graphics.frame_rate
     loop do
       Graphics.update
@@ -1534,6 +1595,7 @@ class PokemonStorageScene
       break if @sprites["boxparty"].y >= Graphics.height
     end
     @sprites["boxparty"].y = Graphics.height
+    @sprites["boxparty"].hidePokemon #Sylvi Big Icons
   end
 
   def pbHold(selected)
@@ -2171,6 +2233,12 @@ class PokemonStorageScene
     @sprites["boxparty"].dispose
     @sprites["boxparty"] = PokemonBoxPartySprite.new(@storage.party, @boxsidesviewport)
     @sprites["boxparty"].y = oldPartyY
+    #Sylvi Big Icons
+    if @sprites["boxparty"].y >= Graphics.height
+      @sprites["boxparty"].hidePokemon
+    else
+      @sprites["boxparty"].showPokemon
+    end
   end
 
   def drawMarkings(bitmap, x, y, _width, _height, markings)

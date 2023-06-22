@@ -131,6 +131,9 @@ class PokemonSummary_Scene
       @sprites["pokemon"].zoom_y = Settings::FRONTSPRITE_SCALE
     end
     @sprites["pokeicon"] = PokemonIconSprite.new(@pokemon, @viewport)
+    #Sylvi Big Icons
+    @sprites["pokeicon"].icon_offset_x = 0
+    @sprites["pokeicon"].icon_offset_y = 0
     @sprites["pokeicon"].setOffset(PictureOrigin::Center)
     @sprites["pokeicon"].x = 46
     @sprites["pokeicon"].y = 92
@@ -191,6 +194,9 @@ class PokemonSummary_Scene
     @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     pbSetSystemFont(@sprites["overlay"].bitmap)
     @sprites["pokeicon"] = PokemonIconSprite.new(@pokemon, @viewport)
+    #Sylvi Big Icons
+    @sprites["pokeicon"].icon_offset_x = 0
+    @sprites["pokeicon"].icon_offset_y = 0
     @sprites["pokeicon"].setOffset(PictureOrigin::Center)
     @sprites["pokeicon"].x = 46
     @sprites["pokeicon"].y = 92
