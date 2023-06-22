@@ -33,8 +33,8 @@ class PokemonBoxIcon < IconSprite
   #KurayX - KURAYX_ABOUT_SHINIES
   #KuraIcon
   def createRBGableShiny(pokemon)
-    result_icon = AnimatedBitmap.new(GameData::Species.icon_filename(pokemon.species, pokemon.form, pokemon.gender, pokemon.shiny?))
-    # result_icon = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(pokemon))
+    # result_icon = AnimatedBitmap.new(GameData::Species.icon_filename(pokemon.species, pokemon.form, pokemon.gender, pokemon.shiny?))
+    result_icon = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(pokemon))
     dexNum = getDexNumberForSpecies(pokemon.species)
     if pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
       # result_icon.shiftColors(colorshifting)

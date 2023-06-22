@@ -160,8 +160,8 @@ class PokemonIconSprite < SpriteWrapper
     if @pokemon.egg?
       @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(@pokemon))
     elsif useRegularIcon(@pokemon.species)
-      @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename(@pokemon.species, @pokemon.form, @pokemon.gender, @pokemon.shiny?))
-      # @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(@pokemon))
+      # @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename(@pokemon.species, @pokemon.form, @pokemon.gender, @pokemon.shiny?))
+      @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(@pokemon))
       if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
         # @animBitmap.shiftColors(colorshifting)
         @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?)

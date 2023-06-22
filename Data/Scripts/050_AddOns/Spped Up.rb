@@ -42,7 +42,7 @@ end
 
 # Default game speed.
 $GameSpeed = 0
-System.set_window_title(System.game_title + " | Kuray's Shiny Revamp | Speed: x" + ($GameSpeed+1).to_s)
+System.set_window_title(System.game_title + " | Kuray's PIF Revamp v" + KURAYVERSION + " | Speed: x" + ($GameSpeed+1).to_s)
 $frame = 0
 $CanToggle = true
 
@@ -53,16 +53,24 @@ module Graphics
 
   def self.update
     if $CanToggle && Input.trigger?(Input::AUX2)
-      $GameSpeed = 0
+      if File.exists?("Kurayami.krs")
+        if $DEBUG
+          $DEBUG = false
+        else
+          $DEBUG = true
+        end
+      else
+        $GameSpeed = 0
+        System.set_window_title(System.game_title + " | Kuray's PIF Revamp v" + KURAYVERSION + " | Speed: x" + ($GameSpeed+1).to_s)
+      end
       # $GameSpeed = 4 if $GameSpeed < 0
       #KurayX
-      System.set_window_title(System.game_title + " | Kuray's Shiny Revamp | Speed: x" + ($GameSpeed+1).to_s)
     end
     if $CanToggle && Input.trigger?(Input::AUX1)
       $GameSpeed += 1
       $GameSpeed = 0 if $GameSpeed >= SPEEDUP_STAGES.size
       #KurayX
-      System.set_window_title(System.game_title + " | Kuray's Shiny Revamp | Speed: x" + ($GameSpeed+1).to_s)
+      System.set_window_title(System.game_title + " | Kuray's PIF Revamp v" + KURAYVERSION + " | Speed: x" + ($GameSpeed+1).to_s)
     end
     $frame += 1
     return unless $frame % SPEEDUP_STAGES[$GameSpeed] == 0
