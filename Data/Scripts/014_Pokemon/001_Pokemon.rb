@@ -988,7 +988,7 @@ class Pokemon
   # @return [Array<Array<Integer,Symbol>>] this Pokémon's move list, where every element is [level, move ID]
   #KurayX Makes it so it also takes the pre-evo's moves.
   def getMoveList
-    kuraymoves = species_data.moves
+    kuraymoves = species_data.moves.clone
     kuraychecking = species
     while true
       checkspecie = GameData::Species.get(kuraychecking).get_previous_species
