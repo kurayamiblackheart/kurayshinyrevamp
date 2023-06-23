@@ -1,15 +1,23 @@
 module GameData
   class Species
-    def self.sprite_bitmap_from_pokemon(pkmn, back = false, species = nil)
+    def self.sprite_bitmap_from_pokemon(pkmn, back = false, species = nil, makeShiny = true)
       species = pkmn.species if !species
       species = GameData::Species.get(species).id_number # Just to be sure it's a number
       return self.egg_sprite_bitmap(species, pkmn.form) if pkmn.egg?
       if back
         #KurayX - KURAYX_ABOUT_SHINIES
-        ret = self.back_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?)
+        if makeShiny
+          ret = self.back_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?)
+        else
+          ret = self.back_sprite_bitmap(species, nil, nil, false, false, false)
+        end
       else
         #KurayX - KURAYX_ABOUT_SHINIES
-        ret = self.front_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?)
+        if makeShiny
+          ret = self.front_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?)
+        else
+          ret = self.front_sprite_bitmap(species, nil, nil, false, false, false)
+        end
       end
       return ret
     end

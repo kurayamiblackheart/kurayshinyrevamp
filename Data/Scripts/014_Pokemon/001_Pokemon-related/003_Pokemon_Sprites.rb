@@ -190,7 +190,11 @@ class PokemonIconSprite < SpriteWrapper
 
     if self.use_big_icon?
       #Sylvi Big Icons
-      @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+      if $PokemonSystem.shiny_icons_kuray == 1
+        @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+      else
+        @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
+      end
       if @pokemon.egg?
         @animBitmap.scale_bitmap(1.0/2.0)
       else

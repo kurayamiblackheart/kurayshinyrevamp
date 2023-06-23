@@ -110,16 +110,24 @@ module GameData
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    def self.sprite_bitmap_from_pokemon(pkmn, back = false, species = nil)
+    def self.sprite_bitmap_from_pokemon(pkmn, back = false, species = nil, makeShiny = true)
       species = pkmn.species if !species
       species = GameData::Species.get(species).species # Just to be sure it's a symbol
       return self.egg_sprite_bitmap(species, pkmn.form) if pkmn.egg?
       if back
         #KurayX - KURAYX_ABOUT_SHINIES
-        ret = self.back_sprite_bitmap(species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.shinyValue?, pkmn.shinyR?, pkmn.shinyG?, pkmn.shinyB?)
+        if makeShiny
+          ret = self.back_sprite_bitmap(species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.shinyValue?, pkmn.shinyR?, pkmn.shinyG?, pkmn.shinyB?)
+        else
+          ret = self.back_sprite_bitmap(species, pkmn.form, pkmn.gender, false, false, false)
+        end
       else
         #KurayX - KURAYX_ABOUT_SHINIES
-        ret = self.front_sprite_bitmap(species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.shinyValue?, pkmn.shinyR?, pkmn.shinyG?, pkmn.shinyB?)
+        if makeShiny
+          ret = self.front_sprite_bitmap(species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.shinyValue?, pkmn.shinyR?, pkmn.shinyG?, pkmn.shinyB?)
+        else
+          ret = self.front_sprite_bitmap(species, pkmn.form, pkmn.gender, false, false, false)
+        end
       end
       alter_bitmap_function = MultipleForms.getFunction(species, "alterBitmap")
       if ret && alter_bitmap_function
