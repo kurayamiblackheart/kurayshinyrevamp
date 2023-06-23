@@ -126,7 +126,7 @@ class Pokemon
   MAX_MOVES = 4
 
   # S_CHANCE_VALIDATOR = 16
-  S_CHANCE_VALIDATOR = 160
+  S_CHANCE_VALIDATOR = 16
 
   def self.play_cry(species, form = 0, volume = 90, pitch = 100)
     GameData::Species.play_cry_from_species(species, form, volume, pitch)
