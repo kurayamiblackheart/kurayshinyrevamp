@@ -106,6 +106,8 @@ class PokemonPauseMenu
     cmdPokedex = -1
     cmdPokemon = -1
     cmdBag = -1
+    #KurayX Creating kuray shop
+    cmdKurayShop = -1
     cmdTrainer = -1
     cmdSave = -1
     cmdOption = -1
@@ -118,8 +120,10 @@ class PokemonPauseMenu
       commands[cmdPokedex = commands.length] = _INTL("Pokédex")
     end
     commands[cmdPokemon = commands.length] = _INTL("Pokémon") if $Trainer.party_count > 0
-    commands[cmdPC = commands.length] = _INTL("PC") if $game_switches[SWITCH_GOT_BADGE_16] && $PokemonSystem.kurayfusepreview
+    commands[cmdPC = commands.length] = _INTL("PC") if $game_switches[SWITCH_GOT_BADGE_16] && $PokemonSystem.kurayqol
     commands[cmdBag = commands.length] = _INTL("Bag") if !pbInBugContest?
+    #KurayX Creating kuray shop
+    commands[cmdKurayShop = commands.length] = _INTL("Kuray Shop") if !pbInBugContest?
     commands[cmdPokegear = commands.length] = _INTL("Pokégear") if $Trainer.has_pokegear
     commands[cmdTrainer = commands.length] = $Trainer.name
     if pbInSafari?
@@ -212,6 +216,25 @@ class PokemonPauseMenu
           pbUseKeyItemInField(item)
           return
         end
+      elsif cmdKurayShop >= 0 && command == cmdKurayShop
+        #KurayX Creating kuray shop
+        pbPlayDecisionSE
+        oldmart = $game_temp.mart_prices.clone
+        $game_temp.fromkurayshop = 1
+        if !$game_temp.mart_prices[570]
+          $game_temp.mart_prices[570] = [6900, 3450]
+        else
+          $game_temp.mart_prices[570][1] = 3450
+          $game_temp.mart_prices[570][0] = 6900
+        end
+        pbFadeOutIn {
+          scene = PokemonMart_Scene.new
+          screen = PokemonMartScreen.new(scene,[570])
+          screen.pbBuyScreen
+        }
+        $game_temp.mart_prices = oldmart.clone
+        $game_temp.fromkurayshop = nil
+        oldmart = []
       elsif cmdPokegear >= 0 && command == cmdPokegear
         pbPlayDecisionSE
         pbFadeOutIn {

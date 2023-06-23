@@ -735,6 +735,21 @@ class Pokemon
     @gender = value if value.nil? || value == 0 || value == 1
   end
 
+  #KurayX
+  def forceMale
+    @gender = 0
+  end
+
+  #KurayX
+  def forceFemale
+    @gender = 1
+  end
+
+  #KurayX
+  def forceGenderless
+    @gender = 2
+  end
+
   # Makes this Pokémon male.
   def makeMale
     self.gender = 0;
@@ -743,6 +758,12 @@ class Pokemon
   # Makes this Pokémon female.
   def makeFemale
     self.gender = 1;
+  end
+
+  # Makes this Pokémon genderless.
+  #KurayX
+  def makeGenderless
+    self.gender = 2;
   end
 
   # @return [Boolean] whether this Pokémon is male

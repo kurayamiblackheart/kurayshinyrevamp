@@ -1055,21 +1055,40 @@ ItemHandlers::UseOnPokemon.add(:GOLDENBANANA, proc { |item, pokemon, scene|
   next pbHPItem(pokemon, 50, scene)
 })
 
+#KurayX Changed transgender to work on fusions and players can forcefully choose a specific gender for a pokemon
 ItemHandlers::UseOnPokemon.add(:TRANSGENDERSTONE, proc { |item, pokemon, scene|
-  if pokemon.gender == 0
-    pokemon.makeFemale
-    scene.pbRefresh
-    scene.pbDisplay(_INTL("The Pokémon became female!"))
-    next true
-  elsif pokemon.gender == 1
-    pokemon.makeMale
-    scene.pbRefresh
-    scene.pbDisplay(_INTL("The Pokémon became male!"))
-
-    next true
-  else
+  if pokemon.pizza?
     scene.pbDisplay(_INTL("It won't have any effect."))
     next false
+  else
+    commands = []
+    cmdFemale = -1
+    cmdMale = -1
+    cmdGenderless = -1
+    commands[cmdFemale = commands.length] = _INTL("Make female") if pokemon.gender != 1
+    commands[cmdGenderless = commands.length] = _INTL("Make genderless") if pokemon.gender != 2
+    commands[cmdMale = commands.length] = _INTL("Make male") if pokemon.gender != 0
+    commands = scene.pbShowCommands(
+      _INTL("Transgender to which gender?"), commands)
+    if cmdFemale >= 0 && commands == cmdFemale # to female
+      pokemon.forceFemale
+      scene.pbRefresh
+      scene.pbDisplay(_INTL("The Pokémon became female!"))
+      next true
+    elsif cmdMale >= 0 && commands == cmdMale # to male
+      pokemon.forceMale
+      scene.pbRefresh
+      scene.pbDisplay(_INTL("The Pokémon became male!"))
+      next true
+    elsif cmdGenderless >= 0 && commands == cmdGenderless # to genderless
+      pokemon.forceGenderless
+      scene.pbRefresh
+      scene.pbDisplay(_INTL("The Pokémon became genderless!"))
+      next true
+    else
+      scene.pbDisplay(_INTL("It won't have any effect."))
+      next false
+    end
   end
 })
 
