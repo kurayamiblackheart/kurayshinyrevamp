@@ -166,10 +166,24 @@ def getRandomCustomFusionForIntro(returnRandomPokemonIfNoneFound = true, customP
   return randPoke
 end
 
+#KurayX new ShinyStars
 def addShinyStarsToGraphicsArray(imageArray, xPos, yPos, shinyBody, shinyHead, debugShiny, srcx=nil, srcy=nil, width=nil, height=nil,
-                                 showSecondStarUnder=false, showSecondStarAbove=false)
+                                 showSecondStarUnder=false, showSecondStarAbove=false, kuraxRGB=[0,0,0])
   # color = debugShiny ? Color.new(0,0,0,255) : nil
-  color = nil
+  # if debugShiny
+  #   color = Color.new(0,0,0,255)
+  if [9,10,11].include?(kuraxRGB[0]) || [9,10,11].include?(kuraxRGB[1]) || [9,10,11].include?(kuraxRGB[2])
+    color = Color.new(0,255,255,255)
+    #Inverted Magenta/Cyan/Yellow
+  elsif [3,4,5].include?(kuraxRGB[0]) || [3,4,5].include?(kuraxRGB[1]) || [3,4,5].include?(kuraxRGB[2])
+    color = Color.new(255,255,0,255)
+    #Magenta/Cyan/Yellow
+  elsif [6,7,8].include?(kuraxRGB[0]) || [6,7,8].include?(kuraxRGB[1]) || [6,7,8].include?(kuraxRGB[2])
+    color = Color.new(0,0,0,255)
+    #Inverted Red/Blue/Green
+  else
+    color = nil
+  end
   imageloc = "Graphics/Pictures/shiny"
   imageArray.push([imageloc,xPos,yPos,srcx,srcy,width,height,color])
   if shinyBody && shinyHead

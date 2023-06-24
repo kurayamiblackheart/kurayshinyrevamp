@@ -451,7 +451,8 @@ class PokemonPartyPanel < SpriteWrapper
         # Draw shiny icon
         if @pokemon.shiny?
           # imagePos=[]
-          addShinyStarsToGraphicsArray(imagePos,80,48,@pokemon.bodyShiny?,@pokemon.headShiny?,@pokemon.debugShiny?,0,0,16,16,false,false)
+          #KurayX new ShinyStars
+          addShinyStarsToGraphicsArray(imagePos,80,48,@pokemon.bodyShiny?,@pokemon.headShiny?,@pokemon.debugShiny?,0,0,16,16,false,false,[@pokemon.shinyR?,@pokemon.shinyG?,@pokemon.shinyB?])
           # pbDrawImagePositions(@overlaysprite.bitmap,imagePos)
         end
         if imagePos

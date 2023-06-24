@@ -340,7 +340,8 @@ class PokemonSummary_Scene
     end
     # Show shininess star
     if @pokemon.shiny?
-      addShinyStarsToGraphicsArray(imagepos,2,134,@pokemon.bodyShiny?,@pokemon.headShiny?,@pokemon.debugShiny?,nil,nil,nil,nil,true,false)
+      #KurayX new ShinyStars
+      addShinyStarsToGraphicsArray(imagepos,2,134,@pokemon.bodyShiny?,@pokemon.headShiny?,@pokemon.debugShiny?,nil,nil,nil,nil,true,false,[@pokemon.shinyR?,@pokemon.shinyG?,@pokemon.shinyB?])
       #imagepos.push([sprintf("Graphics/Pictures/shiny"), 2, 134])
     end
     # Draw all images
