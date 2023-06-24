@@ -8,7 +8,7 @@
 ###SCRIPTEDIT1
 # Config value for selecting title screen style
 SCREENSTYLE = 1
-KURAYVERSION = "0.6.25"
+KURAYVERSION = "0.6.27"
 # 1 - FR/LG
 # 2 - R/S/E
 
@@ -75,6 +75,32 @@ class Scene_Intro
     # initializes load screen
     sscene = PokemonLoad_Scene.new
     sscreen = PokemonLoadScreen.new(sscene)
+    #KurayX just a quick way to load font at start (temporary fix)
+    if !$PokemonSystem.kurayfonts
+      $PokemonSystem.kurayfonts = 0
+    elsif $PokemonSystem.kurayfonts == 1
+      MessageConfig.pbGetSystemFontSizeset(26)
+      MessageConfig.pbGetSmallFontSizeset(25)
+      MessageConfig.pbGetNarrowFontSizeset(26)
+      MessageConfig.pbSetSystemFontName("Power Red and Green")
+      MessageConfig.pbSetSmallFontName("Power Green Small")
+      MessageConfig.pbSetNarrowFontName("Power Green Small")
+    elsif $PokemonSystem.kurayfonts == 2
+      MessageConfig.pbGetSystemFontSizeset(29)
+      MessageConfig.pbGetSmallFontSizeset(25)
+      MessageConfig.pbGetNarrowFontSizeset(29)
+      MessageConfig.pbSetSystemFontName("Power Clear")
+      MessageConfig.pbSetSmallFontName("Power Clear")
+      MessageConfig.pbSetNarrowFontName("Power Clear")
+    elsif $PokemonSystem.kurayfonts == 3
+      MessageConfig.pbGetSystemFontSizeset(29)
+      MessageConfig.pbGetSmallFontSizeset(25)
+      MessageConfig.pbGetNarrowFontSizeset(29)
+      MessageConfig.pbSetSystemFontName("Power Red and Blue")
+      MessageConfig.pbSetSmallFontName("Power Red and Blue")
+      MessageConfig.pbSetNarrowFontName("Power Red and Blue")
+    end
+    #KurayX just a quick way to load font at start (temporary fix)
     sscreen.pbStartLoadScreen
   end
 

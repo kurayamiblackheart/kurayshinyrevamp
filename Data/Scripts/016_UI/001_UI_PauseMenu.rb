@@ -221,15 +221,53 @@ class PokemonPauseMenu
         pbPlayDecisionSE
         oldmart = $game_temp.mart_prices.clone
         $game_temp.fromkurayshop = 1
-        if !$game_temp.mart_prices[570]
-          $game_temp.mart_prices[570] = [6900, 3450]
-        else
-          $game_temp.mart_prices[570][1] = 3450
-          $game_temp.mart_prices[570][0] = 6900
-        end
+        # 570 = Transgender Stone
+        # 604 = Secret Capsule
+        # 568 = Mist Stone (evolve any Pokemon)
+        # 569 = Devolution Spray
+        # 249 = PPUP
+        # 250 = PPMAX
+        # 247 = Elixir
+        # 248 = Elixir Max
+        # 245 = Ether
+        # 246 = Ether Max
+        # 314 = TM Return
+        # 371 = TM Poison Jab
+        # 619 = TM Toxic Spikes
+        # 618 = TM Spore
+        # 114 = Focus Sash
+        # 115 = Flame Orb
+        # 116 = Toxic Orb
+        # 100 = Life Orb
+        $game_temp.mart_prices[570] = [6900, 3450]
+        # $game_temp.mart_prices[604] = [9100, 4550]
+        $game_temp.mart_prices[568] = [18000, 9000]
+        # $game_temp.mart_prices[569] = [8200, 4100]
+        $game_temp.mart_prices[245] = [1200, 600]
+        $game_temp.mart_prices[247] = [4000, 2000]
+        $game_temp.mart_prices[249] = [9100, 4550]
+        $game_temp.mart_prices[246] = [3600, 1800]
+        $game_temp.mart_prices[248] = [12000, 6000]
+        $game_temp.mart_prices[250] = [29120, 14560]
+        $game_temp.mart_prices[314] = [10000, 5000]
+        $game_temp.mart_prices[371] = [10000, 5000]
+        $game_temp.mart_prices[619] = [30000, 15000]
+        $game_temp.mart_prices[618] = [30000, 15000]
+        $game_temp.mart_prices[114] = [6000, 3000]
+        $game_temp.mart_prices[115] = [6000, 3000]
+        $game_temp.mart_prices[116] = [6000, 3000]
+        $game_temp.mart_prices[100] = [6000, 3000]
+        # allitems = [
+        #   570, 604, 568, 569, 245, 247, 249, 246, 248, 250, 314, 371, 619, 618,
+        #   114, 115, 116, 100
+        # ]
+        allitems = [
+          570, 568, 245, 247, 249, 246, 248, 250, 314, 371, 619, 618,
+          114, 115, 116, 100
+        ]
         pbFadeOutIn {
           scene = PokemonMart_Scene.new
-          screen = PokemonMartScreen.new(scene,[570])
+          screen = PokemonMartScreen.new(scene,allitems)
           screen.pbBuyScreen
         }
         $game_temp.mart_prices = oldmart.clone
