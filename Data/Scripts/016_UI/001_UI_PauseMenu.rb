@@ -241,7 +241,8 @@ class PokemonPauseMenu
         # 100 = Life Orb
         $game_temp.mart_prices[570] = [6900, 3450]
         # $game_temp.mart_prices[604] = [9100, 4550]
-        $game_temp.mart_prices[568] = [18000, 9000]
+        $game_temp.mart_prices[568] = [999999, 24000] if !$game_switches[SWITCH_GOT_BADGE_8]
+        $game_temp.mart_prices[568] = [42000, 24000] if $game_switches[SWITCH_GOT_BADGE_8]
         # $game_temp.mart_prices[569] = [8200, 4100]
         $game_temp.mart_prices[245] = [1200, 600]
         $game_temp.mart_prices[247] = [4000, 2000]
@@ -265,6 +266,7 @@ class PokemonPauseMenu
           570, 568, 245, 247, 249, 246, 248, 250, 314, 371, 619, 618,
           114, 115, 116, 100
         ]
+        # allitems.push(568) if $game_switches[SWITCH_GOT_BADGE_8]
         pbFadeOutIn {
           scene = PokemonMart_Scene.new
           screen = PokemonMartScreen.new(scene,allitems)
