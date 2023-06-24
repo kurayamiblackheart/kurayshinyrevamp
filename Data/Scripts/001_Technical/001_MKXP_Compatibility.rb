@@ -9,14 +9,17 @@ def pbSetWindowText(string)
 end
 
 def kurayRNGforChannels
-  kurayRNG = rand(0..1000)
+  kurayRNG = rand(0..10000)
   if kurayRNG < 5
     return rand(0..11)
-  elsif kurayRNG < 205
+  elsif kurayRNG < 41
+    return rand(0..8)
+  elsif kurayRNG < 2041
     return rand(0..5)
   else
     return rand(0..2)
   end
+  # 0.04% chance to have an inverse magenta/yellow/cyan
   # 0.4% chance to have an inverse (4/1000*100)
   # 4% chance to have Cyan/Magenta/Yellow (40/1000*100)
   # change Cyan/Magenta/Yellow to 20%
