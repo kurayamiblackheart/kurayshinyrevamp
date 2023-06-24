@@ -71,8 +71,240 @@ class AnimatedBitmap
     return greenChannel
   end
 
-  #KurayX - KURAYX_ABOUT_SHINIES
+  #ChatGPT
+  # def getChannelGradient(shiny, redShiny, greenShiny, blueShiny)
+  #   if shiny == 1
+  #     return greenShiny.clone
+  #   elsif shiny == 2
+  #     return blueShiny.clone
+  #   elsif shiny == 0
+  #     return redShiny.clone
+  #   elsif shiny == 3
+  #     return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r + g) / 2 }
+  #   elsif shiny == 4
+  #     return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r + b) / 2 }
+  #   elsif shiny == 5
+  #     return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
+  #   elsif shiny == 6
+  #     return self.gradientMapping(greenShiny.clone, redShiny.clone)
+  #   elsif shiny == 7
+  #     return self.gradientMapping(greenShiny.clone, blueShiny.clone)
+  #   elsif shiny == 8
+  #     return self.gradientMapping(redShiny.clone, greenShiny.clone)
+  #   elsif shiny == 9
+  #     return self.gradientMapping(redShiny.clone, blueShiny.clone)
+  #   elsif shiny == 10
+  #     return self.gradientMapping(blueShiny.clone, redShiny.clone)
+  #   elsif shiny == 11
+  #     return self.gradientMapping(blueShiny.clone, greenShiny.clone)
+  #   elsif shiny == 12
+  #     colordoing = redShiny.clone
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 13
+  #     colordoing = greenShiny.clone
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 14
+  #     colordoing = blueShiny.clone
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 15
+  #     colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r + g) / 2 }
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 16
+  #     colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r + b) / 2 }
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 17
+  #     colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 18
+  #     colordoing = self.gradientMapping(greenShiny.clone, redShiny.clone)
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 19
+  #     colordoing = self.gradientMapping(greenShiny.clone, blueShiny.clone)
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 20
+  #     colordoing = self.gradientMapping(redShiny.clone, greenShiny.clone)
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 21
+  #     colordoing = self.gradientMapping(redShiny.clone, blueShiny.clone)
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 22
+  #     colordoing = self.gradientMapping(blueShiny.clone, redShiny.clone)
+  #     return colordoing.map { |r| 255 - r }
+  #   elsif shiny == 23
+  #     colordoing = self.gradientMapping(blueShiny.clone, greenShiny.clone)
+  #     return colordoing.map { |r| 255 - r }
+  #   end
+  # end
+
+  #ChatGPT
+  # def gradientMappingOld(sourceChannel, targetChannel)
+  #   gradientFactor = 1.0 / (targetChannel.size - 1)
+  #   targetChannel.each_index do |i|
+  #     startValue = sourceChannel[i]
+  #     endValue = sourceChannel[i + 1] || startValue
+  #     value = (startValue * (1 - i * gradientFactor) + endValue * (i * gradientFactor)).to_i
+  #     targetChannel[i] = value
+  #   end
+  #   targetChannel
+  # end
+
+  # def gradientMapping(sourceChannel, targetChannel, steps = 10)
+  #   gradientFactor = 1.0 / (@bitmap.bitmap.width - 1)
+  #   rowLength = @bitmap.bitmap.height + 1
+  
+  #   for i in 0..(@bitmap.bitmap.width - 1)
+  #     startIdx = i * rowLength
+  #     endIdx = (i + 1) * rowLength - 1
+  #     rowValues = sourceChannel[startIdx..endIdx]
+  #     minVal = rowValues.compact.min
+  #     maxVal = rowValues.compact.max
+  #     range = maxVal - minVal
+  
+  #     if range.zero?
+  #       # Assign the values directly if there is no range
+  #       rowValues.each_with_index do |value, j|
+  #         targetIdx = startIdx + j
+  #         targetChannel[targetIdx] = value
+  #       end
+  #     else
+  #       # Interpolate between neighboring colors
+  #       stepSize = 1.0 / (steps + 1)
+  #       stepWeights = (0..steps).map { |step| step * stepSize }
+  
+  #       rowValues.each_cons(2).with_index do |(startValue, endValue), j|
+  #         targetStartIdx = startIdx + j * (steps + 1)
+  #         targetEndIdx = targetStartIdx + steps
+  
+  #         stepWeights.each_with_index do |weight, k|
+  #           value = startValue * (1 - weight) + endValue * weight
+  #           interpolatedValue = (value - minVal) / range * 255
+  #           targetIdx = targetStartIdx + k
+  #           targetChannel[targetIdx] = interpolatedValue
+  #         end
+  #       end
+  #     end
+  #   end
+  #   targetChannel
+  # end
+
+  # def gradientMapping(sourceChannel, targetChannel)
+  #   gradientFactor = 1.0 / (@bitmap.bitmap.width - 1)
+  #   rowLength = @bitmap.bitmap.height + 1
+  #   for i in 0..(@bitmap.bitmap.width - 1)
+  #     startIdx = i * rowLength
+  #     endIdx = (i + 1) * rowLength - 1
+  #     rowValues = sourceChannel[startIdx..endIdx]
+  #     minVal = rowValues.compact.min # Find the minimum non-nil value
+  #     maxVal = rowValues.compact.max # Find the maximum non-nil value
+  #     range = maxVal - minVal
+  #     rowValues.each_with_index do |value, j|
+  #       targetIdx = startIdx + j
+  #       if value.nil?
+  #         targetChannel[targetIdx] = nil
+  #       elsif range.zero?
+  #         targetChannel[targetIdx] = value
+  #       else
+  #         normalizedValue = (value - minVal).to_f / range
+  #         interpolatedValue = (normalizedValue * 255).to_i
+  #         targetChannel[targetIdx] = interpolatedValue
+  #       end
+  #     end
+  #   end
+  #   targetChannel
+  # end
+
+  #KurayX - KURAYX_ABOUT_SHINIES Modified by ChatGPT
   def pbGiveFinaleColor(shinyR, shinyG, shinyB, offset)
+    dontmodify = 0
+    if shinyR == 0 && shinyG == 1 && shinyB == 2
+      dontmodify = 1
+    end
+    @bitmap = nil
+    newbitmap = GifBitmap.new(@path, @filename, offset, shinyR, shinyG, shinyB)
+    @bitmap = newbitmap.copy
+
+    greenShiny = []
+    redShiny = []
+    blueShiny = []
+  
+    # greeninclude = [1, 3, 5, 6, 7, 8, 11, 13, 15, 17, 18, 19, 20, 23]
+    # redinclude = [0, 3, 4, 6, 8, 9, 10, 12, 15, 16, 18, 20, 21, 22]
+    # blueinclude = [2, 4, 5, 7, 9, 10, 11, 14, 16, 17, 19, 21, 22, 23]
+    greeninclude = [1, 3, 5, 7, 9, 11]
+    redinclude = [0, 3, 4, 6, 9, 10]
+    blueinclude = [2, 4, 5, 8, 10, 11]
+    greenShiny = self.pbGetGreenChannel if greeninclude.include?(shinyR) || greeninclude.include?(shinyB) || greeninclude.include?(shinyG)
+    redShiny = self.pbGetRedChannel if redinclude.include?(shinyR) || redinclude.include?(shinyB) || redinclude.include?(shinyG)
+    blueShiny = self.pbGetBlueChannel if blueinclude.include?(shinyR) || blueinclude.include?(shinyB) || blueinclude.include?(shinyG)
+
+    # greenShiny = self.pbGetGreenChannel
+    # redShiny = self.pbGetRedChannel
+    # blueShiny = self.pbGetBlueChannel
+  
+    canalRed = self.getChannelGradient(shinyR, redShiny, greenShiny, blueShiny)
+    canalGreen = self.getChannelGradient(shinyG, redShiny, greenShiny, blueShiny)
+    canalBlue = self.getChannelGradient(shinyB, redShiny, greenShiny, blueShiny)
+    if dontmodify == 0
+      for i in 0..@bitmap.bitmap.width
+        for j in 0..@bitmap.bitmap.height
+          if @bitmap.bitmap.get_pixel(i, j).alpha != 0
+            depth = i * (@bitmap.bitmap.height + 1) + j
+            @bitmap.bitmap.set_pixel(i, j, Color.new(canalRed[depth], canalGreen[depth], canalBlue[depth], @bitmap.bitmap.get_pixel(i, j).alpha))
+          end
+        end
+      end
+    end
+  end
+
+  #ChatGPT
+  def getChannelGradient(shiny, redShiny, greenShiny, blueShiny)
+    if shiny == 1
+      return greenShiny.clone
+    elsif shiny == 2
+      return blueShiny.clone
+    elsif shiny == 0
+      return redShiny.clone
+    elsif shiny == 3
+      return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r + g) / 2 }
+    elsif shiny == 4
+      return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r + b) / 2 }
+    elsif shiny == 5
+      return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
+    elsif shiny == 6
+      colordoing = redShiny.clone
+      return colordoing.map { |r| 255 - r }
+    elsif shiny == 7
+      colordoing = greenShiny.clone
+      return colordoing.map { |r| 255 - r }
+    elsif shiny == 8
+      colordoing = blueShiny.clone
+      return colordoing.map { |r| 255 - r }
+    elsif shiny == 9
+      colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r + g) / 2 }
+      return colordoing.map { |r| 255 - r }
+    elsif shiny == 10
+      colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r + b) / 2 }
+      return colordoing.map { |r| 255 - r }
+    elsif shiny == 11
+      colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
+      return colordoing.map { |r| 255 - r }
+    end
+    # 0 = Red
+    # 1 = Green
+    # 2 = Blue
+    # 3 = Yellow
+    # 4 = Magenta
+    # 5 = Cyan
+    # 6 = Inverse Red
+    # 7 = Inverse Green
+    # 8 = Inverse Blue
+    # 9 = Inverse Yellow
+    # 10 = Inverse Magenta
+    # 11 = Inverse Cyan
+  end
+
+  #KurayX - KURAYX_ABOUT_SHINIES (Default)
+  def pbGiveFinaleColorDefault(shinyR, shinyG, shinyB, offset)
     dontmodify = 0
     if shinyR == 0 && shinyG == 1 && shinyB == 2
       dontmodify = 1
@@ -130,7 +362,6 @@ class AnimatedBitmap
     end
     # @bitmap = GifBitmap.new(@path, @filename, offset)
   end
-
   
   def shiftColors(offset = 0)
     @bitmap = GifBitmap.new(@path, @filename, offset)

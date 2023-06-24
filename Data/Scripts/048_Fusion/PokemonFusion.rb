@@ -541,9 +541,9 @@ class PokemonFusionScene
 
     #KurayX - KURAYX_ABOUT_SHINIES
     domepokehue = rand(0..360) - 180
-    domepoker = rand(0..2)
-    domepokeg = rand(0..2)
-    domepokeb = rand(0..2)
+    domepoker = kurayRNGforChannels
+    domepokeg = kurayRNGforChannels
+    domepokeb = kurayRNGforChannels
     if pokemon2.shiny?
       domepokehue = pokemon2.shinyValue?
       domepoker = pokemon2.shinyR?
@@ -751,17 +751,17 @@ class PokemonFusionScene
       end
       if $PokemonSystem.shinyfusedye == 2
         @pokemon1.shinyValue = rand(0..360) - 180
-        @pokemon1.shinyR = rand(0..2)
-        @pokemon1.shinyG = rand(0..2)
-        @pokemon1.shinyB = rand(0..2)
+        @pokemon1.shinyR = kurayRNGforChannels
+        @pokemon1.shinyG = kurayRNGforChannels
+        @pokemon1.shinyB = kurayRNGforChannels
         @pokemon1.body_shinyhue = rand(0..360) - 180
-        @pokemon1.body_shinyr = rand(0..2)
-        @pokemon1.body_shinyg = rand(0..2)
-        @pokemon1.body_shinyb = rand(0..2)
+        @pokemon1.body_shinyr = kurayRNGforChannels
+        @pokemon1.body_shinyg = kurayRNGforChannels
+        @pokemon1.body_shinyb = kurayRNGforChannels
         @pokemon1.head_shinyhue = rand(0..360) - 180
-        @pokemon1.head_shinyr = rand(0..2)
-        @pokemon1.head_shinyg = rand(0..2)
-        @pokemon1.head_shinyb = rand(0..2)
+        @pokemon1.head_shinyr = kurayRNGforChannels
+        @pokemon1.head_shinyg = kurayRNGforChannels
+        @pokemon1.head_shinyb = kurayRNGforChannels
       end
 
       @pokemon1.debug_shiny = true if @pokemon1.debug_shiny || @pokemon2.debug_shiny

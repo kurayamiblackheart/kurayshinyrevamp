@@ -1828,9 +1828,9 @@ class PokemonStorageScene
             if pokemon.shiny?
               newvalue = rand(0..360) - 180
               pokemon.shinyValue=newvalue
-              pokemon.shinyR=rand(0..2)
-              pokemon.shinyG=rand(0..2)
-              pokemon.shinyB=rand(0..2)
+              pokemon.shinyR=kurayRNGforChannels
+              pokemon.shinyG=kurayRNGforChannels
+              pokemon.shinyB=kurayRNGforChannels
               pbHardRefresh
               pbDisplay(_INTL("Wait... Its shiny color changed!"))
             else
@@ -1879,14 +1879,18 @@ class PokemonStorageScene
     qty = 0
     helptext = pbDisplay(_INTL("RedChannel (0-2)"))
     params = ChooseNumberParams.new
-    params.setMaxDigits(1)
-    params.setRange(0, 2)
+    params.setMaxDigits(2)
+    params.setRange(0, 11)
+    #Before ChatGPT new
+    # params.setRange(0, 2)
     params.setDefaultValue(pokemon.shinyR?)
     params.setInitialValue(pokemon.shinyR?)
     params.setCancelValue(pokemon.shinyR?)
     params.setNegativesAllowed(false)
     qty = @scene.pbChooseNumber(helptext,params)
-    if qty < 3
+    #Before ChatGPT new
+    # if qty < 3
+    if qty < 12
       if qty > -1
         pokemon.shinyR=qty
         pbHardRefresh
@@ -1895,14 +1899,18 @@ class PokemonStorageScene
     end
     helptext = pbDisplay(_INTL("GreenChannel (0-2)"))
     params = ChooseNumberParams.new
-    params.setMaxDigits(1)
-    params.setRange(0, 2)
+    params.setMaxDigits(2)
+    params.setRange(0, 11)
+    #Before ChatGPT new
+    # params.setRange(0, 2)
     params.setDefaultValue(pokemon.shinyG?)
     params.setInitialValue(pokemon.shinyG?)
     params.setCancelValue(pokemon.shinyG?)
     params.setNegativesAllowed(false)
     qty = @scene.pbChooseNumber(helptext,params)
-    if qty < 3
+    #Before ChatGPT new
+    # if qty < 3
+    if qty < 12
       if qty > -1
         pokemon.shinyG=qty
         pbHardRefresh
@@ -1911,14 +1919,18 @@ class PokemonStorageScene
     end
     helptext = pbDisplay(_INTL("BlueChannel (0-2)"))
     params = ChooseNumberParams.new
-    params.setMaxDigits(1)
-    params.setRange(0, 2)
+    params.setMaxDigits(2)
+    params.setRange(0, 11)
+    #Before ChatGPT new
+    # params.setRange(0, 2)
     params.setDefaultValue(pokemon.shinyB?)
     params.setInitialValue(pokemon.shinyB?)
     params.setCancelValue(pokemon.shinyB?)
     params.setNegativesAllowed(false)
     qty = @scene.pbChooseNumber(helptext,params)
-    if qty < 3
+    #Before ChatGPT new
+    # if qty < 3
+    if qty < 12
       if qty > -1
         pokemon.shinyB=qty
         pbHardRefresh
@@ -1939,11 +1951,11 @@ class PokemonStorageScene
     end
     newvalue = rand(0..360) - 180
     pokemon.shinyValue=newvalue
-    pokemon.shinyR=rand(0..2)
-    pokemon.shinyG=rand(0..2)
-    pokemon.shinyB=rand(0..2)
+    pokemon.shinyR=kurayRNGforChannels
+    pokemon.shinyG=kurayRNGforChannels
+    pokemon.shinyB=kurayRNGforChannels
     pbHardRefresh
-    pbDisplay(_INTL("Re-rolled Shiny Color !"))
+    pbDisplay(_INTL("Re-rolled into " + pokemon.shinyValue.to_s + ";" + pokemon.shinyR.to_s + ";" + pokemon.shinyG.to_s + ";" + pokemon.shinyB.to_s + " !"))
   end
 
   def pbKurayNoEvo(selected, heldpoke)
@@ -2046,6 +2058,81 @@ class PokemonStorageScene
       end
     end
     pbDisplay(_INTL("All Pokemons Exported !"))
+  end
+
+  #KurayX
+  def pbToggleShiny(selected, heldpoke)
+    pokemon = heldpoke
+    if heldpoke
+      pokemon = heldpoke
+    elsif selected[0] == -1
+      pokemon = @storage.party[selected[1]]
+    else
+      pokemon = @storage.boxes[selected[0]][selected[1]]
+    end
+    if pokemon.shiny?
+      pokemon.shiny=false
+      pbHardRefresh
+      pbDisplay(_INTL("Pokemon now Normal !"))
+    else
+      pokemon.shiny=true
+      pbHardRefresh
+      pbDisplay(_INTL("Pokemon now Shiny !"))
+    end
+  end
+
+  #KurayX
+  def pbCarpFill(selected, heldpoke)
+    directory_name = "ExportedPokemons"
+    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    importname = directory_name + "/" + "CarpFill.json"
+    if File.file?(importname)
+      pokemon = Pokemon.new(:BULBASAUR, 1)
+      importdata = File.read(importname)
+      pokemon.load_json(eval(importdata))
+      relta = 0
+      gelta = 0
+      belta = 0
+      for p in 0..1727
+        if p > @storage.boxes.length-1
+          @storage.boxes[@storage.boxes.length] = PokemonBox.new(_INTL("Box {1}",@storage.boxes.length+1),PokemonBox::BOX_SIZE)
+        end
+        curvalue = -180
+        for i in 0..29
+          #BoxFilling
+          curvalue += 12
+          doing = pokemon.clone
+          doing.shinyValue=curvalue
+          doing.shinyR=relta
+          doing.shinyG=gelta
+          doing.shinyB=belta
+          # pokemon.@personalID = rand(2 ** 16) | rand(2 ** 16) << 16
+          garvalue = p*(30)+(i+1)
+          doing.name = garvalue.to_s
+          @storage.pbImportKuray(p, i, doing)
+        end
+        relta += 1
+        if relta > 11
+          relta = 0
+          gelta += 1
+        end
+        if gelta > 11
+          relta = 0
+          gelta = 0
+          belta += 1
+        end
+        if belta > 11
+          relta = 0
+          gelta = 0
+          belta = 0
+        end
+      end
+      pbHardRefresh
+      pbDisplay(_INTL("CarpFill done !"))
+    else
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("'CarpFill.json' not found !"))
+    end
   end
 
   #KurayX
@@ -2533,6 +2620,8 @@ class PokemonStorageScreen
               cmdShinyChoose = -1
               cmdEvoLock = -1
               cmdShinify = -1
+              cmdToggleShiny = -1
+              cmdCarpFill = -1
               if heldpoke
                 helptext = _INTL("{1} is selected.", heldpoke.name)
                 commands[cmdMove = commands.length] = (pokemon) ? _INTL("Shift") : _INTL("Place")
@@ -2570,6 +2659,8 @@ class PokemonStorageScreen
               commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
               commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
               commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
+              commands[cmdCarpFill = commands.length] = _INTL("CarpFill") if $DEBUG && File.exists?("Kurayami.krs")
+              commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny") if $DEBUG && File.exists?("Kurayami.krs")
               commands[cmdDebug = commands.length] = _INTL("Debug") if $DEBUG
               commands[cmdCancel = commands.length] = _INTL("Cancel")
               command = pbShowCommands(helptext, commands)
@@ -2589,6 +2680,10 @@ class PokemonStorageScreen
                 pbExportAll(selected, @heldpkmn, 0)
               elsif cmdImportJson >= 0 && command == cmdImportJson # Import Json
                 pbImportJson(selected, @heldpkmn)
+              elsif cmdToggleShiny >= 0 && command == cmdToggleShiny # Toggle Shiny
+                pbToggleShiny(selected, @heldpkmn)
+              elsif cmdCarpFill >= 0 && command == cmdCarpFill # Carp Fill
+                pbCarpFill(selected, @heldpkmn)
               elsif cmdShinyReroll >= 0 && command == cmdShinyReroll # Re-roll Shiny Color
                 pbRerollShiny(selected, @heldpkmn)
               elsif cmdShinyChoose >= 0 && command == cmdShinyChoose # Set Shiny Color
@@ -3117,6 +3212,16 @@ class PokemonStorageScreen
   #KurayX
   def pbImportJson(selected, heldpoke)
     @scene.pbImportJson(selected, heldpoke)
+  end
+
+  #KurayX
+  def pbToggleShiny(selected, heldpoke)
+    @scene.pbToggleShiny(selected, heldpoke)
+  end
+
+  #KurayX
+  def pbCarpFill(selected, heldpoke)
+    @scene.pbCarpFill(selected, heldpoke)
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES

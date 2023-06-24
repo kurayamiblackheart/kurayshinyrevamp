@@ -261,7 +261,7 @@ class Pokemon
     if @shinyR
       return @shinyR
     else
-      @shinyR=rand(0..2)
+      @shinyR=kurayRNGforChannels
       return @shinyR
     end
   end
@@ -271,7 +271,7 @@ class Pokemon
     if @shinyG
       return @shinyG
     else
-      @shinyG=rand(0..2)
+      @shinyG=kurayRNGforChannels
       return @shinyG
     end
   end
@@ -281,7 +281,7 @@ class Pokemon
     if @shinyB
       return @shinyB
     else
-      @shinyB=rand(0..2)
+      @shinyB=kurayRNGforChannels
       return @shinyB
     end
   end
@@ -310,7 +310,7 @@ class Pokemon
     if @head_shinyr
       return @head_shinyr
     else
-      @head_shinyr=rand(0..2)
+      @head_shinyr=kurayRNGforChannels
       return @head_shinyr
     end
   end
@@ -319,7 +319,7 @@ class Pokemon
     if @body_shinyr
       return @body_shinyr
     else
-      @body_shinyr=rand(0..2)
+      @body_shinyr=kurayRNGforChannels
       return @body_shinyr
     end
   end
@@ -328,7 +328,7 @@ class Pokemon
     if @head_shinyg
       return @head_shinyg
     else
-      @head_shinyg=rand(0..2)
+      @head_shinyg=kurayRNGforChannels
       return @head_shinyg
     end
   end
@@ -337,7 +337,7 @@ class Pokemon
     if @body_shinyg
       return @body_shinyg
     else
-      @body_shinyg=rand(0..2)
+      @body_shinyg=kurayRNGforChannels
       return @body_shinyg
     end
   end
@@ -346,7 +346,7 @@ class Pokemon
     if @head_shinyb
       return @head_shinyb
     else
-      @head_shinyb=rand(0..2)
+      @head_shinyb=kurayRNGforChannels
       return @head_shinyb
     end
   end
@@ -355,7 +355,7 @@ class Pokemon
     if @body_shinyb
       return @body_shinyb
     else
-      @body_shinyb=rand(0..2)
+      @body_shinyb=kurayRNGforChannels
       return @body_shinyb
     end
   end
@@ -1709,9 +1709,9 @@ class Pokemon
     #KurayX - KURAYX_ABOUT_SHINIES
     @shinyValue = rand(0..360) - 180
     @kuraygender = rand(65536)
-    @shinyR = rand(0..2)
-    @shinyG = rand(0..2)
-    @shinyB = rand(0..2)
+    @shinyR = kurayRNGforChannels
+    @shinyG = kurayRNGforChannels
+    @shinyB = kurayRNGforChannels
     @ability_index = nil
     @ability = nil
     @nature = nil
