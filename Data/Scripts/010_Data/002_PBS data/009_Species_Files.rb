@@ -84,15 +84,15 @@ module GameData
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    def self.front_sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2)
+    def self.front_sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, cusFile=nil)
       #filename = self.front_sprite_filename(species, form, gender, shiny, shadow)
       filename = self.front_sprite_filename(GameData::Species.get(species).id_number)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    def self.back_sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2)
-      filename = self.back_sprite_filename(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB)
+    def self.back_sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, cusFile=nil)
+      filename = self.back_sprite_filename(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB, cusFile)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
 
@@ -103,10 +103,10 @@ module GameData
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    def self.sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, back = false, egg = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2)
+    def self.sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, back = false, egg = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, cusFile=nil)
       return self.egg_sprite_bitmap(species, form) if egg
-      return self.back_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB) if back
-      return self.front_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB)
+      return self.back_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB, cusFile) if back
+      return self.front_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB, cusFile)
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
@@ -117,14 +117,14 @@ module GameData
       if back
         #KurayX - KURAYX_ABOUT_SHINIES
         if makeShiny
-          ret = self.back_sprite_bitmap(species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.shinyValue?, pkmn.shinyR?, pkmn.shinyG?, pkmn.shinyB?)
+          ret = self.back_sprite_bitmap(species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.shinyValue?, pkmn.shinyR?, pkmn.shinyG?, pkmn.shinyB?, pkmn.kuraycustomfile?)
         else
           ret = self.back_sprite_bitmap(species, pkmn.form, pkmn.gender, false, false, false)
         end
       else
         #KurayX - KURAYX_ABOUT_SHINIES
         if makeShiny
-          ret = self.front_sprite_bitmap(species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.shinyValue?, pkmn.shinyR?, pkmn.shinyG?, pkmn.shinyB?)
+          ret = self.front_sprite_bitmap(species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.shinyValue?, pkmn.shinyR?, pkmn.shinyG?, pkmn.shinyB?, pkmn.kuraycustomfile?)
         else
           ret = self.front_sprite_bitmap(species, pkmn.form, pkmn.gender, false, false, false)
         end

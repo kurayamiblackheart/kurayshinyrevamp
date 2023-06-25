@@ -52,6 +52,8 @@ class Pokemon
   attr_accessor :shinyB
   attr_accessor :kuray_no_evo
   attr_accessor :kuraygender
+  #KurayX - Custom Filenames
+  attr_accessor :kuraycustomfile
 
   # The index of this Pokémon's ability (0, 1 are natural abilities, 2+ are
   # hidden abilities)as defined for its species/form. An ability may not be
@@ -221,6 +223,11 @@ class Pokemon
     @shinyValue=value
   end
 
+  #KurayX - Custom Filenames
+  def kuraycustomfile=(value)
+    @kuraycustomfile=value
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES
   def shinyR=(value)
     @shinyR=value
@@ -263,6 +270,30 @@ class Pokemon
     else
       @shinyR=kurayRNGforChannels
       return @shinyR
+    end
+  end
+
+  
+  #KurayX - Custom Filenames
+  def kuraycustomfile?
+    if @kuraycustomfile
+      #We have one, need to resolve it
+      if !pbResolveBitmap(@kuraycustomfile)
+        if species_data.id_number
+          @kuraycustomfile=kurayGetCustomSprite(species_data.id_number)
+        else
+          return nil
+        end
+      else
+        return @kuraycustomfile
+      end
+    else
+      #We don't have one, need to generate one
+      if species_data.id_number
+        @kuraycustomfile=kurayGetCustomSprite(species_data.id_number)
+      else
+        return nil
+      end
     end
   end
 
@@ -407,6 +438,11 @@ class Pokemon
   #KurayX - KURAYX_ABOUT_SHINIES
   def shinyR
     return @shinyR
+  end
+
+  #KurayX - Custom Filenames
+  def kuraycustomfile
+    return @kuraycustomfile
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
@@ -1548,6 +1584,7 @@ class Pokemon
       "shiny" => @shiny,
       "kuraygender" => @kuraygender,
       "shinyValue" => @shinyValue,
+      "kuraycustomfile" => @kuraycustomfile,
       "shinyR" => @shinyR,
       "shinyG" => @shinyG,
       "shinyB" => @shinyB,
@@ -1624,6 +1661,7 @@ class Pokemon
     @shiny = jsonparse['shiny']
     @kuraygender = jsonparse['kuraygender']
     @shinyValue = jsonparse['shinyValue']
+    @kuraycustomfile = jsonparse['kuraycustomfile']
     @shinyR = jsonparse['shinyR']
     @shinyG = jsonparse['shinyG']
     @shinyB = jsonparse['shinyB']
@@ -1709,6 +1747,8 @@ class Pokemon
     #KurayX - KURAYX_ABOUT_SHINIES
     @shinyValue = rand(0..360) - 180
     @kuraygender = rand(65536)
+    #KurayX - Custom Filenames
+    @kuraycustomfile = kurayGetCustomSprite(species_data.id_number)
     @shinyR = kurayRNGforChannels
     @shinyG = kurayRNGforChannels
     @shinyB = kurayRNGforChannels

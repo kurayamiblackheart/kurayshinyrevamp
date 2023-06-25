@@ -7,14 +7,14 @@ module GameData
       if back
         #KurayX - KURAYX_ABOUT_SHINIES
         if makeShiny
-          ret = self.back_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?)
+          ret = self.back_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?,pkmn.kuraycustomfile?)
         else
           ret = self.back_sprite_bitmap(species, nil, nil, false, false, false)
         end
       else
         #KurayX - KURAYX_ABOUT_SHINIES
         if makeShiny
-          ret = self.front_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?)
+          ret = self.front_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?,pkmn.kuraycustomfile?)
         else
           ret = self.front_sprite_bitmap(species, nil, nil, false, false, false)
         end
@@ -23,11 +23,11 @@ module GameData
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    def self.sprite_bitmap_from_pokemon_id(id, back = false, shiny=false, bodyShiny=false,headShiny=false, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2)
+    def self.sprite_bitmap_from_pokemon_id(id, back = false, shiny=false, bodyShiny=false,headShiny=false, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2, cusFile=nil)
       if back
-        ret = self.back_sprite_bitmap(id,nil,nil,shiny,bodyShiny,headShiny,pokeHue,pokeR,pokeG,pokeB)
+        ret = self.back_sprite_bitmap(id,nil,nil,shiny,bodyShiny,headShiny,pokeHue,pokeR,pokeG,pokeB,cusFile)
       else
-        ret = self.front_sprite_bitmap(id,nil,nil,shiny,bodyShiny,headShiny,pokeHue,pokeR,pokeG,pokeB)
+        ret = self.front_sprite_bitmap(id,nil,nil,shiny,bodyShiny,headShiny,pokeHue,pokeR,pokeG,pokeB,cusFile)
       end
       return ret
     end
@@ -85,12 +85,20 @@ module GameData
 
     #KurayX - KURAYX_ABOUT_SHINIES
     #KuraSprite
-    def self.front_sprite_bitmap(dex_number, a = 0, b = 0, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2)
+    def self.front_sprite_bitmap(dex_number, a = 0, b = 0, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, cusFile=nil)
       #la méthode est utilisé ailleurs avec d'autres arguments (gender, form, etc.) mais on les veut pas
       if dex_number.is_a?(Symbol)
         dex_number = GameData::Species.get(dex_number).id_number
       end
-      filename = self.sprite_filename(dex_number)
+      if cusFile == nil
+        filename = self.sprite_filename(dex_number)
+      else
+        if pbResolveBitmap(cusFile)
+          filename = cusFile
+        else
+          filename = self.sprite_filename(dex_number)
+        end
+      end
       sprite = (filename) ? AnimatedBitmap.new(filename) : nil
       if isShiny
         # sprite.shiftColors(colorshifting)
@@ -106,8 +114,16 @@ module GameData
 
     #KurayX - KURAYX_ABOUT_SHINIES
     #KuraSprite
-    def self.back_sprite_bitmap(dex_number, b = 0, form = 0, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2)
-      filename = self.sprite_filename(dex_number)
+    def self.back_sprite_bitmap(dex_number, b = 0, form = 0, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, cusFile=nil)
+      if cusFile == nil
+        filename = self.sprite_filename(dex_number)
+      else
+        if pbResolveBitmap(cusFile)
+          filename = cusFile
+        else
+          filename = self.sprite_filename(dex_number)
+        end
+      end
       sprite = (filename) ? AnimatedBitmap.new(filename) : nil
       if isShiny
         # sprite.shiftColors(colorshifting)

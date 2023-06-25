@@ -254,9 +254,27 @@ class PokemonBoxIcon < IconSprite
     if self.use_big_icon?
       #Sylvi Big Icons
       if $PokemonSystem.shiny_icons_kuray == 1
-        tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+        if @pokemon.kuraycustomfile? == nil
+          tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+        else
+          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg?
+            filename = @pokemon.kuraycustomfile?
+            tempBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
+          else
+            tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+          end
+        end
       else
-        tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
+        if @pokemon.kuraycustomfile? == nil
+          tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
+        else
+          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg?
+            filename = @pokemon.kuraycustomfile?
+            tempBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
+          else
+            tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
+          end
+        end
       end
       if @pokemon.egg?
         tempBitmap.scale_bitmap(1.0/2.0)
