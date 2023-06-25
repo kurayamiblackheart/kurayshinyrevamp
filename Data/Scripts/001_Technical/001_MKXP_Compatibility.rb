@@ -32,7 +32,8 @@ def kurayGetCustomNonFusion(dex_number)
   #Settings::CUSTOM_BASE_SPRITES_FOLDER
   $POTENTIALSPRITES = {} if !$POTENTIALSPRITES
   $POTENTIALSPRITES[dex_number] = [] if !$POTENTIALSPRITES[dex_number]
-  usinglocation = "Graphics/Base Sprites/"
+  # usinglocation = "Graphics/Base Sprites/"
+  usinglocation = "Graphics/KuraySprites/"
   if $POTENTIALSPRITES[dex_number].empty?
     # Only keep files that correspond to the actual pokemon
     # Dir.foreach(Settings::CUSTOM_BASE_SPRITES_FOLDER + dex_number.to_s + "*") do |filename|

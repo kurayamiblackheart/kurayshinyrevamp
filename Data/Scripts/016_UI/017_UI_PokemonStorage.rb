@@ -1809,6 +1809,137 @@ class PokemonStorageScene
     return ret
   end
 
+  def pbKurayAct(selected, heldpoke)
+    commands = []
+    cmdCancel = -1
+    cmdImportJson = -1
+    cmdExport = -1
+    cmdExportAll = -1
+    cmdShinyReroll = -1
+    cmdShinyChoose = -1
+    cmdEvoLock = -1
+    cmdShinify = -1
+    cmdToggleShiny = -1
+    cmdCarpFill = -1
+    cmdRerollSprite = -1
+    cmdShininessSell = -1
+    # if heldpoke
+    #   helptext = _INTL("{1} is selected.", heldpoke.name)
+    #   commands[cmdMove = commands.length] = (pokemon) ? _INTL("Shift") : _INTL("Place")
+    # elsif pokemon
+    #   helptext = _INTL("{1} is selected.", pokemon.name)
+    #   commands[cmdMove = commands.length] = _INTL("Move")
+    # end
+    commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && heldpoke.kuray_no_evo? == 0)
+    commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && heldpoke.kuray_no_evo? == 1)
+    commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !heldpoke.shiny?
+    commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if heldpoke.shiny?
+    commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if heldpoke.shiny?
+    commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite (P5000)")
+    commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
+    commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
+    commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
+    commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
+    commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
+    commands[cmdCarpFill = commands.length] = _INTL("CarpFill") if $DEBUG && File.exists?("Kurayami.krs")
+    commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny") if $DEBUG && File.exists?("Kurayami.krs")
+    commands[cmdCancel = commands.length] = _INTL("Cancel")
+    command = pbShowCommands(helptext, commands)
+    if cmdEvoLock >= 0 && command == cmdEvoLock # EvoLock
+      pbKurayNoEvo(selected, heldpoke)
+    elsif cmdExport >= 0 && command == cmdExport # Export
+      pbExport(selected, heldpoke, 0)
+    elsif cmdExportAll >= 0 && command == cmdExportAll # Export ALL
+      pbExportAll(selected, heldpoke, 0)
+    elsif cmdImportJson >= 0 && command == cmdImportJson # Import Json
+      pbImportJson(selected, heldpoke)
+    elsif cmdToggleShiny >= 0 && command == cmdToggleShiny # Toggle Shiny
+      pbToggleShiny(selected, heldpoke)
+    elsif cmdRerollSprite >= 0 && command == cmdRerollSprite # Reroll Sprite
+      pbRerollSprite(selected, heldpoke)
+    elsif cmdShininessSell >= 0 && command == cmdShininessSell # Sell Shininess
+      pbShinySell(selected, heldpoke)
+    elsif cmdCarpFill >= 0 && command == cmdCarpFill # Carp Fill
+      pbCarpFill(selected, heldpoke)
+    elsif cmdShinyReroll >= 0 && command == cmdShinyReroll # Re-roll Shiny Color
+      pbRerollShiny(selected, heldpoke)
+    elsif cmdShinyChoose >= 0 && command == cmdShinyChoose # Set Shiny Color
+      pbDefineShinycolor(selected, heldpoke)
+    elsif cmdShinify >= 0 && command == cmdShinify # Shinify
+      pbKuraShinify(selected, heldpoke)
+    end
+  end
+
+  def pbRerollSprite(selected, heldpoke)
+    while true
+      if $Trainer.money < 5000
+        pbPlayBuzzerSE
+        pbDisplay(_INTL("Not enough Money !"))
+        break
+      else
+        kuraychoices = [
+          _INTL("Re-roll Sprite (P5000)"),
+          _INTL("Nevermind"),
+        ]
+        kuraychoice = pbShowCommands(
+          _INTL("You have P" + $Trainer.money.to_s_formatted), kuraychoices)
+        case kuraychoice
+        when 0
+          $Trainer.money -= 5000
+          pokemon = heldpoke
+          attempts = 10
+          while attempts > 0
+            attempts -= 1
+            newfile = kurayGetCustomSprite(pokemon.dexNum)
+            if newfile != pokemon.kuraycustomfile?
+              break
+            end
+          end
+          if newfile != pokemon.kuraycustomfile?
+            pokemon.kuraycustomfile = kurayGetCustomSprite(pokemon.dexNum)
+            pbHardRefresh
+            pbDisplay(_INTL("Oh! Its sprite changed!"))
+          else
+            pbDisplay(_INTL("Maybe it can't do that..."))
+            $Trainer.money += 5000
+          end
+        when 1
+          break
+        end
+      end
+    end
+  end
+
+  def pbShinySell(selected, heldpoke)
+    if !heldpoke.shiny?
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("Not Shiny!"))
+      break
+    else
+      kuraychoices = [
+        _INTL("Unshiny (+P1000)"),
+        _INTL("Nevermind"),
+      ]
+      kuraychoice = pbShowCommands(
+        _INTL("Are you sure to unshiny?"), kuraychoices)
+      case kuraychoice
+      when 0
+        $Trainer.money += 1000
+        pokemon = heldpoke
+        pokemon.shiny=false
+        # newvalue = rand(0..360) - 180
+        # pokemon.shinyValue=newvalue
+        # pokemon.shinyR=kurayRNGforChannels
+        # pokemon.shinyG=kurayRNGforChannels
+        # pokemon.shinyB=kurayRNGforChannels
+        pbHardRefresh
+        pbDisplay(_INTL("Shiny, no more!"))
+      when 1
+        break
+      end
+    end
+  end
+
   def pbKuraShinify(selected, heldpoke)
     while true
       if $Trainer.money < 1000
@@ -1835,13 +1966,6 @@ class PokemonStorageScene
           end
           becomeshiny = rand(kurayshiny)
           pokemon = heldpoke
-          if heldpoke
-            pokemon = heldpoke
-          elsif selected[0] == -1
-            pokemon = @storage.party[selected[1]]
-          else
-            pokemon = @storage.boxes[selected[0]][selected[1]]
-          end
           if becomeshiny == 0 || (pokemon.shiny? && becomeshiny == 1)
             if pokemon.shiny?
               newvalue = rand(0..360) - 180
@@ -2632,15 +2756,16 @@ class PokemonStorageScreen
               cmdDebug = -1
               cmdCancel = -1
               cmdNickname = -1
-              cmdImportJson = -1
-              cmdExport = -1
-              cmdExportAll = -1
-              cmdShinyReroll = -1
-              cmdShinyChoose = -1
-              cmdEvoLock = -1
-              cmdShinify = -1
-              cmdToggleShiny = -1
-              cmdCarpFill = -1
+              # cmdImportJson = -1
+              # cmdExport = -1
+              # cmdExportAll = -1
+              # cmdShinyReroll = -1
+              # cmdShinyChoose = -1
+              # cmdEvoLock = -1
+              # cmdShinify = -1
+              # cmdToggleShiny = -1
+              # cmdCarpFill = -1
+              cmdKurayAct = -1
               if heldpoke
                 helptext = _INTL("{1} is selected.", heldpoke.name)
                 commands[cmdMove = commands.length] = (pokemon) ? _INTL("Shift") : _INTL("Place")
@@ -2662,24 +2787,25 @@ class PokemonStorageScreen
               commands[cmdItem = commands.length] = _INTL("Item")
 
               commands[cmdRelease = commands.length] = _INTL("Release")
-              if heldpoke
-                commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && heldpoke.kuray_no_evo? == 0)
-                commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && heldpoke.kuray_no_evo? == 1)
-                commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !heldpoke.shiny?
-                commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if heldpoke.shiny?
-              elsif pokemon
-                commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
-                commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 1)
-                commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !pokemon.shiny?
-                commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny?
-              end
-              commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
-              commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
-              commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
-              commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
-              commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
-              commands[cmdCarpFill = commands.length] = _INTL("CarpFill") if $DEBUG && File.exists?("Kurayami.krs")
-              commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny") if $DEBUG && File.exists?("Kurayami.krs")
+              # if heldpoke
+              #   commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && heldpoke.kuray_no_evo? == 0)
+              #   commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && heldpoke.kuray_no_evo? == 1)
+                # commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !heldpoke.shiny?
+                # commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if heldpoke.shiny?
+              # elsif pokemon
+              #   commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
+              #   commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 1)
+                # commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !pokemon.shiny?
+                # commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny?
+              # end
+              commands[cmdKurayAct = commands.length] = _INTL("Kuray Action")
+              # commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
+              # commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
+              # commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
+              # commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
+              # commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
+              # commands[cmdCarpFill = commands.length] = _INTL("CarpFill") if $DEBUG && File.exists?("Kurayami.krs")
+              # commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny") if $DEBUG && File.exists?("Kurayami.krs")
               commands[cmdDebug = commands.length] = _INTL("Debug") if $DEBUG
               commands[cmdCancel = commands.length] = _INTL("Cancel")
               command = pbShowCommands(helptext, commands)
@@ -2691,24 +2817,26 @@ class PokemonStorageScreen
                 end
               elsif cmdSummary >= 0 && command == cmdSummary # Summary
                 pbSummary(selected, @heldpkmn)
-              elsif cmdEvoLock >= 0 && command == cmdEvoLock # EvoLock
-                pbKurayNoEvo(selected, @heldpkmn)
-              elsif cmdExport >= 0 && command == cmdExport # Export
-                pbExport(selected, @heldpkmn, 0)
-              elsif cmdExportAll >= 0 && command == cmdExportAll # Export ALL
-                pbExportAll(selected, @heldpkmn, 0)
-              elsif cmdImportJson >= 0 && command == cmdImportJson # Import Json
-                pbImportJson(selected, @heldpkmn)
-              elsif cmdToggleShiny >= 0 && command == cmdToggleShiny # Toggle Shiny
-                pbToggleShiny(selected, @heldpkmn)
-              elsif cmdCarpFill >= 0 && command == cmdCarpFill # Carp Fill
-                pbCarpFill(selected, @heldpkmn)
-              elsif cmdShinyReroll >= 0 && command == cmdShinyReroll # Re-roll Shiny Color
-                pbRerollShiny(selected, @heldpkmn)
-              elsif cmdShinyChoose >= 0 && command == cmdShinyChoose # Set Shiny Color
-                pbDefineShinycolor(selected, @heldpkmn)
-              elsif cmdShinify >= 0 && command == cmdShinify # Shinify
-                pbKuraShinify(selected, @heldpkmn)
+              # elsif cmdEvoLock >= 0 && command == cmdEvoLock # EvoLock
+              #   pbKurayNoEvo(selected, @heldpkmn)
+              # elsif cmdExport >= 0 && command == cmdExport # Export
+              #   pbExport(selected, @heldpkmn, 0)
+              # elsif cmdExportAll >= 0 && command == cmdExportAll # Export ALL
+              #   pbExportAll(selected, @heldpkmn, 0)
+              # elsif cmdImportJson >= 0 && command == cmdImportJson # Import Json
+              #   pbImportJson(selected, @heldpkmn)
+              # elsif cmdToggleShiny >= 0 && command == cmdToggleShiny # Toggle Shiny
+              #   pbToggleShiny(selected, @heldpkmn)
+              # elsif cmdCarpFill >= 0 && command == cmdCarpFill # Carp Fill
+              #   pbCarpFill(selected, @heldpkmn)
+              # elsif cmdShinyReroll >= 0 && command == cmdShinyReroll # Re-roll Shiny Color
+              #   pbRerollShiny(selected, @heldpkmn)
+              # elsif cmdShinyChoose >= 0 && command == cmdShinyChoose # Set Shiny Color
+              #   pbDefineShinycolor(selected, @heldpkmn)
+              # elsif cmdShinify >= 0 && command == cmdShinify # Shinify
+                # pbKuraShinify(selected, @heldpkmn)
+              elsif cmdKurayAct >= 0 && command == cmdKurayAct # KurayAct
+                pbKurayAct(selected, @heldpkmn)
               elsif cmdNickname >= 0 && command == cmdNickname # Rename
                 renamePokemon(selected)
               elsif cmdWithdraw >= 0 && command == cmdWithdraw # Store/Withdraw
@@ -3251,6 +3379,11 @@ class PokemonStorageScreen
   #KurayX - KURAYX_ABOUT_SHINIES
   def pbDefineShinycolor(selected, heldpoke)
     @scene.pbDefineShinycolor(selected, heldpoke)
+  end
+
+  #KurayX - KURAYX_ABOUT_SHINIES
+  def pbKurayAct(selected, heldpoke)
+    @scene.pbKurayAct(selected, heldpoke)
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
