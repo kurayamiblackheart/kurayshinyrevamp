@@ -1914,7 +1914,6 @@ class PokemonStorageScene
     if !heldpoke.shiny?
       pbPlayBuzzerSE
       pbDisplay(_INTL("Not Shiny!"))
-      break
     else
       kuraychoices = [
         _INTL("Unshiny (+P1000)"),
@@ -1934,8 +1933,6 @@ class PokemonStorageScene
         # pokemon.shinyB=kurayRNGforChannels
         pbHardRefresh
         pbDisplay(_INTL("Shiny, no more!"))
-      when 1
-        break
       end
     end
   end
