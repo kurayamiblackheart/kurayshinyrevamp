@@ -1831,13 +1831,7 @@ class PokemonStorageScene
     cmdCarpFill = -1
     cmdRerollSprite = -1
     cmdShininessSell = -1
-    # if heldpoke
-    #   helptext = _INTL("{1} is selected.", heldpoke.name)
-    #   commands[cmdMove = commands.length] = (pokemon) ? _INTL("Shift") : _INTL("Place")
-    # elsif pokemon
-    #   helptext = _INTL("{1} is selected.", pokemon.name)
-    #   commands[cmdMove = commands.length] = _INTL("Move")
-    # end
+    helptext = _INTL("{1} is selected.", pokemon.name)
     commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
     commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 1)
     commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !pokemon.shiny?
