@@ -348,9 +348,7 @@ class AnimatedBitmap
     else
       canalBlue = redShiny.clone
     end
-    # File.open('LogColors.txt' + ".txt", 'a') { |f| f.write("Inside !\r") }
     if dontmodify == 0
-      # File.open('LogColors.txt' + ".txt", 'a') { |f| f.write("Modifying !\r") }
       for i in 0..@bitmap.bitmap.width
         for j in 0..@bitmap.bitmap.height
           if @bitmap.bitmap.get_pixel(i, j).alpha != 0

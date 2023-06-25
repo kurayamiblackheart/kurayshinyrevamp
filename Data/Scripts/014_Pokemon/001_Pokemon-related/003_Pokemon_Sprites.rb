@@ -51,11 +51,9 @@ class PokemonSprite < SpriteWrapper
   end
 
   def setPokemonBitmap(pokemon, back = false)
-    # File.open('LogColors.txt' + ".txt", 'a') { |f| f.write("SPRITE STARTED SETPOKEMONBITMAP\r") }
     @_iconbitmap.dispose if @_iconbitmap
     @_iconbitmap = (pokemon) ? GameData::Species.sprite_bitmap_from_pokemon(pokemon, back) : nil
     self.bitmap = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
-    # File.open('LogColors.txt' + ".txt", 'a') { |f| f.write("SPRITE FINISHED SETPOKEMONBITMAP\r") }
     self.color = Color.new(0, 0, 0, 0)
     changeOrigin
   end
