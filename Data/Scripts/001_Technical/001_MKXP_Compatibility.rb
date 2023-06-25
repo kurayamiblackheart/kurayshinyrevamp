@@ -41,7 +41,6 @@ def kurayGetCustomNonFusion(dex_number)
     files.each do |filename|
       next if filename == '.' or filename == '..'
       next if !filename.end_with?(".png")
-      # dexname = filename.split('.png')[0]
       dexname = File.basename(filename).split('.png')[0]
       checknumber = dexname.gsub(/[^\d]/, '')
       next if checknumber.to_i != dex_number
@@ -81,7 +80,7 @@ def kurayGetCustomDoubleFusion(dex_number, head_id, body_id)
     files.each do |filename|
       next if filename == '.' or filename == '..'
       next if !filename.end_with?(".png")
-      # dexname = filename.split('.png')[0]
+      next if filename.end_with?("_i.png")
       dexname = File.basename(filename).split('.png')[0]
       checknumber = dexname.gsub(/[^\d.]/, '')
       next if checknumber.to_s != head_id.to_s + "." + body_id.to_s
