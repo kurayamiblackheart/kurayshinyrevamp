@@ -1810,6 +1810,14 @@ class PokemonStorageScene
   end
 
   def pbKurayAct(selected, heldpoke)
+    pokemon = heldpoke
+    if heldpoke
+      pokemon = heldpoke
+    elsif selected[0] == -1
+      pokemon = @storage.party[selected[1]]
+    else
+      pokemon = @storage.boxes[selected[0]][selected[1]]
+    end
     commands = []
     cmdCancel = -1
     cmdImportJson = -1
@@ -1830,11 +1838,11 @@ class PokemonStorageScene
     #   helptext = _INTL("{1} is selected.", pokemon.name)
     #   commands[cmdMove = commands.length] = _INTL("Move")
     # end
-    commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && heldpoke.kuray_no_evo? == 0)
-    commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && heldpoke.kuray_no_evo? == 1)
-    commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !heldpoke.shiny?
-    commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if heldpoke.shiny?
-    commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if heldpoke.shiny?
+    commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
+    commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 1)
+    commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !pokemon.shiny?
+    commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny?
+    commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if pokemon.shiny?
     commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite (P5000)")
     commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
     commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
@@ -1887,6 +1895,13 @@ class PokemonStorageScene
         when 0
           $Trainer.money -= 5000
           pokemon = heldpoke
+          if heldpoke
+            pokemon = heldpoke
+          elsif selected[0] == -1
+            pokemon = @storage.party[selected[1]]
+          else
+            pokemon = @storage.boxes[selected[0]][selected[1]]
+          end
           attempts = 10
           while attempts > 0
             attempts -= 1
@@ -1911,7 +1926,15 @@ class PokemonStorageScene
   end
 
   def pbShinySell(selected, heldpoke)
-    if !heldpoke.shiny?
+    pokemon = heldpoke
+    if heldpoke
+      pokemon = heldpoke
+    elsif selected[0] == -1
+      pokemon = @storage.party[selected[1]]
+    else
+      pokemon = @storage.boxes[selected[0]][selected[1]]
+    end
+    if !pokemon.shiny?
       pbPlayBuzzerSE
       pbDisplay(_INTL("Not Shiny!"))
     else
@@ -1924,7 +1947,7 @@ class PokemonStorageScene
       case kuraychoice
       when 0
         $Trainer.money += 1000
-        pokemon = heldpoke
+        # pokemon = heldpoke
         pokemon.shiny=false
         # newvalue = rand(0..360) - 180
         # pokemon.shinyValue=newvalue
@@ -1963,6 +1986,13 @@ class PokemonStorageScene
           end
           becomeshiny = rand(kurayshiny)
           pokemon = heldpoke
+          if heldpoke
+            pokemon = heldpoke
+          elsif selected[0] == -1
+            pokemon = @storage.party[selected[1]]
+          else
+            pokemon = @storage.boxes[selected[0]][selected[1]]
+          end
           if becomeshiny == 0 || (pokemon.shiny? && becomeshiny == 1)
             if pokemon.shiny?
               newvalue = rand(0..360) - 180
