@@ -195,6 +195,9 @@ class PokemonIconSprite < SpriteWrapper
           if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
             filename = @pokemon.kuraycustomfile?
             @animBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
+            if @pokemon.shiny?
+              @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?)
+            end
           else
             @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
           end
