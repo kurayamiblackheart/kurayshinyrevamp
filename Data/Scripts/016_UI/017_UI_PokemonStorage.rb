@@ -1903,11 +1903,11 @@ class PokemonStorageScene
           while attempts > 0
             attempts -= 1
             newfile = kurayGetCustomSprite(pokemon.dexNum)
-            if newfile != pokemon.kuraycustomfile? && !newfile == nil
+            if newfile != pokemon.kuraycustomfile? && newfile != nil
               break
             end
           end
-          if newfile != pokemon.kuraycustomfile? && !newfile == nil
+          if newfile != pokemon.kuraycustomfile? && newfile != nil
             pokemon.kuraycustomfile = kurayGetCustomSprite(pokemon.dexNum)
             pbHardRefresh
             pbDisplay(_INTL("Oh! Its sprite changed!"))
