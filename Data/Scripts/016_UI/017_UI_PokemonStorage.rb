@@ -2819,7 +2819,7 @@ class PokemonStorageScreen
                 # commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !pokemon.shiny?
                 # commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny?
               # end
-              commands[cmdKurayAct = commands.length] = _INTL("Kuray Action")
+              commands[cmdKurayAct = commands.length] = _INTL("Kuray Actions")
               # commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
               # commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
               # commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
