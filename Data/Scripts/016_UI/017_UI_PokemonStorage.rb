@@ -257,7 +257,7 @@ class PokemonBoxIcon < IconSprite
         if @pokemon.kuraycustomfile? == nil
           tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
         else
-          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg?
+          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
             filename = @pokemon.kuraycustomfile?
             tempBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
           else
@@ -268,7 +268,7 @@ class PokemonBoxIcon < IconSprite
         if @pokemon.kuraycustomfile? == nil
           tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
         else
-          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg?
+          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
             filename = @pokemon.kuraycustomfile?
             tempBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
           else
@@ -1837,7 +1837,7 @@ class PokemonStorageScene
     commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !pokemon.shiny?
     commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny?
     commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if pokemon.shiny?
-    commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite (P5000)")
+    commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite (P5000)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
     commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
@@ -1900,11 +1900,11 @@ class PokemonStorageScene
           while attempts > 0
             attempts -= 1
             newfile = kurayGetCustomSprite(pokemon.dexNum)
-            if newfile != pokemon.kuraycustomfile?
+            if newfile != pokemon.kuraycustomfile? && !newfile == nil
               break
             end
           end
-          if newfile != pokemon.kuraycustomfile?
+          if newfile != pokemon.kuraycustomfile? && !newfile == nil
             pokemon.kuraycustomfile = kurayGetCustomSprite(pokemon.dexNum)
             pbHardRefresh
             pbDisplay(_INTL("Oh! Its sprite changed!"))

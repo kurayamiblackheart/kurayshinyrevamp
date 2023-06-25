@@ -93,7 +93,7 @@ module GameData
       if cusFile == nil
         filename = self.sprite_filename(dex_number)
       else
-        if pbResolveBitmap(cusFile)
+        if pbResolveBitmap(cusFile) && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
           filename = cusFile
         else
           filename = self.sprite_filename(dex_number)
@@ -118,7 +118,7 @@ module GameData
       if cusFile == nil
         filename = self.sprite_filename(dex_number)
       else
-        if pbResolveBitmap(cusFile)
+        if pbResolveBitmap(cusFile) && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
           filename = cusFile
         else
           filename = self.sprite_filename(dex_number)

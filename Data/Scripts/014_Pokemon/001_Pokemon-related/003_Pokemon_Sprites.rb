@@ -192,7 +192,7 @@ class PokemonIconSprite < SpriteWrapper
         if @pokemon.kuraycustomfile? == nil
           @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
         else
-          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg?
+          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
             filename = @pokemon.kuraycustomfile?
             @animBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
           else
@@ -203,7 +203,7 @@ class PokemonIconSprite < SpriteWrapper
         if @pokemon.kuraycustomfile? == nil
           @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
         else
-          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg?
+          if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
             filename = @pokemon.kuraycustomfile?
             @animBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
           else

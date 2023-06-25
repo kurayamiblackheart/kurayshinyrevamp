@@ -30,6 +30,7 @@ class PokemonSystem
   attr_accessor :kurayfonts
   attr_accessor :shenanigans
   attr_accessor :kuraybigicons
+  attr_accessor :kurayindividcustomsprite
 
   def initialize
     @textspeed = 1 # Text speed (0=slow, 1=normal, 2=fast)
@@ -60,6 +61,7 @@ class PokemonSystem
     @kurayqol = 1
     @shenanigans = 0
     @kuraybigicons = 0
+    @kurayindividcustomsprite = 0
 
   end
 end
@@ -639,6 +641,15 @@ class PokemonOption_Scene
                                "Pokémon icons will use their full-size battle sprites (except in boxes)",
                                "Pokémon icons will use their full-size battle sprites"]
     )
+
+    options <<
+      EnumOption.new(_INTL("Ind. Custom Sprites"), [_INTL("On"), _INTL("Off")],
+      proc { $PokemonSystem.kurayindividcustomsprite },
+      proc { |value| $PokemonSystem.kurayindividcustomsprite = value },
+      ["Two of the same Pokemons can use different sprites (mod)",
+       "Two of the same Pokemons will use the same sprite (vanilla)"]
+    )
+
     options << EnumOption.new(_INTL("Screen Size"), [_INTL("S"), _INTL("M"), _INTL("L"), _INTL("XL"), _INTL("Full")],
                               proc { [$PokemonSystem.screensize, 4].min },
                               proc { |value|
