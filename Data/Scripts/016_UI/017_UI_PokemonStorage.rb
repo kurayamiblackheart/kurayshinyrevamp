@@ -1834,6 +1834,8 @@ class PokemonStorageScene
     cmdCarpFill = -1
     cmdRerollSprite = -1
     cmdShininessSell = -1
+    cmdBlacklist = -1
+    cmdShowSprite = -1
     helptext = _INTL("{1} is selected.", pokemon.name)
     commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
     commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 1)
@@ -1841,6 +1843,8 @@ class PokemonStorageScene
     commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny?
     commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if pokemon.shiny?
     commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite (P5000)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
+    commands[cmdShowSprite = commands.length] = _INTL("Show Spritename")
+    commands[cmdBlacklist = commands.length] = _INTL("Blacklist Sprite")
     commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
     commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
@@ -1872,6 +1876,10 @@ class PokemonStorageScene
       pbDefineShinycolor(selected, heldpoke)
     elsif cmdShinify >= 0 && command == cmdShinify # Shinify
       pbKuraShinify(selected, heldpoke)
+    elsif cmdBlacklist >= 0 && command == cmdBlacklist # Blacklist Sprite
+      pbBlackList(selected, heldpoke)
+    elsif cmdShowSprite >= 0 && command == cmdShowSprite # Show Sprite
+      pbShowSprite(selected, heldpoke)
     end
   end
 
@@ -1919,6 +1927,52 @@ class PokemonStorageScene
           break
         end
       end
+    end
+  end
+
+  def pbBlackList(selected, heldpoke)
+    pokemon = heldpoke
+    if heldpoke
+      pokemon = heldpoke
+    elsif selected[0] == -1
+      pokemon = @storage.party[selected[1]]
+    else
+      pokemon = @storage.boxes[selected[0]][selected[1]]
+    end
+    if pokemon.kuraycustomfile == nil
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("No Custom Sprite!"))
+    else
+      kuraychoices = [
+        _INTL("Blacklist"),
+        _INTL("Nevermind"),
+      ]
+      kuraychoice = pbShowCommands(
+        _INTL("Blacklisted sprites will never be used by any Pokemon ever again."), kuraychoices)
+      case kuraychoice
+      when 0
+        pokemon.kuraycustomfile = kurayPlayerBlackList(pokemon.dexNum, pokemon.kuraycustomfile)
+        pbHardRefresh
+        pbDisplay(_INTL("Sprite blacklisted!"))
+      end
+    end
+  end
+
+  def pbShowSprite(selected, heldpoke)
+    pokemon = heldpoke
+    if heldpoke
+      pokemon = heldpoke
+    elsif selected[0] == -1
+      pokemon = @storage.party[selected[1]]
+    else
+      pokemon = @storage.boxes[selected[0]][selected[1]]
+    end
+    if pokemon.kuraycustomfile == nil
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("No Custom Sprite!"))
+    else
+      krtempname = File.basename(pokemon.kuraycustomfile)
+      pbDisplay(_INTL(krtempname))
     end
   end
 
@@ -2043,7 +2097,7 @@ class PokemonStorageScene
       end
     end
     qty = 0
-    helptext = pbDisplay(_INTL("RedChannel (0-2)"))
+    helptext = pbDisplay(_INTL("RedChannel (0-11)"))
     params = ChooseNumberParams.new
     params.setMaxDigits(2)
     params.setRange(0, 11)
@@ -2063,7 +2117,7 @@ class PokemonStorageScene
         pbDisplay(_INTL("Changed Red Channel !"))
       end
     end
-    helptext = pbDisplay(_INTL("GreenChannel (0-2)"))
+    helptext = pbDisplay(_INTL("GreenChannel (0-11)"))
     params = ChooseNumberParams.new
     params.setMaxDigits(2)
     params.setRange(0, 11)
@@ -2083,7 +2137,7 @@ class PokemonStorageScene
         pbDisplay(_INTL("Changed Green Channel !"))
       end
     end
-    helptext = pbDisplay(_INTL("BlueChannel (0-2)"))
+    helptext = pbDisplay(_INTL("BlueChannel (0-11)"))
     params = ChooseNumberParams.new
     params.setMaxDigits(2)
     params.setRange(0, 11)
@@ -3103,7 +3157,7 @@ class PokemonStorageScreen
             p = (heldpoke) ? heldpoke : @storage[-1, index]
             p.time_form_set = nil
             p.form = 0 if p.isSpecies?(:SHAYMIN)
-            p.heal
+            p.heal if !$game_temp.fromkurayshop
           end
           @scene.pbStore(selected, heldpoke, destbox, firstfree)
           if heldpoke
@@ -3150,7 +3204,7 @@ class PokemonStorageScreen
     if box >= 0
       @heldpkmn.time_form_set = nil
       @heldpkmn.form = 0 if @heldpkmn.isSpecies?(:SHAYMIN)
-      @heldpkmn.heal
+      @heldpkmn.heal if !$game_temp.fromkurayshop
     end
     @scene.pbPlace(selected, @heldpkmn)
     @storage[box, index] = @heldpkmn
@@ -3179,7 +3233,7 @@ class PokemonStorageScreen
     if box >= 0
       @heldpkmn.time_form_set = nil
       @heldpkmn.form = 0 if @heldpkmn.isSpecies?(:SHAYMIN)
-      @heldpkmn.heal
+      @heldpkmn.heal if !$game_temp.fromkurayshop
     end
     @scene.pbSwap(selected, @heldpkmn)
     tmp = @storage[box, index]
@@ -3286,7 +3340,7 @@ class PokemonStorageScreen
         heldY = held[2] + selectedPos[1]
         pokemon.time_form_set = nil
         pokemon.form = 0 if pokemon.isSpecies?(:SHAYMIN)
-        pokemon.heal
+        pokemon.heal if !$game_temp.fromkurayshop
         @storage[box, heldX + heldY * PokemonBox::BOX_WIDTH] = pokemon
       end
     else
@@ -3300,7 +3354,7 @@ class PokemonStorageScreen
         pokemon = held[0]
         pokemon.time_form_set = nil
         pokemon.form = 0 if pokemon.isSpecies?(:SHAYMIN)
-        pokemon.heal
+        pokemon.heal if !$game_temp.fromkurayshop
         @storage.party.push(pokemon)
       end
     end

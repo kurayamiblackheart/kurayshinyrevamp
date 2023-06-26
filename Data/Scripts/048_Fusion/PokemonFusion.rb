@@ -721,6 +721,8 @@ class PokemonFusionScene
       @pokemon1.exp_when_fused_body = @pokemon1.exp
       @pokemon1.exp_gained_since_fused = 0
       @pokemon1.kuray_no_evo = 0
+      @pokemon1.kuraycustomfile = nil
+      @pokemon2.kuraycustomfile = nil
 
       #KurayX - KURAYX_ABOUT_SHINIES
       if @pokemon2.shiny?

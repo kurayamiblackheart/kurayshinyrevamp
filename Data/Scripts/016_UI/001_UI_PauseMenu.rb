@@ -120,10 +120,10 @@ class PokemonPauseMenu
       commands[cmdPokedex = commands.length] = _INTL("Pokédex")
     end
     commands[cmdPokemon = commands.length] = _INTL("Pokémon") if $Trainer.party_count > 0
-    commands[cmdPC = commands.length] = _INTL("PC") if $game_switches[SWITCH_GOT_BADGE_16] && $PokemonSystem.kurayqol
+    commands[cmdPC = commands.length] = _INTL("PC") if $PokemonSystem.kurayqol
     commands[cmdBag = commands.length] = _INTL("Bag") if !pbInBugContest?
     #KurayX Creating kuray shop
-    commands[cmdKurayShop = commands.length] = _INTL("Kuray Shop") if !pbInBugContest?
+    commands[cmdKurayShop = commands.length] = _INTL("Kuray Shop") if !pbInBugContest? && $PokemonSystem.kurayqol
     commands[cmdPokegear = commands.length] = _INTL("Pokégear") if $Trainer.has_pokegear
     commands[cmdTrainer = commands.length] = $Trainer.name
     if pbInSafari?
@@ -182,12 +182,14 @@ class PokemonPauseMenu
       # cmdPC = KurayPC #KurayX PC
       elsif cmdPC >= 0 && command == cmdPC
         pbPlayDecisionSE
+        $game_temp.fromkurayshop = 1
         pbFadeOutIn {
           scene = PokemonStorageScene.new
           screen = PokemonStorageScreen.new(scene, $PokemonStorage)
           screen.pbStartScreen(0)
           $once = 0
         }
+        $game_temp.fromkurayshop = nil
       elsif cmdPokemon >= 0 && command == cmdPokemon
         pbPlayDecisionSE
         hiddenmove = nil

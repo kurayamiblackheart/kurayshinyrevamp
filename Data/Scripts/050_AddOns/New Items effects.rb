@@ -1556,6 +1556,8 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
       pokemon.exp_gained_since_fused = 0
       pokemon.exp_when_fused_head = nil
       pokemon.exp_when_fused_body = nil
+      pokemon.kuraycustomfile = nil
+      poke2.kuraycustomfile = nil
 
       if pokemon.shiny?
         pokemon.shiny = false

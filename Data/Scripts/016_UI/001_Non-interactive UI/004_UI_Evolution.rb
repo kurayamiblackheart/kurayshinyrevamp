@@ -609,6 +609,7 @@ class PokemonEvolutionScene
     allNewPossibleAbilities = newSpecies.abilities + newSpecies.hidden_abilities
 
     # Modify Pokémon to make it evolved
+    @pokemon.kuraycustomfile = nil
     @pokemon.species = @newspecies
     @pokemon.form    = 0 if @pokemon.isSpecies?(:MOTHIM)
     @pokemon.calc_stats
