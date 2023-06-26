@@ -1843,8 +1843,8 @@ class PokemonStorageScene
     commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny?
     commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if pokemon.shiny?
     commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite (P5000)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
-    commands[cmdShowSprite = commands.length] = _INTL("Show Spritename")
-    commands[cmdBlacklist = commands.length] = _INTL("Blacklist Sprite")
+    commands[cmdShowSprite = commands.length] = _INTL("Show Spritename") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
+    commands[cmdBlacklist = commands.length] = _INTL("Blacklist Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
     commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
