@@ -148,6 +148,12 @@ module GameData
 
     def self.icon_filename(species, form = 0, gender = 0, shiny = false, shadow = false, egg = false)
       return self.egg_icon_filename(species, form) if egg
+      #KurayX trying to patch triple fusion icons
+      dexNum = getDexNumberForSpecies(species)
+      if dexNum >= Settings::ZAPMOLCUNO_NB
+        return pbResolveBitmap(sprintf("Graphics/Icons/icon" + dexNum.to_s)) if pbResolveBitmap(sprintf("Graphics/Icons/icon" + dexNum.to_s))
+      end
+      #End of KurayX patch attempt
       return self.check_graphic_file("Graphics/Pokemon/", species, form, gender, shiny, shadow, "Icons")
     end
 
