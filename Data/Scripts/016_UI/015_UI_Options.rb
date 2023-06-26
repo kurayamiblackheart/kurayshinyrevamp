@@ -2,9 +2,12 @@
 #
 #===============================================================================
 class PokemonSystem
+  #=================
+  # Vanilla Values
+  #=================
+  # Global
   attr_accessor :textspeed
   attr_accessor :battlescene
-  attr_accessor :battlestyle
   attr_accessor :frame
   attr_accessor :textskin
   attr_accessor :screensize
@@ -14,28 +17,34 @@ class PokemonSystem
   attr_accessor :sevolume
   attr_accessor :textinput
   attr_accessor :quicksurf
-  attr_accessor :battle_type
-  attr_accessor :force_double_wild
   attr_accessor :download_sprites
-  #KurayX
+  # Per-save file
+  attr_accessor :battlestyle
+  attr_accessor :battle_type
+  #=================
+  # Modded Values
+  #=================
+  # Global
   attr_accessor :shiny_icons_kuray
-  attr_accessor :kuray_no_evo
-  attr_accessor :shinyfusedye
   attr_accessor :kurayfusepreview
-  attr_accessor :kuraylevelcap
   attr_accessor :kuraynormalshiny
-  attr_accessor :kurayqol
-  attr_accessor :kuraygambleodds
   attr_accessor :kurayshinyanim
   attr_accessor :kurayfonts
-  attr_accessor :shenanigans
   attr_accessor :kuraybigicons
   attr_accessor :kurayindividcustomsprite
+  # Per-save file
+  attr_accessor :force_double_wild
+  attr_accessor :kuray_no_evo
+  attr_accessor :shinyfusedye
+  attr_accessor :kuraylevelcap
+  attr_accessor :kurayqol
+  attr_accessor :kuraygambleodds
+  attr_accessor :shenanigans
 
   def initialize
+    # Vanilla Global
     @textspeed = 1 # Text speed (0=slow, 1=normal, 2=fast)
     @battlescene = 0 # Battle effects (animations) (0=on, 1=off)
-    @battlestyle = 0 # Battle style (0=switch, 1=set)
     @frame = 0 # Default window frame (see also Settings::MENU_WINDOWSKINS)
     @textskin = 0 # Speech frame
     @screensize = (Settings::SCREEN_SCALE * 2).floor - 1 # 0=half size, 1=full size, 2=full-and-a-half size, 3=double size
@@ -45,24 +54,64 @@ class PokemonSystem
     @sevolume = 100 # Volume of sound effects
     @textinput = 1 # Text input mode (0=cursor, 1=keyboard)
     @quicksurf = 0
+    @download_sprites = 0
+    # Vanilla Per-save file
+    @battlestyle = 0 # Battle style (0=switch, 1=set)
     @battle_type = 0
-    @force_double_wild = 0
-    #KurayX
+    # Modded Global
     @shiny_icons_kuray = 0
+    @kurayfusepreview = 0
+    @kuraynormalshiny = 0
     @kurayshinyanim = 0
+    @kurayfonts = 0
+    @kuraybigicons = 0
+    @kurayindividcustomsprite = 0
+    # Modded Per-save file
+    @force_double_wild = 0
     @kuray_no_evo = 0
     @shinyfusedye = 0
-    @download_sprites = 0
-    @kurayfusepreview = 0
     @kuraylevelcap = 0
-    @kurayfonts = 0
-    @kuraynormalshiny = 0
     @kuraygambleodds = 100
     @kurayqol = 1
     @shenanigans = 0
-    @kuraybigicons = 0
-    @kurayindividcustomsprite = 0
+  end
 
+  def load_bootup_data(saved)
+    # Vanilla
+    @textspeed = saved.textspeed if saved.textspeed
+    @battlescene = saved.battlescene if saved.battlescene
+    @frame = saved.frame if saved.frame
+    @textskin = saved.textskin if saved.textskin
+    @screensize = saved.screensize if saved.screensize
+    @language = saved.language if saved.language
+    @runstyle = saved.runstyle if saved.runstyle
+    @bgmvolume = saved.bgmvolume if saved.bgmvolume
+    @sevolume = saved.sevolume if saved.sevolume
+    @textinput = saved.textinput if saved.textinput
+    @quicksurf = saved.quicksurf if saved.quicksurf
+    @download_sprites = saved.download_sprites if saved.download_sprites
+    # Modded
+    @shiny_icons_kuray = saved.shiny_icons_kuray if saved.shiny_icons_kuray
+    @kurayfusepreview = saved.kurayfusepreview if saved.kurayfusepreview
+    @kuraynormalshiny = saved.kuraynormalshiny if saved.kuraynormalshiny
+    @kurayshinyanim = saved.kurayshinyanim if saved.kurayshinyanim
+    @kurayfonts = saved.kurayfonts if saved.kurayfonts
+    @kuraybigicons = saved.kuraybigicons if saved.kuraybigicons
+    @kurayindividcustomsprite = saved.kurayindividcustomsprite if saved.kurayindividcustomsprite
+  end
+
+  def load_file_data(saved)
+    # Vanilla
+    @battlestyle = saved.battlestyle if saved.battlestyle
+    @battle_type = saved.battle_type if saved.battle_type
+    # Modded
+    @force_double_wild = saved.force_double_wild if saved.force_double_wild
+    @kuray_no_evo = saved.kuray_no_evo if saved.kuray_no_evo
+    @shinyfusedye = saved.shinyfusedye if saved.shinyfusedye
+    @kuraylevelcap = saved.kuraylevelcap if saved.kuraylevelcap
+    @kuraygambleodds = saved.kuraygambleodds if saved.kuraygambleodds
+    @kurayqol = saved.kurayqol if saved.kurayqol
+    @shenanigans = saved.shenanigans if saved.shenanigans
   end
 end
 
@@ -211,6 +260,33 @@ class SliderOption < Option
 end
 
 #===============================================================================
+#
+#===============================================================================
+class ButtonOption < Option
+  include PropertyMixin
+  attr_reader :name
+  
+  def initialize(name, selectProc, description = "")
+    super(description)
+    @name = name
+    @selectProc = selectProc
+  end
+
+  def next(current)
+    self.activate
+    return current
+  end
+
+  def prev(current)
+    return current
+  end
+
+  def activate
+    @selectProc.call
+  end
+end
+
+#===============================================================================
 # Main options list
 #===============================================================================
 class Window_PokemonOption < Window_DrawableCommand
@@ -278,6 +354,9 @@ class Window_PokemonOption < Window_DrawableCommand
     rect = drawCursor(index, rect)
     optionname = (index == @options.length) ? _INTL("Confirm") : @options[index].name
     optionwidth = rect.width * 9 / 20
+    if @options[index] && @options[index].is_a?(ButtonOption)
+      optionwidth = rect.width
+    end
     pbDrawShadowText(self.contents, rect.x, rect.y, optionwidth, rect.height, optionname,
                      @nameBaseColor, @nameShadowColor)
     return if index == @options.length
@@ -324,6 +403,8 @@ class Window_PokemonOption < Window_DrawableCommand
       xpos += optionwidth - self.contents.text_size(value).width
       pbDrawShadowText(self.contents, xpos, rect.y, optionwidth, rect.height, value,
                        @selBaseColor, @selShadowColor)
+    elsif @options[index].is_a?(ButtonOption)
+      # Print no value
     else
       value = @options[index].values[self[index]]
       xpos = optionwidth + rect.x
@@ -350,6 +431,13 @@ class Window_PokemonOption < Window_DrawableCommand
         @selected_position = self[self.index]
         @mustUpdateOptions = true
         @mustUpdateDescription = true
+      elsif Input.trigger?(Input::USE)
+        if @options[self.index].is_a?(ButtonOption)
+          @options[self.index].activate
+          dorefresh = true
+          @mustUpdateOptions = true
+          @mustUpdateDescription = true
+        end
       end
     end
     refresh if dorefresh
@@ -537,21 +625,6 @@ class PokemonOption_Scene
         )
     end
 
-    options <<
-      EnumOption.new(_INTL("Double Wild"), [_INTL("Off"), _INTL("On"), _INTL("Triple!")],
-                      proc { $PokemonSystem.force_double_wild },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.force_double_wild = 0
-                        elsif value == 1
-                          $PokemonSystem.force_double_wild = 1
-                        elsif value == 2
-                          $PokemonSystem.force_double_wild = 2
-                        end
-                        $PokemonSystem.force_double_wild = value
-                      }, "Double wild or nah ?"
-    )
-
     # options <<
     #   EnumOption.new(_INTL("Double Wild"), [_INTL("Off"), _INTL("On")],
     #                   proc { $PokemonSystem.force_double_wild },
@@ -565,37 +638,17 @@ class PokemonOption_Scene
     #                   }, "Double wild or nah ?"
     # )
 
-    #KurayX
-    options <<
-      EnumOption.new(_INTL("Shiny Icons"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.shiny_icons_kuray },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.shiny_icons_kuray = 0
-                        elsif value == 1
-                          $PokemonSystem.shiny_icons_kuray = 1
-                        end
-                        $PokemonSystem.shiny_icons_kuray = value
-                      }, "Makes shiny icons for shiny pokemons, reduces performances !"
-    )
-
     options << EnumOption.new(_INTL("Battle Effects"), [_INTL("On"), _INTL("Off")],
                               proc { $PokemonSystem.battlescene },
                               proc { |value| $PokemonSystem.battlescene = value },
                               "Display move animations in battles"
     )
 
-    options << EnumOption.new(_INTL("Shiny Animation"), [_INTL("On"), _INTL("Off"), _INTL("All")],
-                              proc { $PokemonSystem.kurayshinyanim },
-                              proc { |value| $PokemonSystem.kurayshinyanim = value },
-                              "Display the shiny animations in battles"
-    )
-
     options << EnumOption.new(_INTL("Battle Style"), [_INTL("Switch"), _INTL("Set")],
                               proc { $PokemonSystem.battlestyle },
                               proc { |value| $PokemonSystem.battlestyle = value },
                               ["Prompts to switch Pokémon before the opponent sends out the next one",
-                               "No prompt to switch Pokémon before the opponent sends the next one"]
+                              "No prompt to switch Pokémon before the opponent sends the next one"]
     )
 
     options << EnumOption.new(_INTL("Default Movement"), [_INTL("Walking"), _INTL("Running")],
@@ -633,23 +686,6 @@ class PokemonOption_Scene
                                  "Uses the same party icon for all fusions"]
       )
     end
-    #Sylvi Big Icons
-    options << EnumOption.new(_INTL("Big Pokémon Icons"), [_INTL("Off"), _INTL("Limited"), _INTL("All")],
-                              proc { $PokemonSystem.kuraybigicons },
-                              proc { |value| $PokemonSystem.kuraybigicons = value },
-                              ["Pokémon will use their small box sprites for icons",
-                               "Pokémon icons will use their full-size battle sprites (except in boxes)",
-                               "Pokémon icons will use their full-size battle sprites"]
-    )
-
-    options <<
-      EnumOption.new(_INTL("Ind. Custom Sprites"), [_INTL("On"), _INTL("Off")],
-      proc { $PokemonSystem.kurayindividcustomsprite },
-      proc { |value| $PokemonSystem.kurayindividcustomsprite = value },
-      ["Two of the same Pokemons can use different sprites (mod)",
-       "Two of the same Pokemons will use the same sprite (vanilla)"]
-    )
-
     options << EnumOption.new(_INTL("Screen Size"), [_INTL("S"), _INTL("M"), _INTL("L"), _INTL("XL"), _INTL("Full")],
                               proc { [$PokemonSystem.screensize, 4].min },
                               proc { |value|
@@ -664,163 +700,13 @@ class PokemonOption_Scene
                               proc { |value| $PokemonSystem.quicksurf = value },
                               "Use Field Moves quicker"
     )
-    #KurayX
-    options <<
-      EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.kuray_no_evo },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kuray_no_evo = 0
-                        elsif value == 1
-                          $PokemonSystem.kuray_no_evo = 1
-                        end
-                        $PokemonSystem.kuray_no_evo = value
-                      }, "Toggle on/off evolutions for each individual Pokemons when selected in pc"
-    )
-    #KurayX
-    options <<
-      EnumOption.new(_INTL("Shiny Fuse Dye"), [_INTL("Off"), _INTL("On"), _INTL("Random")],
-                      proc { $PokemonSystem.shinyfusedye },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.shinyfusedye = 0
-                        elsif value == 1
-                          $PokemonSystem.shinyfusedye = 1
-                        elsif value == 2
-                          $PokemonSystem.shinyfusedye = 2
-                        end
-                        $PokemonSystem.shinyfusedye = value
-                      }, "Toggle on/off shiny color dye when fusing. Random re-roll entirely the shiny color"
-    )
-    #KurayX
-    options <<
-      EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.kurayfusepreview },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kurayfusepreview = 0
-                        elsif value == 1
-                          $PokemonSystem.kurayfusepreview = 1
-                        end
-                        $PokemonSystem.kurayfusepreview = value
-                      }, "If enabled, allows you to ALWAYS see what the fusion results looks like"
-    )
-    #KurayX
-    options <<
-      EnumOption.new(_INTL("Kuray QoL"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.kurayqol },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kurayqol = 0
-                        elsif value == 1
-                          $PokemonSystem.kurayqol = 1
-                        end
-                        $PokemonSystem.kurayqol = value
-                      }, "Activates Kuray's QoL features (list on Discord)"
-    )
-    #KurayX
-    options <<
-      EnumOption.new(_INTL("Level Cap"), [_INTL("Off"), _INTL("Easy"), _INTL("Normal"), _INTL("Hard")],
-                      proc { $PokemonSystem.kuraylevelcap },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kuraylevelcap = 0
-                        elsif value == 1
-                          $PokemonSystem.kuraylevelcap = 1
-                        elsif value == 2
-                          $PokemonSystem.kuraylevelcap = 2
-                        elsif value == 3
-                          $PokemonSystem.kuraylevelcap = 3
-                        end
-                        $PokemonSystem.kuraylevelcap = value
-                      }, "Gives your Pokemons a level cap that increases with the game story"
-    )
-    #KurayX
-    options <<
-      EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
-                      proc { $PokemonSystem.kuraynormalshiny },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kuraynormalshiny = 0
-                        elsif value == 1
-                          $PokemonSystem.kuraynormalshiny = 1
-                        end
-                        $PokemonSystem.kuraynormalshiny = value
-                      }, "If OFF, disable the Shiny Revamp, shinies back to vanilla"
-    )
-    #KurayX
-    options <<
-      EnumOption.new(_INTL("Kuray's Shenanigans"), [_INTL("On"), _INTL("Off")],
-                      proc { $PokemonSystem.shenanigans },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.shenanigans = 0
-                        elsif value == 1
-                          $PokemonSystem.shenanigans = 1
-                        end
-                        $PokemonSystem.shenanigans = value
-                      }, "If OFF, remove the joke features and potentially unwanted features"
-    )
-    if $PokemonSystem.kuraygambleodds == nil || !$PokemonSystem.kuraygambleodds
-      $PokemonSystem.kuraygambleodds = 100
-    end
-    options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, 10,
-                                proc { $PokemonSystem.kuraygambleodds },
-                                proc { |value|
-                                  if $PokemonSystem.kuraygambleodds != value
-                                    $PokemonSystem.kuraygambleodds = value
-                                  end
-                                }, "1 out of <x> | Choose the odds of Shinies from Gamble | 0 = Always"
-    )
-    #KurayX
-    options <<
-      EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
-                      proc { $PokemonSystem.kurayfonts },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kurayfonts = 0
-                          # MessageConfig::FONT_SIZE = 29
-                          # MessageConfig::NARROW_FONT_SIZE = 29
-                          MessageConfig.pbGetSystemFontSizeset(29)
-                          MessageConfig.pbGetSmallFontSizeset(25)
-                          MessageConfig.pbGetNarrowFontSizeset(29)
-                          MessageConfig.pbSetSystemFontName("Power Green")
-                          MessageConfig.pbSetSmallFontName("Power Green Small")
-                          MessageConfig.pbSetNarrowFontName("Power Green Narrow")
-                          MessageConfig.pbGetSystemFontSizeset(29)
-                          MessageConfig.pbGetSmallFontSizeset(25)
-                          MessageConfig.pbGetNarrowFontSizeset(29)
-                        elsif value == 1
-                          $PokemonSystem.kurayfonts = 1
-                          # MessageConfig::FONT_SIZE = 26
-                          # MessageConfig::NARROW_FONT_SIZE = 26
-                          MessageConfig.pbGetSystemFontSizeset(26)
-                          MessageConfig.pbGetSmallFontSizeset(25)
-                          MessageConfig.pbGetNarrowFontSizeset(26)
-                          MessageConfig.pbSetSystemFontName("Power Red and Green")
-                          MessageConfig.pbSetSmallFontName("Power Green Small")
-                          MessageConfig.pbSetNarrowFontName("Power Green Small")
-                        elsif value == 2
-                          $PokemonSystem.kurayfonts = 2
-                          MessageConfig.pbGetSystemFontSizeset(29)
-                          MessageConfig.pbGetSmallFontSizeset(25)
-                          MessageConfig.pbGetNarrowFontSizeset(29)
-                          MessageConfig.pbSetSystemFontName("Power Clear")
-                          MessageConfig.pbSetSmallFontName("Power Clear")
-                          MessageConfig.pbSetNarrowFontName("Power Clear")
-                        elsif value == 3
-                          $PokemonSystem.kurayfonts = 3
-                          MessageConfig.pbGetSystemFontSizeset(29)
-                          MessageConfig.pbGetSmallFontSizeset(25)
-                          MessageConfig.pbGetNarrowFontSizeset(29)
-                          MessageConfig.pbSetSystemFontName("Power Red and Blue")
-                          MessageConfig.pbSetSmallFontName("Power Red and Blue")
-                          MessageConfig.pbSetNarrowFontName("Power Red and Blue")
-                        end
-                        $PokemonSystem.kurayfonts = value
-                      }, "Changes the Game's font"
-    )
 
+    options << ButtonOption.new(_INTL("Kuray's PIF Revamp Settings"),
+                              proc {
+                                @kuray_menu = true
+                                openKurayMenu()
+                              }, "Customize modded features"
+    )
 
     return options
   end
@@ -837,6 +723,16 @@ class PokemonOption_Scene
       screen.pbStartScreen
     }
     @autosave_menu = false
+  end
+
+  def openKurayMenu()
+    return if !@kuray_menu
+    pbFadeOutIn {
+      scene = KurayOptionsScene.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @kuray_menu = false
   end
 
   def pbOptions
@@ -902,5 +798,227 @@ class PokemonOptionScreen
     @scene.pbStartScene(inloadscreen)
     @scene.pbOptions
     @scene.pbEndScene
+  end
+end
+
+#===============================================================================
+#
+#===============================================================================
+class KurayOptionsScene < PokemonOption_Scene
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
+    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Kuray's PIF Revamp settings"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Customize modded features")
+
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbGetOptions(inloadscreen = false)
+    options = []
+    options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
+                      proc { $PokemonSystem.kuraynormalshiny },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.kuraynormalshiny = 0
+                        elsif value == 1
+                          $PokemonSystem.kuraynormalshiny = 1
+                        end
+                        $PokemonSystem.kuraynormalshiny = value
+                      }, "If OFF, disable the Shiny Revamp, shinies back to vanilla"
+    )
+    options << EnumOption.new(_INTL("Shiny Animation"), [_INTL("On"), _INTL("Off"), _INTL("All")],
+                      proc { $PokemonSystem.kurayshinyanim },
+                      proc { |value| $PokemonSystem.kurayshinyanim = value },
+                      "Display the shiny animations in battles"
+    )
+    options << EnumOption.new(_INTL("Shiny Icons"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.shiny_icons_kuray },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.shiny_icons_kuray = 0
+                        elsif value == 1
+                          $PokemonSystem.shiny_icons_kuray = 1
+                        end
+                        $PokemonSystem.shiny_icons_kuray = value
+                      }, "Makes shiny icons for shiny pokemons, reduces performances !"
+    )
+    options << EnumOption.new(_INTL("Big Pokémon Icons"), [_INTL("Off"), _INTL("Limited"), _INTL("All")],
+                      proc { $PokemonSystem.kuraybigicons },
+                      proc { |value| $PokemonSystem.kuraybigicons = value },
+                      ["Pokémon will use their small box sprites for icons",
+                      "Pokémon icons will use their full-size battle sprites (except in boxes)",
+                      "Pokémon icons will use their full-size battle sprites"]
+    )
+    options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.kurayfusepreview },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.kurayfusepreview = 0
+                        elsif value == 1
+                          $PokemonSystem.kurayfusepreview = 1
+                        end
+                        $PokemonSystem.kurayfusepreview = value
+                      }, "If enabled, allows you to ALWAYS see what the fusion results looks like"
+    )
+    options << EnumOption.new(_INTL("Ind. Custom Sprites"), [_INTL("On"), _INTL("Off")],
+                      proc { $PokemonSystem.kurayindividcustomsprite },
+                      proc { |value| $PokemonSystem.kurayindividcustomsprite = value },
+                      ["Two of the same Pokemons can use different sprites (mod)",
+                      "Two of the same Pokemons will use the same sprite (vanilla)"]
+    )
+    options << EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
+                      proc { $PokemonSystem.kurayfonts },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.kurayfonts = 0
+                          # MessageConfig::FONT_SIZE = 29
+                          # MessageConfig::NARROW_FONT_SIZE = 29
+                          MessageConfig.pbGetSystemFontSizeset(29)
+                          MessageConfig.pbGetSmallFontSizeset(25)
+                          MessageConfig.pbGetNarrowFontSizeset(29)
+                          MessageConfig.pbSetSystemFontName("Power Green")
+                          MessageConfig.pbSetSmallFontName("Power Green Small")
+                          MessageConfig.pbSetNarrowFontName("Power Green Narrow")
+                          MessageConfig.pbGetSystemFontSizeset(29)
+                          MessageConfig.pbGetSmallFontSizeset(25)
+                          MessageConfig.pbGetNarrowFontSizeset(29)
+                        elsif value == 1
+                          $PokemonSystem.kurayfonts = 1
+                          # MessageConfig::FONT_SIZE = 26
+                          # MessageConfig::NARROW_FONT_SIZE = 26
+                          MessageConfig.pbGetSystemFontSizeset(26)
+                          MessageConfig.pbGetSmallFontSizeset(25)
+                          MessageConfig.pbGetNarrowFontSizeset(26)
+                          MessageConfig.pbSetSystemFontName("Power Red and Green")
+                          MessageConfig.pbSetSmallFontName("Power Green Small")
+                          MessageConfig.pbSetNarrowFontName("Power Green Small")
+                        elsif value == 2
+                          $PokemonSystem.kurayfonts = 2
+                          MessageConfig.pbGetSystemFontSizeset(29)
+                          MessageConfig.pbGetSmallFontSizeset(25)
+                          MessageConfig.pbGetNarrowFontSizeset(29)
+                          MessageConfig.pbSetSystemFontName("Power Clear")
+                          MessageConfig.pbSetSmallFontName("Power Clear")
+                          MessageConfig.pbSetNarrowFontName("Power Clear")
+                        elsif value == 3
+                          $PokemonSystem.kurayfonts = 3
+                          MessageConfig.pbGetSystemFontSizeset(29)
+                          MessageConfig.pbGetSmallFontSizeset(25)
+                          MessageConfig.pbGetNarrowFontSizeset(29)
+                          MessageConfig.pbSetSystemFontName("Power Red and Blue")
+                          MessageConfig.pbSetSmallFontName("Power Red and Blue")
+                          MessageConfig.pbSetNarrowFontName("Power Red and Blue")
+                        end
+                        $PokemonSystem.kurayfonts = value
+                      }, "Changes the Game's font"
+    )
+    if $scene && $scene.is_a?(Scene_Map)
+      options.concat(pbGetInGameOptions())
+    end
+    return options
+  end
+
+  def pbGetInGameOptions()
+    options = []
+    options << EnumOption.new(_INTL("Shiny Fuse Dye"), [_INTL("Off"), _INTL("On"), _INTL("Random")],
+                      proc { $PokemonSystem.shinyfusedye },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.shinyfusedye = 0
+                        elsif value == 1
+                          $PokemonSystem.shinyfusedye = 1
+                        elsif value == 2
+                          $PokemonSystem.shinyfusedye = 2
+                        end
+                        $PokemonSystem.shinyfusedye = value
+                      }, "Toggle on/off shiny color dye when fusing. Random re-roll entirely the shiny color"
+    )
+    options << EnumOption.new(_INTL("Double Wild"), [_INTL("Off"), _INTL("On"), _INTL("Triple!")],
+                      proc { $PokemonSystem.force_double_wild },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.force_double_wild = 0
+                        elsif value == 1
+                          $PokemonSystem.force_double_wild = 1
+                        elsif value == 2
+                          $PokemonSystem.force_double_wild = 2
+                        end
+                        $PokemonSystem.force_double_wild = value
+                      }, "Double wild or nah ?"
+    )
+    options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.kuray_no_evo },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.kuray_no_evo = 0
+                        elsif value == 1
+                          $PokemonSystem.kuray_no_evo = 1
+                        end
+                        $PokemonSystem.kuray_no_evo = value
+                      }, "Toggle on/off evolutions for each individual Pokemons when selected in pc"
+    )
+    options << EnumOption.new(_INTL("Level Cap"), [_INTL("Off"), _INTL("Easy"), _INTL("Normal"), _INTL("Hard")],
+                      proc { $PokemonSystem.kuraylevelcap },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.kuraylevelcap = 0
+                        elsif value == 1
+                          $PokemonSystem.kuraylevelcap = 1
+                        elsif value == 2
+                          $PokemonSystem.kuraylevelcap = 2
+                        elsif value == 3
+                          $PokemonSystem.kuraylevelcap = 3
+                        end
+                        $PokemonSystem.kuraylevelcap = value
+                      }, "Gives your Pokemons a level cap that increases with the game story"
+    )
+    options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, 10,
+                      proc { $PokemonSystem.kuraygambleodds },
+                      proc { |value|
+                        if $PokemonSystem.kuraygambleodds != value
+                          $PokemonSystem.kuraygambleodds = value
+                        end
+                      }, "1 out of <x> | Choose the odds of Shinies from Gamble | 0 = Always"
+    )
+    options << EnumOption.new(_INTL("Kuray QoL"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.kurayqol },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.kurayqol = 0
+                        elsif value == 1
+                          $PokemonSystem.kurayqol = 1
+                        end
+                        $PokemonSystem.kurayqol = value
+                      }, "Activates Kuray's QoL features (list on Discord)"
+    )
+    options << EnumOption.new(_INTL("Kuray's Shenanigans"), [_INTL("On"), _INTL("Off")],
+                      proc { $PokemonSystem.shenanigans },
+                      proc { |value|
+                        if value == 0
+                          $PokemonSystem.shenanigans = 0
+                        elsif value == 1
+                          $PokemonSystem.shenanigans = 1
+                        end
+                        $PokemonSystem.shenanigans = value
+                      }, "If OFF, remove the joke features and potentially unwanted features"
+    )
+    return options
   end
 end

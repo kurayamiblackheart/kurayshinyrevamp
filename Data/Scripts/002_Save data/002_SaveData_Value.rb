@@ -23,6 +23,7 @@ module SaveData
       @id = id
       @loaded = false
       @load_in_bootup = false
+      @optional = false
       instance_eval(&block)
       raise "No save_value defined for save value #{id.inspect}" if @save_proc.nil?
       ##Sylvi Items
@@ -67,6 +68,14 @@ module SaveData
         raise "Save value #{@id.inspect} has no new_game_value defined"
       end
       self.load(@new_game_value_proc.call)
+    end
+
+    #Sylvi
+    def get_new_game_value
+      unless self.has_new_game_proc?
+        raise "Save value #{@id} has no new_game_value defined"
+      end
+      return @new_game_value_proc.call
     end
 
     # @return [Boolean] whether the value should be loaded during bootup
@@ -171,6 +180,16 @@ module SaveData
     def from_vanilla(&block)
       raise ArgumentError, 'No block given to from_vanilla' unless block_given?
       @from_vanilla_proc = block
+    end
+
+    #Sylvi
+    def optional
+      @optional = true
+    end
+
+    #Sylvi
+    def optional?
+      return @optional
     end
 
     # @!endgroup
@@ -296,6 +315,12 @@ module SaveData
 
   #Sylvi Items
   def self.resolve_modded_data(save_data)
+    # Load optional values
+    @values.each do |value|
+      next if save_data.has_key?(value.id) || !value.optional?
+      save_data[value.id] = value.get_new_game_value
+    end
+    # Sync vanilla and modded values
     @values.each do |value|
       next unless value.modded?
       if save_data.has_key?(value.id)

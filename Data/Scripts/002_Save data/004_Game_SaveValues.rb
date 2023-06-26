@@ -33,8 +33,11 @@ SaveData.register(:pokemon_system) do
   load_in_bootup
   ensure_class :PokemonSystem
   save_value { $PokemonSystem }
-  load_value { |value| $PokemonSystem = value }
-  new_game_value { PokemonSystem.new }
+  load_value { |value|
+    $PokemonSystem = PokemonSystem.new if !$PokemonSystem
+    $PokemonSystem.load_bootup_data(value)
+  }
+  new_game_value { $PokemonSystem ? $PokemonSystem : PokemonSystem.new }
   from_old_format { |old_format| old_format[3] }
 end
 
@@ -135,7 +138,22 @@ SaveData.register(:game_version) do
 end
 
 
-#Sylvi Items
+# Kuray Save Data
+#===============================================================================
+
+SaveData.register(:kuray_pokemon_system_file) do
+  optional
+  ensure_class :PokemonSystem
+  save_value { $PokemonSystem }
+  load_value { |value|
+    $PokemonSystem = PokemonSystem.new if !$PokemonSystem
+    $PokemonSystem.load_file_data(value)
+  }
+  new_game_value { PokemonSystem.new }
+end
+
+
+# Vanilla-Modded Compatibility
 #===============================================================================
 
 SaveData.register(:kuray_player) do
