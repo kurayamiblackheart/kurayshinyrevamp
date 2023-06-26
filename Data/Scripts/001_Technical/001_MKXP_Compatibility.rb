@@ -4,11 +4,17 @@ $POTENTIALSPRITES = {}
 
 $KURAY_BLACKLIST = [
   "130a","150a","150b","150d","150g","150i","150l","150o","15b","17d","1a","212b","212d","215g","284d",
-  "284f","287g","287p","300c","310c","310d","336c","354g","357c","415z","94j","94l","92a","93c","94d","133g","138b","368j"
+  "284f","287g","287p","300c","310c","310d","336c","354g","357c","415z","94j","94l","92a","93c","94d","133g","138b","368j", "370a"
 ]
-$KURAY_COMMONLIST = [] # 30%
-$KURAY_RARELIST = [] # 6%
-$KURAY_VERYRARELIST = [] # 2%
+$KURAY_COMMONLIST = [
+  "390c"
+] # 30%
+$KURAY_RARELIST = [
+  "390b"
+] # 6%
+$KURAY_VERYRARELIST = [
+  "390a"
+] # 2%
 $KURAY_LEGENDLIST = [] # 0.5%
 $KURAY_MYTHICLIST = [] # 0.1%
 
@@ -45,7 +51,7 @@ def kurayPlayerBlackList(dex_number, filename)
     usinglocation = "Graphics/KuraySprites/"
     filefile = File.basename(filename)
     File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
-    File.rename(filename, usinglocation + "Disabled/" + filefile)
+    File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
     kuraychose = kurayGetCustomNonFusion(dex_number)
     return nil if kuraychose == nil
     return kuraychose
@@ -64,7 +70,7 @@ def kurayPlayerBlackList(dex_number, filename)
       usinglocation = Settings::CUSTOM_BATTLERS_FOLDER_INDEXED + head_id.to_s + "/"
       filefile = File.basename(filename)
       File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
-      File.rename(filename, usinglocation + "Disabled/" + filefile)
+      File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
       kuraychose = kurayGetCustomDoubleFusion(dex_number, head_id, body_id)
       return nil if kuraychose == nil
       return kuraychose
@@ -147,7 +153,7 @@ def kurayGetCustomNonFusion(dex_number)
       if $KURAY_BLACKLIST.include?(dexname)
         Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
         File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
-        File.rename(filename, usinglocation + "Disabled/" + filefile)
+        File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
         next
       end
       checknumber = dexname.gsub(/[^\d]/, '')
@@ -207,7 +213,7 @@ def kurayGetCustomDoubleFusion(dex_number, head_id, body_id)
       if $KURAY_BLACKLIST.include?(dexname)
         Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
         File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
-        File.rename(filename, usinglocation + "Disabled/" + filefile)
+        File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
         next
       end
       checknumber = dexname.gsub(/[^\d.]/, '')

@@ -8,7 +8,7 @@
 ###SCRIPTEDIT1
 # Config value for selecting title screen style
 SCREENSTYLE = 1
-KURAYVERSION = "0.6.50"
+KURAYVERSION = "0.6.51"
 # 1 - FR/LG
 # 2 - R/S/E
 
