@@ -514,6 +514,7 @@ class PokemonEvolutionScene
     # ignoredBack = @pokemon.clone
     # ignoredBack.kuraycustomfile = nil
     # rsprite2.setPokemonBitmapSpecies(ignoredBack,@newspecies,false)
+    @pokemon.kuraycustomfile = kurayGetCustomSprite(GameData::Species.get(@newspecies).id_number)
     rsprite2.setPokemonBitmapSpecies(@pokemon,@newspecies,false)
     # Ignore custom file KurayX
     rsprite2.x       = rsprite1.x
@@ -614,7 +615,7 @@ class PokemonEvolutionScene
     allNewPossibleAbilities = newSpecies.abilities + newSpecies.hidden_abilities
 
     # Modify Pokémon to make it evolved
-    @pokemon.kuraycustomfile = nil
+    # @pokemon.kuraycustomfile = nil
     @pokemon.species = @newspecies
     @pokemon.form    = 0 if @pokemon.isSpecies?(:MOTHIM)
     @pokemon.calc_stats

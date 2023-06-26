@@ -1835,6 +1835,7 @@ class PokemonStorageScene
     cmdRerollSprite = -1
     cmdShininessSell = -1
     cmdBlacklist = -1
+    cmdDefSprite = -1
     cmdShowSprite = -1
     helptext = _INTL("{1} is selected.", pokemon.name)
     commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
@@ -1843,6 +1844,7 @@ class PokemonStorageScene
     commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny?
     commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if pokemon.shiny?
     commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite (P5000)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
+    commands[cmdDefSprite = commands.length] = _INTL("Use Default Sprite (P500)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdShowSprite = commands.length] = _INTL("Show Spritename") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdBlacklist = commands.length] = _INTL("Blacklist Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
@@ -1878,6 +1880,8 @@ class PokemonStorageScene
       pbKuraShinify(selected, heldpoke)
     elsif cmdBlacklist >= 0 && command == cmdBlacklist # Blacklist Sprite
       pbBlackList(selected, heldpoke)
+    elsif cmdDefSprite >= 0 && command == cmdDefSprite # Blacklist Sprite
+      pbDefaultSprite(selected, heldpoke)
     elsif cmdShowSprite >= 0 && command == cmdShowSprite # Show Sprite
       pbShowSprite(selected, heldpoke)
     end
@@ -1925,6 +1929,41 @@ class PokemonStorageScene
           end
         when 1
           break
+        end
+      end
+    end
+  end
+
+  def pbDefaultSprite(selected, heldpoke)
+    if $Trainer.money < 500
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("Not enough Money !"))
+    else
+      kuraychoices = [
+        _INTL("Use Default Sprite (P500)"),
+        _INTL("Nevermind"),
+      ]
+      kuraychoice = pbShowCommands(
+        _INTL("You have P" + $Trainer.money.to_s_formatted), kuraychoices)
+      case kuraychoice
+      when 0
+        $Trainer.money -= 500
+        pokemon = heldpoke
+        if heldpoke
+          pokemon = heldpoke
+        elsif selected[0] == -1
+          pokemon = @storage.party[selected[1]]
+        else
+          pokemon = @storage.boxes[selected[0]][selected[1]]
+        end
+        newfile = kurayGetCustomSprite(pokemon.dexNum, 1)
+        if newfile != pokemon.kuraycustomfile? && newfile != nil
+          pokemon.kuraycustomfile = newfile
+          pbHardRefresh
+          pbDisplay(_INTL("Its sprite went back to default!"))
+        else
+          pbDisplay(_INTL("Maybe it can't do that..."))
+          $Trainer.money += 500
         end
       end
     end

@@ -1,6 +1,7 @@
 # Using mkxp-z v2.2.0 - https://gitlab.com/mkxp-z/mkxp-z/-/releases/v2.2.0
 $VERBOSE = nil
 $POTENTIALSPRITES = {}
+$DEFAULTSPRITES = {}
 
 $KURAY_BLACKLIST = [
   "130a","150a","150b","150d","150g","150i","150l","150o","15b","17d","1a","212b","212d","215g","284d",
@@ -81,7 +82,11 @@ def kurayPlayerBlackList(dex_number, filename)
   end
 end
 
-def kurayRNGSprite(dex_number)
+def kurayRNGSprite(dex_number, usedefault=0)
+  $DEFAULTSPRITES = {} if !$DEFAULTSPRITES
+  if usedefault != 0 && $DEFAULTSPRITES.has_key?(dex_number.to_s)
+    return $DEFAULTSPRITES[dex_number.to_s]
+  end
   probs = 0
   probs += 1000 if !$POTENTIALSPRITES[dex_number].empty?
   probs += 300 if !$POTENTIALSPRITES[dex_number.to_s + "_common"].empty?
@@ -132,8 +137,9 @@ def kurayRNGSprite(dex_number)
   end
 end
 
-def kurayGetCustomNonFusion(dex_number)
+def kurayGetCustomNonFusion(dex_number, usedefault=0)
   #Settings::CUSTOM_BASE_SPRITES_FOLDER
+  $DEFAULTSPRITES = {} if !$DEFAULTSPRITES
   $POTENTIALSPRITES = {} if !$POTENTIALSPRITES
   $POTENTIALSPRITES[dex_number] = [] if !$POTENTIALSPRITES[dex_number]
   $POTENTIALSPRITES[dex_number.to_s + "_common"] = [] if !$POTENTIALSPRITES[dex_number.to_s + "_common"]
@@ -153,6 +159,9 @@ def kurayGetCustomNonFusion(dex_number)
       next if filename.end_with?("_i.png")
       filefile = File.basename(filename)
       dexname = filefile.split('.png')[0]
+      if dexname.to_s == dex_number.to_s && !$DEFAULTSPRITES.has_key?(dex_number.to_s)
+        $DEFAULTSPRITES[dex_number.to_s] = filefile
+      end
       if $KURAY_BLACKLIST.include?(dexname)
         Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
         File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
@@ -176,12 +185,12 @@ def kurayGetCustomNonFusion(dex_number)
       end
     end
     # Choose randomly from the array
-    kuraycusfile = kurayRNGSprite(dex_number)
+    kuraycusfile = kurayRNGSprite(dex_number, usedefault)
     return nil if kuraycusfile == nil
     return usinglocation + kuraycusfile
   else
     # Choose randomly from the array
-    kuraycusfile = kurayRNGSprite(dex_number)
+    kuraycusfile = kurayRNGSprite(dex_number, usedefault)
     return nil if kuraycusfile == nil
     return usinglocation + kuraycusfile
   end
@@ -194,8 +203,9 @@ def kurayGetCustomTripleFusion(dex_number)
   #getSpecialSpriteName needs to be public
 end
 
-def kurayGetCustomDoubleFusion(dex_number, head_id, body_id)
+def kurayGetCustomDoubleFusion(dex_number, head_id, body_id, usedefault=0)
   #Settings::CUSTOM_BATTLERS_FOLDER_INDEXED
+  $DEFAULTSPRITES = {} if !$DEFAULTSPRITES
   $POTENTIALSPRITES = {} if !$POTENTIALSPRITES
   $POTENTIALSPRITES[dex_number] = [] if !$POTENTIALSPRITES[dex_number]
   $POTENTIALSPRITES[dex_number.to_s + "_common"] = [] if !$POTENTIALSPRITES[dex_number.to_s + "_common"]
@@ -213,6 +223,9 @@ def kurayGetCustomDoubleFusion(dex_number, head_id, body_id)
       next if filename.end_with?("_i.png")
       filefile = File.basename(filename)
       dexname = filefile.split('.png')[0]
+      if dexname.to_s == head_id.to_s + "." + body_id.to_s && !$DEFAULTSPRITES.has_key?(dex_number.to_s)
+        $DEFAULTSPRITES[dex_number.to_s] = filefile
+      end
       if $KURAY_BLACKLIST.include?(dexname)
         Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
         File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
@@ -236,12 +249,12 @@ def kurayGetCustomDoubleFusion(dex_number, head_id, body_id)
       end
     end
     # Choose randomly from the array
-    kuraycusfile = kurayRNGSprite(dex_number)
+    kuraycusfile = kurayRNGSprite(dex_number, usedefault)
     return nil if kuraycusfile == nil
     return usinglocation + kuraycusfile
   else
     # Choose randomly from the array
-    kuraycusfile = kurayRNGSprite(dex_number)
+    kuraycusfile = kurayRNGSprite(dex_number, usedefault)
     return nil if kuraycusfile == nil
     return usinglocation + kuraycusfile
   end
@@ -249,11 +262,11 @@ def kurayGetCustomDoubleFusion(dex_number, head_id, body_id)
 end
 
 # KurayX Allow to have multiple pokemons uses different sprites, generate sprite from filename for the Pokemon.
-def kurayGetCustomSprite(dex_number)
+def kurayGetCustomSprite(dex_number, usedefault=0)
   return nil if dex_number == nil
   if dex_number <= Settings::NB_POKEMON
     #Check for non fusions
-    kuraychose = kurayGetCustomNonFusion(dex_number)
+    kuraychose = kurayGetCustomNonFusion(dex_number, usedefault)
     return nil if kuraychose == nil
     return kuraychose
   else
@@ -268,7 +281,7 @@ def kurayGetCustomSprite(dex_number)
       # Check for double fusion
       body_id = getBodyID(dex_number)
       head_id = getHeadID(dex_number, body_id)
-      kuraychose = kurayGetCustomDoubleFusion(dex_number, head_id, body_id)
+      kuraychose = kurayGetCustomDoubleFusion(dex_number, head_id, body_id, usedefault)
       return nil if kuraychose == nil
       return kuraychose
     end
