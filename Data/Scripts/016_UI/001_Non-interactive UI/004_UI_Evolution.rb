@@ -510,7 +510,12 @@ class PokemonEvolutionScene
     rsprite1.y = (Graphics.height-64)/2
     rsprite2 = PokemonSprite.new(@viewport)
     rsprite2.setOffset(PictureOrigin::Center)
-    rsprite2.setPokemonBitmapSpecies(@pokemon,@newspecies,false)
+    # Ignore custom file KurayX
+    ignoredBack = @pokemon.clone
+    ignoredBack.kuraycustomfile = nil
+    rsprite2.setPokemonBitmapSpecies(ignoredBack,@newspecies,false)
+    # rsprite2.setPokemonBitmapSpecies(@pokemon,@newspecies,false)
+    # Ignore custom file KurayX
     rsprite2.x       = rsprite1.x
     rsprite2.y       = rsprite1.y
     rsprite2.opacity = 0
