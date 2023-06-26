@@ -570,15 +570,47 @@ class Pokemon
     if this_nature
       this_nature.stat_changes.each { |change| nature_mod[change[0]] += change[1] }
     end
+    #KurayX boost self-fusion
+    kuraystat = 0
+    if self.isSelfFusion?
+      GameData::Stat.each_main do |s|
+        kuraystat += base_stats[s.id]
+      end
+      # File.open('KurayLogV' + ".txt", 'a') { |f| f.write("Self Fusion: " + self.speciesName.to_s + " |Sum stats: " + kuraystat.to_s + "\r") } if File.exists?("Kurayami.krs")
+    end
+    kurayboost = 1.0
+    if kuraystat != 0
+      if kuraystat >= 800
+        kurayboost = 1.02
+      elsif kuraystat >= 700
+        kurayboost = 1.04
+      elsif kuraystat >= 600
+        kurayboost = 1.06
+      elsif kuraystat >= 500
+        kurayboost = 1.09
+      elsif kuraystat >= 400
+        kurayboost = 1.13
+      elsif kuraystat >= 300
+        kurayboost = 1.19
+      elsif kuraystat >= 200
+        kurayboost = 1.47
+      elsif kuraystat >= 100
+        kurayboost = 1.81
+      else
+        kurayboost = 2.8
+      end
+      # let's modify kurayboost depending on kuraystat sums here
+    end
     # Calculate stats
     stats = {}
     GameData::Stat.each_main do |s|
       if s.id == :HP
-        stats[s.id] = calcHP(base_stats[s.id], this_level, this_IV[s.id], @ev[s.id])
+        stats[s.id] = calcHP((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], @ev[s.id])
       else
-        stats[s.id] = calcStat(base_stats[s.id], this_level, this_IV[s.id], @ev[s.id], nature_mod[s.id])
+        stats[s.id] = calcStat((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], @ev[s.id], nature_mod[s.id])
       end
     end
+    #End KurayX
     hpDiff = @totalhp - @hp
     #@totalhp = stats[:HP]
     @totalhp = self.ability == :WONDERGUARD ? 1 : stats[:HP]
@@ -1524,15 +1556,47 @@ class Pokemon
     if this_nature
       this_nature.stat_changes.each { |change| nature_mod[change[0]] += change[1] }
     end
+    #KurayX boost self-fusion
+    kuraystat = 0
+    if self.isSelfFusion?
+      GameData::Stat.each_main do |s|
+        kuraystat += base_stats[s.id]
+      end
+      # File.open('KurayLogV' + ".txt", 'a') { |f| f.write("Self Fusion: " + self.speciesName.to_s + " |Sum stats: " + kuraystat.to_s + "\r") } if File.exists?("Kurayami.krs")
+    end
+    kurayboost = 1.0
+    if kuraystat != 0
+      if kuraystat >= 800
+        kurayboost = 1.02
+      elsif kuraystat >= 700
+        kurayboost = 1.04
+      elsif kuraystat >= 600
+        kurayboost = 1.06
+      elsif kuraystat >= 500
+        kurayboost = 1.09
+      elsif kuraystat >= 400
+        kurayboost = 1.13
+      elsif kuraystat >= 300
+        kurayboost = 1.19
+      elsif kuraystat >= 200
+        kurayboost = 1.47
+      elsif kuraystat >= 100
+        kurayboost = 1.81
+      else
+        kurayboost = 2.8
+      end
+      # let's modify kurayboost depending on kuraystat sums here
+    end
     # Calculate stats
     stats = {}
     GameData::Stat.each_main do |s|
       if s.id == :HP
-        stats[s.id] = calcHP(base_stats[s.id], this_level, this_IV[s.id], @ev[s.id])
+        stats[s.id] = calcHP((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], @ev[s.id])
       else
-        stats[s.id] = calcStat(base_stats[s.id], this_level, this_IV[s.id], @ev[s.id], nature_mod[s.id])
+        stats[s.id] = calcStat((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], @ev[s.id], nature_mod[s.id])
       end
     end
+    #End KurayX
     hpDiff = @totalhp - @hp
     #@totalhp = stats[:HP]
     @totalhp = self.ability == :WONDERGUARD ? 1 : stats[:HP]
