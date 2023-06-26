@@ -1688,6 +1688,9 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
       pokemon.moves = poke1.moves
       pokemon.obtain_method = 0
       poke1.obtain_method = 0
+      #Just to be sure...
+      poke1.kuraycustomfile = nil
+      poke2.kuraycustomfile = nil
 
       #scene.pbDisplay(_INTL(p1.to_s + " " + p2.to_s))
       scene.pbHardRefresh
