@@ -1990,9 +1990,11 @@ class PokemonStorageScene
         _INTL("Blacklisted sprites will never be used by any Pokemon ever again."), kuraychoices)
       case kuraychoice
       when 0
-        pokemon.kuraycustomfile = kurayPlayerBlackList(pokemon.dexNum, pokemon.kuraycustomfile)
-        pbHardRefresh
-        pbDisplay(_INTL("Sprite blacklisted!"))
+        if pbConfirmMessageSerious(_INTL("Are you sure?"))
+          pokemon.kuraycustomfile = kurayPlayerBlackList(pokemon.dexNum, pokemon.kuraycustomfile)
+          pbHardRefresh
+          pbDisplay(_INTL("Sprite blacklisted!"))
+        end
       end
     end
   end
