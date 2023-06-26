@@ -50,6 +50,7 @@ def kurayPlayerBlackList(dex_number, filename)
     #Check for non fusions
     usinglocation = "Graphics/KuraySprites/"
     filefile = File.basename(filename)
+    Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
     File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
     File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
     kuraychose = kurayGetCustomNonFusion(dex_number)
@@ -69,6 +70,7 @@ def kurayPlayerBlackList(dex_number, filename)
       head_id = getHeadID(dex_number, body_id)
       usinglocation = Settings::CUSTOM_BATTLERS_FOLDER_INDEXED + head_id.to_s + "/"
       filefile = File.basename(filename)
+      Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
       File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
       File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
       kuraychose = kurayGetCustomDoubleFusion(dex_number, head_id, body_id)
