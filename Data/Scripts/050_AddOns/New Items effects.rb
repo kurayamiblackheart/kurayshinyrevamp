@@ -514,7 +514,7 @@ ItemHandlers::UseOnPokemon.add(:DNAREVERSER, proc { |item, pokemon, scene|
     scene.pbDisplay(_INTL("It won't have any effect."))
     next false
   end
-  if Kernel.pbConfirmMessageSerious(_INTL("Should {1} be reversed?", pokemon.name))
+  if Kernel.pbConfirmMessage(_INTL("Should {1} be reversed?", pokemon.name))
     reverseFusion(pokemon)
     scene.pbRefreshAnnotations(proc { |p| pbCheckEvolution(p, item) > 0 })
     scene.pbRefresh
@@ -555,7 +555,7 @@ ItemHandlers::UseOnPokemon.add(:INFINITEREVERSERS, proc { |item, pokemon, scene|
     scene.pbDisplay(_INTL("It won't have any effect."))
     next false
   end
-  if Kernel.pbConfirmMessageSerious(_INTL("Should {1} be reversed?", pokemon.name))
+  if Kernel.pbConfirmMessage(_INTL("Should {1} be reversed?", pokemon.name))
     body = getBasePokemonID(pokemon.species, true)
     head = getBasePokemonID(pokemon.species, false)
     newspecies = (head) * Settings::NB_POKEMON + body
@@ -1647,10 +1647,17 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
         poke2.debug_shiny = false
       end
 
+      currentBoxFull = pcPosition != nil && (pcPosition[0] == -1 ? $PokemonStorage.party_full? : $PokemonStorage[pcPosition[0]].full?)
+
       if $Trainer.party.length >= 6
         if (keepInParty == 0)
-          $PokemonStorage.pbStoreCaught(poke2)
-          scene.pbDisplay(_INTL("{1} was sent to the PC.", poke2.name))
+          if currentBoxFull && scene.is_a?(PokemonStorageScene) && !scene.screen.heldpkmn
+            # Hold the pokemon if the current box is full
+            scene.screen.pbSetHeldPokemon(poke2)
+          else
+            $PokemonStorage.pbStoreCaught(poke2)
+            scene.pbDisplay(_INTL("{1} was sent to the PC.", poke2.name))
+          end
         else
           poke2 = Pokemon.new(bodyPoke, body_level)
           poke1 = Pokemon.new(headPoke, head_level)
@@ -1658,8 +1665,14 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
           if pcPosition != nil
             box = pcPosition[0]
             index = pcPosition[1]
-            #todo: store at next available position from current position
-            $PokemonStorage.pbStoreCaught(poke2)
+
+            if currentBoxFull && scene.is_a?(PokemonStorageScene) && !scene.screen.heldpkmn
+              # Hold the pokemon if the current box is full
+              scene.screen.pbSetHeldPokemon(poke2)
+            else
+              #todo: store at next available position from current position
+              $PokemonStorage.pbStoreCaught(poke2)
+            end
           else
             $PokemonStorage.pbStoreCaught(poke2)
             scene.pbDisplay(_INTL("{1} was sent to the PC.", poke2.name))
@@ -1671,8 +1684,15 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
           box = pcPosition[0]
           index = pcPosition[1]
 
-          #todo: store at next available position from current position
-          $PokemonStorage.pbStoreCaught(poke2)
+          if box == -1
+            Kernel.pbAddPokemonSilent(poke2, poke2.level)
+          elsif currentBoxFull && scene.is_a?(PokemonStorageScene) && !scene.screen.heldpkmn
+            # Hold the pokemon if the current box is full
+            scene.screen.pbSetHeldPokemon(poke2)
+          else
+            #todo: store at next available position from current position
+            $PokemonStorage.pbStoreCaught(poke2)
+          end
         else
           Kernel.pbAddPokemonSilent(poke2, poke2.level)
         end

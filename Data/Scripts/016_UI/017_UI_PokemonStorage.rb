@@ -562,6 +562,18 @@ class PokemonBoxArrow < SpriteWrapper
     self.z = 2
   end
 
+  def grabImmediate(sprite)
+    @grabbingState = 0
+    @holding = true
+    @heldpkmn = sprite
+    @heldpkmn.viewport = self.viewport
+    @heldpkmn.z = 1
+    self.z = 2
+
+    self.x = @spriteX
+    self.y = @spriteY
+  end
+
   def grabMulti(sprites)
     @grabbingState = 1
     @multiheldpkmn = sprites
@@ -1033,6 +1045,7 @@ end
 #===============================================================================
 class PokemonStorageScene
   attr_reader :cursormode
+  attr_reader :screen
   attr_accessor :sprites
 
   def initialize
@@ -1635,6 +1648,11 @@ class PokemonStorageScene
       Input.update
       self.update
     end
+  end
+
+  def pbSetHeldPokemon(pokemon)
+    pokesprite = PokemonBoxIcon.new(pokemon, @arrowviewport)
+    @sprites["arrow"].grabImmediate(pokesprite)
   end
 
   def pbSwap(selected, _heldpoke)
@@ -2855,7 +2873,12 @@ class PokemonStorageScreen
             next
           elsif @scene.cursormode == "quickswap"
             if @heldpkmn
-              (pokemon) ? pbSwap(selected) : pbPlace(selected)
+              if pokemon
+                pbSwap(selected)
+              else
+                pbPlace(selected)
+                cancelFusion() if @fusionMode
+              end
             else
               pbHold(selected)
             end
@@ -3225,6 +3248,13 @@ class PokemonStorageScreen
     @scene.pbHold(selected)
     @heldpkmn = @storage[box, index]
     @storage.pbDelete(box, index)
+    @scene.pbRefresh
+  end
+
+  def pbSetHeldPokemon(pokemon)
+    return false if @heldpkmn
+    @scene.pbSetHeldPokemon(pokemon)
+    @heldpkmn = pokemon
     @scene.pbRefresh
   end
 
@@ -4487,21 +4517,31 @@ class PokemonStorageScreen
   #
 
   def pbFuseFromPC(selected, heldpoke)
-      box = selected[0]
-      index = selected[1]
-      poke_body = @storage[box, index]
-      poke_head = heldpoke
-      if heldpoke
-        if dexNum(heldpoke.species) > NB_POKEMON
-          pbDisplay(_INTL("{1} is already fused!", heldpoke.name))
-          return
-        end
-        p selected
-        if(heldpoke.egg?)
-          pbDisplay(_INTL("It's impossible to fuse an egg!"))
-          return
-        end
+    box = selected[0]
+    index = selected[1]
+    poke_body = @storage[box, index]
+    poke_head = heldpoke
+
+    if heldpoke
+      if dexNum(heldpoke.species) > NB_POKEMON
+        pbDisplay(_INTL("{1} is already fused!", heldpoke.name))
+        return
       end
+      if heldpoke.egg?
+        pbDisplay(_INTL("It's impossible to fuse an egg!"))
+        return
+      end
+    end
+    if poke_body
+      if dexNum(poke_body.species) > NB_POKEMON
+        pbDisplay(_INTL("{1} is already fused!", poke_body.name))
+        return
+      end
+      if poke_body.egg?
+        pbDisplay(_INTL("It's impossible to fuse an egg!"))
+        return
+      end
+    end
 
     splicerItem = selectSplicer()
     if splicerItem == nil
@@ -4509,10 +4549,11 @@ class PokemonStorageScreen
       return
     end
 
+    @fusionMode = true
+    @fusionItem = splicerItem
+    @scene.setFusing(true, @fusionItem)
+
     if !heldpoke
-      @fusionMode = true
-      @fusionItem = splicerItem
-      @scene.setFusing(true, @fusionItem)
       pbHold(selected)
       pbDisplay(_INTL("Select a Pokémon to fuse it with"))
       @scene.sprites["box"].disableFusions()
@@ -4520,11 +4561,12 @@ class PokemonStorageScreen
     end
     if !poke_body
       pbDisplay(_INTL("Select a Pokémon to fuse it with"))
-      @fusionMode = true
-      @fusionItem = splicerItem
-      @scene.setFusing(true, @fusionItem)
+      @scene.sprites["box"].disableFusions()
       return
     end
+
+    pbStartFusion(selected)
+    return
   end
 
   def deleteHeldPokemon(heldpoke, selected)
@@ -4557,9 +4599,10 @@ class PokemonStorageScreen
     pokemon = @storage[selected[0], selected[1]]
 
     if !pokemon
-      command = pbShowCommands("Select an action", ["Cancel", "Stop fusing"])
+      command = pbShowCommands("Select an action", ["Stop fusing", "Cancel"])
       case command
-      when 1 #stop
+      when 0 #stop
+        pbPlace(selected)
         cancelFusion()
       end
     else
@@ -4579,50 +4622,7 @@ class PokemonStorageScreen
       command = pbShowCommands("Select an action", commands)
       case command
       when 0 #Fuse
-        if !pokemon
-          pbDisplay(_INTL("No Pokémon selected!"))
-          return
-        else
-          if dexNum(pokemon.species) > NB_POKEMON
-            pbDisplay(_INTL("This Pokémon is already fused!"))
-            return
-          end
-        end
-        isSuperSplicer = isSuperSplicer?(@fusionItem)
-
-
-        selectedHead =selectFusion(pokemon, heldpoke, isSuperSplicer)
-        if selectedHead == nil
-          pbDisplay(_INTL("It won't have any effect."))
-          return false
-        end
-        if selectedHead == -1 #cancelled out
-          return false
-        end
-
-        selectedBase = selectedHead == pokemon ? heldpoke : pokemon
-        firstOptionSelected= selectedBase == pokemon
-
-
-        if (Kernel.pbConfirmMessage(_INTL("Fuse the two Pokémon?")))
-          pbFuse(selectedHead, selectedBase, isSuperSplicer)
-          if canDeleteItem(@fusionItem)
-            $PokemonBag.pbDeleteItem(@fusionItem)
-          end
-          if firstOptionSelected
-            deleteSelectedPokemon(heldpoke, selected)
-          else
-            deleteHeldPokemon(heldpoke, selected)
-          end
-
-          @scene.setFusing(false)
-          @fusionMode = false
-          @scene.sprites["box"].enableFusions()
-          return
-        else
-          # print "fusion cancelled"
-          # @fusionMode = false
-        end
+        pbStartFusion(selected)
       when 1 #swap
         if pokemon
           if dexNum(pokemon.species) <= NB_POKEMON
@@ -4640,6 +4640,56 @@ class PokemonStorageScreen
     end
   end
 
+  def pbStartFusion(selected)
+    heldpoke = pbHeldPokemon
+    pokemon = @storage[selected[0], selected[1]]
+
+    if !pokemon
+      pbDisplay(_INTL("No Pokémon selected!"))
+      return
+    else
+      if dexNum(pokemon.species) > NB_POKEMON
+        pbDisplay(_INTL("This Pokémon is already fused!"))
+        return
+      end
+    end
+    isSuperSplicer = isSuperSplicer?(@fusionItem)
+
+
+    selectedHead =selectFusion(pokemon, heldpoke, isSuperSplicer)
+    if selectedHead == nil
+      pbDisplay(_INTL("It won't have any effect."))
+      return false
+    end
+    if selectedHead == -1 #cancelled out
+      return false
+    end
+
+    selectedBase = selectedHead == pokemon ? heldpoke : pokemon
+    firstOptionSelected= selectedBase == pokemon
+
+
+    if (Kernel.pbConfirmMessage(_INTL("Fuse the two Pokémon?")))
+      pbFuse(selectedHead, selectedBase, isSuperSplicer)
+      if canDeleteItem(@fusionItem)
+        $PokemonBag.pbDeleteItem(@fusionItem)
+      end
+      if firstOptionSelected
+        deleteSelectedPokemon(heldpoke, selected)
+      else
+        deleteHeldPokemon(heldpoke, selected)
+      end
+
+      @scene.setFusing(false)
+      @fusionMode = false
+      @scene.sprites["box"].enableFusions()
+      return
+    else
+      # print "fusion cancelled"
+      # @fusionMode = false
+    end
+  end
+
   def reverseFromPC(selected)
     box = selected[0]
     index = selected[1]
@@ -4649,7 +4699,7 @@ class PokemonStorageScreen
       scene.pbDisplay(_INTL("It won't have any effect."))
       return
     end
-    if Kernel.pbConfirmMessageSerious(_INTL("Should {1} be reversed?", pokemon.name))
+    if Kernel.pbConfirmMessage(_INTL("Should {1} be reversed?", pokemon.name))
       reverseFusion(pokemon)
     end
     $PokemonBag.pbDeleteItem(:DNAREVERSER) if $PokemonBag.pbQuantity(:INFINITEREVERSERS) <= 0
