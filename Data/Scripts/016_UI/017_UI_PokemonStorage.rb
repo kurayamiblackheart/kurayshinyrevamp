@@ -1941,9 +1941,13 @@ class PokemonStorageScene
             pokemon.kuraycustomfile = newfile
             pbHardRefresh
             pbDisplay(_INTL("Oh! Its sprite changed!"))
+            #Best option to refresh sprites so far \/
+            break
           else
             pbDisplay(_INTL("Maybe it can't do that..."))
             $Trainer.money += 5000
+            #Best option to refresh sprites so far \/
+            break
           end
         when 1
           break
@@ -1974,14 +1978,24 @@ class PokemonStorageScene
         else
           pokemon = @storage.boxes[selected[0]][selected[1]]
         end
-        newfile = kurayGetCustomSprite(pokemon.dexNum, 1)
-        if newfile != pokemon.kuraycustomfile? && newfile != nil
-          pokemon.kuraycustomfile = newfile
-          pbHardRefresh
-          pbDisplay(_INTL("Its sprite went back to default!"))
+        if pokemon.kuraycustomfile == nil
+          pbPlayBuzzerSE
+          pbDisplay(_INTL("No Custom Sprite!"))
         else
-          pbDisplay(_INTL("Maybe it can't do that..."))
-          $Trainer.money += 500
+          if isKurayDefaultSprite(pokemon.dexNum, pokemon.kuraycustomfile)
+            pbDisplay(_INTL("Already on default!"))
+            $Trainer.money += 500
+          else
+            newfile = kurayGetCustomSprite(pokemon.dexNum, 1)
+            if newfile != pokemon.kuraycustomfile? && newfile != nil
+              pokemon.kuraycustomfile = newfile
+              pbHardRefresh
+              pbDisplay(_INTL("Its sprite went back to default!"))
+            else
+              pbDisplay(_INTL("Maybe it can't do that..."))
+              $Trainer.money += 500
+            end
+          end
         end
       end
     end
@@ -2009,9 +2023,13 @@ class PokemonStorageScene
       case kuraychoice
       when 0
         if pbConfirmMessageSerious(_INTL("Are you sure?"))
-          pokemon.kuraycustomfile = kurayPlayerBlackList(pokemon.dexNum, pokemon.kuraycustomfile)
-          pbHardRefresh
-          pbDisplay(_INTL("Sprite blacklisted!"))
+          if isKurayDefaultSprite(pokemon.dexNum, pokemon.kuraycustomfile)
+            pbDisplay(_INTL("Cannot blacklist default!"))
+          else
+            pokemon.kuraycustomfile = kurayPlayerBlackList(pokemon.dexNum, pokemon.kuraycustomfile)
+            pbHardRefresh
+            pbDisplay(_INTL("Sprite blacklisted!"))
+          end
         end
       end
     end

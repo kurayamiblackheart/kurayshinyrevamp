@@ -7,13 +7,13 @@ $KURAY_BLACKLIST = [
   "130a","150a","150b","150d","150g","150i","150l","150o","15b","17d","1a","212b","212d","215g","284d",
   "284f","287g","287p","300c","310c","310d","336c","354g","357c","415z","94j","94l","92a","93c","94d","133g","138b","368j","370a",
   "411a","408b","402a","402b","140d","220a","146d","171c","172c","218a","227e","288f","324b","331b","350b","354j","360b","360c","360d","384c","392k","413a",
-  "417c","417d","418b"
+  "417c","417d","418b","194b"
 ]
 $KURAY_COMMONLIST = [
   "390c","132e"
 ] # 30%
 $KURAY_RARELIST = [
-  "390b","68c","115d","132c"
+  "390b","68c","115d","132c","201_kuc","201_kub"
 ] # 6%
 $KURAY_VERYRARELIST = [
   "390a","50a","52i","94g","100a","100c","101b","102a","102d","104c","102a","132a","133d","135b","143e","155b","155f","157g","158a","165b","175d","202a","265e","287d","294b",
@@ -21,10 +21,13 @@ $KURAY_VERYRARELIST = [
 ] # 2% ~Jokes and Alt
 $KURAY_LEGENDLIST = [
   "37a","38l","51a","52j","53g","53h","59b","72a","73a","76a","77a","77c","78a","78g","79f","80c","100d","100f","101d","103a","144b","145a","145b","146b","146g","155e","157a",
-  "157c","195a","217a","245a","315f","336a","336h","338f","348a","399b","399c","411c"
+  "157c","195a","217a","245a","315f","336a","336h","338f","348a","399b","399c","411c",
+  "201_shinya","201_shinyaa","201_shinyab","201_shinyac","201_shinyad","201_shinyae","201_shinyaf","201_shinyag","201_shinyah","201_shinyai","201_shinyaj","201_shinyb","201_shinyba",
+  "201_shinybb","201_shinybc","201_shinybd","201_shinybe","201_shinybf","201_shinybg","201_shinybh","201_shinybj","201_shinyc","201_shinyd","201_shinye","201_shinyf","201_shinyi"
 ] # 0.5% ~Regional
 $KURAY_MYTHICLIST = [
-  "249c","249k","249l","290b","315e","381e"
+  "249c","249k","249l","290b","315e","381e",
+  "201_shinyg","201_shinyh"
 ] # 0.1% ~Shadow Lugia etc
 
 #Potential fusions mistakes:
@@ -96,6 +99,31 @@ def kurayPlayerBlackList(dex_number, filename)
       return kuraychose
     end
   end
+end
+
+def isKurayDefaultSprite(dex_number, filename)
+  return false if dex_number == nil
+  return false if filename == nil
+  if dex_number <= Settings::NB_POKEMON
+    #Check for non fusions
+    filefile = File.basename(filename)
+    dexname = filefile.split('.png')[0]
+    return true if dexname.to_s == dex_number.to_s
+    return false
+  else
+    if dex_number >= Settings::ZAPMOLCUNO_NB
+      return false
+    else
+      # Check for double fusion
+      body_id = getBodyID(dex_number)
+      head_id = getHeadID(dex_number, body_id)
+      filefile = File.basename(filename)
+      dexname = filefile.split('.png')[0]
+      return true if dexname.to_s == head_id.to_s + "." + body_id.to_s
+      return false
+    end
+  end
+  return nil
 end
 
 def kurayRNGSprite(dex_number, usedefault=0)
