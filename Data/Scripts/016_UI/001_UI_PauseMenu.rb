@@ -49,7 +49,7 @@ class PokemonPauseMenu_Scene
     ret = -1
     cmdwindow = @sprites["cmdwindow"]
     cmdwindow.commands = commands
-    cmdwindow.index = $PokemonTemp.menuLastChoice
+    cmdwindow.index = [$PokemonTemp.menuLastChoice, commands.length - 1].min
     cmdwindow.resizeToFit(commands)
     cmdwindow.x = Graphics.width - cmdwindow.width
     cmdwindow.y = 0
@@ -120,10 +120,10 @@ class PokemonPauseMenu
       commands[cmdPokedex = commands.length] = _INTL("Pokédex")
     end
     commands[cmdPokemon = commands.length] = _INTL("Pokémon") if $Trainer.party_count > 0
-    commands[cmdPC = commands.length] = _INTL("PC") if $PokemonSystem.kurayqol
+    commands[cmdPC = commands.length] = _INTL("PC") if $PokemonSystem.kurayqol == 1
     commands[cmdBag = commands.length] = _INTL("Bag") if !pbInBugContest?
     #KurayX Creating kuray shop
-    commands[cmdKurayShop = commands.length] = _INTL("Kuray Shop") if !pbInBugContest? && $PokemonSystem.kurayqol
+    commands[cmdKurayShop = commands.length] = _INTL("Kuray Shop") if !pbInBugContest? && $PokemonSystem.kurayqol == 1
     commands[cmdPokegear = commands.length] = _INTL("Pokégear") if $Trainer.has_pokegear
     commands[cmdTrainer = commands.length] = $Trainer.name
     if pbInSafari?
