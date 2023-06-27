@@ -181,6 +181,13 @@ class PokemonPauseMenu
         end
       # cmdPC = KurayPC #KurayX PC
       elsif cmdPC >= 0 && command == cmdPC
+        # Prevent use in Elite 4 / Champion / Hall of Fame
+        invalidMaps = [315, 316, 317, 318, 328, 341]
+        if invalidMaps.include?($game_map.map_id)
+          @scene.pbHideMenu
+          pbMessage(_INTL("Can't use that here."))
+          break
+        end
         pbPlayDecisionSE
         $game_temp.fromkurayshop = 1
         pbFadeOutIn {
@@ -219,6 +226,13 @@ class PokemonPauseMenu
           return
         end
       elsif cmdKurayShop >= 0 && command == cmdKurayShop
+        # Prevent use in Elite 4 / Champion / Hall of Fame
+        invalidMaps = [315, 316, 317, 318, 328, 341]
+        if invalidMaps.include?($game_map.map_id)
+          @scene.pbHideMenu
+          pbMessage(_INTL("Can't use that here."))
+          break
+        end
         #KurayX Creating kuray shop
         pbPlayDecisionSE
         oldmart = $game_temp.mart_prices.clone
