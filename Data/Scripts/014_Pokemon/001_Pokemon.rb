@@ -54,6 +54,7 @@ class Pokemon
   attr_accessor :kuraygender
   #KurayX - Custom Filenames
   attr_accessor :kuraycustomfile
+  attr_accessor :oldkuraycustomfile
 
   # The index of this Pokémon's ability (0, 1 are natural abilities, 2+ are
   # hidden abilities)as defined for its species/form. An ability may not be
@@ -228,6 +229,11 @@ class Pokemon
     @kuraycustomfile=value
   end
 
+  #KurayX - Custom Filenames
+  def oldkuraycustomfile=(value)
+    @oldkuraycustomfile=value
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES
   def shinyR=(value)
     @shinyR=value
@@ -273,6 +279,14 @@ class Pokemon
     end
   end
 
+  #KurayX - Custom Filenames
+  def oldkuraycustomfile?
+    if @oldkuraycustomfile
+      return @oldkuraycustomfile
+    else
+      return nil
+    end
+  end
   
   #KurayX - Custom Filenames
   def kuraycustomfile?
@@ -443,6 +457,11 @@ class Pokemon
   #KurayX - Custom Filenames
   def kuraycustomfile
     return @kuraycustomfile
+  end
+
+  #KurayX - Custom Filenames
+  def oldkuraycustomfile
+    return @oldkuraycustomfile
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
@@ -1649,6 +1668,7 @@ class Pokemon
       "kuraygender" => @kuraygender,
       "shinyValue" => @shinyValue,
       "kuraycustomfile" => @kuraycustomfile,
+      "oldkuraycustomfile" => @oldkuraycustomfile,
       "shinyR" => @shinyR,
       "shinyG" => @shinyG,
       "shinyB" => @shinyB,
@@ -1726,6 +1746,7 @@ class Pokemon
     @kuraygender = jsonparse['kuraygender']
     @shinyValue = jsonparse['shinyValue']
     @kuraycustomfile = jsonparse['kuraycustomfile']
+    @oldkuraycustomfile = jsonparse['oldkuraycustomfile']
     @shinyR = jsonparse['shinyR']
     @shinyG = jsonparse['shinyG']
     @shinyB = jsonparse['shinyB']
@@ -1813,6 +1834,7 @@ class Pokemon
     @kuraygender = rand(65536)
     #KurayX - Custom Filenames
     @kuraycustomfile = kurayGetCustomSprite(species_data.id_number)
+    @oldkuraycustomfile = nil
     @shinyR = kurayRNGforChannels
     @shinyG = kurayRNGforChannels
     @shinyB = kurayRNGforChannels

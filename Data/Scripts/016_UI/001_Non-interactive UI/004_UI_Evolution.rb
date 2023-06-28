@@ -514,6 +514,7 @@ class PokemonEvolutionScene
     # ignoredBack = @pokemon.clone
     # ignoredBack.kuraycustomfile = nil
     # rsprite2.setPokemonBitmapSpecies(ignoredBack,@newspecies,false)
+    @pokemon.oldkuraycustomfile = @pokemon.kuraycustomfile?
     @pokemon.kuraycustomfile = kurayGetCustomSprite(GameData::Species.get(@newspecies).id_number)
     rsprite2.setPokemonBitmapSpecies(@pokemon,@newspecies,false)
     # Ignore custom file KurayX
@@ -578,6 +579,7 @@ class PokemonEvolutionScene
     if canceled
       pbMessageDisplay(@sprites["msgwindow"],
          _INTL("Huh? {1} stopped evolving!",@pokemon.name)) { pbUpdate }
+      @pokemon.kuraycustomfile = @pokemon.oldkuraycustomfile?
     else
       pbEvolutionSuccess(reversing)
     end
