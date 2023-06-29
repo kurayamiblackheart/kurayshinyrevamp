@@ -580,6 +580,7 @@ class PokemonEvolutionScene
       pbMessageDisplay(@sprites["msgwindow"],
          _INTL("Huh? {1} stopped evolving!",@pokemon.name)) { pbUpdate }
       @pokemon.kuraycustomfile = @pokemon.oldkuraycustomfile?
+      @pokemon.oldkuraycustomfile = nil
     else
       pbEvolutionSuccess(reversing)
     end
@@ -621,6 +622,7 @@ class PokemonEvolutionScene
     @pokemon.species = @newspecies
     @pokemon.form    = 0 if @pokemon.isSpecies?(:MOTHIM)
     @pokemon.calc_stats
+    @pokemon.oldkuraycustomfile = nil
     # See and own evolved species
     $Trainer.pokedex.register(@pokemon)
     $Trainer.pokedex.set_owned(@newspecies)
