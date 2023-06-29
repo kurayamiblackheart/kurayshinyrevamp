@@ -1982,19 +1982,23 @@ class PokemonStorageScene
           pbPlayBuzzerSE
           pbDisplay(_INTL("No Custom Sprite!"))
         else
-          if isKurayDefaultSprite(pokemon.dexNum, pokemon.kuraycustomfile)
+          # if isKurayDefaultSprite(pokemon.dexNum, pokemon.kuraycustomfile)
+          if pokemon.kuraycustomfile == "none"
             pbDisplay(_INTL("Already on default!"))
             $Trainer.money += 500
           else
-            newfile = kurayGetCustomSprite(pokemon.dexNum, 1)
-            if newfile != pokemon.kuraycustomfile? && newfile != nil
-              pokemon.kuraycustomfile = newfile
-              pbHardRefresh
-              pbDisplay(_INTL("Its sprite went back to default!"))
-            else
-              pbDisplay(_INTL("Maybe it can't do that..."))
-              $Trainer.money += 500
-            end
+            pokemon.kuraycustomfile = "none"
+            pbHardRefresh
+            pbDisplay(_INTL("It now uses default sprite!"))
+            # newfile = kurayGetCustomSprite(pokemon.dexNum, 1)
+            # if newfile != pokemon.kuraycustomfile? && newfile != nil
+            #   pokemon.kuraycustomfile = newfile
+            #   pbHardRefresh
+            #   pbDisplay(_INTL("Its sprite went back to default!"))
+            # else
+            #   pbDisplay(_INTL("Maybe it can't do that..."))
+            #   $Trainer.money += 500
+            # end
           end
         end
       end

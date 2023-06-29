@@ -292,6 +292,7 @@ class Pokemon
   def kuraycustomfile?
     if @kuraycustomfile
       #We have one, need to resolve it
+      return nil if @kuraycustomfile == "none"
       if !pbResolveBitmap(@kuraycustomfile)
         if species_data.id_number
           @kuraycustomfile=kurayGetCustomSprite(species_data.id_number)
@@ -457,6 +458,7 @@ class Pokemon
 
   #KurayX - Custom Filenames
   def kuraycustomfile
+    return nil if @kuraycustomfile == "none"
     return @kuraycustomfile
   end
 
