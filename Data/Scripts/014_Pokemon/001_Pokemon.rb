@@ -463,6 +463,12 @@ class Pokemon
   end
 
   #KurayX - Custom Filenames
+  def kuraycustomfiledefault?
+    return true if @kuraycustomfile == "none"
+    return false
+  end
+
+  #KurayX - Custom Filenames
   def oldkuraycustomfile
     return @oldkuraycustomfile
   end
