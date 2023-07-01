@@ -2103,6 +2103,14 @@ class PokemonStorageScene
         pbDisplay(_INTL("Not enough Money !"))
         break
       else
+        pokemon = heldpoke
+        if heldpoke
+          pokemon = heldpoke
+        elsif selected[0] == -1
+          pokemon = @storage.party[selected[1]]
+        else
+          pokemon = @storage.boxes[selected[0]][selected[1]]
+        end
         gambletext="Gamble for Shiny (P1000)" if !pokemon.shiny?
         gambletext="Gamble for new Color (P1000)" if pokemon.shiny?
         kuraychoices = [
@@ -2123,14 +2131,6 @@ class PokemonStorageScene
             kurayshiny = $PokemonSystem.kuraygambleodds
           end
           becomeshiny = rand(kurayshiny)
-          pokemon = heldpoke
-          if heldpoke
-            pokemon = heldpoke
-          elsif selected[0] == -1
-            pokemon = @storage.party[selected[1]]
-          else
-            pokemon = @storage.boxes[selected[0]][selected[1]]
-          end
           if becomeshiny == 0 || (pokemon.shiny? && becomeshiny == 1)
             if pokemon.shiny?
               newvalue = rand(0..360) - 180
