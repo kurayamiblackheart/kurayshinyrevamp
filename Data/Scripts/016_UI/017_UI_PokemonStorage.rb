@@ -2103,8 +2103,10 @@ class PokemonStorageScene
         pbDisplay(_INTL("Not enough Money !"))
         break
       else
+        gambletext="Gamble for Shiny (P1000)" if !pokemon.shiny?
+        gambletext="Gamble for new Color (P1000)" if pokemon.shiny?
         kuraychoices = [
-          _INTL("Gamble for Shiny (P1000)"),
+          _INTL(gambletext),
           _INTL("Nevermind"),
         ]
         kuraychoice = pbShowCommands(
