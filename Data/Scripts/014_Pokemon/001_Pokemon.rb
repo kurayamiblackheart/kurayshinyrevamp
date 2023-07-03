@@ -641,7 +641,7 @@ class Pokemon
     #End KurayX
     hpDiff = @totalhp - @hp
     #@totalhp = stats[:HP]
-    @totalhp = self.ability == :WONDERGUARD ? 1 : stats[:HP]
+    @totalhp = adjustHPForWonderGuard(stats)
     calculated_hp = @totalhp - hpDiff
     @hp = calculated_hp > 0 ? calculated_hp : 0
     @attack = stats[:ATTACK]
@@ -1567,6 +1567,19 @@ class Pokemon
     return ((((base * 2 + iv + (ev / 4)) * level / 100).floor + 5) * nat / 100).floor
   end
 
+  def adjust_level_for_base_stats_mode()
+    nb_badges = $Trainer.badge_count
+    this_level = ((nb_badges * Settings::NO_LEVEL_MODE_LEVEL_INCR) + Settings::NO_LEVEL_MODE_LEVEL_BASE).ceil
+    if this_level > Settings::MAXIMUM_LEVEL
+      this_level = Settings::MAXIMUM_LEVEL
+    end
+    return this_level
+  end
+
+  def adjustHPForWonderGuard(stats)
+    return self.ability == :WONDERGUARD ? 1 : stats[:HP]
+  end
+
   # Recalculates this Pokémon's stats.
   def calc_stats
     base_stats = self.baseStats
@@ -1574,7 +1587,7 @@ class Pokemon
     this_IV = self.calcIV
 
     if $game_switches[SWITCH_NO_LEVELS_MODE]
-      this_level = Settings::NO_LEVEL_MODE_LEVEL
+      this_level = adjust_level_for_base_stats_mode()
     end
 
     # Format stat multipliers due to nature
@@ -1627,7 +1640,7 @@ class Pokemon
     #End KurayX
     hpDiff = @totalhp - @hp
     #@totalhp = stats[:HP]
-    @totalhp = self.ability == :WONDERGUARD ? 1 : stats[:HP]
+    @totalhp = adjustHPForWonderGuard(stats)
     calculated_hp = @totalhp - hpDiff
     @hp = calculated_hp > 0 ? calculated_hp : 0
     @attack = stats[:ATTACK]
@@ -1683,6 +1696,8 @@ class Pokemon
       "shinyB" => @shinyB,
       "ability_index" => @ability_index,
       "ability" => @ability,
+      "ability2_index" => @ability2_index,
+      "ability2" => @ability2,
       "nature" => @nature,
       "nature_for_stats" => @nature_for_stats,
       "item" => @item,
@@ -1761,6 +1776,8 @@ class Pokemon
     @shinyB = jsonparse['shinyB']
     @ability_index = jsonparse['ability_index']
     @ability = jsonparse['ability']
+    @ability_index = jsonparse['ability2_index']
+    @ability = jsonparse['ability2']
     @nature = jsonparse['nature']
     @nature_for_stats = jsonparse['nature_for_stats']
     @item = jsonparse['item']
@@ -1848,7 +1865,9 @@ class Pokemon
     @shinyG = kurayRNGforChannels
     @shinyB = kurayRNGforChannels
     @ability_index = nil
+    @ability2_index = nil
     @ability = nil
+    @ability2 = nil
     @nature = nil
     @kuray_no_evo = 0
     @nature_for_stats = nil

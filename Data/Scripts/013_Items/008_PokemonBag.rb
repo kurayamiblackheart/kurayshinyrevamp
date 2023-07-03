@@ -13,6 +13,7 @@ class PokemonBag
   end
 
   def initialize
+    @descending_sort=false
     @lastpocket = 1
     @pockets    = []
     @choices    = []
@@ -40,6 +41,36 @@ class PokemonBag
       end
       @pockets = newpockets
     end
+  end
+
+  def sort_pocket_alphabetically()
+    current_pocket = @pockets[@lastpocket]
+    sorted = current_pocket.sort_by do |item|
+      GameData::Item.get(item[0]).name
+    end
+    sorted.reverse! if @descending_sort
+
+    @descending_sort = !@descending_sort
+    @pockets[@lastpocket] = sorted
+  end
+
+  def sort_pocket_by_quantity()
+    current_pocket = @pockets[@lastpocket]
+    sorted = current_pocket.sort_by do |item|
+      if @descending_sort
+        -item[1]
+      else
+        item[1]
+      end
+    end
+    @descending_sort = !@descending_sort
+    @pockets[@lastpocket] = sorted
+  end
+
+  def sort_pocket_by_last_used()
+  end
+
+  def sort_pocket_by_frequent_use()
   end
 
   def clear

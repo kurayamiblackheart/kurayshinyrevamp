@@ -1634,6 +1634,11 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
       pokemon.ability_index = pokemon.body_original_ability_index if pokemon.body_original_ability_index
       poke2.ability_index = pokemon.head_original_ability_index if pokemon.head_original_ability_index
 
+      pokemon.ability2_index=nil
+      pokemon.ability2=nil
+      poke2.ability2_index=nil
+      poke2.ability2=nil
+
       pokemon.debug_shiny = true if pokemon.debug_shiny && pokemon.body_shiny
       poke2.debug_shiny = true if pokemon.debug_shiny && poke2.head_shiny
 
@@ -1999,4 +2004,24 @@ ItemHandlers::BattleUseOnPokemon.add(:GOLDENBANANA, proc { |item, pokemon, battl
 })
 ItemHandlers::UseOnPokemon.add(:GOLDENBANANA, proc { |item, pokemon, scene|
   next pbHPItem(pokemon, 50, scene)
+})
+
+ItemHandlers::UseInField.add(:BOXLINK, proc { |item|
+  blacklisted_maps = [
+    315,316,317,318,328,343,#Elite Four
+    776,777,778,779,780,781,782,783,784, #Mt. Silver
+    722,723,724,720 #Dream sequence
+  ]
+  if blacklisted_maps.include?($game_map.map_id)
+    Kernel.pbMessage("There doesn't seem to be any network coverage here...")
+  else
+    $game_temp.fromkurayshop = 1
+    pbFadeOutIn {
+      scene = PokemonStorageScene.new
+      screen = PokemonStorageScreen.new(scene,$PokemonStorage)
+      screen.pbStartScreen(0) #Boot PC in organize mode
+    }
+    $game_temp.fromkurayshop = nil
+  end
+  next 1
 })

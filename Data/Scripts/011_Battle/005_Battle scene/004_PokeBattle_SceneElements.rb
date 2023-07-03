@@ -415,8 +415,10 @@ class AbilitySplashBar < SpriteWrapper
   TEXT_BASE_COLOR   = Color.new(0,0,0)
   TEXT_SHADOW_COLOR = Color.new(248,248,248)
 
-  def initialize(side,viewport=nil)
+  def initialize(side,viewport=nil, secondAbility=false)
     super(viewport)
+    @ability_name=nil
+    @secondAbility=secondAbility
     @side    = side
     @battler = nil
     # Create sprite wrapper that displays background graphic
@@ -458,6 +460,10 @@ class AbilitySplashBar < SpriteWrapper
     @bgSprite.z = value-1
   end
 
+  def ability_name=(value)
+    @ability_name=value
+  end
+
   def opacity=(value)
     super
     @bgSprite.opacity = value
@@ -478,6 +484,10 @@ class AbilitySplashBar < SpriteWrapper
     refresh
   end
 
+  def secondAbility=(value)
+    @secondAbility = value
+  end
+
   def refresh
     self.bitmap.clear
     return if !@battler
@@ -485,9 +495,12 @@ class AbilitySplashBar < SpriteWrapper
     textX = (@side==0) ? 10 : self.bitmap.width-8
     # Draw Pokémon's name
     textPos.push([_INTL("{1}'s",@battler.name),textX,-4,@side==1,
-       TEXT_BASE_COLOR,TEXT_SHADOW_COLOR,true])
+       TEXT_BASE_COLOR,TEXT_SHADOW_COLOR,true]) if !@secondAbility
     # Draw Pokémon's ability
-    textPos.push([@battler.abilityName,textX,26,@side==1,
+    abilityName = @secondAbility ? @battler.ability2Name : @battler.abilityName
+    abilityName = @ability_name if @ability_name
+    #return if abilityName ==""
+    textPos.push([abilityName,textX,26,@side==1,
        TEXT_BASE_COLOR,TEXT_SHADOW_COLOR,true])
     pbDrawTextPositions(self.bitmap,textPos)
   end

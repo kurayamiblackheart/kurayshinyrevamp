@@ -789,6 +789,7 @@ ItemHandlers::UseOnPokemon.add(:RARECANDY, proc { |item, pkmn, scene|
     scene.pbDisplay(_INTL("It won't have any effect."))
     next false
   end
+  pbSet(VAR_STAT_RARE_CANDY,pbGet(VAR_STAT_RARE_CANDY)+1)
   pbChangeLevel(pkmn, pkmn.level + 1, scene)
   scene.pbHardRefresh
   next true

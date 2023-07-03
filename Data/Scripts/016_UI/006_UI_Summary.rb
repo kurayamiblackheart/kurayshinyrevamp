@@ -716,10 +716,20 @@ class PokemonSummary_Scene
     ]
     # Draw ability name and description
     ability = @pokemon.ability
+    ability2 = @pokemon.ability2
     if ability
       textpos.push([ability.name, 362, 278, 0, Color.new(64, 64, 64), Color.new(176, 176, 176)])
       drawTextEx(overlay, 224, 320, 282, 2, ability.description, Color.new(64, 64, 64), Color.new(176, 176, 176))
     end
+
+    #fixme temp double abilities
+    # if ability
+    #   textpos.push([ability.name, 362, 278, 0, Color.new(64, 64, 64), Color.new(176, 176, 176)])
+    #   if ability2
+    #     drawTextEx(overlay, 224, 320, 282, 2, ability2.name, Color.new(64, 64, 64), Color.new(176, 176, 176))
+    #   end
+    # end
+
     # Draw all text
     pbDrawTextPositions(overlay, textpos)
     # Draw HP bar

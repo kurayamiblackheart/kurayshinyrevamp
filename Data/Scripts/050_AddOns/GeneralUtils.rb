@@ -47,6 +47,30 @@ def pbAddPokemonID(pokemon_id, level = 1, see_form = true, skip_randomize = fals
   return true
 end
 
+def ensureFusionIconExists
+  directory_name = "Graphics/Pokemon/FusionIcons"
+  Dir.mkdir(directory_name) unless File.exists?(directory_name)
+end
+
+def addNewTripleFusion(pokemon1,pokemon2,pokemon3,level = 1)
+  return if !pokemon1
+  return if !pokemon2
+  return if !pokemon3
+
+  if pbBoxesFull?
+    pbMessage(_INTL("There's no more room for Pokémon!\1"))
+    pbMessage(_INTL("The Pokémon Boxes are full and can't accept any more!"))
+    return false
+  end
+
+  pokemon = TripleFusion.new(pokemon1,pokemon2,pokemon3,level)
+  pokemon.calc_stats
+  pbMessage(_INTL("{1} obtained {2}!\\me[Pkmn get]\\wtnp[80]\1", $Trainer.name, pokemon.name))
+  pbNicknameAndStore(pokemon)
+  #$Trainer.pokedex.register(pokemon)
+  return true
+end
+
 def pbHasSpecies?(species)
   if species.is_a?(String) || species.is_a?(Symbol)
     id = getID(PBSpecies, species)

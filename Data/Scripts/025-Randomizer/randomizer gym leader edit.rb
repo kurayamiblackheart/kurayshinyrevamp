@@ -216,29 +216,30 @@ def Kernel.sumGameStats()
   stringStats << "Seen " << $Trainer.pokedexSeen.to_s << " Pokémon"
   stringStats << "\nCaught " << $Trainer.pokedexOwned.to_s << " Pokémon"
 
-  stringStats << "\nBeaten the Elite Four " << $game_variables[174].to_s << " times"
-  stringStats << "\nFused " << $game_variables[126].to_s << " Pokémon"
+  stringStats << "\nBeaten the Elite Four " << $game_variables[VAR_STAT_NB_ELITE_FOUR].to_s << " times"
+  stringStats << "\nFused " << $game_variables[VAR_STAT_NB_FUSIONS].to_s << " Pokémon"
 
-  stringStats << "\nRematched " << $game_variables[162].to_s << " Gym Leaders"
+  stringStats << "\nRematched " << $game_variables[VAR_STAT_LEADER_REMATCH].to_s << " Gym Leaders"
   stringStats << "\nTook " << $PokemonGlobal.stepcount.to_s << " steps"
   stringStats << "\nVisited " << countVisitedMaps.to_s << " different areas"
+  stringStats << "\nUsed " << $game_variables[VAR_STAT_RARE_CANDY] << " Rare Candies"
 
   if $game_switches[910]
-    stringStats << "\nMade " << $game_variables[164].to_s << " Wonder Trades"
+    stringStats << "\nMade " << $game_variables[VAR_STAT_NB_WONDERTRADES].to_s << " Wonder Trades"
   end
 
-  stringStats << "\nTipped $" << $game_variables[100].to_s << " to clowns"
-  stringStats << "\nDestroyed " << $game_variables[163].to_s << " sandcastles"
+  stringStats << "\nTipped $" << $game_variables[VAR_STAT_CLOWN_TIP_TOTAL].to_s << " to clowns"
+  stringStats << "\nDestroyed " << $game_variables[VAR_STAT_NB_SANDCASTLES].to_s << " sandcastles"
 
-  if $game_variables[43] > 0 || $game_variables[44] > 0
-    stringStats << "\nWon $" << $game_variables[43].to_s << " against gamblers"
-    stringStats << "\nLost $" << $game_variables[44].to_s << " against gamblers"
+  if $game_variables[VAR_STAT_GAMBLER_WINS] > 0 || $game_variables[VAR_STAT_GAMBLER_LOSSES] > 0
+    stringStats << "\nWon $" << $game_variables[VAR_STAT_GAMBLER_WINS].to_s << " against gamblers"
+    stringStats << "\nLost $" << $game_variables[VAR_STAT_GAMBLER_LOSSES].to_s << " against gamblers"
   end
-  stringStats << "\nSpent $" << $game_variables[225].to_s << " at hotels"
+  stringStats << "\nSpent $" << $game_variables[VAR_STAT_HOTELS_SPENT].to_s << " at hotels"
 
-  stringStats << "\nAccepted " << $game_variables[96].to_s << " quests"
-  stringStats << "\nCompleted " << $game_variables[98].to_s << " quests"
-  stringStats << "\nDiscovered " << $game_variables[193].to_s << " secrets"
+  stringStats << "\nAccepted " << $game_variables[VAR_STAT_QUESTS_ACCEPTED].to_s << " quests"
+  stringStats << "\nCompleted " << $game_variables[VAR_STAT_QUESTS_COMPLETED].to_s << " quests"
+  stringStats << "\nDiscovered " << $game_variables[VAR_STAT_NB_SECRETS].to_s << " secrets"
 
   if $game_switches[912]
     stringStats << "\nDied " << $game_variables[191].to_s << " times in Pikachu's adventure"
@@ -431,7 +432,7 @@ def getCustomSpeciesList(allowOnline = true, redownload_file=false)
     end
   end
 
-  if speciesList.length <= 200 && allowOnline
+  if speciesList.length <= 20000 && allowOnline
     if redownload_file && Kernel.pbConfirmMessage(_INTL("Not enough local sprites found.  Attempt to fetch list from the internet?"))
       updateOnlineCustomSpritesFile
     end

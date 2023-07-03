@@ -1182,7 +1182,7 @@ class PokemonPartyScreen
   def pbPokemonRename(pkmn, pkmnid)
     cmd = 0
     loop do
-      speciesname = PBSpecies.getName(pkmn.species)
+      speciesname = pkmn.speciesName
       msg = [_INTL("{1} has the nickname {2}.", speciesname, pkmn.name),
              _INTL("{1} has no nickname.", speciesname)][pkmn.name == speciesname ? 1 : 0]
       cmd = @scene.pbShowCommands(msg, [

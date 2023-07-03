@@ -339,9 +339,12 @@ class PokeBattle_Battler
     return @pokemon.hasHeadOf?(check_species)
   end
 
-
   def isFusionOf(check_species)
     return @pokemon.isFusionOf(check_species)
+  end
+
+  def isFusion?()
+    return @pokemon.isFusion?()
   end
 
   # Returns the active types of this Pokémon. The array should not include the

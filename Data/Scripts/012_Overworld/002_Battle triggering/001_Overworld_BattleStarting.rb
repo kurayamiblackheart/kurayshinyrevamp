@@ -515,6 +515,51 @@ def pbTrainerBattleCore(*args)
   return decision
 end
 
+def convert_pokemon_to_pokemon_hash(pokemon)
+  pokemon_hash = Hash.new
+  pokemon_hash[:species] = pokemon.species
+  pokemon_hash[:level] = pokemon.level
+  return pokemon_hash
+end
+
+#party: array of pokemon team
+# [[:SPECIES,level], ... ]
+#
+def customTrainerBattle(trainerName, trainerType, party_array, default_level=50, endSpeech="", sprite_override=nil)
+
+
+  # trainerID= "customTrainer"
+  #
+  # trainer_info_hash = {}
+  # trainer_info_hash[:id] = trainerID
+  # trainer_info_hash[:id_number] = 0
+  # trainer_info_hash[:name] = trainerName
+  # trainer_info_hash[:version] = 0
+  # trainer_info_hash[:items] = []
+  # trainer_info_hash[:lose_text] = endSpeech
+  # trainer_info_hash[:pokemon] = party
+
+  #trainer = GameData::Trainer.new(trainer_info_hash)
+  trainer = NPCTrainer.new(trainerName,trainerType,sprite_override)
+  trainer.lose_text=endSpeech
+  party = []
+  party_array.each { |pokemon|
+    if pokemon.is_a?(Pokemon)
+      party << pokemon
+    elsif pokemon.is_a?(Symbol)
+      party << Pokemon.new(pokemon,default_level,trainer)
+    end
+  }
+  trainer.party=party
+  Events.onTrainerPartyLoad.trigger(nil,trainer)
+
+
+
+  decision = pbTrainerBattleCore(trainer)
+  # Return true if the player won the battle, and false if any other result
+  return (decision==1)
+end
+
 #===============================================================================
 # Standard methods that start a trainer battle of various sizes
 #===============================================================================
