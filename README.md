@@ -1,4 +1,4 @@
-# Kuray's ShinyRevamp
+# Kuray's PIF Revamp
 
 Join the mod's Discord! https://discord.gg/UFxQkUZeyE
 
