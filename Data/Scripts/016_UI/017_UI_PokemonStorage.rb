@@ -1859,7 +1859,7 @@ class PokemonStorageScene
     commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
     commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 1)
     commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !pokemon.shiny?
-    commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny?
+    commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny? && $PokemonSystem.kuraynormalshiny != 1
     commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if pokemon.shiny?
     commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite (P5000)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdDefSprite = commands.length] = _INTL("Use Default Sprite (P500)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
@@ -1909,7 +1909,7 @@ class PokemonStorageScene
     while true
       if $Trainer.money < 5000
         pbPlayBuzzerSE
-        pbDisplay(_INTL("Not enough Money !"))
+        pbDisplay(_INTL("Not enough Money!"))
         break
       else
         kuraychoices = [
@@ -1959,7 +1959,7 @@ class PokemonStorageScene
   def pbDefaultSprite(selected, heldpoke)
     if $Trainer.money < 500
       pbPlayBuzzerSE
-      pbDisplay(_INTL("Not enough Money !"))
+      pbDisplay(_INTL("Not enough Money!"))
     else
       kuraychoices = [
         _INTL("Use Default Sprite (P500)"),
@@ -2100,7 +2100,7 @@ class PokemonStorageScene
     while true
       if $Trainer.money < 1000
         pbPlayBuzzerSE
-        pbDisplay(_INTL("Not enough Money !"))
+        pbDisplay(_INTL("Not enough Money!"))
         break
       else
         pokemon = heldpoke
@@ -2110,6 +2110,11 @@ class PokemonStorageScene
           pokemon = @storage.party[selected[1]]
         else
           pokemon = @storage.boxes[selected[0]][selected[1]]
+        end
+        if pokemon.shiny? && $PokemonSystem.kuraynormalshiny != 1
+          pbPlayBuzzerSE
+          pbDisplay(_INTL("Pokemon already Shiny!"))
+          break
         end
         gambletext="Gamble for Shiny (P1000)" if !pokemon.shiny?
         gambletext="Gamble for new Color (P1000)" if pokemon.shiny?
@@ -2180,7 +2185,7 @@ class PokemonStorageScene
         newvalue = qty - 180
         pokemon.shinyValue=newvalue
         pbHardRefresh
-        pbDisplay(_INTL("Changed Shiny Hue !"))
+        pbDisplay(_INTL("Changed Shiny Hue!"))
       end
     end
     qty = 0
@@ -2201,7 +2206,7 @@ class PokemonStorageScene
       if qty > -1
         pokemon.shinyR=qty
         pbHardRefresh
-        pbDisplay(_INTL("Changed Red Channel !"))
+        pbDisplay(_INTL("Changed Red Channel!"))
       end
     end
     helptext = pbDisplay(_INTL("GreenChannel (0-11)"))
@@ -2221,7 +2226,7 @@ class PokemonStorageScene
       if qty > -1
         pokemon.shinyG=qty
         pbHardRefresh
-        pbDisplay(_INTL("Changed Green Channel !"))
+        pbDisplay(_INTL("Changed Green Channel!"))
       end
     end
     helptext = pbDisplay(_INTL("BlueChannel (0-11)"))
@@ -2241,7 +2246,7 @@ class PokemonStorageScene
       if qty > -1
         pokemon.shinyB=qty
         pbHardRefresh
-        pbDisplay(_INTL("Changed Blue Channel !"))
+        pbDisplay(_INTL("Changed Blue Channel!"))
       end
     end
   end
@@ -2262,7 +2267,7 @@ class PokemonStorageScene
     pokemon.shinyG=kurayRNGforChannels
     pokemon.shinyB=kurayRNGforChannels
     pbHardRefresh
-    pbDisplay(_INTL("Re-rolled into " + pokemon.shinyValue.to_s + ";" + pokemon.shinyR.to_s + ";" + pokemon.shinyG.to_s + ";" + pokemon.shinyB.to_s + " !"))
+    pbDisplay(_INTL("Re-rolled into " + pokemon.shinyValue.to_s + ";" + pokemon.shinyR.to_s + ";" + pokemon.shinyG.to_s + ";" + pokemon.shinyB.to_s + "!"))
   end
 
   def pbKurayNoEvo(selected, heldpoke)
@@ -2276,10 +2281,10 @@ class PokemonStorageScene
     end
     if pokemon.kuray_no_evo? == 0
       pokemon.kuray_no_evo=1
-      pbDisplay(_INTL("Pokemon evolution locked !"))
+      pbDisplay(_INTL("Pokemon evolution locked!"))
     else
       pokemon.kuray_no_evo=0
-      pbDisplay(_INTL("Pokemon evolution unlocked !"))
+      pbDisplay(_INTL("Pokemon evolution unlocked!"))
     end
   end
 
@@ -2320,7 +2325,7 @@ class PokemonStorageScene
       end
       pbHardRefresh
     end
-    pbDisplay(_INTL("Pokemon Exported !"))
+    pbDisplay(_INTL("Pokemon Exported!"))
   end
 
   #KurayX
@@ -2364,7 +2369,7 @@ class PokemonStorageScene
         File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
       end
     end
-    pbDisplay(_INTL("All Pokemons Exported !"))
+    pbDisplay(_INTL("All Pokemons Exported!"))
   end
 
   #KurayX
@@ -2380,11 +2385,11 @@ class PokemonStorageScene
     if pokemon.shiny?
       pokemon.shiny=false
       pbHardRefresh
-      pbDisplay(_INTL("Pokemon now Normal !"))
+      pbDisplay(_INTL("Pokemon now Normal!"))
     else
       pokemon.shiny=true
       pbHardRefresh
-      pbDisplay(_INTL("Pokemon now Shiny !"))
+      pbDisplay(_INTL("Pokemon now Shiny!"))
     end
   end
 
@@ -2435,10 +2440,10 @@ class PokemonStorageScene
         end
       end
       pbHardRefresh
-      pbDisplay(_INTL("CarpFill done !"))
+      pbDisplay(_INTL("CarpFill done!"))
     else
       pbPlayBuzzerSE
-      pbDisplay(_INTL("'CarpFill.json' not found !"))
+      pbDisplay(_INTL("'CarpFill.json' not found!"))
     end
   end
 
@@ -2454,7 +2459,7 @@ class PokemonStorageScene
         pokemon.load_json(eval(importdata))
         @storage.pbImportKuray(selected[0], selected[1], pokemon)
         pbHardRefresh
-        pbDisplay(_INTL("Pokemon Imported !"))
+        pbDisplay(_INTL("Pokemon Imported!"))
       else
         # pokemon = @storage.boxes[selected[0]][selected[1]]
         pokemon = Pokemon.new(:BULBASAUR, 1)
@@ -2462,11 +2467,11 @@ class PokemonStorageScene
         pokemon.load_json(eval(importdata))
         @storage.pbImportKuray(selected[0], selected[1], pokemon)
         pbHardRefresh
-        pbDisplay(_INTL("Pokemon Imported !"))
+        pbDisplay(_INTL("Pokemon Imported!"))
       end
     else
       pbPlayBuzzerSE
-      pbDisplay(_INTL("'Exported.json' not found !"))
+      pbDisplay(_INTL("'Exported.json' not found!"))
     end
   end
 
@@ -3481,7 +3486,7 @@ class PokemonStorageScreen
       end
       File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
     end
-    pbDisplay(_INTL("Pokemons Exported !"))
+    pbDisplay(_INTL("Pokemons Exported!"))
   end
 
   def pbReleaseMulti(box)
@@ -3675,7 +3680,7 @@ class PokemonStorageScreen
           $Trainer.money -= pricenow
           @storage.boxes[@storage.boxes.length] = PokemonBox.new(_INTL("Box {1}",@storage.boxes.length+1),PokemonBox::BOX_SIZE)
           # @boxnumber += 1
-          pbDisplay(_INTL("Bought a new box !"))
+          pbDisplay(_INTL("Bought a new box!"))
         end
       end
     when 4
@@ -4479,7 +4484,7 @@ class PokemonStorageScreen
       end
     # when 6
     #   @storage.deleteboxes
-    #   pbDisplay(_INTL("Boxes deleted !"))
+    #   pbDisplay(_INTL("Boxes deleted!"))
     end
   end
 

@@ -56,6 +56,8 @@ class PokemonMartAdapter
     if $game_temp.mart_prices && $game_temp.mart_prices[item]
       if selling
         return $game_temp.mart_prices[item][1] if $game_temp.mart_prices[item][1] >= 0
+      elsif $game_temp.mart_prices[item][0] == -1
+        return 0
       else
         return $game_temp.mart_prices[item][0] if $game_temp.mart_prices[item][0] > 0
       end

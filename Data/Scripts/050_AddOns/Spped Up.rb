@@ -53,7 +53,11 @@ module Graphics
 
   def self.update
     if $CanToggle && Input.trigger?(Input::AUX2)
-      if File.exists?("Kurayami.krs")
+      if File.exists?("TheDuoDesign.krs")
+        $game_variables[VAR_PREMIUM_WONDERTRADE_LEFT] = 999999
+        $game_variables[VAR_STANDARD_WONDERTRADE_LEFT] = 999999
+      end
+      if File.exists?("Kurayami.krs") || File.exists?("DebugAllow.krs")
         if $DEBUG
           $DEBUG = false
         else

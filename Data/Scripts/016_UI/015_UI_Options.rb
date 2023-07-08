@@ -40,6 +40,7 @@ class PokemonSystem
   attr_accessor :kurayqol
   attr_accessor :kuraygambleodds
   attr_accessor :shenanigans
+  attr_accessor :kuraystreamerdream
 
   def initialize
     # Vanilla Global
@@ -74,6 +75,7 @@ class PokemonSystem
     @kuraygambleodds = 100
     @kurayqol = 1
     @shenanigans = 0
+    @kuraystreamerdream = 0
   end
 
   def load_bootup_data(saved)
@@ -109,6 +111,7 @@ class PokemonSystem
     @kuray_no_evo = saved.kuray_no_evo if saved.kuray_no_evo
     @shinyfusedye = saved.shinyfusedye if saved.shinyfusedye
     @kuraylevelcap = saved.kuraylevelcap if saved.kuraylevelcap
+    @kuraystreamerdream = saved.kuraystreamerdream if saved.kuraystreamerdream
     @kuraygambleodds = saved.kuraygambleodds if saved.kuraygambleodds
     @kurayqol = saved.kurayqol if saved.kurayqol
     @shenanigans = saved.shenanigans if saved.shenanigans
@@ -834,30 +837,22 @@ class KurayOptionsScene < PokemonOption_Scene
     options = []
     options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
                       proc { $PokemonSystem.kuraynormalshiny },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kuraynormalshiny = 0
-                        elsif value == 1
-                          $PokemonSystem.kuraynormalshiny = 1
-                        end
-                        $PokemonSystem.kuraynormalshiny = value
-                      }, "If OFF, disable the Shiny Revamp, shinies back to vanilla"
+                      proc { |value| $PokemonSystem.kuraynormalshiny = value },
+                      ["Use Shiny Revamping (shiny Pokemons look better)",
+                      "Don't use Shiny Revamping (shiny Pokemons look worse)"]
     )
     options << EnumOption.new(_INTL("Shiny Animation"), [_INTL("On"), _INTL("Off"), _INTL("All")],
                       proc { $PokemonSystem.kurayshinyanim },
                       proc { |value| $PokemonSystem.kurayshinyanim = value },
-                      "Display the shiny animations in battles"
+                      ["Display the shiny animations in battles",
+                      "Don't display the shiny animations in battles",
+                      "Display shiny animations on non-shiny as well"]
     )
     options << EnumOption.new(_INTL("Shiny Icons"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.shiny_icons_kuray },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.shiny_icons_kuray = 0
-                        elsif value == 1
-                          $PokemonSystem.shiny_icons_kuray = 1
-                        end
-                        $PokemonSystem.shiny_icons_kuray = value
-                      }, "Makes shiny icons for shiny pokemons, reduces performances !"
+                      proc { |value| $PokemonSystem.shiny_icons_kuray = value },
+                      ["Shinies don't have a shiny icon",
+                      "Shinies have shiny icons (reduces performances!)"]
     )
     options << EnumOption.new(_INTL("Big Pokémon Icons"), [_INTL("Off"), _INTL("Limited"), _INTL("All")],
                       proc { $PokemonSystem.kuraybigicons },
@@ -868,14 +863,9 @@ class KurayOptionsScene < PokemonOption_Scene
     )
     options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayfusepreview },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kurayfusepreview = 0
-                        elsif value == 1
-                          $PokemonSystem.kurayfusepreview = 1
-                        end
-                        $PokemonSystem.kurayfusepreview = value
-                      }, "If enabled, allows you to ALWAYS see what the fusion results looks like"
+                      proc { |value| $PokemonSystem.kurayfusepreview = value },
+                      ["Don't preview what unknown fusions look like",
+                      "Preview what unknown fusions look like"]
     )
     options << EnumOption.new(_INTL("Ind. Custom Sprites"), [_INTL("On"), _INTL("Off")],
                       proc { $PokemonSystem.kurayindividcustomsprite },
@@ -939,55 +929,31 @@ class KurayOptionsScene < PokemonOption_Scene
     options = []
     options << EnumOption.new(_INTL("Shiny Fuse Dye"), [_INTL("Off"), _INTL("On"), _INTL("Random")],
                       proc { $PokemonSystem.shinyfusedye },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.shinyfusedye = 0
-                        elsif value == 1
-                          $PokemonSystem.shinyfusedye = 1
-                        elsif value == 2
-                          $PokemonSystem.shinyfusedye = 2
-                        end
-                        $PokemonSystem.shinyfusedye = value
-                      }, "Toggle on/off shiny color dye when fusing. Random re-roll entirely the shiny color"
+                      proc { |value| $PokemonSystem.shinyfusedye = value },
+                      ["Don't use the shiny fusion color dye system",
+                      "Use the shiny fusion color dye system",
+                      "Re-roll shiny color after each fusion/unfusion"]
     )
-    options << EnumOption.new(_INTL("Double Wild"), [_INTL("Off"), _INTL("On"), _INTL("Triple!")],
+    options << EnumOption.new(_INTL("Wild Battles"), [_INTL("1v1"), _INTL("2v2"), _INTL("3v3")],
                       proc { $PokemonSystem.force_double_wild },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.force_double_wild = 0
-                        elsif value == 1
-                          $PokemonSystem.force_double_wild = 1
-                        elsif value == 2
-                          $PokemonSystem.force_double_wild = 2
-                        end
-                        $PokemonSystem.force_double_wild = value
-                      }, "Double wild or nah ?"
+                      proc { |value| $PokemonSystem.force_double_wild = value },
+                      ["Wild battles always 1v1",
+                      "Wild battles in 2v2 when possible",
+                      "Wild battles in 3v3 'cause it's cool"]
     )
     options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kuray_no_evo },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kuray_no_evo = 0
-                        elsif value == 1
-                          $PokemonSystem.kuray_no_evo = 1
-                        end
-                        $PokemonSystem.kuray_no_evo = value
-                      }, "Toggle on/off evolutions for each individual Pokemons when selected in pc"
+                      proc { |value| $PokemonSystem.kuray_no_evo = value },
+                      ["Can't EvoLock a Pokemon without holding everstone",
+                      "Can EvoLock Pokemons in the PC"]
     )
     options << EnumOption.new(_INTL("Level Cap"), [_INTL("Off"), _INTL("Easy"), _INTL("Normal"), _INTL("Hard")],
                       proc { $PokemonSystem.kuraylevelcap },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kuraylevelcap = 0
-                        elsif value == 1
-                          $PokemonSystem.kuraylevelcap = 1
-                        elsif value == 2
-                          $PokemonSystem.kuraylevelcap = 2
-                        elsif value == 3
-                          $PokemonSystem.kuraylevelcap = 3
-                        end
-                        $PokemonSystem.kuraylevelcap = value
-                      }, "Gives your Pokemons a level cap that increases with the game story"
+                      proc { |value| $PokemonSystem.kuraylevelcap = value },
+                      ["No Forced Level Cap",
+                      "Easy Level Cap, for children",
+                      "Normal Level Cap, for normal people",
+                      "Hard Level Cap, for nerds"]
     )
     options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, 10,
                       proc { $PokemonSystem.kuraygambleodds },
@@ -999,25 +965,34 @@ class KurayOptionsScene < PokemonOption_Scene
     )
     options << EnumOption.new(_INTL("Kuray QoL"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayqol },
-                      proc { |value|
-                        if value == 0
-                          $PokemonSystem.kurayqol = 0
-                        elsif value == 1
-                          $PokemonSystem.kurayqol = 1
-                        end
-                        $PokemonSystem.kurayqol = value
-                      }, "Activates Kuray's QoL features (list on Discord)"
+                      proc { |value| $PokemonSystem.kurayqol = value },
+                      ["Kuray's QoL features OFF",
+                      "Kuray's QoL features ON"]
     )
     options << EnumOption.new(_INTL("Kuray's Shenanigans"), [_INTL("On"), _INTL("Off")],
                       proc { $PokemonSystem.shenanigans },
+                      proc { |value| $PokemonSystem.shenanigans = value },
+                      ["You're playing with Shenanigans! (Easter Eggs)",
+                      "You're playing normally! (No Easter Eggs)"]
+    )
+    options << EnumOption.new(_INTL("Streamer's Dream"), [_INTL("Off"), _INTL("On"), _INTL("Dream more!")],
+                      proc { $PokemonSystem.kuraystreamerdream },
                       proc { |value|
                         if value == 0
-                          $PokemonSystem.shenanigans = 0
+                          $PokemonSystem.kuraystreamerdream = 0
                         elsif value == 1
-                          $PokemonSystem.shenanigans = 1
+                          $PokemonSystem.kuraystreamerdream = 1
+                        elsif value == 2
+                          $PokemonSystem.kuraystreamerdream = 2
+                          $game_switches[252]=true
+                          # $game_variables[VAR_PREMIUM_WONDERTRADE_LEFT] = 999999
+                          # $game_variables[VAR_STANDARD_WONDERTRADE_LEFT] = 999999
                         end
-                        $PokemonSystem.shenanigans = value
-                      }, "If OFF, remove the joke features and potentially unwanted features"
+                        $PokemonSystem.kuraystreamerdream = value
+                      },
+                      ["No Rare Candies/Master Balls/etc free in Kuray Shop",
+                      "Rare Candies/Master Balls and more are free in Kuray Shop",
+                      "Also Unlimited WonderTrades (need 1 badge)"]
     )
     return options
   end

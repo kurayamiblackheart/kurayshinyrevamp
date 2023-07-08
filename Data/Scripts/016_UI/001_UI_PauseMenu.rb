@@ -116,13 +116,15 @@ class PokemonPauseMenu
     cmdQuit = -1
     cmdEndGame = -1
     cmdPC = -1
+    cmdKurayHeal = -1
     if $Trainer.has_pokedex && $Trainer.pokedex.accessible_dexes.length > 0
       commands[cmdPokedex = commands.length] = _INTL("Pokédex")
     end
     commands[cmdPokemon = commands.length] = _INTL("Pokémon") if $Trainer.party_count > 0
-    commands[cmdPC = commands.length] = _INTL("PC") if $PokemonSystem.kurayqol == 1
     commands[cmdBag = commands.length] = _INTL("Bag") if !pbInBugContest?
     #KurayX Creating kuray shop
+    commands[cmdPC = commands.length] = _INTL("PC") if $PokemonSystem.kurayqol == 1
+    commands[cmdKurayHeal = commands.length] = _INTL("Heal Pokémon") if $PokemonSystem.kurayqol == 1
     commands[cmdKurayShop = commands.length] = _INTL("Kuray Shop") if !pbInBugContest? && $PokemonSystem.kurayqol == 1
     commands[cmdPokegear = commands.length] = _INTL("Pokégear") if $Trainer.has_pokegear
     commands[cmdTrainer = commands.length] = $Trainer.name
@@ -182,7 +184,12 @@ class PokemonPauseMenu
       # cmdPC = KurayPC #KurayX PC
       elsif cmdPC >= 0 && command == cmdPC
         # Prevent use in Elite 4 / Champion / Hall of Fame
-        invalidMaps = [315, 316, 317, 318, 328, 341]
+        # invalidMaps = [315, 316, 317, 318, 328, 341]
+        invalidMaps = [
+          315,316,317,318,328,343,#Elite Four
+          776,777,778,779,780,781,782,783,784, #Mt. Silver
+          722,723,724,720 #Dream sequence
+        ]
         if invalidMaps.include?($game_map.map_id)
           @scene.pbHideMenu
           pbMessage(_INTL("Can't use that here."))
@@ -225,6 +232,19 @@ class PokemonPauseMenu
           pbUseKeyItemInField(item)
           return
         end
+      elsif cmdKurayHeal >= 0 && command == cmdKurayHeal
+        invalidMaps = [
+          315,316,317,318,328,343,#Elite Four
+          776,777,778,779,780,781,782,783,784, #Mt. Silver
+          722,723,724,720 #Dream sequence
+        ]
+        if invalidMaps.include?($game_map.map_id)
+          @scene.pbHideMenu
+          pbMessage(_INTL("Can't use that here."))
+          break
+        end
+        $Trainer.heal_party
+        pbMessage(_INTL("Pokemons healed!"))
       elsif cmdKurayShop >= 0 && command == cmdKurayShop
         # Prevent use in Elite 4 / Champion / Hall of Fame
         invalidMaps = [315, 316, 317, 318, 328, 341]
@@ -237,6 +257,58 @@ class PokemonPauseMenu
         pbPlayDecisionSE
         oldmart = $game_temp.mart_prices.clone
         $game_temp.fromkurayshop = 1
+
+
+        # 314 = TM Return
+        # 329 = TM Facade
+        # 335 = TM Round
+        # 343 = TM Fling
+        # 345 = TM Sky Drop
+        # 346 = TM Incinerate
+        # 356 = TM Rock Polish
+        # 358 = TM Stone Edge
+        # 367 = TM Rock Throw
+        # 371 = TM Poison Jab
+        # 618 = TM Spore
+        # 619 = TM Toxic Spikes
+        # 646 = TM Brutal Swing
+        # 647 = TM Aurora Veil
+        # 648 = TM Dazzling Gleam
+        # 649 = TM Focus Punch
+        # 650 = TM Infestation
+        # 651 = TM Leech Life
+        # 652 = TM Power Up Punch
+        # 653 = TM Shock Wave
+        # 654 = TM Smart Strike
+        # 655 = TM Steel Wing
+        # 656 = TM Stomping Tantrum
+        # 657 = TM Throat Chop
+        # 659 = TM Scald
+        $game_temp.mart_prices[314] = [10000, 5000]
+        $game_temp.mart_prices[329] = [10000, 5000]
+        $game_temp.mart_prices[335] = [10000, 5000]
+        $game_temp.mart_prices[343] = [10000, 5000]
+        $game_temp.mart_prices[345] = [10000, 5000]
+        $game_temp.mart_prices[346] = [10000, 5000]
+        $game_temp.mart_prices[356] = [10000, 5000]
+        $game_temp.mart_prices[358] = [10000, 5000]
+        $game_temp.mart_prices[367] = [10000, 5000]
+        $game_temp.mart_prices[371] = [10000, 5000]
+        $game_temp.mart_prices[618] = [30000, 15000]
+        $game_temp.mart_prices[619] = [30000, 15000]
+        $game_temp.mart_prices[646] = [30000, 15000]
+        $game_temp.mart_prices[647] = [30000, 15000]
+        $game_temp.mart_prices[648] = [30000, 15000]
+        $game_temp.mart_prices[649] = [30000, 15000]
+        $game_temp.mart_prices[650] = [30000, 15000]
+        $game_temp.mart_prices[651] = [30000, 15000]
+        $game_temp.mart_prices[652] = [30000, 15000]
+        $game_temp.mart_prices[653] = [30000, 15000]
+        $game_temp.mart_prices[654] = [30000, 15000]
+        $game_temp.mart_prices[655] = [30000, 15000]
+        $game_temp.mart_prices[656] = [30000, 15000]
+        $game_temp.mart_prices[657] = [30000, 15000]
+        $game_temp.mart_prices[659] = [30000, 15000]
         # 570 = Transgender Stone
         # 604 = Secret Capsule
         # 568 = Mist Stone (evolve any Pokemon)
@@ -247,18 +319,12 @@ class PokemonPauseMenu
         # 248 = Elixir Max
         # 245 = Ether
         # 246 = Ether Max
-        # 314 = TM Return
-        # 371 = TM Poison Jab
-        # 619 = TM Toxic Spikes
-        # 618 = TM Spore
-        # 114 = Focus Sash
-        # 115 = Flame Orb
-        # 116 = Toxic Orb
-        # 100 = Life Orb
-        $game_temp.mart_prices[570] = [6900, 3450]
+        $game_temp.mart_prices[570] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
+        $game_temp.mart_prices[570] = [6900, 3450] if $PokemonSystem.kuraystreamerdream == 0
         # $game_temp.mart_prices[604] = [9100, 4550]
-        $game_temp.mart_prices[568] = [999999, 24000] if !$game_switches[SWITCH_GOT_BADGE_8]
-        $game_temp.mart_prices[568] = [42000, 24000] if $game_switches[SWITCH_GOT_BADGE_8]
+        $game_temp.mart_prices[568] = [999999, 24000] if !$game_switches[SWITCH_GOT_BADGE_8] && $PokemonSystem.kuraystreamerdream == 0
+        $game_temp.mart_prices[568] = [42000, 24000] if $game_switches[SWITCH_GOT_BADGE_8] && $PokemonSystem.kuraystreamerdream == 0
+        $game_temp.mart_prices[568] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         # $game_temp.mart_prices[569] = [8200, 4100]
         $game_temp.mart_prices[245] = [1200, 600]
         $game_temp.mart_prices[247] = [4000, 2000]
@@ -266,21 +332,31 @@ class PokemonPauseMenu
         $game_temp.mart_prices[246] = [3600, 1800]
         $game_temp.mart_prices[248] = [12000, 6000]
         $game_temp.mart_prices[250] = [29120, 14560]
-        $game_temp.mart_prices[314] = [10000, 5000]
-        $game_temp.mart_prices[371] = [10000, 5000]
-        $game_temp.mart_prices[619] = [30000, 15000]
-        $game_temp.mart_prices[618] = [30000, 15000]
+        # 114 = Focus Sash
+        # 115 = Flame Orb
+        # 116 = Toxic Orb
+        # 100 = Life Orb
         $game_temp.mart_prices[114] = [6000, 3000]
         $game_temp.mart_prices[115] = [6000, 3000]
         $game_temp.mart_prices[116] = [6000, 3000]
         $game_temp.mart_prices[100] = [6000, 3000]
+        # 263 = Rare Candy
+        # 264 = Master Ball
+        $game_temp.mart_prices[263] = [10000, 0] if $PokemonSystem.kuraystreamerdream == 0
+        $game_temp.mart_prices[264] = [960000, 0] if $PokemonSystem.kuraystreamerdream == 0
+        $game_temp.mart_prices[263] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
+        $game_temp.mart_prices[264] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         # allitems = [
         #   570, 604, 568, 569, 245, 247, 249, 246, 248, 250, 314, 371, 619, 618,
         #   114, 115, 116, 100
         # ]
         allitems = [
-          570, 568, 245, 247, 249, 246, 248, 250, 314, 371, 619, 618,
-          114, 115, 116, 100
+          570, 568, 245, 247, 249, 246, 248, 250,
+          314, 329, 335, 343, 345, 346, 356, 358, 367, 371,
+          618, 619, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656,
+          657, 658, 659,
+          114, 115, 116, 100,
+          263, 264
         ]
         # allitems.push(568) if $game_switches[SWITCH_GOT_BADGE_8]
         pbFadeOutIn {
