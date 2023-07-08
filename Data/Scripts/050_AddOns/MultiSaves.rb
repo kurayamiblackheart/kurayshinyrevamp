@@ -386,8 +386,8 @@ class PokemonLoadScreen
         commands[cmd_new_game_plus = commands.length] = _INTL('New Game +')
       end
       commands[cmd_options = commands.length] = _INTL('Options')
-      commands[cmd_discord = commands.length]     = _INTL('Join Discord Server')
-      commands[cmd_doc = commands.length]     = _INTL('Open Documentation')
+      commands[cmd_discord = commands.length]     = _INTL('Join Mod\'s Discord')
+      commands[cmd_doc = commands.length]     = _INTL('Open Mod\'s Documentation')
       commands[cmd_language = commands.length] = _INTL('Language') if Settings::LANGUAGES.length >= 2
       commands[cmd_debug = commands.length] = _INTL('Debug') if $DEBUG
       commands[cmd_quit = commands.length] = _INTL('Quit Game')
