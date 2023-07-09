@@ -2111,7 +2111,7 @@ class PokemonStorageScene
         else
           pokemon = @storage.boxes[selected[0]][selected[1]]
         end
-        if pokemon.shiny? && $PokemonSystem.kuraynormalshiny != 1
+        if pokemon.shiny? && $PokemonSystem.kuraynormalshiny == 1
           pbPlayBuzzerSE
           pbDisplay(_INTL("Pokemon already Shiny!"))
           break
