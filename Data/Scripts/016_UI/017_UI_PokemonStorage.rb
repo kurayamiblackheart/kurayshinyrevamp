@@ -3013,7 +3013,7 @@ class PokemonStorageScreen
               elsif cmdKurayAct >= 0 && command == cmdKurayAct # KurayAct
                 pbKurayAct(selected, @heldpkmn)
               elsif cmdNickname >= 0 && command == cmdNickname # Rename
-                renamePokemon(selected)
+                renamePokemon(selected, @heldpkmn)
               elsif cmdWithdraw >= 0 && command == cmdWithdraw # Store/Withdraw
                 (selected[0] == -1) ? pbStore(selected, @heldpkmn) : pbWithdraw(selected, @heldpkmn)
               elsif cmdItem >= 0 && command == cmdItem # Item
@@ -3124,10 +3124,18 @@ class PokemonStorageScreen
   end
 
 
-  def renamePokemon(selected)
-    box = selected[0]
-    index = selected[1]
-    pokemon = @storage[box, index]
+  def renamePokemon(selected, heldpoke)
+    pokemon = heldpoke
+    if heldpoke
+      pokemon = heldpoke
+    elsif selected[0] == -1
+      pokemon = @storage.party[selected[1]]
+    else
+      pokemon = @storage.boxes[selected[0]][selected[1]]
+    end
+    # box = selected[0]
+    # index = selected[1]
+    # pokemon = @storage[box, index]
 
     if pokemon.egg?
       pbDisplay(_INTL("You cannot rename an egg!"))
