@@ -47,6 +47,15 @@ def pbAddPokemonID(pokemon_id, level = 1, see_form = true, skip_randomize = fals
   return true
 end
 
+def generateFusionIcon(dexNum, path)
+  begin
+    IO.copy_stream(dexNum, path)
+    return true
+  rescue
+    return false
+  end
+end
+
 def ensureFusionIconExists
   directory_name = "Graphics/Pokemon/FusionIcons"
   Dir.mkdir(directory_name) unless File.exists?(directory_name)

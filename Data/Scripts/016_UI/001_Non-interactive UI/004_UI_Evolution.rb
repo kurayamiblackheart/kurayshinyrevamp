@@ -598,6 +598,9 @@ class PokemonEvolutionScene
     end
     # Success jingle/message
     pbMEPlay("Evolution success")
+    sprite_bitmap=@sprites["rsprite2"].getBitmap
+    drawSpriteCredits(sprite_bitmap.filename,sprite_bitmap.path, @viewport)
+
     newspeciesname = GameData::Species.get(@newspecies).name
     if !reversing
       pbMessageDisplay(@sprites["msgwindow"],

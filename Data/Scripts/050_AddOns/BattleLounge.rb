@@ -206,22 +206,14 @@ end
 
 def getCustomSpeciesListForPokemon(dexNum,allowLegendaries=true)
   excluded = allowLegendaries ? [] : listLegendaryPokemonIds()
-  filesList = Dir["./Graphics/CustomBattlers/*"]
+  customsList = getCustomSpeciesList($PokemonSystem.download_sprites == 0)
   speciesList = []
-  maxDexNumber = (NB_POKEMON * NB_POKEMON) + NB_POKEMON
-  maxVal = filesList.length - 1
-  for i in 0..maxVal
-    path = filesList[i]
-    file = File.basename(path, ".*")
-    splitPoke = file.split(".")
-    head = splitPoke[0].to_i
-    body = splitPoke[1].to_i
-    if (head == dexNum || body == dexNum) && !(excluded.include?(head) || excluded.include?(body))
-      fused = (body * NB_POKEMON) + head
-      if fused <= maxDexNumber && fused > 0
-        speciesList << fused
-      end
+  for comparedPoke in customsList
+    next if excluded.include?(comparedPoke)
+    if Kernel.isPartPokemon(comparedPoke, dexNum)
+      speciesList << comparedPoke
     end
+
   end
   if speciesList.length == 0
     speciesList << dexNum

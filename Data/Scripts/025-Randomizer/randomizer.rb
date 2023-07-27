@@ -303,8 +303,9 @@ end
 
 def tryRandomizeGiftPokemon(pokemon, dontRandomize = false)
   if $game_switches[SWITCH_RANDOM_GIFT_POKEMON] && $game_switches[SWITCH_RANDOM_WILD] && !dontRandomize
-    oldSpecies = dexNum(pokemon.species)
-    pokemon.species = getSpecies($PokemonGlobal.psuedoBSTHash[oldSpecies])
-    pokemon.kuraycustomfile = nil
+    oldSpecies = pokemon.is_a?(Pokemon) ? dexNum(pokemon) : dexNum(pokemon.species)
+    if $PokemonGlobal.psuedoBSTHash[oldSpecies]
+      pokemon.species = getSpecies($PokemonGlobal.psuedoBSTHash[oldSpecies])
+    end
   end
 end

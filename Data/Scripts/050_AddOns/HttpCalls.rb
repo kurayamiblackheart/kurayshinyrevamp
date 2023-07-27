@@ -11,6 +11,15 @@ def updateCreditsFile
   download_file(Settings::CREDITS_FILE_URL,Settings::CREDITS_FILE_PATH,)
 end
 
+def createCustomSpriteFolders()
+  if !Dir.exist?(Settings::CUSTOM_BATTLERS_FOLDER)
+    Dir.mkdir(Settings::CUSTOM_BATTLERS_FOLDER)
+  end
+  if !Dir.exist?(Settings::CUSTOM_BATTLERS_FOLDER_INDEXED)
+    Dir.mkdir(Settings::CUSTOM_BATTLERS_FOLDER_INDEXED)
+  end
+end
+
 def download_file(url, saveLocation)
   begin
     response = HTTPLite.get(url)

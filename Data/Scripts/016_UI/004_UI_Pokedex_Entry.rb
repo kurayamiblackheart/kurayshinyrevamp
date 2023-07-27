@@ -116,6 +116,7 @@ class PokemonPokedexInfo_Scene
     pbSetSystemFont(@sprites["overlay"].bitmap)
     pbUpdateDummyPokemon
     drawPage(@page)
+    sprite_bitmap= @sprites["infosprite"].getBitmap
     pbFadeInAndShow(@sprites) { pbUpdate }
   end
 

@@ -188,7 +188,8 @@ class PokemonPauseMenu
         invalidMaps = [
           315,316,317,318,328,343,#Elite Four
           776,777,778,779,780,781,782,783,784, #Mt. Silver
-          722,723,724,720 #Dream sequence
+          722,723,724,720, #Dream sequence
+          304,306,307       #Victory road
         ]
         if invalidMaps.include?($game_map.map_id)
           @scene.pbHideMenu
@@ -236,7 +237,8 @@ class PokemonPauseMenu
         invalidMaps = [
           315,316,317,318,328,343,#Elite Four
           776,777,778,779,780,781,782,783,784, #Mt. Silver
-          722,723,724,720 #Dream sequence
+          722,723,724,720, #Dream sequence
+          304,306,307       #Victory road
         ]
         if invalidMaps.include?($game_map.map_id)
           @scene.pbHideMenu

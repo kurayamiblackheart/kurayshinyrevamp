@@ -50,7 +50,7 @@ class FusionQuiz
           prompt_quit = pbMessage(_INTL("You still have {1} rounds to go. You'll only keep your points if you finish all {2} rounds. Do you really want to quit now?", rounds_left, nb_rounds), ["Yes", "No"])
           if prompt_quit
             @abandonned = true
-            return
+            break
           end
         end
         round_multiplier += round_multiplier_increase
@@ -63,12 +63,14 @@ class FusionQuiz
   end
 
   def end_quiz()
+    hide_fusion_picture
     Kernel.pbClearText()
     previous_highest = pbGet(VAR_STAT_FUSION_QUIZ_HIGHEST_SCORE)
     pbSet(VAR_STAT_FUSION_QUIZ_HIGHEST_SCORE,@score) if @score > previous_highest
 
     previous_total = pbGet(VAR_STAT_FUSION_QUIZ_TOTAL_PTS)
     pbSet(VAR_STAT_FUSION_QUIZ_TOTAL_PTS,previous_total+@score)
+    dispose
   end
 
   def start_quiz_new_round(round_multiplier = 1)
@@ -191,12 +193,16 @@ class FusionQuiz
 
   def current_streak_dialog()
     return if @current_streak ==0
+    streak_base_worth= @difficulty == :REGULAR ? 25 : 100
     if @current_streak % 4 == 0
+      extra_points = (@current_streak/4)*streak_base_worth
       if @current_streak >= 8
         pbMessage(_INTL("That's {1} correct answers in a row. You're on a roll!", @current_streak))
       else
         pbMessage(_INTL("That's {1} correct answers in a row. You're doing great!", @current_streak))
       end
+      pbMessage(_INTL("Here's {1} extra points for maintaining a streak!",extra_points))
+      award_points(extra_points)
     end
   end
 
@@ -229,7 +235,6 @@ class FusionQuiz
   def give_answer(prompt_message, answer_id, should_generate_new_choices)
     question_answered = false
     answer_pokemon_name = getPokemon(answer_id).real_name
-
     while !question_answered
       if @difficulty == :ADVANCED
         player_answer = prompt_pick_answer_advanced(prompt_message, answer_id)

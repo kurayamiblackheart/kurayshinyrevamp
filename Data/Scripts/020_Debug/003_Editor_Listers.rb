@@ -3,6 +3,7 @@
 #===============================================================================
 def pbListWindow(cmds, width = Graphics.width / 2)
   list = Window_CommandPokemon.newWithSize(cmds, 0, 0, width, Graphics.height)
+  list.setAllowArrowsJump(true)
   list.index     = 0
   list.rowHeight = 24
   pbSetSmallFont(list.contents)

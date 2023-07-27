@@ -2740,6 +2740,15 @@ class PokemonStorageScene
     end
     pbDrawTextPositions(overlay, textstrings)
     @sprites["pokemon"].setPokemonBitmap(pokemon)
+
+    if pokemon.egg?
+      @sprites["pokemon"].zoom_x = Settings::EGGSPRITE_SCALE
+      @sprites["pokemon"].zoom_y = Settings::EGGSPRITE_SCALE
+    else
+      @sprites["pokemon"].zoom_x = Settings::FRONTSPRITE_SCALE
+      @sprites["pokemon"].zoom_y = Settings::FRONTSPRITE_SCALE
+    end
+
   end
 
   def pbUpdateSelectionRect(box, selected)
@@ -2954,10 +2963,10 @@ class PokemonStorageScreen
                   commands[cmdUnfuse = commands.length] = _INTL("Unfuse")
                   commands[cmdReverse = commands.length] = _INTL("Reverse") if $PokemonBag.pbQuantity(:DNAREVERSER) > 0 || $PokemonBag.pbQuantity(:INFINITEREVERSERS) > 0
                 else
-                  commands[cmdFuse = commands.length] = _INTL("Fuse")
+                  commands[cmdFuse = commands.length] = _INTL("Fuse") if !@heldpkmn
                 end
               end
-              commands[cmdNickname = commands.length] = _INTL("Nickname")
+              commands[cmdNickname = commands.length] = _INTL("Nickname") if !@heldpkmn
               commands[cmdWithdraw = commands.length] = (selected[0] == -1) ? _INTL("Store") : _INTL("Withdraw")
               commands[cmdItem = commands.length] = _INTL("Item")
 

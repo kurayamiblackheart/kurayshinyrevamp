@@ -308,6 +308,7 @@ class Window_PokemonOption < Window_DrawableCommand
     @mustUpdateOptions = false
     @mustUpdateDescription = false
     @selected_position = 0
+    @allow_arrows_jump=false
     for i in 0...@options.length
       @optvalues[i] = 0
     end

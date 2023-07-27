@@ -703,6 +703,7 @@ def pbRockSmash
     pbMessage(_INTL("{1} used {2}!", speciesname, GameData::Move.get(move).name))
     pbHiddenMoveAnimation(movefinder)
     facingEvent = $game_player.pbFacingEvent(true)
+    pbSEPlay("Rock Smash", 80)
     $scene.spriteset.addUserAnimation(Settings::ROCK_SMASH_ANIMATION_ID, facingEvent.x, facingEvent.y, false)
     return true
   end

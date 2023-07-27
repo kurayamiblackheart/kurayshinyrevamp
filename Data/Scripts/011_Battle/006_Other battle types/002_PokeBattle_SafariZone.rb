@@ -169,7 +169,7 @@ class ThrowBaitAnimation < PokeBattle_Animation
     # Show Pokémon jumping before eating the bait
     delay = ball.totalDuration+3
     2.times do
-      battler.setSE(delay,"player jump")
+      battler.setSE(delay,"Player jump")
       battler.moveDelta(delay,3,0,-16)
       battler.moveDelta(delay+4,3,0,16)
       delay = battler.totalDuration+1

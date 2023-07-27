@@ -8,6 +8,7 @@ class Window_Pokedex < Window_DrawableCommand
     @selarrow     = AnimatedBitmap.new("Graphics/Pictures/Pokedex/cursor_list")
     @pokeballOwn  = AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_own")
     @pokeballSeen = AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_seen")
+    @allow_arrows_jump=true
     self.baseColor   = Color.new(88,88,80)
     self.shadowColor = Color.new(168,184,184)
     self.windowskin  = nil

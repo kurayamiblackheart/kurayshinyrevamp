@@ -32,7 +32,7 @@ class Game_Player < Game_Character
   def bump_into_object
     return if @bump_se && @bump_se>0
     pbSEPlay("Player bump")
-    @bump_se = Graphics.frame_rate/4
+    @bump_se = Graphics.frame_rate/2
   end
 
   def move_generic(dir, turn_enabled = true)

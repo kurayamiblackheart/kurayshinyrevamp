@@ -116,7 +116,7 @@ Hankiro, luckygirl88, Nalty,
 OceansLugiaSpirit,Pokemon-Diamond,
 rekman, Rick1234, SailorVicious,WolfPP
 
-Tileset graphics:
+Public use tileset graphics:
 Alucus BoOmxBiG<s>chimcharsfireworkd
 EpicDay<s>EternalTakai
 Gallanty Heavy-Metal-Lover<s>Hek-el-grande
@@ -130,12 +130,12 @@ Spacemotion<s>Speedialga
 ThatsSoWitty Thurpok<s>TyranitarDark
 UltimoSpriter<s>WesleyFG
 
-Music:    
+Public use music:    
 Pokeli, TailDoll666100
 Kazune Sawatari, sentsinkantéun,
 Nanashima, CharizardTheMaster, The Zame Jack 
 
-RPG Maker Scripts:
+Public use RPG Maker scripts:
 Luka S.J, shiney570, Erasus, Umbreon
 FL, KleinStudio, carmaniac, Wootius,
 andracass

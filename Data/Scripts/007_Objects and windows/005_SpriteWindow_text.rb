@@ -741,6 +741,7 @@ class SpriteWindow_Selectable < SpriteWindow_Base
     @row_height = 32
     @column_spacing = 32
     @ignore_input = false
+    @allow_arrows_jump=false
   end
 
   def itemCount
@@ -765,6 +766,10 @@ class SpriteWindow_Selectable < SpriteWindow_Base
       self.top_row=oldTopRow
       update_cursor_rect
     end
+  end
+
+  def setAllowArrowsJump(value)
+    @allow_arrows_jump=value
   end
 
   def columns
@@ -848,63 +853,89 @@ class SpriteWindow_Selectable < SpriteWindow_Base
     super
     if self.active && @item_max > 0 && @index >= 0 && !@ignore_input
       if Input.repeat?(Input::UP)
-        if @index >= @column_max ||
-           (Input.trigger?(Input::UP) && (@item_max % @column_max)==0)
-          oldindex = @index
-          @index = (@index - @column_max + @item_max) % @item_max
-          if @index!=oldindex
-            pbPlayCursorSE()
-            update_cursor_rect
-          end
-        end
+        scroll_up()
       elsif Input.repeat?(Input::DOWN)
-        if @index < @item_max - @column_max ||
-           (Input.trigger?(Input::DOWN) && (@item_max % @column_max)==0)
-          oldindex = @index
-          @index = (@index + @column_max) % @item_max
-          if @index!=oldindex
-            pbPlayCursorSE()
-            update_cursor_rect
-          end
-        end
-      elsif Input.repeat?(Input::LEFT)
-        if @column_max >= 2 && @index > 0
-          oldindex = @index
-          @index -= 1
-          if @index!=oldindex
-            pbPlayCursorSE()
-            update_cursor_rect
-          end
-        end
-      elsif Input.repeat?(Input::RIGHT)
-        if @column_max >= 2 && @index < @item_max - 1
-          oldindex = @index
-          @index += 1
-          if @index!=oldindex
-            pbPlayCursorSE()
-            update_cursor_rect
-          end
-        end
-      elsif Input.repeat?(Input::JUMPUP)
-        if @index > 0
-          oldindex = @index
-          @index = [self.index-self.page_item_max, 0].max
-          if @index!=oldindex
-            pbPlayCursorSE()
-            self.top_row -= self.page_row_max
-            update_cursor_rect
-          end
-        end
-      elsif Input.repeat?(Input::JUMPDOWN)
-        if @index < @item_max-1
-          oldindex = @index
-          @index = [self.index+self.page_item_max, @item_max-1].min
-          if @index!=oldindex
-            pbPlayCursorSE()
-            self.top_row += self.page_row_max
-            update_cursor_rect
-          end
-        end
+        scroll_down()
+      elsif Input.repeat?(Input::LEFT) && !@allow_arrows_jump
+        scroll_left()
+      elsif Input.repeat?(Input::RIGHT) && !@allow_arrows_jump
+        scroll_right()
+      elsif Input.repeat?(Input::JUMPUP) || (Input.repeat?(Input::LEFT) && @allow_arrows_jump)
+        jump_up()
+      elsif Input.repeat?(Input::JUMPDOWN) || (Input.repeat?(Input::RIGHT) && @allow_arrows_jump)
+        jump_down()
+      end
+    end
+  end
+
+  def scroll_up()
+    if @index >= @column_max ||
+      (Input.trigger?(Input::UP) && (@item_max % @column_max)==0)
+      oldindex = @index
+      @index = (@index - @column_max + @item_max) % @item_max
+      if @index!=oldindex
+        pbPlayCursorSE()
+        update_cursor_rect
+      end
+    end
+  end
+
+  def scroll_down()
+    if @index < @item_max - @column_max ||
+      (Input.trigger?(Input::DOWN) && (@item_max % @column_max)==0)
+      oldindex = @index
+      @index = (@index + @column_max) % @item_max
+      if @index!=oldindex
+        pbPlayCursorSE()
+        update_cursor_rect
+      end
+    end
+  end
+
+  def scroll_left()
+    if @column_max >= 2 && @index < @item_max - 1
+      oldindex = @index
+      @index += 1
+      if @index!=oldindex
+        pbPlayCursorSE()
+        update_cursor_rect
+      end
+    end
+  end
+
+  def scroll_right()
+    if @column_max >= 2 && @index > 0
+      oldindex = @index
+      @index -= 1
+      if @index!=oldindex
+        pbPlayCursorSE()
+        update_cursor_rect
+      end
+    end
+  end
+
+
+  def jump_up()
+    if @index > 0
+      oldindex = @index
+      @index = [self.index-self.page_item_max, 0].max
+      if @index!=oldindex
+        pbPlayCursorSE()
+        self.top_row -= self.page_row_max
+        update_cursor_rect
+      end
+    end
+  end
+
+
+  def jump_down()
+    if @index < @item_max-1
+      oldindex = @index
+      @index = [self.index+self.page_item_max, @item_max-1].min
+      if @index!=oldindex
+        pbPlayCursorSE()
+        self.top_row += self.page_row_max
+        update_cursor_rect
       end
     end
   end

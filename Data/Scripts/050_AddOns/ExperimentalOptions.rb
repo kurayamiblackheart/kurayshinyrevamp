@@ -36,19 +36,20 @@ class ExperimentalOptionsScene < PokemonOption_Scene
                      proc { |value|
                        $game_switches[SWITCH_NO_LEVELS_MODE] = value == 0
                      }, "All Pokémon use their base stats, regardless of levels."
-      ),
-          EnumOption.new(_INTL("Double abilities"), [_INTL("On"), _INTL("Off")],
-                         proc {
-                           $game_switches[SWITCH_DOUBLE_ABILITIES] ? 0 : 1
-                         },
-                         proc { |value|
-                           $game_switches[SWITCH_DOUBLE_ABILITIES] = value == 0
-                         }, "Fused Pokémon have two abilities at the same time"
-    )
+      )#,
+          # EnumOption.new(_INTL("Double abilities"), [_INTL("On"), _INTL("Off")],
+          #                proc {
+          #                  $game_switches[SWITCH_DOUBLE_ABILITIES] ? 0 : 1
+          #                },
+          #                proc { |value|
+          #                  $game_switches[SWITCH_DOUBLE_ABILITIES] = value == 0
+          #                }, "Fused Pokémon have two abilities at the same time"
+          #)
 
     ]
     return options
   end
+
 
 
 end

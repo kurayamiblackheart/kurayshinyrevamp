@@ -144,6 +144,7 @@ def mainFunctionDebug
     Graphics.update
     Graphics.freeze
     #clearTempFolder()
+    createCustomSpriteFolders()
     begin
       sortCustomBattlers()
     rescue
