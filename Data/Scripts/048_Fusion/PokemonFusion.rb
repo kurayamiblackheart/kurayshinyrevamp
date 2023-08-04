@@ -711,7 +711,7 @@ class PokemonFusionScene
       overlay = BitmapSprite.new(Graphics.width, Graphics.height, @viewport).bitmap
 
       sprite_bitmap = @sprites["rsprite2"].getBitmap
-      drawSpriteCredits(sprite_bitmap.filename,sprite_bitmap.path, @viewport)
+      # drawSpriteCredits(sprite_bitmap.filename,sprite_bitmap.path, @viewport)
       Kernel.pbMessageDisplay(@sprites["msgwindow"],
                               _INTL("\\se[]Congratulations! Your Pokémon were fused into {2}!\\wt[80]", @pokemon1.name, newspeciesname))
 
