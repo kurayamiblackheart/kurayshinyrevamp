@@ -8,9 +8,13 @@
 ###SCRIPTEDIT1
 # Config value for selecting title screen style
 SCREENSTYLE = 1
-KURAYVERSION = "0.7.8"
+KURAYVERSION = "0.7.9"
 # 1 - FR/LG
 # 2 - R/S/E
+
+module Settings
+  GAME_VERSION_NUMBER = "5.3.1"
+end
 
 class Scene_Intro
 
