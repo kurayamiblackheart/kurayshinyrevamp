@@ -81,13 +81,13 @@ Sprites pack manager
 Kiwi
 
 Sprite Managers
-Howls
-Kiwi
-Melmcs
-Milchik the Miltank
-rezza
-Punko
-Skel'n
+avianAnnihilator<s>Blaquaza
+BéBoutton<s>Howls
+Ignus<s>Kiwi
+Maelmc<s>Milchik the Miltank
+rezza<s>Skel'n
+Thorns<s>TM
+
 
 All of the custom fused Pokémon sprites 
 were made by various members of the sp

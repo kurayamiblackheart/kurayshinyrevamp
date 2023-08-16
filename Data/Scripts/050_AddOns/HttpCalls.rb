@@ -72,7 +72,7 @@ end
 
 def download_autogen_sprite(head_id, body_id)
   return nil if $PokemonSystem.download_sprites != 0
-  url = "https://raw.githubusercontent.com/Aegide/autogen-fusion-sprites/master/Battlers/{1}/{1}.{2}.png"
+  url = "https://raw.githubusercontent.com/infinitefusion/autogen-fusion-sprites/master/Battlers/{1}/{1}.{2}.png"
   destPath = _INTL("{1}{2}", Settings::BATTLERS_FOLDER, head_id)
   sprite = download_sprite(_INTL(url, head_id, body_id), head_id, body_id, destPath)
   return sprite if sprite
