@@ -127,11 +127,11 @@ class PokeBattle_AI
         score = pbGetMoveScore(move,user,b,skill)
         totalScore += ((user.opposes?(b)) ? score : -score)
       end
-      choices.push([idxMove,totalScore,-1]) if totalScore>0
+      choices.push([idxMove,totalScore,-1,move.name]) if totalScore>0
     elsif target_data.num_targets == 0
       # If move has no targets, affects the user, a side or the whole field
       score = pbGetMoveScore(move,user,user,skill)
-      choices.push([idxMove,score,-1]) if score>0
+      choices.push([idxMove,score,-1,move.name]) if score>0
     else
       # If move affects one battler and you have to choose which one
       scoresAndTargets = []
@@ -144,7 +144,7 @@ class PokeBattle_AI
       if scoresAndTargets.length>0
         # Get the one best target for the move
         scoresAndTargets.sort! { |a,b| b[0]<=>a[0] }
-        choices.push([idxMove,scoresAndTargets[0][0],scoresAndTargets[0][1]])
+        choices.push([idxMove,scoresAndTargets[0][0],scoresAndTargets[0][1],move.name])
       end
     end
   end

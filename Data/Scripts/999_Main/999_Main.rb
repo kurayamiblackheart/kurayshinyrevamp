@@ -138,6 +138,7 @@ def mainFunctionDebug
     showLoadingScreen
     MessageTypes.loadMessageFile("Data/messages.dat") if safeExists?("Data/messages.dat")
     PluginManager.runPlugins
+    Dir["./Mods/*.rb"].each {|file| load File.expand_path(file) }  # DemICE> The one line that makes everything come together.
     Compiler.main
     Game.initialize
     Game.set_up_system
