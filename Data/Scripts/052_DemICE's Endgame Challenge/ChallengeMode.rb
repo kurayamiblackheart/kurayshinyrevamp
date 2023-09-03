@@ -42,11 +42,36 @@ class HallOfFame_Scene
   def writeGameMode(overlay, x, y)
 	if $game_switches[850]
 		gameMode = "Endgame Challenge"
+		gameMode = "Endgame Challenge Completed!" if $game_map.map_id == 314
 		subMode = ""  # Might make an All Ability Mutation mode in the future.
 		pbDrawTextPositions(overlay, [[_INTL("{1} {2}", gameMode, subMode), x, y, 2, BASECOLOR, SHADOWCOLOR]])
 	else
 		challende_mode_writeGameMode(overlay, x, y)
 	end	
+  end
+
+  def writeTrainerData
+    totalsec = Graphics.frame_count / Graphics.frame_rate
+    hour = totalsec / 60 / 60
+    min = totalsec / 60 % 60
+    pubid = sprintf("%05d", $Trainer.public_ID)
+    lefttext = _INTL("Name<r>{1}<br>", $Trainer.name)
+    lefttext += _INTL("IDNo.<r>{1}<br>", pubid)
+    lefttext += _ISPRINTF("Time<r>{1:02d}:{2:02d}<br>", hour, min)
+    lefttext += _INTL("Pokédex<r>{1}/{2}<br>",
+                      $Trainer.pokedex.owned_count, $Trainer.pokedex.seen_count)
+    lefttext += _INTL("Difficulty<r>{1}<br>", getDifficulty())
+    @sprites["messagebox"] = Window_AdvancedTextPokemon.new(lefttext)
+    @sprites["messagebox"].viewport = @viewport
+    @sprites["messagebox"].width = 192 if @sprites["messagebox"].width < 192
+    @sprites["msgwindow"] = pbCreateMessageWindow(@viewport)
+	if $game_switches[850] && $game_map.map_id == 314
+   	 pbMessageDisplay(@sprites["msgwindow"],
+                     _INTL("You completed the challenge!\nCongratulations!\\^"))
+	else
+   	 pbMessageDisplay(@sprites["msgwindow"],
+                     _INTL("League champion!\nCongratulations!\\^"))
+	end				 
   end
 
 end

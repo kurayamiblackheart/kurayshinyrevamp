@@ -2574,10 +2574,26 @@ class PokeBattle_Battle
 		idxBattler = idxBattler.index if idxBattler.respond_to?("index")
 		return @battlers.select { |b| b && !b.fainted? && !b.opposes?(idxBattler) }
 	end
+	
+end  
+
+
+class PokeBattle_Battler
 
 	# Returns an array containing all unfainted opposing Pokémon.
 	def allOpposing
 		return @battle.allOtherSideBattlers(@index)
 	end	
+
+	# Returns an array containing all unfainted ally Pokémon.
+	def allAllies
+		return @battle.allSameSideBattlers(@index).reject { |b| b.index == @index }
+	end	
+
+	# Yields each unfainted opposing Pokémon.
+	# Unused
+	def eachOpposing
+		@battle.battlers.each { |b| yield b if b && !b.fainted? && b.opposes?(@index) }
+	end
 	
-end  
+end	
