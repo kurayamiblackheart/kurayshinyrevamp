@@ -100,10 +100,9 @@ class PokeBattle_Move
 		stageMul = [3,3,3,3,3,3, 3, 4,5,6,7,8,9]
 		stageDiv = [9,8,7,6,5,4, 3, 3,3,3,3,3,3]
 		accuracy = 100.0 * stageMul[accStage] / stageDiv[accStage]
-		baseDmg = pbBaseDamage(@baseDamage,user,target)
 		if $game_switches[850] # You can now hit your Focus Blasts my dear AI
 			if user.pbOwnedByPlayer?
-				accuracy*=1.2  if baseDmg>0
+				accuracy*=1.2  if @baseDamage>0
 			else
 				accuracy*=1.3 
 			end
