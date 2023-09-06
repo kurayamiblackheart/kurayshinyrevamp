@@ -3684,6 +3684,7 @@ class PokemonStorageScreen
       pricenow = @storage.maxBoxes * 300
       if pricenow > 100000
         pricenow = 100000
+      end
       if $Trainer.money < pricenow
         pbPlayBuzzerSE
         pbDisplay(_INTL("Not enough Money ! Cost P" + pricenow.to_s))
