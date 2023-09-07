@@ -163,6 +163,9 @@ class PokeBattle_AI
 	  ownparty.each_with_index do |pkmn, idxParty|
 		  next if !pkmn || !pkmn.able?
 		  next if pkmn==pokmon
+		  if pkmn==ownparty[ownparty.length-1]
+			sum-=40
+		  end	
 		  if pokmon.ability==:DROUGHT
 			  sum+=10 if pkmn.ability == :CHLOROPHYLL
 			  sum+=5 if pkmn.ability == :FLOWERGIFT || pkmn.ability == :SOLARPOWER || pkmn.ability == :PROTOSYNTHESIS

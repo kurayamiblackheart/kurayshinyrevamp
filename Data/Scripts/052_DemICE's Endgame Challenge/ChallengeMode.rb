@@ -3,20 +3,40 @@ alias challende_mode_getTrainersDataMode getTrainersDataMode
 def getTrainersDataMode
 	mode = challende_mode_getTrainersDataMode
 	if $game_switches && $game_switches[850] && 
-		($game_map.map_id == 314 || 
-			$game_map.map_id == 315 ||
-			$game_map.map_id == 316 ||
-			$game_map.map_id == 317 ||
-			$game_map.map_id == 318 ||
-			$game_map.map_id == 328 ||
-			$game_map.map_id == 546 ||
-			$game_map.map_id == 784 )
+		($game_map.map_id == 314 ||  # Pokemon League Lobby
+			$game_map.map_id == 315 || # Lorelei
+			$game_map.map_id == 316 || # Bruno
+			$game_map.map_id == 317 || # Agatha
+			$game_map.map_id == 318 || # Lance
+			$game_map.map_id == 328 || # Champion Room
+			$game_map.map_id == 546 || # Vermillion Fight Arena
+			$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
+			$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
 		mode = GameData::TrainerChallenge
 	end  
 	return mode
 end
 
+class PokeBattle_Battler
 
+	alias challenge_pbInitPokemon pbInitPokemon
+	def pbInitPokemon(pkmn,idxParty)
+		challenge_pbInitPokemon(pkmn,idxParty)
+		if $game_switches && $game_switches[850] && 
+			($game_map.map_id == 314 ||  # Pokemon League Lobby
+				$game_map.map_id == 315 || # Lorelei
+				$game_map.map_id == 316 || # Bruno
+				$game_map.map_id == 317 || # Agatha
+				$game_map.map_id == 318 || # Lance
+				$game_map.map_id == 328 || # Champion Room
+				$game_map.map_id == 546 || # Vermillion Fight Arena
+				$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
+				$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
+		    @moves.each { |move| move.pp*=2 } if !pbOwnedByPlayer?
+		end	
+	end
+
+end
 
 class PokeBattle_Battle
 	
@@ -34,6 +54,27 @@ class PokeBattle_Battle
 		end	
 		challende_mode_pbItemMenu(idxBattler,firstAction)
 	end	
+
+  alias challende_mode_setBattleMode setBattleMode
+  def setBattleMode(mode)
+    # default = $game_variables[VAR_DEFAULT_BATTLE_TYPE].is_a?(Array) ? $game_variables[VAR_DEFAULT_BATTLE_TYPE] : [1, 1]
+    #KurayX patching battles
+	if $game_switches && $game_switches[850] && 
+		($game_map.map_id == 314 ||  # Pokemon League Lobby
+			$game_map.map_id == 315 || # Lorelei
+			$game_map.map_id == 316 || # Bruno
+			$game_map.map_id == 317 || # Agatha
+			$game_map.map_id == 318 || # Lance
+			$game_map.map_id == 328 || # Champion Room
+			$game_map.map_id == 546 || # Vermillion Fight Arena
+			$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
+			$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
+		@sideSizes = [1, 1]
+	else	
+		challende_mode_setBattleMode(mode)	
+	end	
+  end
+
 end
 
 class HallOfFame_Scene
@@ -77,6 +118,7 @@ class HallOfFame_Scene
 end
 
 class PokeBattle_Move
+
 	
 	def pbAccuracyCheck(user,target)
 		# "Always hit" effects and "always hit" accuracy
@@ -116,6 +158,22 @@ class PokeBattle_Move
 	end
 	
 end  
+
+#===============================================================================
+# Hits 2-5 times.
+#===============================================================================
+class PokeBattle_Move_0C0 < PokeBattle_Move
+  
+	def pbNumHits(user,targets)
+	  if @id == :WATERSHURIKEN && user.isSpecies?(:GRENINJA) && user.form == 2
+		return 3
+	  end
+	  hitChances = [3,3,4,4,5,5]
+	  r = @battle.pbRandom(hitChances.length)
+	  r = hitChances.length-1 if user.hasActiveAbility?(:SKILLLINK)
+	  return hitChances[r]
+	end
+  end
 
 module GameData
 	
@@ -159,14 +217,15 @@ module GameData
 		alias challenge_mode_to_trainer to_trainer
 		def to_trainer
 			if $game_switches && $game_switches[850] && 
-				($game_map.map_id == 314 || 
-					$game_map.map_id == 315 ||
-					$game_map.map_id == 316 ||
-					$game_map.map_id == 317 ||
-					$game_map.map_id == 318 ||
-					$game_map.map_id == 328 ||
-					$game_map.map_id == 546 ||
-					$game_map.map_id == 784 )	
+				($game_map.map_id == 314 ||  # Pokemon League Lobby
+					$game_map.map_id == 315 || # Lorelei
+					$game_map.map_id == 316 || # Bruno
+					$game_map.map_id == 317 || # Agatha
+					$game_map.map_id == 318 || # Lance
+					$game_map.map_id == 328 || # Champion Room
+					$game_map.map_id == 546 || # Vermillion Fight Arena
+					$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
+					$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
 					  randovar=$game_switches[987]
 					  reversevar=$game_switches[47]
 					  $game_switches[987]=false
@@ -174,14 +233,15 @@ module GameData
 			end		  
 		  trainer = challenge_mode_to_trainer
 			if $game_switches && $game_switches[850] && 
-				($game_map.map_id == 314 || 
-					$game_map.map_id == 315 ||
-					$game_map.map_id == 316 ||
-					$game_map.map_id == 317 ||
-					$game_map.map_id == 318 ||
-					$game_map.map_id == 328 ||
-					$game_map.map_id == 546 ||
-					$game_map.map_id == 784 )			  
+				($game_map.map_id == 314 ||  # Pokemon League Lobby
+					$game_map.map_id == 315 || # Lorelei
+					$game_map.map_id == 316 || # Bruno
+					$game_map.map_id == 317 || # Agatha
+					$game_map.map_id == 318 || # Lance
+					$game_map.map_id == 328 || # Champion Room
+					$game_map.map_id == 546 || # Vermillion Fight Arena
+					$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
+					$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)		  
 				trainer.party.each_with_index do |pkmn, i|
 					pkmn_data = @pokemon[i]
 					pkmn.abilityMutation = true if pkmn_data[:abilityMutation]					
@@ -192,7 +252,6 @@ module GameData
 							end    
 						end 
 						pkmn.level=maxlevel
-						pkmn.moves.each { |move| move.pp*=2 }
 					GameData::Stat.each_main do |s|
 						pkmn.ev[s.id] = 252
 						pkmn.ev[s.id]+=200 if (s.id==:ATTACK || s.id==:SPECIAL_ATTACK)
@@ -201,14 +260,15 @@ module GameData
 				end
 			end	
 		if $game_switches && $game_switches[850] && 
-			($game_map.map_id == 314 || 
-				$game_map.map_id == 315 ||
-				$game_map.map_id == 316 ||
-				$game_map.map_id == 317 ||
-				$game_map.map_id == 318 ||
-				$game_map.map_id == 328 ||
-				$game_map.map_id == 546 ||
-				$game_map.map_id == 784 )	
+			($game_map.map_id == 314 ||  # Pokemon League Lobby
+				$game_map.map_id == 315 || # Lorelei
+				$game_map.map_id == 316 || # Bruno
+				$game_map.map_id == 317 || # Agatha
+				$game_map.map_id == 318 || # Lance
+				$game_map.map_id == 328 || # Champion Room
+				$game_map.map_id == 546 || # Vermillion Fight Arena
+				$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
+				$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
 			  $game_switches[987]=randovar
 			  $game_switches[47]=reversevar  
 		end	

@@ -230,7 +230,7 @@ class PokeBattle_AI
       # Calculate how much damage the move will do (roughly)
       #baseDmg = pbMoveBaseDamage(move, user, target, skill)
       realDamage = pbRoughDamage(move, user, target, skill)#, baseDmg)  # DemICE Moved the baseDmg calculation inside pbRoughDamage
-	  realDamage*=0.9 #DemICE encourage AI to use stronger moves to avoid opponent surviving from low damage roll.
+	    realDamage*=0.9 #DemICE encourage AI to use stronger moves to avoid opponent surviving from low damage roll.
       # Account for accuracy of move
       accuracy = pbRoughAccuracy(move, user, target, skill)
       accuracy*= 1.3 if $game_switches[850] # Endgame Challenge enabled
@@ -252,9 +252,8 @@ class PokeBattle_AI
         if user.hasActiveAbility?(:STENCH) && !move.flinchingMove?
           canFlinch = true
         end
-        realDamage *= 1.2 if canFlinch
+        realDamage *= 1.1 if canFlinch
       end
-    end
       # Convert damage to percentage of target's remaining HP
       damagePercentage = realDamage * 100.0 / target.hp
       # Don't prefer weak attacks
@@ -265,6 +264,11 @@ class PokeBattle_AI
       if damagePercentage > 100   # Treat all lethal moves the same   # DemICE
         damagePercentage = 120 
         damagePercentage+=50 if move.function == "150"  # DemICE: Fell Stinger should be preferred among other moves that KO
+          if ["0DD","14F"].include?(move.function)
+            missinghp = (user.totalhp-user.hp) *100.0 / user.totalhp
+            damagePercentage += missinghp*0.5
+          end  
+        end
       end  
       damagePercentage -= 1 if accuracy < 100  # DemICE
       #damagePercentage += 40 if damagePercentage > 100   # Prefer moves likely to be lethal  # DemICE
