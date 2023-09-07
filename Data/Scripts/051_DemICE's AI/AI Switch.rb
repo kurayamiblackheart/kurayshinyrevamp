@@ -163,12 +163,9 @@ class PokeBattle_AI
 	  ownparty.each_with_index do |pkmn, idxParty|
 		  next if !pkmn || !pkmn.able?
 		  next if pkmn==pokmon
-		  if pkmn==ownparty[ownparty.length-1]
-			sum-=40
-		  end	
 		  if pokmon.ability==:DROUGHT
 			  sum+=10 if pkmn.ability == :CHLOROPHYLL
-			  sum+=5 if pkmn.ability == :FLOWERGIFT || pkmn.ability == :SOLARPOWER || pkmn.ability == :PROTOSYNTHESIS
+			  sum+=10 if pkmn.ability == :FLOWERGIFT || pkmn.ability == :SOLARPOWER || pkmn.ability == :PROTOSYNTHESIS
 			  pkmn.eachMove do |m|
 				  next if m.base_damage==0 || m.type != :FIRE
 				  sum += 5
@@ -260,6 +257,9 @@ class PokeBattle_AI
           sum += Effectiveness.calculate(m.type, bTypes[0], bTypes[1], bTypes[2])
         end
       end
+	  if pokmon==party[party.length-1]
+		sum-=20
+	  end	
       if best == -1 || sum > bestSum
         best = i
         bestSum = sum
