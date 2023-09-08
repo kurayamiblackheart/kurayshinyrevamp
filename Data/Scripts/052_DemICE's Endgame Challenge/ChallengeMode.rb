@@ -260,21 +260,10 @@ module GameData
 					end				
 					pkmn.calc_stats
 				end
+				$game_switches[987]=randovar
+				$game_switches[47]=reversevar  
+				$game_switches[SWITCH_IS_REMATCH]=rematch
 			end	
-		if $game_switches && $game_switches[850] && 
-			($game_map.map_id == 314 ||  # Pokemon League Lobby
-				$game_map.map_id == 315 || # Lorelei
-				$game_map.map_id == 316 || # Bruno
-				$game_map.map_id == 317 || # Agatha
-				$game_map.map_id == 318 || # Lance
-				$game_map.map_id == 328 || # Champion Room
-				$game_map.map_id == 546 || # Vermillion Fight Arena
-				$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
-				$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
-			  $game_switches[987]=randovar
-			  $game_switches[47]=reversevar  
-			  $game_switches[SWITCH_IS_REMATCH]=rematch
-		end	
 		  return trainer
 		end				
 		
