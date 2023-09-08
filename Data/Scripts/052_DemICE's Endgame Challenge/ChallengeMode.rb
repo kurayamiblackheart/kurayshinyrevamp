@@ -228,8 +228,10 @@ module GameData
 					$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
 					  randovar=$game_switches[987]
 					  reversevar=$game_switches[47]
+					  rematch=$game_switches[SWITCH_IS_REMATCH]
 					  $game_switches[987]=false
 					  $game_switches[47]=false
+					  $game_switches[SWITCH_IS_REMATCH]=false
 			end		  
 		  trainer = challenge_mode_to_trainer
 			if $game_switches && $game_switches[850] && 
@@ -271,6 +273,7 @@ module GameData
 				$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
 			  $game_switches[987]=randovar
 			  $game_switches[47]=reversevar  
+			  $game_switches[SWITCH_IS_REMATCH]=rematch
 		end	
 		  return trainer
 		end				
