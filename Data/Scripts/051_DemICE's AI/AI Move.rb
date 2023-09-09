@@ -591,10 +591,24 @@ class PokeBattle_AI
     typeMod = pbCalcTypeMod(type,user,target)
     # Type effectiveness
     if Effectiveness.ineffective?(typeMod) || score<=0
-		if move.baseDamage>0 || move.name=="Thunder Wave"
-			return true
-		end
-	end	
+      if move.baseDamage>0 || move.name=="Thunder Wave"
+        return true
+      end
+    end	
+	  # DemICE: Yes i had to move Last Resort here to make its score return 0 otherwise it just never became 0.
+	  if move.function == "125" 
+      hasThisMove = false
+      hasOtherMoves = false
+      hasUnusedMoves = false
+      user.eachMove do |m|
+        hasThisMove    = true if m.id == @id
+        hasOtherMoves  = true if m.id != @id
+        hasUnusedMoves = true if m.id != @id && !user.movesUsed.include?(m.id)
+      end
+      if !hasThisMove || !hasOtherMoves || hasUnusedMoves
+        return true
+      end 
+	  end  
     # Immunity due to ability/item/other effects
     if skill>=PBTrainerAI.mediumSkill
       case type

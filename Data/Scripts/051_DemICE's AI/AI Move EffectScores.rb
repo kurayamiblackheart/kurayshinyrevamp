@@ -1414,18 +1414,18 @@ class PokeBattle_AI
 				score -= 90
 			end 
 			#---------------------------------------------------------------------------
-		when "125" # Last Resort
-			hasThisMove = false
-			hasOtherMoves = false
-			hasUnusedMoves = false
-			user.eachMove do |m|
-				hasThisMove    = true if m.id == @id
-				hasOtherMoves  = true if m.id != @id
-				hasUnusedMoves = true if m.id != @id && !user.movesUsed.include?(m.id)
-			end
-			if !hasThisMove || !hasOtherMoves || hasUnusedMoves
-				score=0
-			end
+		# when "125" # Last Resort
+		# 	hasThisMove = false
+		# 	hasOtherMoves = false
+		# 	hasUnusedMoves = false
+		# 	user.eachMove do |m|
+		# 		hasThisMove    = true if m.id == @id
+		# 		hasOtherMoves  = true if m.id != @id
+		# 		hasUnusedMoves = true if m.id != @id && !user.movesUsed.include?(m.id)
+		# 	end
+		# 	if !hasThisMove || !hasOtherMoves || hasUnusedMoves
+		# 		score=0
+		# 	end
 			#---------------------------------------------------------------------------
 		when "103" # Spikes
 			target=user.pbDirectOpposing(true)
