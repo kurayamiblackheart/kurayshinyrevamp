@@ -629,6 +629,21 @@ class Pokemon
       end
       # let's modify kurayboost depending on kuraystat sums here
     end
+    # DemICE tying the self-fusion buff to an option 
+    kurayboost =1.0 if $PokemonSystem.self_fusion_boost==0
+    # DemICE (And also disabling it for the endgame challenge)
+    if $game_switches && $game_switches[850] && 
+      ($game_map.map_id == 314 ||  # Pokemon League Lobby
+        $game_map.map_id == 315 || # Lorelei
+        $game_map.map_id == 316 || # Bruno
+        $game_map.map_id == 317 || # Agatha
+        $game_map.map_id == 318 || # Lance
+        $game_map.map_id == 328 || # Champion Room
+        $game_map.map_id == 546 || # Vermillion Fight Arena
+        $game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
+        $game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
+          kurayboost=1.0
+    end     
     # Calculate stats
     stats = {}
     GameData::Stat.each_main do |s|

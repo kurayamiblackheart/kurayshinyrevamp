@@ -38,6 +38,7 @@ class PokemonSystem
   attr_accessor :shinyfusedye
   attr_accessor :kuraylevelcap
   attr_accessor :kurayqol
+  attr_accessor :self_fusion_boost
   attr_accessor :kuraygambleodds
   attr_accessor :shenanigans
   attr_accessor :kuraystreamerdream
@@ -74,6 +75,7 @@ class PokemonSystem
     @kuraylevelcap = 0
     @kuraygambleodds = 100
     @kurayqol = 1
+    @self_fusion_boost = 0
     @shenanigans = 0
     @kuraystreamerdream = 0
   end
@@ -114,6 +116,7 @@ class PokemonSystem
     @kuraystreamerdream = saved.kuraystreamerdream if saved.kuraystreamerdream
     @kuraygambleodds = saved.kuraygambleodds if saved.kuraygambleodds
     @kurayqol = saved.kurayqol if saved.kurayqol
+    @kurayqol = saved.self_fusion_boost if saved.self_fusion_boost
     @shenanigans = saved.shenanigans if saved.shenanigans
   end
 end
@@ -955,6 +958,12 @@ class KurayOptionsScene < PokemonOption_Scene
                       "Easy Level Cap, for children",
                       "Normal Level Cap, for normal people",
                       "Hard Level Cap, for nerds"]
+    )
+    options << EnumOption.new(_INTL("Self-Fusion Stat Boost"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.self_fusion_boost },
+                      proc { |value| $PokemonSystem.self_fusion_boost = value },
+                      ["Stat boost for self-fusions is disabled.",
+                      "Stat boost for self-fusions is enabled."]
     )
     options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, 10,
                       proc { $PokemonSystem.kuraygambleodds },
