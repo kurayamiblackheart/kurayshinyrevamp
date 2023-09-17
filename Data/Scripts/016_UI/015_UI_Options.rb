@@ -116,7 +116,7 @@ class PokemonSystem
     @kuraystreamerdream = saved.kuraystreamerdream if saved.kuraystreamerdream
     @kuraygambleodds = saved.kuraygambleodds if saved.kuraygambleodds
     @kurayqol = saved.kurayqol if saved.kurayqol
-    @kurayqol = saved.self_fusion_boost if saved.self_fusion_boost
+    @self_fusion_boost = saved.self_fusion_boost if saved.self_fusion_boost
     @shenanigans = saved.shenanigans if saved.shenanigans
   end
 end
