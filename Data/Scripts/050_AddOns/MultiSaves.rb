@@ -335,10 +335,10 @@ class PokemonLoadScreen
 
   def pbStartLoadScreen
     updateCreditsFile
-    newer_version = find_newer_available_version
-    if newer_version
-      pbMessage(_INTL("Version {1} is now available! Please check the game's official page to download the newest version.", newer_version))
-    end
+    # newer_version = find_newer_available_version
+    # if newer_version
+    #   pbMessage(_INTL("Version {1} is now available! Please check the game's official page to download the newest version.", newer_version))
+    # end
 
     if ($game_temp.unimportedSprites && $game_temp.unimportedSprites.size > 0)
       handleReplaceExistingSprites()

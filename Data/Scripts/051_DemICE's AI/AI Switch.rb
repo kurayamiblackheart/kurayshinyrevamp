@@ -21,7 +21,10 @@ class PokeBattle_AI
 				typeMod = pbCalcTypeMod(moveType, target, battler)
 				if Effectiveness.super_effective?(typeMod) && moveData.base_damage > 50
 					switchChance = (moveData.base_damage > 70) ? 30 : 20
-					shouldSwitch = true if switchChance>80 #(pbAIRandom(100) < switchChance) # DemICE removing randomness
+					if switchChance>80 #(pbAIRandom(100) < switchChance) # DemICE removing randomness
+						shouldSwitch = true 
+						echo("If you ever see this message, you are witnessing a miracle. Start praying.\n")
+					end	
 				end
 			end
 		end
@@ -39,7 +42,7 @@ class PokeBattle_AI
 					(j.function=="0DC" && !b.pbHasType?(:GRASS) && b.effects[PBEffects::Substitute]<=0) # Leech Seed
 					tickdamage=true
 				end	
-				if b.hasActiveAbility?(:WONDERGUARD)
+				if b.hp==1
 					tickdamage=true if j.function=="102" && !b.pbHasType?(:ICE)
 					tickdamage=true if j.function=="101" && !b.pbHasType?(:ROCK) && !b.pbHasType?(:GROUND) && !b.pbHasType?(:STEEL)
 					tickdamage=true if j.function=="105" && !battler.pbOpposingSide.effects[PBEffects::StealthRock]
@@ -64,11 +67,15 @@ class PokeBattle_AI
 				mindamage=100 if ((maxspeed>aspeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 			end	
 		end	
-		shouldSwitch=true if maxdampercent<mindamage && !tickdamage
+		if maxdampercent<mindamage && !tickdamage
+			shouldSwitch=true 
+			echo("Switching because of dealing little to no direct or indirect damage.\n")
+		end	
 		# Pokémon can't do anything (must have been in battle for at least 5 rounds)
 		if !@battle.pbCanChooseAnyMove?(idxBattler) &&
 			battler.turnCount && battler.turnCount >= 5
 			shouldSwitch = true
+			echo("Switching because 5 turns of nothing.\n")
 		end
 		# Pokémon is Perish Songed and has Baton Pass
 		if skill >= PBTrainerAI.highSkill && battler.effects[PBEffects::PerishSong] == 1
@@ -77,6 +84,7 @@ class PokeBattle_AI
 				next if !@battle.pbCanChooseMove?(idxBattler, i, false)
 				batonPass = i
 				shouldSwitch = true
+				echo("Switching because of perish song.\n")
 				break
 			end
 		end
@@ -102,6 +110,7 @@ class PokeBattle_AI
 				end
 				if scoreCount > 0 && scoreSum / scoreCount <= 120 #&& pbAIRandom(100) < 80 # DemICE removing randomness
 					shouldSwitch = true if battler.hp>battler.totalhp/2
+					echo("Switching because of being encored into a bad move.\n")
 				end
 			end
 		end
@@ -116,6 +125,7 @@ class PokeBattle_AI
 				end
 				if scoreCount > 0 && scoreSum / scoreCount <= 120 #&& pbAIRandom(100) < 80 # DemICE removing randomness
 					shouldSwitch = true if battler.hp>battler.totalhp/3
+					echo("Switching because of being choice locked into a bad move.\n")
 				end
 			end
 		end
@@ -133,23 +143,29 @@ class PokeBattle_AI
 		if @battle.rules["suddendeath"] && battler.turnCount > 0
 			if battler.hp <= battler.totalhp / 4 #&& pbAIRandom(100) < 30 # DemICE removing randomness
 				shouldSwitch = true
+				echo("The fuck's a sudden death\n")
 			elsif battler.hp <= battler.totalhp / 2 #&& pbAIRandom(100) < 80 # DemICE removing randomness
 				shouldSwitch = true
+				echo("The fuck's a sudden death\n")
 			end
 		end
 		# Pokémon is about to faint because of Perish Song
 		if battler.effects[PBEffects::PerishSong] == 1
 			shouldSwitch = true
+			echo("Switching because of perish song.\n")
 		end
 		#incoming = [nil,0]
 		incoming = nil
 		weight = 1
-		if @battle.pbCanChooseNonActive?(idxBattler)
+		if @battle.pbCanChooseNonActive?(idxBattler) && shouldSwitch
 			newindex=pbHardSwitchChooseNewEnemy(idxBattler,party,true)
 		else	
 			shouldSwitch=false
 		end
-		shouldswitch=false if newindex!=battler.pokemonIndex	
+		if newindex!=battler.pokemonIndex && shouldSwitch	
+			echo("\nRegretting the switch because there is no good pokmon to hard switch in.\n")
+			shouldSwitch=false 
+		end
 		if shouldSwitch
 			incoming=newindex
 			# idxPartyStart, idxPartyEnd = @battle.pbTeamIndexRangeFromBattlerIndex(idxBattler)
@@ -230,9 +246,10 @@ class PokeBattle_AI
 		enemies.each do |i|
 			#pokmon = party[i]
 			pokmon = @battle.pbMakeFakeBattler(party[i],batonpasscheck,@battle.battlers[idxBattler]) 
-			# if $DEBUG && Input.press?(Input::CTRL) && !sack
-			# 	print pokmon.name
-			# end
+			#if $consoleenabled
+				echo("\nSwitch score for: "+pokmon.name)
+				echo("\n----------------------------------------\n")
+			#end	
 			sum  = 0
 			if PluginManager.installed?("Mid Battle Dialogue")
 				if BattleScripting.hasAceData?
@@ -381,10 +398,12 @@ class PokeBattle_AI
 				end
 			end
 			sum+=maxscore+(scoresum*0.01) #if damagesum>0 || tickdamage
-			# if $DEBUG && Input.press?(Input::CTRL) && !sack
-			# 	print sum
-			# end
-			sum-=100 if (ownmaxmove.physicalMove? && pokmon.stages[:SPECIAL_ATTACK]>0) || (ownmaxmove.specialMove? && pokmon.stages[:ATTACK]>0)
+			if $consoleenabled
+				echo("\nScore after factoring offense: "+sum.to_s+" (Maximum potential damage dealt: "+damagedealtPercent.to_s+" percent)")
+			end	
+			if ownmaxmove
+				sum-=100 if (ownmaxmove.physicalMove? && pokmon.stages[:SPECIAL_ATTACK]>0) || (ownmaxmove.specialMove? && pokmon.stages[:ATTACK]>0)
+			end	
 			willtakedamage=false
 			pokmon.eachOpposing do |b|
 				if ((aspeed>maxspeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>roomturn)) && (damagedealtPercent>=100 || maxprio>0)
@@ -417,6 +436,9 @@ class PokeBattle_AI
 					sum-=20 if groundvar  
 				end	
 			end	
+			#if $consoleenabled
+				echo("\nScore after factoring defense: "+sum.to_s+" (Maximum expected damage taken: "+damagetakenPercent.to_s+" percent)")
+			#end	
 			ownparty = @battle.pbParty(1)
 			ownparty.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
@@ -538,7 +560,9 @@ class PokeBattle_AI
 				sum=0
 				sum=2000 if sack && i!=activemon
 			end	
-			#print sum if $DEBUG && Input.press?(Input::CTRL) && !sack
+			#if $consoleenabled
+				echo("\nScore after various other factors: "+sum.to_s+"\n")
+			#end	
 			if best == -1 || sum > bestSum
 				best = i
 				bestSum = sum

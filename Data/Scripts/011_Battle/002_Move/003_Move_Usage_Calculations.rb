@@ -265,6 +265,7 @@ class PokeBattle_Move
     damage  = (((2.0 * user.level / 5 + 2).floor * baseDmg * atk / defense).floor / 50).floor + 2
     damage  = [(damage  * multipliers[:final_damage_multiplier]).round, 1].max
     target.damageState.calcDamage = damage
+    echo("\n"+damage.to_s+" damage!\n")
   end
 
   def pbCalcDamageMultipliers(user,target,numTargets,type,baseDmg,multipliers)
@@ -408,7 +409,7 @@ class PokeBattle_Move
       end
     end
     # Random variance
-    if !self.is_a?(PokeBattle_Confusion)
+    if !self.is_a?(PokeBattle_Confusion) && $PokemonSystem.damage_variance==1 && !$game_switches[850]
       random = 85+@battle.pbRandom(16)
       multipliers[:final_damage_multiplier] *= random / 100.0
     end

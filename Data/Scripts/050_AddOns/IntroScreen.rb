@@ -13,7 +13,7 @@ KURAYVERSION = "0.8.8"
 # 2 - R/S/E
 
 module Settings
-  GAME_VERSION_NUMBER = "5.3.1"
+  GAME_VERSION_NUMBER = "5.3.1.2"
 end
 
 class Scene_Intro
