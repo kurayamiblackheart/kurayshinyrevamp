@@ -6,6 +6,11 @@ def test_http_get
   end
 end
 
+def updateHttpSettingsFile
+  return if $PokemonSystem.download_sprites != 0
+  download_file(Settings::HTTP_CONFIGS_FILE_URL, Settings::HTTP_CONFIGS_FILE_PATH)
+end
+
 def updateCreditsFile
   return if $PokemonSystem.download_sprites != 0
   download_file(Settings::CREDITS_FILE_URL,Settings::CREDITS_FILE_PATH,)
@@ -61,7 +66,7 @@ def download_sprite(base_path, head_id, body_id, saveLocation = "Graphics/temp",
       File.open(downloaded_file_name, "wb") do |file|
         file.write(response[:body])
       end
-      echo _INTL("\nDownloaded file {1} to {2}", downloaded_file_name, saveLocation)
+      echo _INTL("\nDownloaded file from {1} to {2}", base_path, saveLocation)
       return downloaded_file_name
     end
     return nil
@@ -72,7 +77,7 @@ end
 
 def download_autogen_sprite(head_id, body_id)
   return nil if $PokemonSystem.download_sprites != 0
-  url = "https://raw.githubusercontent.com/infinitefusion/autogen-fusion-sprites/master/Battlers/{1}/{1}.{2}.png"
+  url = Settings::AUTOGEN_SPRITES_REPO_URL + "{1}/{1}.{2}.png"
   destPath = _INTL("{1}{2}", Settings::BATTLERS_FOLDER, head_id)
   sprite = download_sprite(_INTL(url, head_id, body_id), head_id, body_id, destPath)
   return sprite if sprite
@@ -82,7 +87,8 @@ end
 def download_custom_sprite(head_id, body_id)
   return nil if $PokemonSystem.download_sprites != 0
   #base_path = "https://raw.githubusercontent.com/Aegide/custom-fusion-sprites/main/CustomBattlers/{1}.{2}.png"
-  url = "https://raw.githubusercontent.com/infinitefusion/sprites/main/CustomBattlers/{1}.{2}.png"
+  # url = "https://raw.githubusercontent.com/infinitefusion/sprites/main/CustomBattlers/{1}.{2}.png"
+  url = Settings::CUSTOM_SPRITES_REPO_URL + "{1}.{2}.png"
   destPath = _INTL("{1}{2}", Settings::CUSTOM_BATTLERS_FOLDER_INDEXED, head_id)
   if !Dir.exist?(destPath)
     Dir.mkdir(destPath)
@@ -94,7 +100,7 @@ def download_custom_sprite(head_id, body_id)
 end
 
 def download_unfused_alt_sprites(dex_num)
-  base_url = "https://raw.githubusercontent.com/infinitefusion/sprites/main/Other/Base%20Sprites/{1}"
+  base_url = Settings::BASE_POKEMON_ALT_SPRITES_REPO_URL + "{1}"
   extension = ".png"
   destPath = _INTL("{1}", Settings::CUSTOM_BASE_SPRITES_FOLDER)
   if !Dir.exist?(destPath)
@@ -111,7 +117,7 @@ def download_unfused_alt_sprites(dex_num)
 end
 
 def download_alt_sprites(head_id,body_id)
-  base_url = "https://raw.githubusercontent.com/infinitefusion/sprites/main/CustomBattlers/{1}.{2}"
+  base_url = "#{Settings::CUSTOM_SPRITES_REPO_URL}{1}.{2}"
   extension = ".png"
   destPath = _INTL("{1}{2}", Settings::CUSTOM_BATTLERS_FOLDER_INDEXED, head_id)
   if !Dir.exist?(destPath)
