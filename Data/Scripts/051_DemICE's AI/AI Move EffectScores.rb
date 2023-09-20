@@ -299,6 +299,8 @@ class PokeBattle_AI
 							score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>halfhealth
 						end
 					end 
+					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:EVASION] * 10
 				end
 			else
@@ -333,6 +335,8 @@ class PokeBattle_AI
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
 				end 
+				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				if user.statStageAtMax?(:ATTACK) &&
 					user.statStageAtMax?(:DEFENSE)
 					score -= 90
@@ -384,6 +388,8 @@ class PokeBattle_AI
 				score += 20 if halfhealth>maxdam
 				score += 40 if thirdhealth>maxdam
 			end 
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if user.statStageAtMax?(:ATTACK) &&
 				user.statStageAtMax?(:DEFENSE)
 				score -= 90
@@ -435,6 +441,8 @@ class PokeBattle_AI
 				score += 20 if halfhealth>maxdam
 				score += 40 if thirdhealth>maxdam
 			end 
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if user.statStageAtMax?(:ATTACK) &&
 				user.statStageAtMax?(:DEFENSE) &&
 				user.statStageAtMax?(:ACCURACY)
@@ -483,20 +491,9 @@ class PokeBattle_AI
 				end
 				score += 20 if halfhealth>maxdam
 				score += 40 if thirdhealth>maxdam
-				# prio=false
-				# @battle.allOtherSideBattlers(1).each do |b|
-				# 	for j in b.moves
-				# 		next if !j.damagingMove?
-				# 		prio= (j.priority>0) 
-				# 	end 
-				# end   
-				# selfprio=false
-				# user.eachMove do |m|
-				# 	next if !m.damagingMove?
-				# 	selfprio= (m.priority>0) 
-				# end    
-				# score-=30 if prio && !selfprio
 			end
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if user.statStageAtMax?(:ATTACK) &&
 				user.statStageAtMax?(:SPEED)
 				score -= 90
@@ -542,20 +539,9 @@ class PokeBattle_AI
 				end
 				score += 20 if halfhealth>maxdam
 				score += 40 if thirdhealth>maxdam
-				#prio=false
-				# @battle.allOtherSideBattlers(1).each do |b|
-				# 	for j in b.moves
-				# 		next if !j.damagingMove?
-				# 		prio= (j.priority>0) 
-				# 	end 
-				# end   
-				# selfprio=false
-				# user.eachMove do |m|
-				# 	next if !m.damagingMove?
-				# 	selfprio= (m.priority>0) 
-				# end    
-				# score-=30 if prio && !selfprio
 			end
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if user.statStageAtMax?(:ATTACK) &&
 				user.statStageAtMax?(:SPEED)
 				score -= 90
@@ -606,20 +592,9 @@ class PokeBattle_AI
 					ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
 					score += 40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*1.5>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
 				end
-				prio=false
-				@battle.allOtherSideBattlers(1).each do |b|
-					for j in b.moves
-						next if !j.damagingMove?
-						prio= (j.priority>0) 
-					end 
-				end   
-				selfprio=false
-				user.eachMove do |m|
-					next if !m.damagingMove?
-					selfprio= (m.priority>0) 
-				end    
-				score-=30 if prio && !selfprio
 			end
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if user.statStageAtMax?(:SPEED) &&
 				user.statStageAtMax?(:SPECIAL_ATTACK) &&
 				user.statStageAtMax?(:SPECIAL_DEFENSE)
@@ -672,20 +647,9 @@ class PokeBattle_AI
 				end
 				score += 20 if halfhealth>maxdam
 				score += 40 if thirdhealth>maxdam
-				prio=false
-				# @battle.allOtherSideBattlers(1).each do |b|
-				# 	for j in b.moves
-				# 		next if !j.damagingMove?
-				# 		prio= (j.priority>0) 
-				# 	end 
-				# end   
-				# selfprio=false
-				# user.eachMove do |m|
-				# 	next if !m.damagingMove?
-				# 	selfprio= (m.priority>0) 
-				# end    
-				# score-=30 if prio && !selfprio
 			end 
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if user.statStageAtMax?(:SPECIAL_ATTACK) &&
 				user.statStageAtMax?(:SPECIAL_DEFENSE)
 				score -= 90
@@ -735,6 +699,8 @@ class PokeBattle_AI
 					score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
 				end
 			end 
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if user.statStageAtMax?(:DEFENSE) &&
 				user.statStageAtMax?(:SPECIAL_DEFENSE)
 				score -= 90
@@ -775,6 +741,8 @@ class PokeBattle_AI
 					score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
 				end
 			end 
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if (user.statStageAtMax?(:DEFENSE) &&
 				user.statStageAtMax?(:SPECIAL_DEFENSE)) || !geared
 				score -= 200
@@ -813,6 +781,8 @@ class PokeBattle_AI
 					score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
 				end
 			end 
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if move.statusMove?
 				if user.statStageAtMax?(:DEFENSE)
 					score -= 90
@@ -853,6 +823,8 @@ class PokeBattle_AI
 					score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
 				end
 			end 
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if move.statusMove?
 				if user.statStageAtMax?(:DEFENSE)
 					score -= 90
@@ -895,6 +867,8 @@ class PokeBattle_AI
 					score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
 				end
 			end 
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if move.statusMove?
 				if user.statStageAtMax?(:SPECIAL_DEFENSE)
 					score -= 90
@@ -927,20 +901,9 @@ class PokeBattle_AI
 					score += 100 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*1.5>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
 				end
 				score += 40 if thirdhealth>maxdam
-				# prio=false
-				# @battle.allOtherSideBattlers(1).each do |b|
-				# 	for j in b.moves
-				# 		next if !j.damagingMove?
-				# 		prio= (j.priority>0) 
-				# 	end 
-				# end   
-				# selfprio=false
-				# user.eachMove do |m|
-				# 	next if !m.damagingMove?
-				# 	selfprio= (m.priority>0) 
-				# end    
-				# score-=60 if prio && !selfprio
 			end
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if move.statusMove?
 				if user.statStageAtMax?(:SPEED)
 					score -= 90
@@ -980,20 +943,9 @@ class PokeBattle_AI
 					end
 				end
 				score += 40 if thirdhealth>maxdam
-				# prio=false
-				# @battle.allOtherSideBattlers(1).each do |b|
-				# 	for j in b.moves
-				# 		next if !j.damagingMove?
-				# 		prio= (j.priority>0) 
-				# 	end 
-				# end   
-				# selfprio=false
-				# user.eachMove do |m|
-				# 	next if !m.damagingMove?
-				# 	selfprio= (m.priority>0) 
-				# end    
-				# score-=60 if prio && !selfprio
 			end
+			score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+			score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 			if move.statusMove?
 				if user.statStageAtMax?(:SPEED)
 					score -= 90
@@ -1039,6 +991,8 @@ class PokeBattle_AI
 					score += 40 if thirdhealth>maxdam
 					prio=false
 				end 
+				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:ATTACK] * 10
 				score -= user.stages[:SPECIAL_ATTACK] * 10
 				if skill >= PBTrainerAI.mediumSkill
@@ -1086,6 +1040,8 @@ class PokeBattle_AI
 					score += 40 if thirdhealth>maxdam
 					prio=false
 				end 
+				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:ATTACK] * 10
 				score -= user.stages[:SPECIAL_ATTACK] * 10
 				if skill >= PBTrainerAI.mediumSkill
@@ -1134,20 +1090,9 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-						# prio=false
-						# @battle.allOtherSideBattlers(1).each do |b|
-						# 	for j in b.moves
-						# 		next if !j.damagingMove?
-						# 		prio= (j.priority>0) 
-						# 	end 
-						# end   
-						# selfprio=false
-						# user.eachMove do |m|
-						# 	next if !m.damagingMove?
-						# 	selfprio= (m.priority>0) 
-						# end    
-						# score-=30 if prio && !selfprio
 					end 
+					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:ATTACK] * 20
 					if skill >= PBTrainerAI.mediumSkill
 						hasPhysicalAttack = false
@@ -1212,19 +1157,6 @@ class PokeBattle_AI
 						score-=90
 					end	
 					if targetSurvivesMove(maxmove,target,user,maxprio) || (target.status == :SLEEP && target.statusCount>1)
-						# prio=false
-						# @battle.allOtherSideBattlers(1).each do |b|
-						# 	for j in b.moves
-						# 		next if !j.damagingMove?
-						# 		prio=true if (j.priority>0) 
-						# 	end 
-						# end   
-						# selfprio=false
-						# user.eachMove do |m|
-						# 	next if !m.damagingMove?
-						# 	selfprio=true if  (m.priority>0) 
-						# end    
-						# score-=30 if prio && !selfprio
 						score += 40
 						score+= 60 if (target.status == :SLEEP && target.statusCount>1)
 						score += 60 if user.hasActiveAbility?(:SPEEDBOOST)
@@ -1248,6 +1180,8 @@ class PokeBattle_AI
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
 					end 
+					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:ATTACK]*20
 					if skill>=PBTrainerAI.mediumSkill
 						hasPhysicalAttack = false
@@ -1306,20 +1240,9 @@ class PokeBattle_AI
 					end
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
-					# prio=false
-					# @battle.allOtherSideBattlers(1).each do |b|
-					# 	for j in b.moves
-					# 		next if !j.damagingMove?
-					# 		prio= (j.priority>0) 
-					# 	end 
-					# end   
-					# selfprio=false
-					# user.eachMove do |m|
-					# 	next if !m.damagingMove?
-					# 	selfprio= (m.priority>0) 
-					# end    
-					# score-=30 if prio && !selfprio
 				end 
+				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:ATTACK] * 10
 				score -= user.stages[:ACCURACY] * 10
 				if skill >= PBTrainerAI.mediumSkill
@@ -1366,20 +1289,9 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-						# prio=false
-						# @battle.allOtherSideBattlers(1).each do |b|
-						# 	for j in b.moves
-						# 		next if !j.damagingMove?
-						# 		prio= (j.priority>0) 
-						# 	end 
-						# end   
-						# selfprio=false
-						# user.eachMove do |m|
-						# 	next if !m.damagingMove?
-						# 	selfprio= (m.priority>0) 
-						# end    
-						# score-=30 if prio && !selfprio
 					end 
+					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:SPECIAL_ATTACK]*20
 					if skill>=PBTrainerAI.mediumSkill
 						hasSpecicalAttack = false
@@ -1438,20 +1350,9 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-						# prio=false
-						# @battle.allOtherSideBattlers(1).each do |b|
-						# 	for j in b.moves
-						# 		next if !j.damagingMove?
-						# 		prio= (j.priority>0) 
-						# 	end 
-						# end   
-						# selfprio=false
-						# user.eachMove do |m|
-						# 	next if !m.damagingMove?
-						# 	selfprio= (m.priority>0) 
-						# end    
-						# score-=30 if prio && !selfprio
 					end 
+					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score += 40 if user.turnCount == 0
 					score -= user.stages[:SPECIAL_ATTACK] * 30
 					if skill >= PBTrainerAI.mediumSkill
@@ -1528,20 +1429,9 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>(maxdam)
 						score += 40 if thirdhealth>(maxdam)
-						# prio=false
-						# @battle.allOtherSideBattlers(1).each do |b|
-						# 	for j in b.moves
-						# 		next if !j.damagingMove?
-						# 		prio= (j.priority>0) 
-						# 	end 
-						# end   
-						# selfprio=false
-						# user.eachMove do |m|
-						# 	next if !m.damagingMove?
-						# 	selfprio= (m.priority>0) 
-						# end    
-						# score-=60 if prio && !selfprio
 					end
+					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				end	
 			end    
 			#---------------------------------------------------------------------------
