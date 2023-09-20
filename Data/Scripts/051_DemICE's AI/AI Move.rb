@@ -643,7 +643,7 @@ class PokeBattle_AI
 		# Critical hits - n/a
 		# Random variance - n/a
 		# DemICE encourage AI to use stronger moves to avoid opponent surviving from low damage roll.
-		multipliers[:final_damage_multiplier] *=0.9 if ($PokemonSystem.damage_variance==1 || game_switches[850])  # If the damage variance is enabled from kuray options.
+		multipliers[:final_damage_multiplier] *=0.9 if $PokemonSystem.damage_variance==1 && !$game_switches[850]  # If the damage variance is enabled from kuray options.
 		# STAB
 		if skill>=PBTrainerAI.mediumSkill
 			if type && user.pbHasType?(type)
