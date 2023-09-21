@@ -347,8 +347,11 @@ class PokeBattle_AI
 					end
 				end
 			end
+			aspeed = pbRoughStat(user,:SPEED,skill)
+			ospeed = pbRoughStat(target,:SPEED,skill)
 			if ((!target.hasActiveAbility?(:INNERFOCUS) && !target.hasActiveAbility?(:SHIELDDUST)) || mold_broken) &&
-				target.effects[PBEffects::Substitute]==0
+				target.effects[PBEffects::Substitute]==0 &&
+				((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				canFlinch = false
 				if move.canKingsRock? && user.hasActiveItem?([:KINGSROCK,:RAZORFANG])
 					canFlinch = true

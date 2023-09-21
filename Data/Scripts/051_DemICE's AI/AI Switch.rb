@@ -117,10 +117,15 @@ class PokeBattle_AI
 		if battler.effects[PBEffects::ChoiceBand] &&
 			battler.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
 			if battler.lastMoveUsed && battler.pbHasMove?(battler.lastMoveUsed)
+				choicedmove=nil
+				for choice in battler.moves
+					next if choice.id!=battler.lastMoveUsed
+					choicedmove=choice
+				end
 				scoreSum   = 0
 				scoreCount = 0
 				battler.allOpposing.each do |b|
-					scoreSum += pbGetMoveScore(battler.lastMoveUsed, battler, b, skill)
+					scoreSum += pbGetMoveScore(choicedmove, battler, b, skill)
 					scoreCount += 1
 				end
 				if scoreCount > 0 && scoreSum / scoreCount <= 120 #&& pbAIRandom(100) < 80 # DemICE removing randomness
