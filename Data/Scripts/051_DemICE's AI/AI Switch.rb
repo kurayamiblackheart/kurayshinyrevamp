@@ -162,17 +162,22 @@ class PokeBattle_AI
 		#incoming = [nil,0]
 		incoming = nil
 		weight = 1
-		if @battle.pbCanChooseNonActive?(idxBattler) && shouldSwitch
-			newindex=pbHardSwitchChooseNewEnemy(idxBattler,party,true)
-		else	
-			shouldSwitch=false
+		canheswitch=false
+		party.each_with_index do |_pkmn, i|
+			canheswitch=true if @battle.pbCanHardSwitchLax?(idxBattler, i)
 		end
-		if newindex!=battler.pokemonIndex && shouldSwitch	
-			echo("\nRegretting the switch because there is no good pokmon to hard switch in.\n")
-			shouldSwitch=false 
+		shouldSwitch=false if !canheswitch
+		newindex=pbHardSwitchChooseNewEnemy(idxBattler,party,true) if shouldSwitch
+		if newindex
+			if newindex[0]==battler.pokemonIndex && shouldSwitch	
+				echo("\nRegretting the switch because there is no good pokmon to hard switch in.\n")
+				shouldSwitch=false 
+			end
+		else
+			shouldSwitch=false 	
 		end
 		if shouldSwitch
-			incoming=newindex
+			incoming=newindex[0]
 			# idxPartyStart, idxPartyEnd = @battle.pbTeamIndexRangeFromBattlerIndex(idxBattler)
 			# @battle.pbParty(idxBattler).each_with_index do |pkmn, i|
 			# 	next if i == idxPartyEnd - 1   # Don't choose to switch in ace
