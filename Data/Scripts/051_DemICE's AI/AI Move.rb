@@ -27,6 +27,10 @@ class PokeBattle_AI
 		# NOTE: A move is only added to the choices array if it has a non-zero
 		#       score.
 		choices     = []
+		if !@battle.wildBattle?
+			echo("\n\nDamage calculations for: "+user.name+"\n")
+			echo("------------------------------------------")
+		end
 		user.eachMoveWithIndex do |_m, i|
 			next if !@battle.pbCanChooseMove?(idxBattler, i, false)
 			if wildBattler
@@ -37,8 +41,8 @@ class PokeBattle_AI
 		end
 
 		if !@battle.wildBattle?
-			echo("\n\n\nChoices and scores for: "+user.name+"\n")
-			echo("----------------------------------------\n")
+			echo("\nChoices and scores:\n") #for: "+user.name+"\n")
+			echo("------------------------\n")#----------------\n")
 		end
 		# Figure out useful information about the choices
 		totalScore = 0
@@ -60,7 +64,7 @@ class PokeBattle_AI
 				if [1, 2, 3, 6, 7, 8].include?(useType)   # Use on Pokémon
 					idxTarget = @battle.battlers[idxTarget].pokemonIndex   # Party Pokémon
 				end
-				echo(item[0].name+": "+item[1].to_s)
+				#echo(item[0].name+": "+item[1].to_s)
 				# if $consoleenabled
 				# 	echo(choices+[item[0],item[1]])
 				# end	
@@ -316,7 +320,7 @@ class PokeBattle_AI
 		#baseDmg = pbMoveBaseDamage(move, user, target, skill)
 		realDamage = pbRoughDamage(move, user, target, skill)#, baseDmg)  # DemICE Moved the baseDmg calculation inside pbRoughDamage
 		#realDamage*=0.9 #DemICE encourage AI to use stronger moves to avoid opponent surviving from low damage roll.
-		echo("\n"+move.name+" damage: "+realDamage.to_s+"\n")
+		echo("\n"+move.name+" damage on "+target.name+": "+realDamage.to_s+"\n")
 		# Account for accuracy of move
 		accuracy = pbRoughAccuracy(move, user, target, skill)
 		accuracy*= 1.3 if $game_switches[850] # Endgame Challenge enabled
@@ -356,7 +360,7 @@ class PokeBattle_AI
 				if move.canKingsRock? && user.hasActiveItem?([:KINGSROCK,:RAZORFANG])
 					canFlinch = true
 				end
-				if user.hasActiveAbility?(:STENCH) && !move.flinchingMove?
+				if user.hasActiveAbility?(:STENCH) || move.flinchingMove?
 					canFlinch = true
 				end
 				bestmove=bestMoveVsTarget(user,target,skill) # [maxdam,maxmove,maxprio,physorspec]

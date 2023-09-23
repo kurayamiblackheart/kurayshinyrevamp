@@ -10,7 +10,7 @@ class PokeBattle_AI
 		if move.baseDamage==0 && attacker.hasActiveAbility?(:PRANKSTER)
 			prankpri = true
 		end	
-		if move.priority>0 || prankpri || (attacker.hasActiveAbility?(:GALEWINGS) && attacker.hp==attacker.totalhp && move.type==PBTypes::FLYING)
+		if move.priority>0 || prankpri || (attacker.hasActiveAbility?(:GALEWINGS) && attacker.hp==attacker.totalhp && move.type==:FLYING)
 			aspeed = pbRoughStat(attacker,:SPEED,skill)
 			ospeed = pbRoughStat(opponent,:SPEED,skill)
 			if move.baseDamage>0  
@@ -173,7 +173,7 @@ class PokeBattle_AI
 				end
 			elsif skill >= PBTrainerAI.mediumSkill
 				score -= 90 if move.statusMove?
-				score = 5 if target.effects[PBEffects::Yawn] > 0 && move.function == "004"
+				score -=300 if target.effects[PBEffects::Yawn] > 0 && move.function == "004"
 			end
 			
 			#---------------------------------------------------------------------------
