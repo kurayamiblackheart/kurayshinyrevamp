@@ -21,8 +21,10 @@ class PokemonDataBox < SpriteWrapper
   #KurayNewSymbolGender
   NAME_BASE_COLOR         = Color.new(255,255,255)
   NAME_SHADOW_COLOR       = Color.new(32,32,32)
+  # MALE_BASE_COLOR         = Color.new(48,96,216)
   MALE_BASE_COLOR         = Color.new(55, 148, 229)
   MALE_SHADOW_COLOR       = NAME_SHADOW_COLOR
+  # FEMALE_BASE_COLOR       = Color.new(248,88,40)
   FEMALE_BASE_COLOR       = Color.new(229, 55, 203)
   FEMALE_SHADOW_COLOR     = NAME_SHADOW_COLOR
 
@@ -40,6 +42,8 @@ class PokemonDataBox < SpriteWrapper
     @animatingHP  = false
     @showExp      = false   # Specifically, show the Exp bar
     @animatingExp = false
+	# Trapstarr's Type Display
+	@showtypeDisplay = false # Unused at the moment
     @expFlash     = 0
     initializeDataBoxGraphic(sideSize)
     initializeOtherGraphics(viewport)
@@ -55,7 +59,7 @@ class PokemonDataBox < SpriteWrapper
       if onPlayerSide
         @showHP  = true
         @showExp = true
-      end
+	  end
     else   # Multiple Pokémon on side, use the thin dara box BG
       bgFilename = ["Graphics/Pictures/Battle/databox_thin",
                     "Graphics/Pictures/Battle/databox_thin_foe"][@battler.index%2]
@@ -86,7 +90,9 @@ class PokemonDataBox < SpriteWrapper
     @numbersBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/icon_numbers"))
     @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp"))
     @expBarBitmap  = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_exp"))
-    # Create sprite to draw HP numbers on
+	# Traps Type Display
+    @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+	# Create sprite to draw HP numbers on
     @hpNumbers = BitmapSprite.new(124,16,viewport)
     pbSetSmallFont(@hpNumbers.bitmap)
     @sprites["hpNumbers"] = @hpNumbers
@@ -99,6 +105,11 @@ class PokemonDataBox < SpriteWrapper
     @expBar = SpriteWrapper.new(viewport)
     @expBar.bitmap = @expBarBitmap.bitmap
     @sprites["expBar"] = @expBar
+	# Traps Type Display
+    # Create a sprite wrapper that displays Opponents Type
+    @sprites["typeDisplay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
+    @typeDisplay = SpriteWrapper.new(viewport)
+    @typeDisplay.bitmap = @sprites["typeDisplay"].bitmap
     # Create sprite wrapper that displays everything except the above
     @contents = BitmapWrapper.new(@databoxBitmap.width,@databoxBitmap.height)
     self.bitmap  = @contents
@@ -113,6 +124,8 @@ class PokemonDataBox < SpriteWrapper
     @numbersBitmap.dispose
     @hpBarBitmap.dispose
     @expBarBitmap.dispose
+	# Trapstarr's Type Display
+	@typeDisplayBitmap.dispose
     @contents.dispose
     super
   end
@@ -209,6 +222,48 @@ class PokemonDataBox < SpriteWrapper
       startX += charWidth
     end
   end
+  
+  # Trapstarr's Type Display
+  def drawtypeDisplay
+    typeDisplay = @sprites["typeDisplay"].bitmap
+    # Determine the type IDs for the opponent's types
+    if @battler.opposes?(0)
+      type1_number = GameData::Type.get(@battler.pokemon.type1).id_number
+      type2_number = GameData::Type.get(@battler.pokemon.type2).id_number
+      type1rect = Rect.new(0, type1_number * 28, 64, 28)
+      type2rect = Rect.new(0, type2_number * 28, 64, 28)
+    
+      # Calculate the position of the type display relative to the health bar
+      scale = 0.65  # Adjust this value as needed
+      scaled_width = (64 * scale).to_i
+      scaled_height = (28 * (scale * 1.2)).to_i
+    
+      # Position the type displays to the right side of the health bar
+      type_x = @spriteBaseX + (@hpBar.x + 185) # Adjust these value as needed  
+      type_y = @hpBar.y + @hpBar.src_rect.height - 40  # Position below the health bar
+    
+      if @battler.pokemon.type1 == @battler.pokemon.type2
+	    @showtypeDisplay = true
+        typeDisplay.stretch_blt(
+          Rect.new(type_x, type_y, scaled_width, scaled_height),
+          @typeDisplayBitmap.bitmap,
+          type1rect
+        )
+      else
+	    @showtypeDisplay = true
+        typeDisplay.stretch_blt(
+          Rect.new(type_x, type_y, scaled_width, scaled_height),
+          @typeDisplayBitmap.bitmap,
+          type1rect
+        )
+        typeDisplay.stretch_blt(
+          Rect.new(type_x, type_y + scaled_height, scaled_width, scaled_height),
+          @typeDisplayBitmap.bitmap,
+          type2rect
+        )
+      end
+    end
+  end
 
   def refresh
     self.bitmap.clear
@@ -223,6 +278,11 @@ class PokemonDataBox < SpriteWrapper
     nameOffset = nameWidth-116 if nameWidth>116
     textPos.push([@battler.name,@spriteBaseX+8-nameOffset,0,false,NAME_BASE_COLOR,NAME_SHADOW_COLOR])
     # Draw Pokémon's gender symbol
+    # case @battler.displayGender
+    # when 0   # Male
+    #   textPos.push([_INTL("♂"),@spriteBaseX+126,0,false,MALE_BASE_COLOR,MALE_SHADOW_COLOR])
+    # when 1   # Female
+    #   textPos.push([_INTL("♀"),@spriteBaseX+126,0,false,FEMALE_BASE_COLOR,FEMALE_SHADOW_COLOR])
     #KurayNewSymbolGender
     kuraygender1t = "♂"
     kuraygender2t = "♀"
@@ -287,8 +347,12 @@ class PokemonDataBox < SpriteWrapper
                      0,(s-1)*STATUS_ICON_HEIGHT,-1,STATUS_ICON_HEIGHT])
     end
     pbDrawImagePositions(self.bitmap,imagePos)
-    refreshHP
-    refreshExp
+	refreshExp
+	refreshHP
+	# Trapstarr's Type Display
+	if $PokemonSystem.typedisplay == 1
+	  refreshtypeDisplay
+	end
   end
 
   def refreshHP
@@ -318,12 +382,31 @@ class PokemonDataBox < SpriteWrapper
 
   def refreshExp
     return if !@showExp
-    return if @battler.level >= 100
-    w = exp_fraction * @expBarBitmap.width
-    # NOTE: The line below snaps the bar's width to the nearest 2 pixels, to
-    #       fit in with the rest of the graphics which are doubled in size.
-    w = ((w/2).round)*2
-    @expBar.src_rect.width = w
+	# return if @battler.level >= 100
+    return if @battler.level >= GameData::GrowthRate.max_level # Prevents display issues
+    if exp_fraction != 0 && @expBarBitmap.width != 0
+      w = exp_fraction * @expBarBitmap.width
+      # NOTE: The line below snaps the bar's width to the nearest 2 pixels, to
+      #       fit in with the rest of the graphics which are doubled in size.
+      w = ((w / 2).round) * 2
+      @expBar.src_rect.width = w
+    else
+      @expBar.src_rect.width = 0
+    end
+  end
+  
+  # Trapstarr's Type Display
+  def refreshtypeDisplay
+	@typeDisplay.bitmap.clear
+	return if !@battler.pokemon || @battler.fainted?
+    if @hpBar.visible
+      drawtypeDisplay
+	end
+  end
+
+  def updatetypeDisplay
+    return if !@showtypeDisplay
+	refreshtypeDisplay
   end
 
   def updateHPAnimation
@@ -398,6 +481,8 @@ class PokemonDataBox < SpriteWrapper
     updateHPAnimation
     # Animate Exp bar
     updateExpAnimation
+	# Update Type Display
+	updatetypeDisplay
     # Update coordinates of the data box
     updatePositions(frameCounter)
     pbUpdateSpriteHash(@sprites)
@@ -487,7 +572,7 @@ class AbilitySplashBar < SpriteWrapper
   def secondAbility=(value)
     @secondAbility = value
   end
-
+  
   def refresh
     self.bitmap.clear
     return if !@battler
