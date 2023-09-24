@@ -276,11 +276,6 @@ class PokemonDataBox < SpriteWrapper
     nameOffset = nameWidth-116 if nameWidth>116
     textPos.push([@battler.name,@spriteBaseX+8-nameOffset,0,false,NAME_BASE_COLOR,NAME_SHADOW_COLOR])
     # Draw Pokémon's gender symbol
-    # case @battler.displayGender
-    # when 0   # Male
-    #   textPos.push([_INTL("♂"),@spriteBaseX+126,0,false,MALE_BASE_COLOR,MALE_SHADOW_COLOR])
-    # when 1   # Female
-    #   textPos.push([_INTL("♀"),@spriteBaseX+126,0,false,FEMALE_BASE_COLOR,FEMALE_SHADOW_COLOR])
     #KurayNewSymbolGender
     kuraygender1t = "♂"
     kuraygender2t = "♀"
