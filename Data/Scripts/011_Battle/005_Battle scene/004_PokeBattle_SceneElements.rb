@@ -41,7 +41,7 @@ class PokemonDataBox < SpriteWrapper
     @showExp      = false   # Specifically, show the Exp bar
     @animatingExp = false
     # Trapstarr's Type Display
-    @showtypeDisplay = false # Unused at the moment
+    @showtypeDisplay = false
     @expFlash     = 0
     initializeDataBoxGraphic(sideSize)
     initializeOtherGraphics(viewport)
