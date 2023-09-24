@@ -88,7 +88,7 @@ class PokemonDataBox < SpriteWrapper
     @numbersBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/icon_numbers"))
     @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp"))
     @expBarBitmap  = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_exp"))
-    # Traps Type Display
+    # Trapstarr's Type Display
     @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
     # Create sprite to draw HP numbers on
     @hpNumbers = BitmapSprite.new(124,16,viewport)
@@ -103,7 +103,7 @@ class PokemonDataBox < SpriteWrapper
     @expBar = SpriteWrapper.new(viewport)
     @expBar.bitmap = @expBarBitmap.bitmap
     @sprites["expBar"] = @expBar
-    # Traps Type Display
+    # Trapstarr's Type Display
     # Create a sprite wrapper that displays Opponents Type
     @sprites["typeDisplay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     @typeDisplay = SpriteWrapper.new(viewport)
