@@ -21,10 +21,10 @@ class PokemonDataBox < SpriteWrapper
   #KurayNewSymbolGender
   NAME_BASE_COLOR         = Color.new(255,255,255)
   NAME_SHADOW_COLOR       = Color.new(32,32,32)
-  # MALE_BASE_COLOR         = Color.new(48,96,216)
+  MALE_BASE_COLOR         = Color.new(48,96,216)
   MALE_BASE_COLOR         = Color.new(55, 148, 229)
   MALE_SHADOW_COLOR       = NAME_SHADOW_COLOR
-  # FEMALE_BASE_COLOR       = Color.new(248,88,40)
+  FEMALE_BASE_COLOR       = Color.new(248,88,40)
   FEMALE_BASE_COLOR       = Color.new(229, 55, 203)
   FEMALE_SHADOW_COLOR     = NAME_SHADOW_COLOR
 
@@ -42,8 +42,8 @@ class PokemonDataBox < SpriteWrapper
     @animatingHP  = false
     @showExp      = false   # Specifically, show the Exp bar
     @animatingExp = false
-	# Trapstarr's Type Display
-	@showtypeDisplay = false # Unused at the moment
+    # Trapstarr's Type Display
+    @showtypeDisplay = false # Unused at the moment
     @expFlash     = 0
     initializeDataBoxGraphic(sideSize)
     initializeOtherGraphics(viewport)
@@ -59,7 +59,7 @@ class PokemonDataBox < SpriteWrapper
       if onPlayerSide
         @showHP  = true
         @showExp = true
-	  end
+      end
     else   # Multiple Pokémon on side, use the thin dara box BG
       bgFilename = ["Graphics/Pictures/Battle/databox_thin",
                     "Graphics/Pictures/Battle/databox_thin_foe"][@battler.index%2]
@@ -90,9 +90,9 @@ class PokemonDataBox < SpriteWrapper
     @numbersBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/icon_numbers"))
     @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp"))
     @expBarBitmap  = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_exp"))
-	# Traps Type Display
+    # Traps Type Display
     @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
-	# Create sprite to draw HP numbers on
+    # Create sprite to draw HP numbers on
     @hpNumbers = BitmapSprite.new(124,16,viewport)
     pbSetSmallFont(@hpNumbers.bitmap)
     @sprites["hpNumbers"] = @hpNumbers
@@ -105,7 +105,7 @@ class PokemonDataBox < SpriteWrapper
     @expBar = SpriteWrapper.new(viewport)
     @expBar.bitmap = @expBarBitmap.bitmap
     @sprites["expBar"] = @expBar
-	# Traps Type Display
+    # Traps Type Display
     # Create a sprite wrapper that displays Opponents Type
     @sprites["typeDisplay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     @typeDisplay = SpriteWrapper.new(viewport)
@@ -124,8 +124,8 @@ class PokemonDataBox < SpriteWrapper
     @numbersBitmap.dispose
     @hpBarBitmap.dispose
     @expBarBitmap.dispose
-	# Trapstarr's Type Display
-	@typeDisplayBitmap.dispose
+    # Trapstarr's Type Display
+    @typeDisplayBitmap.dispose
     @contents.dispose
     super
   end
@@ -347,12 +347,12 @@ class PokemonDataBox < SpriteWrapper
                      0,(s-1)*STATUS_ICON_HEIGHT,-1,STATUS_ICON_HEIGHT])
     end
     pbDrawImagePositions(self.bitmap,imagePos)
-	refreshExp
-	refreshHP
-	# Trapstarr's Type Display
-	if $PokemonSystem.typedisplay == 1
-	  refreshtypeDisplay
-	end
+    refreshHP
+    refreshExp
+    # Trapstarr's Type Display
+    if $PokemonSystem.typedisplay == 1
+      refreshtypeDisplay
+    end
   end
 
   def refreshHP
@@ -379,11 +379,21 @@ class PokemonDataBox < SpriteWrapper
     hpColor = 2 if self.hp<=@battler.totalhp/4   # Red bar
     @hpBar.src_rect.y = hpColor*@hpBarBitmap.height/3
   end
-
+	
+  # def refreshExp
+  #   return if !@showExp
+  #   return if @battler.level >= 100
+  #   w = exp_fraction * @expBarBitmap.width
+  #   # NOTE: The line below snaps the bar's width to the nearest 2 pixels, to
+  #   #       fit in with the rest of the graphics which are doubled in size.
+  #   w = ((w/2).round)*2
+  #   @expBar.src_rect.width = w
+  # end
+	
+  # Trapstarr's exp bar patch (prevents instances of dividing by zero)	
   def refreshExp
     return if !@showExp
-	# return if @battler.level >= 100
-    return if @battler.level >= GameData::GrowthRate.max_level # Prevents display issues
+    return if @battler.level >= GameData::GrowthRate.max_level
     if exp_fraction != 0 && @expBarBitmap.width != 0
       w = exp_fraction * @expBarBitmap.width
       # NOTE: The line below snaps the bar's width to the nearest 2 pixels, to
