@@ -32,6 +32,7 @@ class PokemonSystem
   attr_accessor :kurayfonts
   attr_accessor :kuraybigicons
   attr_accessor :kurayindividcustomsprite
+  attr_accessor :typedisplay
   # Per-save file
   attr_accessor :force_double_wild
   attr_accessor :kuray_no_evo
@@ -69,6 +70,7 @@ class PokemonSystem
     @kurayfonts = 0
     @kuraybigicons = 0
     @kurayindividcustomsprite = 0
+	@typedisplay = 0
     # Modded Per-save file
     @force_double_wild = 0
     @kuray_no_evo = 0
@@ -104,6 +106,7 @@ class PokemonSystem
     @kurayfonts = saved.kurayfonts if saved.kurayfonts
     @kuraybigicons = saved.kuraybigicons if saved.kuraybigicons
     @kurayindividcustomsprite = saved.kurayindividcustomsprite if saved.kurayindividcustomsprite
+    @typedisplay = saved.typedisplay if saved.typedisplay
   end
 
   def load_file_data(saved)
@@ -879,6 +882,12 @@ class KurayOptionsScene < PokemonOption_Scene
                       proc { |value| $PokemonSystem.kurayindividcustomsprite = value },
                       ["Two of the same Pokemons can use different sprites (mod)",
                       "Two of the same Pokemons will use the same sprite (vanilla)"]
+    )
+	options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.typedisplay },
+                      proc { |value| $PokemonSystem.typedisplay = value },
+                      ["Don't display the type indicator in battle",
+                      "Display the type indicator in battle"]
     )
     options << EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
                       proc { $PokemonSystem.kurayfonts },
