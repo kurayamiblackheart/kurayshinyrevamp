@@ -40,8 +40,6 @@ class PokemonDataBox < SpriteWrapper
     @animatingHP  = false
     @showExp      = false   # Specifically, show the Exp bar
     @animatingExp = false
-    # Trapstarr's Type Display
-    @showtypeDisplay = false
     @expFlash     = 0
     initializeDataBoxGraphic(sideSize)
     initializeOtherGraphics(viewport)
@@ -105,9 +103,13 @@ class PokemonDataBox < SpriteWrapper
     @sprites["expBar"] = @expBar
     # Trapstarr's Type Display
     # Create a sprite wrapper that displays Opponents Type
-    @sprites["typeDisplay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
-    @typeDisplay = SpriteWrapper.new(viewport)
-    @typeDisplay.bitmap = @sprites["typeDisplay"].bitmap
+    typeDisplayBitmap = Bitmap.new(Graphics.width, Graphics.height)	
+    @typeDisplay = SpriteWrapper.new(viewport)	
+    @typeDisplay.bitmap = typeDisplayBitmap	
+    @sprites["typeDisplay"] = @typeDisplay	
+    # Trapstarr's Status Icon Fix (Seperating status icon, appling z+1)	
+    @statusIcon = SpriteWrapper.new(viewport)	
+    @sprites["statusIcon"] = @statusIcon
     # Create sprite wrapper that displays everything except the above
     @contents = BitmapWrapper.new(@databoxBitmap.width,@databoxBitmap.height)
     self.bitmap  = @contents
@@ -122,8 +124,9 @@ class PokemonDataBox < SpriteWrapper
     @numbersBitmap.dispose
     @hpBarBitmap.dispose
     @expBarBitmap.dispose
-    # Trapstarr's Type Display
-    @typeDisplayBitmap.dispose
+    # Trapstarr's Type Display & Status Icon
+    @typeDisplayBitmap.dispose	
+    @statusIcon.dispose if @statusIcon # Prevents nil
     @contents.dispose
     super
   end
@@ -133,6 +136,7 @@ class PokemonDataBox < SpriteWrapper
     @hpBar.x     = value+@spriteBaseX+12#102
     @expBar.x    = value+@spriteBaseX+24
     @hpNumbers.x = value+@spriteBaseX+80
+    @statusIcon.x = value + @spriteBaseX+24  
   end
 
   def y=(value)
@@ -140,6 +144,7 @@ class PokemonDataBox < SpriteWrapper
     @hpBar.y     = value+40
     @expBar.y    = value+64
     @hpNumbers.y = value+52
+    @statusIcon.y = value+48
   end
 
   def z=(value)
@@ -147,6 +152,7 @@ class PokemonDataBox < SpriteWrapper
     @hpBar.z     = value+1
     @expBar.z    = value+1
     @hpNumbers.z = value+2
+    @statusIcon.z = value+2 if @statusIcon # Push status icon to top
   end
 
   def opacity=(value)
@@ -241,14 +247,12 @@ class PokemonDataBox < SpriteWrapper
       type_y = @hpBar.y + @hpBar.src_rect.height - 40  # Position below the health bar
     
       if @battler.pokemon.type1 == @battler.pokemon.type2
-	    @showtypeDisplay = true
         typeDisplay.stretch_blt(
           Rect.new(type_x, type_y, scaled_width, scaled_height),
           @typeDisplayBitmap.bitmap,
           type1rect
         )
       else
-	    @showtypeDisplay = true
         typeDisplay.stretch_blt(
           Rect.new(type_x, type_y, scaled_width, scaled_height),
           @typeDisplayBitmap.bitmap,
@@ -331,17 +335,18 @@ class PokemonDataBox < SpriteWrapper
       imagePos.push(["Graphics/Pictures/Battle/icon_own",@spriteBaseX-8,42])
     end
     # Draw status icon
-    if @battler.status != :NONE
-      s = GameData::Status.get(@battler.status).id_number
-      if s == :POISON && @battler.statusCount > 0   # Badly poisoned
-        s = GameData::Status::DATA.keys.length / 2
-      end
-      imagePos.push(["Graphics/Pictures/Battle/icon_statuses",@spriteBaseX+24,56,
-                     0,(s-1)*STATUS_ICON_HEIGHT,-1,STATUS_ICON_HEIGHT])
-    end
+    # if @battler.status != :NONE
+    #   s = GameData::Status.get(@battler.status).id_number
+    #   if s == :POISON && @battler.statusCount > 0   # Badly poisoned
+    #     s = GameData::Status::DATA.keys.length / 2
+    #   end
+    #   imagePos.push(["Graphics/Pictures/Battle/icon_statuses",@spriteBaseX+24,56,
+    #                  0,(s-1)*STATUS_ICON_HEIGHT,-1,STATUS_ICON_HEIGHT])
+    # end
     pbDrawImagePositions(self.bitmap,imagePos)
     refreshHP
     refreshExp
+    refreshStatus
     # Trapstarr's Type Display
     if $PokemonSystem.typedisplay == 1
       refreshtypeDisplay
@@ -398,18 +403,30 @@ class PokemonDataBox < SpriteWrapper
     end
   end
   
+  # Trapstarr's Status Icon Patch
+  def refreshStatus
+    @statusIcon.bitmap.clear if @statusIcon.bitmap
+    return if !@battler || @battler.status == :NONE
+    s = GameData::Status.get(@battler.status).id_number
+    if s == :POISON && @battler.statusCount > 0   # Badly poisoned
+      s = GameData::Status::DATA.keys.length / 2
+    end
+    @statusIcon.bitmap = Bitmap.new("Graphics/Pictures/Battle/icon_statuses")
+    @statusIcon.src_rect.set(0, (s - 1) * STATUS_ICON_HEIGHT, @statusIcon.bitmap.width, STATUS_ICON_HEIGHT)
+  end
+  
   # Trapstarr's Type Display
   def refreshtypeDisplay
-	@typeDisplay.bitmap.clear
-	return if !@battler.pokemon || @battler.fainted?
+    @typeDisplay.bitmap.clear
+    return if !@battler.pokemon || @battler.fainted?
     if @hpBar.visible
       drawtypeDisplay
-	end
+    end
   end
 
+  # Trapstarr's Type Display
   def updatetypeDisplay
-    return if !@showtypeDisplay
-	refreshtypeDisplay
+    refreshtypeDisplay
   end
 
   def updateHPAnimation
