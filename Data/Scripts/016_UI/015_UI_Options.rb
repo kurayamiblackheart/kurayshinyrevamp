@@ -70,7 +70,7 @@ class PokemonSystem
     @kurayfonts = 0
     @kuraybigicons = 0
     @kurayindividcustomsprite = 0
-	@typedisplay = 0
+    @typedisplay = 0
     # Modded Per-save file
     @force_double_wild = 0
     @kuray_no_evo = 0

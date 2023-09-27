@@ -229,6 +229,7 @@ class PokemonDataBox < SpriteWrapper
   
   # Trapstarr's Type Display
   def drawtypeDisplay
+    return if $PokemonSystem.typedisplay == 0
     typeDisplay = @sprites["typeDisplay"].bitmap
     # Determine the type IDs for the opponent's types
     if @battler.opposes?(0)
@@ -417,6 +418,7 @@ class PokemonDataBox < SpriteWrapper
   
   # Trapstarr's Type Display
   def refreshtypeDisplay
+    return if $PokemonSystem.typedisplay == 0
     @typeDisplay.bitmap.clear
     return if !@battler.pokemon || @battler.fainted?
     if @hpBar.visible
@@ -426,6 +428,7 @@ class PokemonDataBox < SpriteWrapper
 
   # Trapstarr's Type Display
   def updatetypeDisplay
+    return if $PokemonSystem.typedisplay == 0
     refreshtypeDisplay
   end
 
@@ -501,8 +504,10 @@ class PokemonDataBox < SpriteWrapper
     updateHPAnimation
     # Animate Exp bar
     updateExpAnimation
-	# Update Type Display
-	updatetypeDisplay
+    # Update Type Display
+    if $PokemonSystem.typedisplay == 1	
+      updatetypeDisplay	
+    end
     # Update coordinates of the data box
     updatePositions(frameCounter)
     pbUpdateSpriteHash(@sprites)
