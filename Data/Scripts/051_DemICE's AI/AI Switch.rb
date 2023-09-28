@@ -169,7 +169,12 @@ class PokeBattle_AI
 		shouldSwitch=false if !canheswitch
 		newindex=pbHardSwitchChooseNewEnemy(idxBattler,party,true) if shouldSwitch
 		if newindex
-			if newindex[0]==battler.pokemonIndex && shouldSwitch	
+			if newindex.is_a?(Array)
+				swapper=newindex[0]
+			else
+				swapper=newindex
+			end
+			if swapper==battler.pokemonIndex && shouldSwitch	
 				echo("\nRegretting the switch because there is no good pokmon to hard switch in.\n")
 				shouldSwitch=false 
 			end
@@ -177,7 +182,7 @@ class PokeBattle_AI
 			shouldSwitch=false 	
 		end
 		if shouldSwitch
-			incoming=newindex[0]
+			incoming=swapper
 			# idxPartyStart, idxPartyEnd = @battle.pbTeamIndexRangeFromBattlerIndex(idxBattler)
 			# @battle.pbParty(idxBattler).each_with_index do |pkmn, i|
 			# 	next if i == idxPartyEnd - 1   # Don't choose to switch in ace
@@ -578,6 +583,7 @@ class PokeBattle_AI
 				bestSum = sum
 			end
 		end
+		echo("\nBest score goes to : "+best.to_s+" with "+bestSum.to_s+"\n")
 		return [best,bestSum] if batonpasscheck
 		return best
 	end

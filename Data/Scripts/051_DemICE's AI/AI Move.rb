@@ -213,15 +213,17 @@ class PokeBattle_AI
 		return 0 if score <= 0
 		# Adjust score based on how much damage it can deal
 		# DemICE moved damage calculation to the beginning
-		if move.damagingMove?
-			score = pbGetMoveScoreDamage(score, move, user, target, skill)
-		else   # Status moves
-			# Don't prefer attacks which don't deal damage
-			score -= 10
 			# Account for accuracy of move
 			accuracy = pbRoughAccuracy(move, user, target, skill)
 			accuracy*= 1.3 if $game_switches[850] # Endgame Challenge enabled
 			accuracy=100 if accuracy>100
+		if move.damagingMove?
+			score = pbGetMoveScoreDamage(score, move, user, target, skill)
+			score -= 100-accuracy*1.33 if accuracy < 100  # DemICE
+		else   # Status moves
+			# Don't prefer attacks which don't deal damage
+			score -= 10
+			# Account for accuracy of move
 			score *= accuracy / 100.0
 			score = 0 if score <= 10 && skill >= PBTrainerAI.highSkill
 		end
@@ -465,17 +467,19 @@ class PokeBattle_AI
 		if skill>=PBTrainerAI.bestSkill && !moldBreaker && target.abilityActive?
 			# NOTE: These abilities aren't suitable for checking at the start of the
 			#       round.    #DemICE:  WHAT THE FUCK DO YOU MEAN THEY AREN'T SUITABLE FFS
-			# abilityBlacklist = [:FILTER,:SOLIDROCK]
-			# canCheck = true
-			# abilityBlacklist.each do |m|
-			# next if move.id != m
-			# canCheck = false
-			# break
-			# end
-			#if canCheck
+			abilityBlacklist = [:FILTER,:SOLIDROCK]
+			canCheck = true
+			abilityBlacklist.each do |m|
+				#next if move.id != m # Really? comparing a move id with an ability id? This blacklisting never worked.
+				if target.hasActiveAbility?(m)
+					canCheck = false
+					break
+				end
+			end
+			if canCheck
 			BattleHandlers.triggerDamageCalcTargetAbility(target.ability,
 				user,target,move,multipliers,baseDmg,type)
-			#end
+			end
 		end
 		if skill>=PBTrainerAI.bestSkill && !moldBreaker
 			target.eachAlly do |b|
@@ -490,16 +494,16 @@ class PokeBattle_AI
 		if skill>=PBTrainerAI.mediumSkill && user.itemActive?
 			# NOTE: These items aren't suitable for checking at the start of the
 			#       round.     #DemICE:  WHAT THE FUCK DO YOU MEAN THEY AREN'T SUITABLE FFS
-			# itemBlacklist = [:EXPERTBELT,:LIFEORB]
-			# if !itemBlacklist.include?(user.item_id)
+			itemBlacklist = [:EXPERTBELT]#,:LIFEORB]
+			 if !itemBlacklist.include?(user.item_id)
 			BattleHandlers.triggerDamageCalcUserItem(user.item,
 				user,target,move,multipliers,baseDmg,type)
-			# end
+			 end
 		end
 		if skill>=PBTrainerAI.bestSkill && target.itemActive?
 			# NOTE: Type-weakening berries aren't suitable for checking at the start
 			#       of the round.
-			if target.item && !(target.item.is_berry? && target.item_id!=:CHILANBERRY)
+			if target.item && !(target.item.is_berry?)# && target.item_id!=:CHILANBERRY)
 				$aiberrycheck=true
 				BattleHandlers.triggerDamageCalcTargetItem(target.item,
 					user,target,move,multipliers,baseDmg,type)
@@ -581,45 +585,53 @@ class PokeBattle_AI
 			end
 		end
 		# DemICE adding resist berries
-		if target.itemActive? && Effectiveness.super_effective?(typeMod)
-			case target.item_id
-			when :BABIRIBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:STEEL
-			when :SHUCABERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:GROUND
-			when :CHARTIBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:ROCK
-			when :CHOPLEBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:FIGHTING
-			when :COBABERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:FLYING
-			when :COLBURBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:DARK
-			when :HABANBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:DRAGON
-			when :KASIBBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:GHOST
-			when :KEBIABERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:POISON
-			when :OCCABERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:FIRE
-			when :PASSHOBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:WATER
-			when :PAYAPABERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:PSYCHIC
-			when :RINDOBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:GRASS
-			when :ROSELIBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:FAIRY
-			when :TANGABERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:BUG
-			when :WACANBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:ELECTRIC
-			when :YACHEBERRY
-				multipliers[:final_damage_multiplier]*=0.5 if type==:ICE
+		if Effectiveness.super_effective?(typeMod)
+			if user.hasActiveItem?(:EXPERTBELT)
+				multipliers[:final_damage_multiplier]*=1.2
 			end
-		end   
-		#multipliers[:final_damage_multiplier]*=0.5 if type==:NORMAL && target.itemActive?
+			if target.hasActiveAbility?([:SOLIDROCK, :FILTER]) && !moldBreaker
+				multipliers[:final_damage_multiplier]*=0.75
+			end
+			if target.itemActive?
+				case target.item_id
+				when :BABIRIBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:STEEL
+				when :SHUCABERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:GROUND
+				when :CHARTIBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:ROCK
+				when :CHOPLEBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:FIGHTING
+				when :COBABERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:FLYING
+				when :COLBURBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:DARK
+				when :HABANBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:DRAGON
+				when :KASIBBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:GHOST
+				when :KEBIABERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:POISON
+				when :OCCABERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:FIRE
+				when :PASSHOBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:WATER
+				when :PAYAPABERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:PSYCHIC
+				when :RINDOBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:GRASS
+				when :ROSELIBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:FAIRY
+				when :TANGABERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:BUG
+				when :WACANBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:ELECTRIC
+				when :YACHEBERRY
+					multipliers[:final_damage_multiplier]*=0.5 if type==:ICE
+				end
+			end   
+		end
+		multipliers[:final_damage_multiplier]*=0.5 if type==:NORMAL && target.hasActiveItem?(:CHILANBERRY)
 		# Multi-targeting attacks
 		if skill>=PBTrainerAI.highSkill
 			if pbTargetsMultiple?(move,user)
@@ -1106,7 +1118,7 @@ class PokeBattle_AI
 							if fasterhealing
 								echo("healing will be executed before the player")
 								echo("\n")
-								hpitemscore*=0.5
+								hpitemscore*=0.2
 							else
 								echo("healing will be executed after the player")
 								echo("\n")
@@ -1212,7 +1224,7 @@ class PokeBattle_AI
 				if maxdam>halfhealth
 					echo("expected damage is higher than half of hp after healing")
 					echo("\n")
-					hpitemscore*=0.8 
+					hpitemscore*=0.2
 				end
 				if target.hasActiveItem?(:METRONOME)
 					echo("player has metronome.. score decreases accordingly")

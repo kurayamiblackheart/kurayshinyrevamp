@@ -170,6 +170,7 @@ class PokeBattle_AI
 					if target.pbHasMoveFunction?("011","0B4")   # Snore, Sleep Talk
 						score -= 50
 					end
+					score -= 150 if target.hasActiveAbility?(:EARLYBIRD)
 				end
 			elsif skill >= PBTrainerAI.mediumSkill
 				score -= 90 if move.statusMove?
@@ -2997,6 +2998,7 @@ class PokeBattle_AI
 	end
 
 	def canSleepTarget(attacker,opponent,berry=false)
+		return false if opponent.effects[PBEffects::Substitute]>0
 		return false if berry && (opponent.status==:SLEEP)# && opponent.statusCount>1)
 		return false if (opponent.hasActiveItem?(:LUMBERRY) || opponent.hasActiveItem?(:CHESTOBERRY)) && berry
 		return false if opponent.pbCanSleep?(attacker,false)
