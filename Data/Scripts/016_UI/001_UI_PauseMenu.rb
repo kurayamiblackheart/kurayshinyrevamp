@@ -342,10 +342,13 @@ class PokemonPauseMenu
         $game_temp.mart_prices[115] = [6000, 3000]
         $game_temp.mart_prices[116] = [6000, 3000]
         $game_temp.mart_prices[100] = [6000, 3000]
+        # 235 = Rage Candy Bar
         # 263 = Rare Candy
         # 264 = Master Ball
+        $game_temp.mart_prices[235] = [10000, 0] if $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[263] = [10000, 0] if $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[264] = [960000, 0] if $PokemonSystem.kuraystreamerdream == 0
+        $game_temp.mart_prices[235] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         $game_temp.mart_prices[263] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         $game_temp.mart_prices[264] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         # allitems = [
@@ -358,7 +361,7 @@ class PokemonPauseMenu
           618, 619, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656,
           657, 659,
           114, 115, 116, 100,
-          263, 264
+          235, 263, 264
         ]
         # allitems.push(568) if $game_switches[SWITCH_GOT_BADGE_8]
         pbFadeOutIn {
