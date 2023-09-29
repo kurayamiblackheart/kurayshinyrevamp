@@ -632,7 +632,26 @@ class PokemonEvolutionScene
     # See and own evolved species
     $Trainer.pokedex.register(@pokemon)
     $Trainer.pokedex.set_owned(@newspecies)
-
+    
+    # Add base Pokémon of a fusion to the Pokédex	during evolution
+    if (@pokemon.species_data.id_number > NB_POKEMON) && $PokemonSystem.improved_pokedex == 1	
+      if @pokemon.species_data.id_number > (NB_POKEMON * NB_POKEMON) + NB_POKEMON	
+        # Triple Fusion Logic, skipping for now (not sure if supported yet)	
+      else	
+        bodyPoke = getBasePokemonID(@pokemon.species_data.id_number, true)	
+        headPoke = getBasePokemonID(@pokemon.species_data.id_number, false)	
+    	
+        [bodyPoke, headPoke].each do |poke|	
+          if !$Trainer.pokedex.owned?(poke)	
+            $Trainer.pokedex.set_owned(poke)	
+            if $Trainer.has_pokedex	
+              $Trainer.pokedex.register(poke)	
+            end	
+          end	
+        end	
+      end	
+    end
+    
     if allNewPossibleAbilities.include?(oldAbility)
       @pokemon.ability=oldAbility
     end
