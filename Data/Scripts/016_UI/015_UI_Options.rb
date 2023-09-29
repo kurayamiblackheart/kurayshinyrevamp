@@ -36,6 +36,7 @@ class PokemonSystem
   # Per-save file
   attr_accessor :force_double_wild
   attr_accessor :improved_pokedex
+  attr_accessor :recover_consumables
   attr_accessor :kuray_no_evo
   attr_accessor :shinyfusedye
   attr_accessor :kuraylevelcap
@@ -75,6 +76,7 @@ class PokemonSystem
     # Modded Per-save file
     @force_double_wild = 0
     @improved_pokedex = 0
+    @recover_consumables = 0
     @kuray_no_evo = 0
     @shinyfusedye = 0
     @kuraylevelcap = 0
@@ -118,6 +120,7 @@ class PokemonSystem
     # Modded
     @force_double_wild = saved.force_double_wild if saved.force_double_wild
     @improved_pokedex = saved.improved_pokedex if saved.improved_pokedex
+    @recover_consumables = saved.recover_consumables if saved.recover_consumables
     @kuray_no_evo = saved.kuray_no_evo if saved.kuray_no_evo
     @shinyfusedye = saved.shinyfusedye if saved.shinyfusedye
     @kuraylevelcap = saved.kuraylevelcap if saved.kuraylevelcap
@@ -965,7 +968,13 @@ class KurayOptionsScene < PokemonOption_Scene
                       proc { |value| $PokemonSystem.improved_pokedex = value },	
                       ["Don't use the Improved Pokedex",	
                       "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]	
-    )		      
+    )
+    options << EnumOption.new(_INTL("Recover Consumables"), [_INTL("Off"), _INTL("On")],	
+                      proc { $PokemonSystem.recover_consumables },	
+                      proc { |value| $PokemonSystem.recover_consumables = value },	
+                      ["Don't recover consumable items after battle",	
+                      "Recover consumable items after battle"]	
+    )
     options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kuray_no_evo },
                       proc { |value| $PokemonSystem.kuray_no_evo = value },
