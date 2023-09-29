@@ -35,6 +35,7 @@ class PokemonSystem
   attr_accessor :typedisplay
   # Per-save file
   attr_accessor :force_double_wild
+  attr_accessor :improved_pokedex
   attr_accessor :kuray_no_evo
   attr_accessor :shinyfusedye
   attr_accessor :kuraylevelcap
@@ -73,6 +74,7 @@ class PokemonSystem
     @typedisplay = 0
     # Modded Per-save file
     @force_double_wild = 0
+    @improved_pokedex = 0
     @kuray_no_evo = 0
     @shinyfusedye = 0
     @kuraylevelcap = 0
@@ -115,6 +117,7 @@ class PokemonSystem
     @battle_type = saved.battle_type if saved.battle_type
     # Modded
     @force_double_wild = saved.force_double_wild if saved.force_double_wild
+    @improved_pokedex = saved.improved_pokedex if saved.improved_pokedex
     @kuray_no_evo = saved.kuray_no_evo if saved.kuray_no_evo
     @shinyfusedye = saved.shinyfusedye if saved.shinyfusedye
     @kuraylevelcap = saved.kuraylevelcap if saved.kuraylevelcap
@@ -957,6 +960,12 @@ class KurayOptionsScene < PokemonOption_Scene
                       "Wild battles in 2v2 when possible",
                       "Wild battles in 3v3 'cause it's cool"]
     )
+    options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],	
+                      proc { $PokemonSystem.improved_pokedex },	
+                      proc { |value| $PokemonSystem.improved_pokedex = value },	
+                      ["Don't use the Improved Pokedex",	
+                      "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]	
+    )		      
     options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kuray_no_evo },
                       proc { |value| $PokemonSystem.kuray_no_evo = value },
