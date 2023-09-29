@@ -511,11 +511,13 @@ class PokeBattle_Battler
       @battle.pbDisplay(_INTL("{1} is unaffected!",pbThis)) if showMessages
       return false
     end
-    agender = user.gender
-    ogender = gender
-    if agender==2 || ogender==2 || agender==ogender
-      @battle.pbDisplay(_INTL("{1} is unaffected!",pbThis)) if showMessages
-      return false
+    if !(user.pokemon&.kuraygender <= 256 && $PokemonSystem.shenanigans == 0) # Skip gender check if pizza gender. Eveyone loves pizza!
+      agender = user.gender
+      ogender = gender
+      if agender==2 || ogender==2 || agender==ogender
+        @battle.pbDisplay(_INTL("{1} is unaffected!",pbThis)) if showMessages
+        return false
+      end
     end
     if !@battle.moldBreaker
       if hasActiveAbility?([:AROMAVEIL,:OBLIVIOUS])
