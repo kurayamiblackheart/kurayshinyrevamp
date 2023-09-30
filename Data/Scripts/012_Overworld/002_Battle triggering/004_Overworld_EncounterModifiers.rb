@@ -5,6 +5,21 @@
 # want it to apply to!
 ################################################################################
 
+# Trapstarr - Make all trainer pokemon shiny
+Events.onTrainerPartyLoad += proc { |_sender, e|
+  foeParty = []
+  trainer = e[0]
+  party = e[2]
+  if $PokemonSystem.shiny_trainer_pkmn == 1
+    # Set the entire trainers party as shiny
+    trainer.party.each do |pokemon|
+      foeParty.push(pokemon)
+      pokemon.shiny = true
+      pokemon.debug_shiny = true
+    end
+  end
+}
+
 # Make all wild Pokémon shiny while a certain Switch is ON (see Settings).
 Events.onWildPokemonCreate += proc { |_sender, e|
   pokemon = e[0]
