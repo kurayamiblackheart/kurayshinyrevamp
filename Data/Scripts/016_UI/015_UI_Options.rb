@@ -43,6 +43,7 @@ class PokemonSystem
   attr_accessor :kurayqol
   attr_accessor :self_fusion_boost
   attr_accessor :damage_variance
+  attr_accessor :shiny_trainer_pkmn
   attr_accessor :kuraygambleodds
   attr_accessor :shenanigans
   attr_accessor :kuraystreamerdream
@@ -84,6 +85,7 @@ class PokemonSystem
     @kurayqol = 1
     @self_fusion_boost = 0
     @damage_variance = 1
+    @shiny_trainer_pkmn = 0
     @shenanigans = 0
     @kuraystreamerdream = 0
   end
@@ -129,6 +131,7 @@ class PokemonSystem
     @kurayqol = saved.kurayqol if saved.kurayqol
     @self_fusion_boost = saved.self_fusion_boost if saved.self_fusion_boost
     @damage_variance = saved.damage_variance if saved.damage_variance
+    @shiny_trainer_pkmn = saved.shiny_trainer_pkmn if saved.shiny_trainer_pkmn
     @shenanigans = saved.shenanigans if saved.shenanigans
   end
 end
@@ -1000,6 +1003,12 @@ class KurayOptionsScene < PokemonOption_Scene
                       proc { |value| $PokemonSystem.damage_variance = value },
                       ["Damage Variance is disabled.",
                       "Damage Variance is enabled."]
+    )
+    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.shiny_trainer_pkmn },
+                      proc { |value| $PokemonSystem.shiny_trainer_pkmn = value },
+                      ["Trainer pokemon will have their normal shiny rates",
+                      "All trainers pokemon in their party will be shiny"]
     )
     options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, 10,
                       proc { $PokemonSystem.kuraygambleodds },
