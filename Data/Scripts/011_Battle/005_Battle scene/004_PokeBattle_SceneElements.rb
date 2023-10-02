@@ -125,7 +125,7 @@ class PokemonDataBox < SpriteWrapper
     @hpBarBitmap.dispose
     @expBarBitmap.dispose
     # Trapstarr's Type Display & Status Icon
-    @typeDisplayBitmap.dispose	
+    @typeDisplayBitmap.dispose if @typeDisplayBitmap # Prevents nil
     @statusIcon.dispose if @statusIcon # Prevents nil
     @contents.dispose
     super
