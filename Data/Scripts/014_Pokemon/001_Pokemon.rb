@@ -1118,8 +1118,12 @@ class Pokemon
 
   # Returns the list of moves this Pokémon can learn by levelling up.
   # @return [Array<Array<Integer,Symbol>>] this Pokémon's move list, where every element is [level, move ID]
-  #KurayX Makes it so it also takes the pre-evo's moves.
   def getMoveList
+    return species_data.moves
+  end
+
+  #KurayX Makes it so it also takes the pre-evo's moves.
+  def getMoveRelearnerList
     kuraymoves = species_data.moves.clone
     kuraychecking = species
     while true
@@ -1128,15 +1132,10 @@ class Pokemon
         break
       end
       kurayoldmoves = GameData::Species.get(checkspecie).moves
-      kuraymoves.push(*kurayoldmoves)
+      kuraymoves.unshift(*kurayoldmoves)
       kuraychecking = checkspecie
     end
     return kuraymoves
-  end
-
-  #KurayX Prevent duplication of asking again and again if pokemon should learn this move
-  def getMLStandard
-    return species_data.moves
   end
 
   # Sets this Pokémon's movelist to the default movelist it originally had.
@@ -1242,10 +1241,11 @@ class Pokemon
       species_data.egg_moves.include?(move_data.id)
   end
 
+  # MoveRelearner check
   def can_relearn_move?
     return false if egg? || shadowPokemon?
     this_level = self.level
-    getMoveList.each { |m| return true if m[0] <= this_level && !hasMove?(m[1]) }
+    getMoveRelearnerList.each { |m| return true if m[0] <= this_level && !hasMove?(m[1]) }
     @first_moves.each { |m| return true if !hasMove?(m) }
     return false
   end

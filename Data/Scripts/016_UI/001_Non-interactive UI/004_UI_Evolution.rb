@@ -656,7 +656,7 @@ class PokemonEvolutionScene
     end
 
     # Learn moves upon evolution for evolved species
-    movelist = @pokemon.getMLStandard
+    movelist = @pokemon.getMoveList
     for i in movelist
       next if i[0]!=0 && i[0]!=@pokemon.level   # 0 is "learn upon evolution"
       pbLearnMove(@pokemon,i[1],true) { pbUpdate }
