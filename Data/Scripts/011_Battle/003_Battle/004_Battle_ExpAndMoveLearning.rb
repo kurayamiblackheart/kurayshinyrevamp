@@ -246,7 +246,7 @@ class PokeBattle_Battle
                         oldSpAtk, oldSpDef, oldSpeed)
       end
       # Learn all moves learned at this level
-      moveList = pkmn.getMLStandard
+      moveList = pkmn.getMoveList
       moveList.each { |m| pbLearnMove(idxParty, m[1]) if m[0] == curLevel }
     end
   end
