@@ -48,6 +48,7 @@ class PokemonSystem
   attr_accessor :kuraygambleodds
   attr_accessor :shenanigans
   attr_accessor :kuraystreamerdream
+  attr_accessor :autobattler
 
   def initialize
     # Vanilla Global
@@ -90,6 +91,7 @@ class PokemonSystem
     @shiny_trainer_pkmn = 0
     @shenanigans = 0
     @kuraystreamerdream = 0
+    @autobattler = 0
   end
 
   def load_bootup_data(saved)
@@ -136,6 +138,7 @@ class PokemonSystem
     @damage_variance = saved.damage_variance if saved.damage_variance
     @shiny_trainer_pkmn = saved.shiny_trainer_pkmn if saved.shiny_trainer_pkmn
     @shenanigans = saved.shenanigans if saved.shenanigans
+    @autobattler = saved.autobattler if saved.autobattler
   end
 end
 
@@ -1059,6 +1062,12 @@ class KurayOptionsScene < PokemonOption_Scene
                       ["No Rare Candies/Master Balls/etc free in Kuray Shop",
                       "Rare Candies/Master Balls and more are free in Kuray Shop",
                       "Also Unlimited WonderTrades (need 1 badge)"]
+    )
+    options << EnumOption.new(_INTL("Auto-Battle"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.autobattler },
+                      proc { |value| $PokemonSystem.autobattler = value },
+                      ["You fight your own battles",
+                      "Allows Trapstarr to take control of your pokemon"]
     )
     return options
   end
