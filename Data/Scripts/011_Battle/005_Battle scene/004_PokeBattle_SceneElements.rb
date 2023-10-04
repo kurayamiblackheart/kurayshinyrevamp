@@ -87,7 +87,18 @@ class PokemonDataBox < SpriteWrapper
     @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp"))
     @expBarBitmap  = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_exp"))
     # Trapstarr's Type Display
-    @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    if $PokemonSystem.typedisplay != 0  && $PokemonSystem.typedisplay != nil
+      case $PokemonSystem.typedisplay
+      when 1
+        @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/TypeIcons_Lolpy1"))
+      when 2
+        @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/TypeIcons_TCG"))
+      when 3
+        @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/TypeIcons_Square"))
+      when 4
+        @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types_display"))
+      end
+    end
     # Create sprite to draw HP numbers on
     @hpNumbers = BitmapSprite.new(124,16,viewport)
     pbSetSmallFont(@hpNumbers.bitmap)
@@ -101,12 +112,13 @@ class PokemonDataBox < SpriteWrapper
     @expBar = SpriteWrapper.new(viewport)
     @expBar.bitmap = @expBarBitmap.bitmap
     @sprites["expBar"] = @expBar
-    # Trapstarr's Type Display
-    # Create a sprite wrapper that displays Opponents Type
-    typeDisplayBitmap = Bitmap.new(Graphics.width, Graphics.height)	
-    @typeDisplay = SpriteWrapper.new(viewport)	
-    @typeDisplay.bitmap = typeDisplayBitmap	
-    @sprites["typeDisplay"] = @typeDisplay	
+    # Trapstarr's Type Display: Create a sprite wrapper that displays Opponents Type
+    if [1,2,3,4].include?($PokemonSystem.typedisplay)
+      typeDisplayBitmap = Bitmap.new(Graphics.width, Graphics.height)  
+      @typeDisplay = SpriteWrapper.new(viewport)  
+      @typeDisplay.bitmap = typeDisplayBitmap  
+      @sprites["typeDisplay"] = @typeDisplay
+    end	
     # Trapstarr's Status Icon Fix (Seperating status icon, appling z+1)	
     @statusIcon = SpriteWrapper.new(viewport)	
     @sprites["statusIcon"] = @statusIcon
@@ -229,25 +241,42 @@ class PokemonDataBox < SpriteWrapper
   
   # Trapstarr's Type Display
   def drawtypeDisplay
-    return if $PokemonSystem.typedisplay == 0
+    return if $PokemonSystem.typedisplay == 0 || $PokemonSystem.typedisplay == nil
     typeDisplay = @sprites["typeDisplay"].bitmap
-    # Determine the type IDs for the opponent's types
     if @battler.opposes?(0)
-      type1_number = GameData::Type.get(@battler.pokemon.type1).id_number
-      type2_number = GameData::Type.get(@battler.pokemon.type2).id_number
-      type1rect = Rect.new(0, type1_number * 28, 64, 28)
-      type2rect = Rect.new(0, type2_number * 28, 64, 28)
-    
-      # Calculate the position of the type display relative to the health bar
-      scale = 0.65  # Adjust this value as needed
-      scaled_width = (64 * scale).to_i
-      scaled_height = (28 * (scale * 1.2)).to_i
-    
-      # Position the type displays to the right side of the health bar
-      type_x = @spriteBaseX + (@hpBar.x + 185) # Adjust these value as needed  
-      type_y = @hpBar.y + @hpBar.src_rect.height - 40  # Position below the health bar
-    
-      if @battler.pokemon.type1 == @battler.pokemon.type2
+      type1 = @battler.pokemon.type1
+      type2 = @battler.pokemon.type2
+      type1_number = GameData::Type.get(type1).id_number
+      type2_number = GameData::Type.get(type2).id_number
+
+      case $PokemonSystem.typedisplay
+      when 1,2,3
+        type1rect = Rect.new(0, type1_number * 20, 24, 20)
+        type2rect = Rect.new(0, type2_number * 20, 24, 20)
+      when 4
+        type1rect = Rect.new(0, type1_number * 28, 64, 28)
+        type2rect = Rect.new(0, type2_number * 28, 64, 28)
+      end
+
+      scale = ($PokemonSystem.typedisplay == 4) ? 0.65 : 1
+      scaled_width = (type1rect.width * scale).to_i
+      case $PokemonSystem.typedisplay
+      when 1,2,3
+        scaled_height = (type1rect.height * (scale)).to_i
+      when 4
+        scaled_height = (type1rect.height * (scale * 1.2)).to_i
+      end
+	  
+      type_x = @spriteBaseX + (@hpBar.x + 185)
+      case $PokemonSystem.typedisplay
+      when 1,2,3
+        type_y = @hpBar.y + @hpBar.src_rect.height - 43
+        type2_y = type_y + 5 # Spacing
+      when 4
+        type_y = @hpBar.y + @hpBar.src_rect.height - 40
+      end
+	  
+      if type1 == type2
         typeDisplay.stretch_blt(
           Rect.new(type_x, type_y, scaled_width, scaled_height),
           @typeDisplayBitmap.bitmap,
@@ -259,11 +288,20 @@ class PokemonDataBox < SpriteWrapper
           @typeDisplayBitmap.bitmap,
           type1rect
         )
-        typeDisplay.stretch_blt(
-          Rect.new(type_x, type_y + scaled_height, scaled_width, scaled_height),
-          @typeDisplayBitmap.bitmap,
-          type2rect
-        )
+        case $PokemonSystem.typedisplay
+        when 1,2,3
+          typeDisplay.stretch_blt(
+            Rect.new(type_x, type2_y + scaled_height, scaled_width, scaled_height),
+            @typeDisplayBitmap.bitmap,
+            type2rect
+         )
+        when 4
+          typeDisplay.stretch_blt(
+            Rect.new(type_x, type_y + scaled_height, scaled_width, scaled_height),
+            @typeDisplayBitmap.bitmap,
+            type2rect
+          )
+        end
       end
     end
   end
@@ -349,7 +387,7 @@ class PokemonDataBox < SpriteWrapper
     refreshExp
     refreshStatus
     # Trapstarr's Type Display
-    if $PokemonSystem.typedisplay == 1
+    if $PokemonSystem.typedisplay != 0 && $PokemonSystem.typedisplay != nil
       refreshtypeDisplay
     end
   end
@@ -418,7 +456,7 @@ class PokemonDataBox < SpriteWrapper
   
   # Trapstarr's Type Display
   def refreshtypeDisplay
-    return if $PokemonSystem.typedisplay == 0
+    return if $PokemonSystem.typedisplay == 0 || $PokemonSystem.typedisplay == nil
     @typeDisplay.bitmap.clear
     return if !@battler.pokemon || @battler.fainted?
     if @hpBar.visible
@@ -428,7 +466,7 @@ class PokemonDataBox < SpriteWrapper
 
   # Trapstarr's Type Display
   def updatetypeDisplay
-    return if $PokemonSystem.typedisplay == 0
+    return if $PokemonSystem.typedisplay == 0 || $PokemonSystem.typedisplay == nil
     refreshtypeDisplay
   end
 
@@ -505,7 +543,7 @@ class PokemonDataBox < SpriteWrapper
     # Animate Exp bar
     updateExpAnimation
     # Update Type Display
-    if $PokemonSystem.typedisplay == 1	
+    if $PokemonSystem.typedisplay != 0 && $PokemonSystem.typedisplay != nil	
       updatetypeDisplay	
     end
     # Update coordinates of the data box
