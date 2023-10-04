@@ -115,10 +115,35 @@ class PokeBattle_Battle
       end
     elsif isPartic # Participated in battle, no Exp Shares held by anyone
       exp = a / (Settings::SPLIT_EXP_BETWEEN_GAINERS ? numPartic : 1)
-    elsif expAll # Didn't participate in battle, gaining Exp due to Exp All
-      # NOTE: Exp All works like the Exp Share from Gen 6+, not like the Exp All
-      #       from Gen 1, i.e. Exp isn't split between all Pokémon gaining it.
-      exp = a / 2
+    # elsif expAll # Didn't participate in battle, gaining Exp due to Exp All
+    #   # NOTE: Exp All works like the Exp Share from Gen 6+, not like the Exp All
+    #   #       from Gen 1, i.e. Exp isn't split between all Pokémon gaining it.
+    #   exp = a / 2
+    # end
+    # Trapstarr's expAll redistribution
+    elsif expAll
+      total_exp = a / 2 # Total experience to be distributed among the party
+  
+      if $PokemonSystem.expall_redist == nil || $PokemonSystem.expall_redist == 0
+        exp = a / 2
+      else
+        # Determine the highest level Pokémon in the party
+        highest_level = $Trainer.party.max_by(&:level).level
+
+        # Check if all Pokémon are of the same level
+        if $Trainer.party.all? { |pokemon| pokemon.level == highest_level }
+          exp = a / 2
+        else
+          # Calculate the level differences, with a smoothly transitioning emphasis on redistribution
+          differences = $Trainer.party.map do |pokemon| 
+            diff = highest_level - pokemon.level
+            emphasis = 1 + (0.05 + $PokemonSystem.expall_redist ** 1.1 / 1000.0)
+            (diff ** emphasis)
+          end
+          normalized_diffs = differences.map { |diff| diff.to_f / differences.sum }
+          exp = (total_exp * normalized_diffs[$Trainer.party.index(pkmn)]).round
+        end
+      end
     end
     return if exp <= 0
     # Pokémon gain more Exp from trainer battles
