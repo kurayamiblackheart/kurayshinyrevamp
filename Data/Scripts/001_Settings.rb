@@ -5,8 +5,8 @@
 #==============================================================================#
 module Settings
   # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
-  GAME_VERSION = '5.0.0'
-  GAME_VERSION_NUMBER = "5.3.1.2"
+  GAME_VERSION = '0.9.0'
+  GAME_VERSION_NUMBER = "0.9.4"
 
   POKERADAR_LIGHT_ANIMATION_RED_ID = 17
   POKERADAR_LIGHT_ANIMATION_GREEN_ID = 18

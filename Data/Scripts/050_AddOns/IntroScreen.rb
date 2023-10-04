@@ -8,13 +8,13 @@
 ###SCRIPTEDIT1
 # Config value for selecting title screen style
 SCREENSTYLE = 1
-KURAYVERSION = "0.9.3"
+# KURAYVERSION = "0.9.4"
 # 1 - FR/LG
 # 2 - R/S/E
 
-module Settings
-  GAME_VERSION_NUMBER = "5.3.1.2"
-end
+# module Settings
+#   # GAME_VERSION_NUMBER = "5.3.1.2"
+# end
 
 class Scene_Intro
 
@@ -161,7 +161,8 @@ class GenOneStyle
     #KurayX Version System
     # kuraversion = "0.6.18"
     Kernel.pbDisplayText("(Kuray's PIF Revamp Mod)", 254, 298, 99999)
-    Kernel.pbDisplayText("GameVer." + Settings::GAME_VERSION_NUMBER + " | ModVer." + KURAYVERSION, 254, 334, 99999)
+    Kernel.pbDisplayText("Verion: " + Settings::GAME_VERSION_NUMBER, 254, 334, 99999)
+    # Kernel.pbDisplayText("Ver." + Settings::GAME_VERSION_NUMBER + " | ModVer." + KURAYVERSION, 254, 334, 99999)
     # Kernel.pbDisplayText("Version " + Settings::GAME_VERSION_NUMBER, 254, 308, 99999)
 
     @maxPoke = 140 #1st gen, pas de legend la premiere fois, graduellement plus de poke
