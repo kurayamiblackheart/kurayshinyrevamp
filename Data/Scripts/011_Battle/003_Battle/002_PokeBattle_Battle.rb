@@ -275,6 +275,8 @@ class PokeBattle_Battle
 
   def pbOwnedByPlayer?(idxBattler)
     return false if opposes?(idxBattler)
+    # Trapstarr's Auto-Battler (Ally controls player pokemon)
+    return false if $PokemonSystem.autobattler != nil && $PokemonSystem.autobattler == 1
     return pbGetOwnerIndexFromBattlerIndex(idxBattler)==0
   end
 
