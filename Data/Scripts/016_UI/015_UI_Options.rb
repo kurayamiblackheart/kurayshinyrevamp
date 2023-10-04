@@ -35,8 +35,9 @@ class PokemonSystem
   attr_accessor :typedisplay
   # Per-save file
   attr_accessor :force_double_wild
-  attr_accessor :improved_pokedex
+  attr_accessor :improved_pokedex # adds base form pkmn of fusions to pokedex when catching/evolving fusions
   attr_accessor :recover_consumables
+  attr_accessor :expall_redist
   attr_accessor :kuray_no_evo
   attr_accessor :shinyfusedye
   attr_accessor :kuraylevelcap
@@ -78,6 +79,7 @@ class PokemonSystem
     @force_double_wild = 0
     @improved_pokedex = 0
     @recover_consumables = 0
+    @expall_redist = 0
     @kuray_no_evo = 0
     @shinyfusedye = 0
     @kuraylevelcap = 0
@@ -123,6 +125,7 @@ class PokemonSystem
     @force_double_wild = saved.force_double_wild if saved.force_double_wild
     @improved_pokedex = saved.improved_pokedex if saved.improved_pokedex
     @recover_consumables = saved.recover_consumables if saved.recover_consumables
+    @expall_redist = saved.expall_redist if saved.expall_redist
     @kuray_no_evo = saved.kuray_no_evo if saved.kuray_no_evo
     @shinyfusedye = saved.shinyfusedye if saved.shinyfusedye
     @kuraylevelcap = saved.kuraylevelcap if saved.kuraylevelcap
@@ -892,11 +895,14 @@ class KurayOptionsScene < PokemonOption_Scene
                       ["Two of the same Pokemons can use different sprites (mod)",
                       "Two of the same Pokemons will use the same sprite (vanilla)"]
     )
-	options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("On")],
+    options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
                       proc { $PokemonSystem.typedisplay },
                       proc { |value| $PokemonSystem.typedisplay = value },
-                      ["Don't display the type indicator in battle",
-                      "Display the type indicator in battle"]
+                      ["Don't draw the type indicator in battle",
+                      "Draws handmade custom type icons in battle | Artwork by Lolpy1",
+                      "Draws TCG themed type icons in battle",
+                      "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
+                      "Draws the text type display in battle"]
     )
     options << EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
                       proc { $PokemonSystem.kurayfonts },
@@ -966,17 +972,22 @@ class KurayOptionsScene < PokemonOption_Scene
                       "Wild battles in 2v2 when possible",
                       "Wild battles in 3v3 'cause it's cool"]
     )
-    options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],	
-                      proc { $PokemonSystem.improved_pokedex },	
-                      proc { |value| $PokemonSystem.improved_pokedex = value },	
-                      ["Don't use the Improved Pokedex",	
-                      "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]	
+    options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.improved_pokedex },
+                      proc { |value| $PokemonSystem.improved_pokedex = value },
+                      ["Don't use the Improved Pokedex",
+                      "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]
     )
-    options << EnumOption.new(_INTL("Recover Consumables"), [_INTL("Off"), _INTL("On")],	
-                      proc { $PokemonSystem.recover_consumables },	
-                      proc { |value| $PokemonSystem.recover_consumables = value },	
-                      ["Don't recover consumable items after battle",	
-                      "Recover consumable items after battle"]	
+    options << EnumOption.new(_INTL("Recover Consumables"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.recover_consumables },
+                      proc { |value| $PokemonSystem.recover_consumables = value },
+                      ["Don't recover consumable items after battle",
+                      "Recover consumable items after battle"]
+    )
+    options << SliderOption.new(_INTL("ExpAll Redistribution"), 0, 10, 1,
+                      proc { $PokemonSystem.expall_redist },
+                      proc { |value| $PokemonSystem.expall_redist = value },
+                      "0 = Off, 10 = Max | Redistributes total exp from expAll to lower level pokemon"
     )
     options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kuray_no_evo },
