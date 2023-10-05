@@ -14,7 +14,7 @@ The Google Docs already explain everything about this game.
 
 This Github allows you to see the game (open-source), but also to contribute to the development of this project with pull-requests, and download the latest release to stay up-to-date. You need to download the mediafire base of the Kuray's PIF Revamp before applying the new releases of the github.
 
-# List of Features
+# List of Constant Features
 
 - **Modding support**
 - Game's Speed up to **x5** & displayed on the title
@@ -28,7 +28,9 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Endgame challenge & Powerful AI by DemICE, now opponents fight for real!
 - Infinite Save Files, new backup file created at each save
 - Custom Fusion Icons support
-***(↓ Optional features ↓)***
+
+# List of Optional Features (you can turn them ON/OFF or configure/customize them!)
+
 - Shiny Animations
 - Shiny Revamp (using a system built from scratch doing channels shifting on top of hue shifting for very complex color manipulations, **+622 080 shiny combinations** on all sprites, also using black, grey and white as color. Two shinies are different now, you can have a Black Charmander and a Blue Charmander, generated Pokemons have their own shiny data!)
 - 1v1/2v2/3v3 Wild Battles
