@@ -29,7 +29,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Infinite Save Files, new backup file created at each save
 - Custom Fusion Icons support
 
-# List of Optional Features (you can turn them ON/OFF **and/or** configure/customize them!)
+# List of Optional Features (you can turn them ON/OFF and/or configure/customize them!)
 
 - Shiny Animations
 - Shiny Revamp (using a system built from scratch doing channels shifting on top of hue shifting for very complex color manipulations, **+622 080 shiny combinations** on all sprites, also using black, grey and white as color. Two shinies are different now, you can have a Black Charmander and a Blue Charmander, generated Pokemons have their own shiny data!)
