@@ -52,8 +52,15 @@ class PokemonSystem
   attr_accessor :autobattler
   attr_accessor :shinyodds # overwrite the shiny odds
 
+
+
+  attr_accessor :raiser
+  attr_accessor :raiserb
+
   def initialize
     # Vanilla Global
+    @raiser = 1
+    @raiserb = 0
     @textspeed = 1 # Text speed (0=slow, 1=normal, 2=fast)
     @battlescene = 0 # Battle effects (animations) (0=on, 1=off)
     @frame = 0 # Default window frame (see also Settings::MENU_WINDOWSKINS)
@@ -917,6 +924,24 @@ class KurayOptionsScene < PokemonOption_Scene
         openKuray4()
       }, "Customize others features"
     )
+    options <<
+    EnumOption.new(_INTL("Increment Slider by"), [_INTL("1"), _INTL("10"), _INTL("100"), _INTL("1000"), _INTL("10000")],
+                   proc { $PokemonSystem.raiserb },
+                   proc { |value|
+                     if value == 0
+                      $PokemonSystem.raiser = 1
+                     elsif value == 1
+                      $PokemonSystem.raiser = 10
+                     elsif value == 2
+                      $PokemonSystem.raiser = 100
+                     elsif value == 3
+                      $PokemonSystem.raiser = 1000
+                     elsif value == 4
+                      $PokemonSystem.raiser = 10000
+                     end
+                     $PokemonSystem.raiserb = value
+                   }, "For shiny gamble and shiny odds, changes the increment rate of those sliders."
+    )
 
     # if $scene && $scene.is_a?(Scene_Map)
     #   options.concat(pbGetInGameOptions())
@@ -1039,6 +1064,25 @@ class KurayOptSc_1 < PokemonOption_Scene
     options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
     proc {}
     )
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
+    proc {}
+    )
+    options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, $PokemonSystem.raiser,
+                      proc { $PokemonSystem.kuraygambleodds },
+                      proc { |value|
+                        if $PokemonSystem.kuraygambleodds != value
+                          $PokemonSystem.kuraygambleodds = value
+                        end
+                      }, "1 out of <x> | Choose the odds of Shinies from Gamble | 0 = Always"
+    )
+    options << SliderOption.new(_INTL("Wild Shiny Odds"), 1, 65536, $PokemonSystem.raiser,
+                      proc { $PokemonSystem.shinyodds },
+                      proc { |value|
+                        if $PokemonSystem.shinyodds != value-1
+                          $PokemonSystem.shinyodds = value-1
+                        end
+                      }, "<x> out of 65536 | Choose the Shiny Odds"
+    )
     options << ButtonOption.new(_INTL("- by JustAnotherUser -"),
     proc {}
     )
@@ -1151,22 +1195,6 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.self_fusion_boost = value },
                       ["Stat boost for self-fusions is disabled.",
                       "Stat boost for self-fusions is enabled."]
-    )
-    options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, 10,
-                      proc { $PokemonSystem.kuraygambleodds },
-                      proc { |value|
-                        if $PokemonSystem.kuraygambleodds != value
-                          $PokemonSystem.kuraygambleodds = value
-                        end
-                      }, "1 out of <x> | Choose the odds of Shinies from Gamble | 0 = Always"
-    )
-    options << SliderOption.new(_INTL("Wild Shiny Odds"), 1, 65536, 1,
-                      proc { $PokemonSystem.shinyodds },
-                      proc { |value|
-                        if $PokemonSystem.shinyodds != value
-                          $PokemonSystem.shinyodds = value
-                        end
-                      }, "<x> out of 65536 | Choose the Shiny Odds"
     )
     options << ButtonOption.new(_INTL("- by Trapstarr -"),
     proc {}
