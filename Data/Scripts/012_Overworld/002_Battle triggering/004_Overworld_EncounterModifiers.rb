@@ -10,7 +10,22 @@ Events.onTrainerPartyLoad += proc { |_sender, e|
   foeParty = []
   trainer = e[0]
   party = e[2]
+
   if $PokemonSystem.shiny_trainer_pkmn == 1
+    # Determine the ace pokemon
+    last_pokemon = trainer.party.last
+    highest_level_pokemon = trainer.party.max_by { |p| p.level }
+    ace_pokemon = highest_level_pokemon
+
+    # If the last pokemon's level is >= highest level pokemon, it's the ace
+    if last_pokemon.level >= highest_level_pokemon.level
+      ace_pokemon = last_pokemon
+    end
+
+    # Set the ace pokemon as shiny
+    ace_pokemon.shiny = true
+    ace_pokemon.debug_shiny = true
+  elsif $PokemonSystem.shiny_trainer_pkmn == 2
     # Set the entire trainers party as shiny
     trainer.party.each do |pokemon|
       foeParty.push(pokemon)
