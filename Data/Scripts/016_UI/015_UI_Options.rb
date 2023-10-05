@@ -95,7 +95,11 @@ class PokemonSystem
     @kuraystreamerdream = 0
     @autobattler = 0
     @globalvalues = 0
-    @shinyodds = SHINY_POKEMON_CHANCE
+    if Settings::SHINY_POKEMON_CHANCE
+      @shinyodds = Settings::SHINY_POKEMON_CHANCE
+    else
+      @shinyodds = 16
+    end
   end
 
   def load_bootup_data(saved)
