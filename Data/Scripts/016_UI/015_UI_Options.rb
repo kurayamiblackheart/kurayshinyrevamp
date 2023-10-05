@@ -689,6 +689,13 @@ class PokemonOption_Scene
     if $scene && $scene.is_a?(Scene_Map)
       options.concat(pbGetInGameOptions())
     end
+
+    options << ButtonOption.new(_INTL("Kuray's PIF Revamp Settings"),
+                              proc {
+                                @kuray_menu = true
+                                openKurayMenu()
+                              }, "Customize modded features"
+    )
     return options
   end
 
@@ -768,13 +775,6 @@ class PokemonOption_Scene
                                  "Uses the same party icon for all fusions"]
       )
     end
-
-    options << ButtonOption.new(_INTL("Kuray's PIF Revamp Settings"),
-                              proc {
-                                @kuray_menu = true
-                                openKurayMenu()
-                              }, "Customize modded features"
-    )
 
     return options
   end
