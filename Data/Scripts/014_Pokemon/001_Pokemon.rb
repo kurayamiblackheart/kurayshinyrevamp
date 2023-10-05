@@ -566,17 +566,12 @@ class Pokemon
   def level
     @level = growth_rate.level_from_exp(@exp) if !@level
     #Kurayx LevelCAP
-    # if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2) # obtained from trade
-    if $PokemonSystem.kuraylevelcap != 0
+    if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2) # obtained from trade
       levelcap = getkuraylevelcap()
-      if @iv
-        calc_stats_sp(levelcap)
-      end
+      calc_stats_sp(levelcap)
       return levelcap if @level > levelcap
     end
-    if @iv
-      calc_stats_sp(@level)
-    end
+    calc_stats_sp(@level)
     return @level
   end
 
@@ -1870,7 +1865,6 @@ class Pokemon
     @time_form_set = nil
     self.level = level
     @steps_to_hatch = 0
-    heal_status
     @gender = nil
     @shiny = nil
     #KurayX - KURAYX_ABOUT_SHINIES
@@ -1892,7 +1886,6 @@ class Pokemon
     @item = nil
     @mail = nil
     @moves = []
-    reset_moves if withMoves
     @first_moves = []
     @ribbons = []
     @cool = 0
@@ -1934,6 +1927,8 @@ class Pokemon
     @personalID = rand(2 ** 16) | rand(2 ** 16) << 16
     @hp = 1
     @totalhp = 1
+    heal_status
+    reset_moves if withMoves
     calc_stats
     if @form == 0 && recheck_form
       f = MultipleForms.call("getFormOnCreation", self)
