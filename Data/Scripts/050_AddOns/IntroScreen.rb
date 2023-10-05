@@ -160,7 +160,7 @@ class GenOneStyle
     Kernel.pbDisplayText("Keybindings: F1", 80, 0, 99999)
     #KurayX Version System
     # kuraversion = "0.6.18"
-    Kernel.pbDisplayText("(Kuray's PIF Revamp Mod)", 254, 298, 99999)
+    Kernel.pbDisplayText("(Kuray's PIF Revamp)", 254, 298, 99999)
     Kernel.pbDisplayText("Verion: " + Settings::GAME_VERSION_NUMBER, 254, 334, 99999)
     # Kernel.pbDisplayText("Ver." + Settings::GAME_VERSION_NUMBER + " | ModVer." + KURAYVERSION, 254, 334, 99999)
     # Kernel.pbDisplayText("Version " + Settings::GAME_VERSION_NUMBER, 254, 308, 99999)
