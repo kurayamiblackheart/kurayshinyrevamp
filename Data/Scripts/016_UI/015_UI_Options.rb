@@ -33,6 +33,7 @@ class PokemonSystem
   attr_accessor :kuraybigicons
   attr_accessor :kurayindividcustomsprite
   attr_accessor :typedisplay
+  attr_accessor :globalvalues # allows to disable the per-save file functionnality
   # Per-save file
   attr_accessor :force_double_wild
   attr_accessor :improved_pokedex # adds base form pkmn of fusions to pokedex when catching/evolving fusions
@@ -49,6 +50,7 @@ class PokemonSystem
   attr_accessor :shenanigans
   attr_accessor :kuraystreamerdream
   attr_accessor :autobattler
+  attr_accessor :shinyodds # overwrite the shiny odds
 
   def initialize
     # Vanilla Global
@@ -92,6 +94,8 @@ class PokemonSystem
     @shenanigans = 0
     @kuraystreamerdream = 0
     @autobattler = 0
+    @globalvalues = 0
+    @shinyodds = SHINY_POKEMON_CHANCE
   end
 
   def load_bootup_data(saved)
@@ -117,6 +121,12 @@ class PokemonSystem
     @kuraybigicons = saved.kuraybigicons if saved.kuraybigicons
     @kurayindividcustomsprite = saved.kurayindividcustomsprite if saved.kurayindividcustomsprite
     @typedisplay = saved.typedisplay if saved.typedisplay
+    if saved.globalvalues
+      @globalvalues = saved.globalvalues
+      if saved.globalvalues != 0
+        load_file_data(saved)#also load per-savefile datas
+      end
+    end
   end
 
   def load_file_data(saved)
@@ -139,6 +149,7 @@ class PokemonSystem
     @shiny_trainer_pkmn = saved.shiny_trainer_pkmn if saved.shiny_trainer_pkmn
     @shenanigans = saved.shenanigans if saved.shenanigans
     @autobattler = saved.autobattler if saved.autobattler
+    @shinyodds = saved.shinyodds if saved.shinyodds
   end
 end
 
@@ -554,6 +565,10 @@ class PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = []
+    
+    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    )
+
     options << SliderOption.new(_INTL("Music Volume"), 0, 100, 5,
                                 proc { $PokemonSystem.bgmvolume },
                                 proc { |value|
@@ -616,8 +631,51 @@ class PokemonOption_Scene
                      "Automatically download custom sprites from the internet"
       )
 
+    options << EnumOption.new(_INTL("Battle Effects"), [_INTL("On"), _INTL("Off")],
+    proc { $PokemonSystem.battlescene },
+    proc { |value| $PokemonSystem.battlescene = value },
+    "Display move animations in battles"
+    )
 
+    options << EnumOption.new(_INTL("Default Movement"), [_INTL("Walking"), _INTL("Running")],
+                              proc { $PokemonSystem.runstyle },
+                              proc { |value| $PokemonSystem.runstyle = value },
+                              ["Default to walking when not holding the Run key",
+                               "Default to running when not holding the Run key"]
+    )
 
+    options << NumberOption.new(_INTL("Speech Frame"), 1, Settings::SPEECH_WINDOWSKINS.length,
+                                proc { $PokemonSystem.textskin },
+                                proc { |value|
+                                  $PokemonSystem.textskin = value
+                                  MessageConfig.pbSetSpeechFrame("Graphics/Windowskins/" + Settings::SPEECH_WINDOWSKINS[value])
+                                }
+    )
+
+    options << EnumOption.new(_INTL("Text Entry"), [_INTL("Cursor"), _INTL("Keyboard")],
+                              proc { $PokemonSystem.textinput },
+                              proc { |value| $PokemonSystem.textinput = value },
+                              ["Enter text by selecting letters on the screen",
+                               "Enter text by typing on the keyboard"]
+    )
+
+    options << EnumOption.new(_INTL("Screen Size"), [_INTL("S"), _INTL("M"), _INTL("L"), _INTL("XL"), _INTL("Full")],
+                              proc { [$PokemonSystem.screensize, 4].min },
+                              proc { |value|
+                                if $PokemonSystem.screensize != value
+                                  $PokemonSystem.screensize = value
+                                  pbSetResizeFactor($PokemonSystem.screensize)
+                                end
+                              }, "Sets the size of the screen"
+    )
+    options << EnumOption.new(_INTL("Quick Field Moves"), [_INTL("Off"), _INTL("On")],
+                              proc { $PokemonSystem.quicksurf },
+                              proc { |value| $PokemonSystem.quicksurf = value },
+                              "Use Field Moves quicker"
+    )
+
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
+    )
 
     if $game_switches
       options <<
@@ -666,11 +724,6 @@ class PokemonOption_Scene
     #                   }, "Double wild or nah ?"
     # )
 
-    options << EnumOption.new(_INTL("Battle Effects"), [_INTL("On"), _INTL("Off")],
-                              proc { $PokemonSystem.battlescene },
-                              proc { |value| $PokemonSystem.battlescene = value },
-                              "Display move animations in battles"
-    )
 
     options << EnumOption.new(_INTL("Battle Style"), [_INTL("Switch"), _INTL("Set")],
                               proc { $PokemonSystem.battlestyle },
@@ -679,20 +732,6 @@ class PokemonOption_Scene
                               "No prompt to switch Pokémon before the opponent sends the next one"]
     )
 
-    options << EnumOption.new(_INTL("Default Movement"), [_INTL("Walking"), _INTL("Running")],
-                              proc { $PokemonSystem.runstyle },
-                              proc { |value| $PokemonSystem.runstyle = value },
-                              ["Default to walking when not holding the Run key",
-                               "Default to running when not holding the Run key"]
-    )
-
-    options << NumberOption.new(_INTL("Speech Frame"), 1, Settings::SPEECH_WINDOWSKINS.length,
-                                proc { $PokemonSystem.textskin },
-                                proc { |value|
-                                  $PokemonSystem.textskin = value
-                                  MessageConfig.pbSetSpeechFrame("Graphics/Windowskins/" + Settings::SPEECH_WINDOWSKINS[value])
-                                }
-    )
     # NumberOption.new(_INTL("Menu Frame"),1,Settings::MENU_WINDOWSKINS.length,
     #   proc { $PokemonSystem.frame },
     #   proc { |value|
@@ -700,12 +739,6 @@ class PokemonOption_Scene
     #     MessageConfig.pbSetSystemFrame("Graphics/Windowskins/" + Settings::MENU_WINDOWSKINS[value])
     #   }
     # ),
-    options << EnumOption.new(_INTL("Text Entry"), [_INTL("Cursor"), _INTL("Keyboard")],
-                              proc { $PokemonSystem.textinput },
-                              proc { |value| $PokemonSystem.textinput = value },
-                              ["Enter text by selecting letters on the screen",
-                               "Enter text by typing on the keyboard"]
-    )
     if $game_variables
       options << EnumOption.new(_INTL("Fusion icons"), [_INTL("Combined"), _INTL("DNA")],
                                 proc { $game_variables[VAR_FUSION_ICON_STYLE] },
@@ -714,20 +747,6 @@ class PokemonOption_Scene
                                  "Uses the same party icon for all fusions"]
       )
     end
-    options << EnumOption.new(_INTL("Screen Size"), [_INTL("S"), _INTL("M"), _INTL("L"), _INTL("XL"), _INTL("Full")],
-                              proc { [$PokemonSystem.screensize, 4].min },
-                              proc { |value|
-                                if $PokemonSystem.screensize != value
-                                  $PokemonSystem.screensize = value
-                                  pbSetResizeFactor($PokemonSystem.screensize)
-                                end
-                              }, "Sets the size of the screen"
-    )
-    options << EnumOption.new(_INTL("Quick Field Moves"), [_INTL("Off"), _INTL("On")],
-                              proc { $PokemonSystem.quicksurf },
-                              proc { |value| $PokemonSystem.quicksurf = value },
-                              "Use Field Moves quicker"
-    )
 
     options << ButtonOption.new(_INTL("Kuray's PIF Revamp Settings"),
                               proc {
@@ -737,6 +756,16 @@ class PokemonOption_Scene
     )
 
     return options
+  end
+
+  def openKurayMenu()
+    return if !@kuray_menu
+    pbFadeOutIn {
+      scene = KurayOptionsScene.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @kuray_menu = false
   end
 
   def pbAddOnOptions(options)
@@ -751,16 +780,6 @@ class PokemonOption_Scene
       screen.pbStartScreen
     }
     @autosave_menu = false
-  end
-
-  def openKurayMenu()
-    return if !@kuray_menu
-    pbFadeOutIn {
-      scene = KurayOptionsScene.new
-      screen = PokemonOptionScreen.new(scene)
-      screen.pbStartScreen
-    }
-    @kuray_menu = false
   end
 
   def pbOptions
@@ -860,6 +879,123 @@ class KurayOptionsScene < PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = []
+    options << ButtonOption.new(_INTL("Shinies"),
+      proc {
+        @kuray_menu = true
+        openKuray1()
+      }, "Customize shinies features"
+    )
+    options << ButtonOption.new(_INTL("Battles"),
+      proc {
+        @kuray_menu = true
+        openKuray2()
+      }, "Customize battles features"
+    )
+    options << ButtonOption.new(_INTL("Graphics"),
+      proc {
+        @kuray_menu = true
+        openKuray3()
+      }, "Customize graphics features"
+    )
+    options << ButtonOption.new(_INTL("Others"),
+      proc {
+        @kuray_menu = true
+        openKuray4()
+      }, "Customize others features"
+    )
+    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    )
+    
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
+    )
+
+    # if $scene && $scene.is_a?(Scene_Map)
+    #   options.concat(pbGetInGameOptions())
+    # end
+    return options
+  end
+
+  # def pbGetInGameOptions()
+  #   options = []
+  #   return options
+  # end
+
+  def openKuray1()
+    return if !@kuray_menu
+    pbFadeOutIn {
+      scene = KurayOptSc_1.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @kuray_menu = false
+  end
+  def openKuray2()
+    return if !@kuray_menu
+    pbFadeOutIn {
+      scene = KurayOptSc_2.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @kuray_menu = false
+  end
+  def openKuray3()
+    return if !@kuray_menu
+    pbFadeOutIn {
+      scene = KurayOptSc_3.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @kuray_menu = false
+  end
+  def openKuray4()
+    return if !@kuray_menu
+    pbFadeOutIn {
+      scene = KurayOptSc_4.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @kuray_menu = false
+  end
+end
+
+
+#===============================================================================
+# SHINIES
+#===============================================================================
+class KurayOptSc_1 < PokemonOptionScreen
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
+    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Shiny settings"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Customize modded features")
+
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbGetOptions(inloadscreen = false)
+    options = []
+    
+    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    )
+
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
+    )
     options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
                       proc { $PokemonSystem.kuraynormalshiny },
                       proc { |value| $PokemonSystem.kuraynormalshiny = value },
@@ -879,6 +1015,217 @@ class KurayOptionsScene < PokemonOption_Scene
                       ["Shinies don't have a shiny icon",
                       "Shinies have shiny icons (reduces performances!)"]
     )
+
+    if $scene && $scene.is_a?(Scene_Map)
+      options.concat(pbGetInGameOptions())
+    end
+    return options
+  end
+
+  
+  def pbGetInGameOptions()
+    options = []
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
+    )
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
+    )
+    options << ButtonOption.new(_INTL("- by JustAnotherUser -")
+    )
+    options << EnumOption.new(_INTL("Shiny Fuse Dye"), [_INTL("Off"), _INTL("On"), _INTL("Random")],
+                      proc { $PokemonSystem.shinyfusedye },
+                      proc { |value| $PokemonSystem.shinyfusedye = value },
+                      ["Don't use the shiny fusion color dye system",
+                      "Use the shiny fusion color dye system",
+                      "Re-roll shiny color after each fusion/unfusion"]
+    )
+    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    )
+    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.shiny_trainer_pkmn },
+                      proc { |value| $PokemonSystem.shiny_trainer_pkmn = value },
+                      ["Trainer pokemon will have their normal shiny rates",
+                      "All trainers pokemon in their party will be shiny"]
+    )# sister clone in battles!!
+    return options
+  end
+end
+
+#===============================================================================
+# BATTLE
+#===============================================================================
+class KurayOptSc_2 < PokemonOptionScreen
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
+    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Battle settings"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Customize modded features")
+
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbGetOptions(inloadscreen = false)
+    options = []
+    
+    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    )
+    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    )
+    options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
+                      proc { $PokemonSystem.typedisplay },
+                      proc { |value| $PokemonSystem.typedisplay = value },
+                      ["Don't draw the type indicator in battle",
+                      "Draws handmade custom type icons in battle | Artwork by Lolpy1",
+                      "Draws TCG themed type icons in battle",
+                      "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
+                      "Draws the text type display in battle"]
+    )#sister clone in GRAPHICS!!!
+    options << ButtonOption.new(_INTL("- by DemICE -")
+    )
+    options << ButtonOption.new(_INTL("Powerful AI")
+    )
+
+    if $scene && $scene.is_a?(Scene_Map)
+      options.concat(pbGetInGameOptions())
+    end
+    return options
+  end
+
+  
+  def pbGetInGameOptions()
+    options = []
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
+    )
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
+    )
+    options << EnumOption.new(_INTL("Wild Battles"), [_INTL("1v1"), _INTL("2v2"), _INTL("3v3")],
+                      proc { $PokemonSystem.force_double_wild },
+                      proc { |value| $PokemonSystem.force_double_wild = value },
+                      ["Wild battles always 1v1",
+                      "Wild battles in 2v2 when possible",
+                      "Wild battles in 3v3 'cause it's cool"]
+    )
+    options << EnumOption.new(_INTL("Level Cap"), [_INTL("Off"), _INTL("Easy"), _INTL("Normal"), _INTL("Hard")],
+                      proc { $PokemonSystem.kuraylevelcap },
+                      proc { |value| $PokemonSystem.kuraylevelcap = value },
+                      ["No Forced Level Cap",
+                      "Easy Level Cap, for children",
+                      "Normal Level Cap, for normal people",
+                      "Hard Level Cap, for nerds"]
+    )
+    options << EnumOption.new(_INTL("Self-Fusion Stat Boost"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.self_fusion_boost },
+                      proc { |value| $PokemonSystem.self_fusion_boost = value },
+                      ["Stat boost for self-fusions is disabled.",
+                      "Stat boost for self-fusions is enabled."]
+    )
+    options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, 10,
+                      proc { $PokemonSystem.kuraygambleodds },
+                      proc { |value|
+                        if $PokemonSystem.kuraygambleodds != value
+                          $PokemonSystem.kuraygambleodds = value
+                        end
+                      }, "1 out of <x> | Choose the odds of Shinies from Gamble | 0 = Always"
+    )
+    options << SliderOption.new(_INTL("Wild Shiny Odds"), 1, 65536, 1,
+                      proc { $PokemonSystem.shinyodds },
+                      proc { |value|
+                        if $PokemonSystem.shinyodds != value
+                          $PokemonSystem.shinyodds = value
+                        end
+                      }, "<x> out of 65536 | Choose the Shiny Odds"
+    )
+    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    )
+    options << EnumOption.new(_INTL("Recover Consumables"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.recover_consumables },
+                      proc { |value| $PokemonSystem.recover_consumables = value },
+                      ["Don't recover consumable items after battle",
+                      "Recover consumable items after battle"]
+    )
+    options << SliderOption.new(_INTL("ExpAll Redistribution"), 0, 10, 1,
+                      proc { $PokemonSystem.expall_redist },
+                      proc { |value| $PokemonSystem.expall_redist = value },
+                      "0 = Off, 10 = Max | Redistributes total exp from expAll to lower level pokemon"
+    )
+    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.shiny_trainer_pkmn },
+                      proc { |value| $PokemonSystem.shiny_trainer_pkmn = value },
+                      ["Trainer pokemon will have their normal shiny rates",
+                      "All trainers pokemon in their party will be shiny"]
+    )# sister clone in shiny!!
+    options << EnumOption.new(_INTL("Auto-Battle"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.autobattler },
+                      proc { |value| $PokemonSystem.autobattler = value },
+                      ["You fight your own battles",
+                      "Allows Trapstarr to take control of your pokemon"]
+    )
+    options << ButtonOption.new(_INTL("- by DemICE -")
+    )
+    options << EnumOption.new(_INTL("Damage Variance"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.damage_variance },
+                      proc { |value| $PokemonSystem.damage_variance = value },
+                      ["Damage Variance is disabled.",
+                      "Damage Variance is enabled."]
+    )
+
+    return options
+  end
+end
+
+
+#===============================================================================
+# GRAPHICS
+#===============================================================================
+class KurayOptSc_3 < PokemonOptionScreen
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
+    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Graphics settings"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Customize modded features")
+
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbGetOptions(inloadscreen = false)
+    options = []
+    
+    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    )
+
+    options << ButtonOption.new(_INTL("- by Sylvi -")
+    )
     options << EnumOption.new(_INTL("Big Pokémon Icons"), [_INTL("Off"), _INTL("Limited"), _INTL("All")],
                       proc { $PokemonSystem.kuraybigicons },
                       proc { |value| $PokemonSystem.kuraybigicons = value },
@@ -886,6 +1233,21 @@ class KurayOptionsScene < PokemonOption_Scene
                       "Pokémon icons will use their full-size battle sprites (except in boxes)",
                       "Pokémon icons will use their full-size battle sprites"]
     )
+    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    )
+    options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
+                      proc { $PokemonSystem.typedisplay },
+                      proc { |value| $PokemonSystem.typedisplay = value },
+                      ["Don't draw the type indicator in battle",
+                      "Draws handmade custom type icons in battle | Artwork by Lolpy1",
+                      "Draws TCG themed type icons in battle",
+                      "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
+                      "Draws the text type display in battle"]
+    )#sister clone in BATTLE!!!
+
+
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
+    )    
     options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayfusepreview },
                       proc { |value| $PokemonSystem.kurayfusepreview = value },
@@ -898,14 +1260,7 @@ class KurayOptionsScene < PokemonOption_Scene
                       ["Two of the same Pokemons can use different sprites (mod)",
                       "Two of the same Pokemons will use the same sprite (vanilla)"]
     )
-    options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
-                      proc { $PokemonSystem.typedisplay },
-                      proc { |value| $PokemonSystem.typedisplay = value },
-                      ["Don't draw the type indicator in battle",
-                      "Draws handmade custom type icons in battle | Artwork by Lolpy1",
-                      "Draws TCG themed type icons in battle",
-                      "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
-                      "Draws the text type display in battle"]
+    options << ButtonOption.new(_INTL("- by Luminatron -")
     )
     options << EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
                       proc { $PokemonSystem.kurayfonts },
@@ -953,84 +1308,72 @@ class KurayOptionsScene < PokemonOption_Scene
                         $PokemonSystem.kurayfonts = value
                       }, "Changes the Game's font"
     )
+
+    return options
+  end
+end
+
+#===============================================================================
+# OTHERS
+#===============================================================================
+class KurayOptSc_4 < PokemonOptionScreen
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
+    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Others settings"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Customize modded features")
+
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbGetOptions(inloadscreen = false)
+    options = []
+    
+    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    )
+    options << ButtonOption.new(_INTL("- by Sylvi -")
+    )
+    options << EnumOption.new(_INTL("Global Options"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.globalvalues },
+                      proc { |value| $PokemonSystem.globalvalues = value },
+                      ["Some options stays per-save file",
+                      "All options are applied globally"]
+    )
+
     if $scene && $scene.is_a?(Scene_Map)
       options.concat(pbGetInGameOptions())
     end
     return options
   end
 
+  
   def pbGetInGameOptions()
     options = []
-    options << EnumOption.new(_INTL("Shiny Fuse Dye"), [_INTL("Off"), _INTL("On"), _INTL("Random")],
-                      proc { $PokemonSystem.shinyfusedye },
-                      proc { |value| $PokemonSystem.shinyfusedye = value },
-                      ["Don't use the shiny fusion color dye system",
-                      "Use the shiny fusion color dye system",
-                      "Re-roll shiny color after each fusion/unfusion"]
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
     )
-    options << EnumOption.new(_INTL("Wild Battles"), [_INTL("1v1"), _INTL("2v2"), _INTL("3v3")],
-                      proc { $PokemonSystem.force_double_wild },
-                      proc { |value| $PokemonSystem.force_double_wild = value },
-                      ["Wild battles always 1v1",
-                      "Wild battles in 2v2 when possible",
-                      "Wild battles in 3v3 'cause it's cool"]
-    )
-    options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.improved_pokedex },
-                      proc { |value| $PokemonSystem.improved_pokedex = value },
-                      ["Don't use the Improved Pokedex",
-                      "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]
-    )
-    options << EnumOption.new(_INTL("Recover Consumables"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.recover_consumables },
-                      proc { |value| $PokemonSystem.recover_consumables = value },
-                      ["Don't recover consumable items after battle",
-                      "Recover consumable items after battle"]
-    )
-    options << SliderOption.new(_INTL("ExpAll Redistribution"), 0, 10, 1,
-                      proc { $PokemonSystem.expall_redist },
-                      proc { |value| $PokemonSystem.expall_redist = value },
-                      "0 = Off, 10 = Max | Redistributes total exp from expAll to lower level pokemon"
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
     )
     options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kuray_no_evo },
                       proc { |value| $PokemonSystem.kuray_no_evo = value },
                       ["Can't EvoLock a Pokemon without holding everstone",
                       "Can EvoLock Pokemons in the PC"]
-    )
-    options << EnumOption.new(_INTL("Level Cap"), [_INTL("Off"), _INTL("Easy"), _INTL("Normal"), _INTL("Hard")],
-                      proc { $PokemonSystem.kuraylevelcap },
-                      proc { |value| $PokemonSystem.kuraylevelcap = value },
-                      ["No Forced Level Cap",
-                      "Easy Level Cap, for children",
-                      "Normal Level Cap, for normal people",
-                      "Hard Level Cap, for nerds"]
-    )
-    options << EnumOption.new(_INTL("Self-Fusion Stat Boost"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.self_fusion_boost },
-                      proc { |value| $PokemonSystem.self_fusion_boost = value },
-                      ["Stat boost for self-fusions is disabled.",
-                      "Stat boost for self-fusions is enabled."]
-    )
-    options << EnumOption.new(_INTL("Damage Variance"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.damage_variance },
-                      proc { |value| $PokemonSystem.damage_variance = value },
-                      ["Damage Variance is disabled.",
-                      "Damage Variance is enabled."]
-    )
-    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.shiny_trainer_pkmn },
-                      proc { |value| $PokemonSystem.shiny_trainer_pkmn = value },
-                      ["Trainer pokemon will have their normal shiny rates",
-                      "All trainers pokemon in their party will be shiny"]
-    )
-    options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, 10,
-                      proc { $PokemonSystem.kuraygambleodds },
-                      proc { |value|
-                        if $PokemonSystem.kuraygambleodds != value
-                          $PokemonSystem.kuraygambleodds = value
-                        end
-                      }, "1 out of <x> | Choose the odds of Shinies from Gamble | 0 = Always"
     )
     options << EnumOption.new(_INTL("Kuray QoL"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayqol },
@@ -1063,11 +1406,13 @@ class KurayOptionsScene < PokemonOption_Scene
                       "Rare Candies/Master Balls and more are free in Kuray Shop",
                       "Also Unlimited WonderTrades (need 1 badge)"]
     )
-    options << EnumOption.new(_INTL("Auto-Battle"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.autobattler },
-                      proc { |value| $PokemonSystem.autobattler = value },
-                      ["You fight your own battles",
-                      "Allows Trapstarr to take control of your pokemon"]
+    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    )
+    options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.improved_pokedex },
+                      proc { |value| $PokemonSystem.improved_pokedex = value },
+                      ["Don't use the Improved Pokedex",
+                      "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]
     )
     return options
   end
