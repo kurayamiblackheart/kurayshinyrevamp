@@ -1097,10 +1097,11 @@ class KurayOptSc_1 < PokemonOption_Scene
     options << ButtonOption.new(_INTL("- by Trapstarr -"),
     proc {}
     )
-    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("On")],
+    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("Ace"), _INTL("All")],
                       proc { $PokemonSystem.shiny_trainer_pkmn },
                       proc { |value| $PokemonSystem.shiny_trainer_pkmn = value },
                       ["Trainer pokemon will have their normal shiny rates",
+                      "Draws the opposing trainers ace pokemon as shiny",
                       "All trainers pokemon in their party will be shiny"]
     )# sister clone in battles!!
     return options
@@ -1211,10 +1212,11 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.expall_redist = value },
                       "0 = Off, 10 = Max | Redistributes total exp from expAll to lower level pokemon"
     )
-    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("On")],
+    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("Ace"), _INTL("All")],
                       proc { $PokemonSystem.shiny_trainer_pkmn },
                       proc { |value| $PokemonSystem.shiny_trainer_pkmn = value },
                       ["Trainer pokemon will have their normal shiny rates",
+                      "Draws the opposing trainers ace pokemon as shiny",
                       "All trainers pokemon in their party will be shiny"]
     )# sister clone in shiny!!
     options << EnumOption.new(_INTL("Auto-Battle"), [_INTL("Off"), _INTL("On")],
