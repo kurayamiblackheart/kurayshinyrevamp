@@ -1003,8 +1003,8 @@ class KurayOptSc_1 < PokemonOption_Scene
 
   def pbStartScene(inloadscreen = false)
     super
-    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
-    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @sprites["option"].nameBaseColor = Color.new(200, 200, 35)
+    @sprites["option"].nameShadowColor = Color.new(115, 115, 20)
     @changedColor = true
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
@@ -1075,11 +1075,12 @@ class KurayOptSc_1 < PokemonOption_Scene
                         end
                       }, "1 out of <x> | Choose the odds of Shinies from Gamble | 0 = Always"
     )
-    options << SliderOption.new(_INTL("Wild Shiny Odds"), 1, 65536, $PokemonSystem.raiser,
+    options << SliderOption.new(_INTL("Wild Shiny Odds"), 0, 65536, $PokemonSystem.raiser,
                       proc { $PokemonSystem.shinyodds },
                       proc { |value|
-                        if $PokemonSystem.shinyodds != value-1
-                          $PokemonSystem.shinyodds = value-1
+                        if $PokemonSystem.shinyodds != value
+                          $PokemonSystem.shinyodds = value
+                          $PokemonSystem.shinyodds = 1 if $PokemonSystem.shinyodds < 1
                         end
                       }, "<x> out of 65536 | Choose the Shiny Odds"
     )
@@ -1116,8 +1117,8 @@ class KurayOptSc_2 < PokemonOption_Scene
 
   def pbStartScene(inloadscreen = false)
     super
-    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
-    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @sprites["option"].nameBaseColor = Color.new(200, 35, 35)
+    @sprites["option"].nameShadowColor = Color.new(115, 20, 20)
     @changedColor = true
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
@@ -1247,8 +1248,8 @@ class KurayOptSc_3 < PokemonOption_Scene
 
   def pbStartScene(inloadscreen = false)
     super
-    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
-    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @sprites["option"].nameBaseColor = Color.new(35, 200, 35)
+    @sprites["option"].nameShadowColor = Color.new(20, 115, 20)
     @changedColor = true
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
@@ -1376,8 +1377,8 @@ class KurayOptSc_4 < PokemonOption_Scene
 
   def pbStartScene(inloadscreen = false)
     super
-    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
-    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @sprites["option"].nameBaseColor = Color.new(35, 200, 200)
+    @sprites["option"].nameShadowColor = Color.new(20, 115, 115)
     @changedColor = true
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
