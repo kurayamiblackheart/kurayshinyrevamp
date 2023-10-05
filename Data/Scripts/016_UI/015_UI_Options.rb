@@ -679,6 +679,14 @@ class PokemonOption_Scene
                               "Use Field Moves quicker"
     )
 
+    if $scene && $scene.is_a?(Scene_Map)
+      options.concat(pbGetInGameOptions())
+    end
+    return options
+  end
+
+  def pbGetInGameOptions()
+    options = []
     options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
       proc {}
     )
@@ -963,7 +971,7 @@ end
 #===============================================================================
 # SHINIES
 #===============================================================================
-class KurayOptSc_1 < PokemonOptionScreen
+class KurayOptSc_1 < PokemonOption_Scene
   def initialize
     @changedColor = false
   end
@@ -1057,7 +1065,7 @@ end
 #===============================================================================
 # BATTLE
 #===============================================================================
-class KurayOptSc_2 < PokemonOptionScreen
+class KurayOptSc_2 < PokemonOption_Scene
   def initialize
     @changedColor = false
   end
@@ -1204,7 +1212,7 @@ end
 #===============================================================================
 # GRAPHICS
 #===============================================================================
-class KurayOptSc_3 < PokemonOptionScreen
+class KurayOptSc_3 < PokemonOption_Scene
   def initialize
     @changedColor = false
   end
@@ -1333,7 +1341,7 @@ end
 #===============================================================================
 # OTHERS
 #===============================================================================
-class KurayOptSc_4 < PokemonOptionScreen
+class KurayOptSc_4 < PokemonOption_Scene
   def initialize
     @changedColor = false
   end
