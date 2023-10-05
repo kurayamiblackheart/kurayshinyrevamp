@@ -566,7 +566,8 @@ class Pokemon
   def level
     @level = growth_rate.level_from_exp(@exp) if !@level
     #Kurayx LevelCAP
-    if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2) # obtained from trade
+    # if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2) # obtained from trade
+    if $PokemonSystem.kuraylevelcap != 0
       levelcap = getkuraylevelcap()
       if @iv
         calc_stats_sp(levelcap)
