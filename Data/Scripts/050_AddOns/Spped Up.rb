@@ -42,7 +42,7 @@ end
 
 # Default game speed.
 $GameSpeed = 0
-System.set_window_title("Kuray's Infinite Fusion Revamp | Version: " + KURAYVERSION + " | Speed: x" + ($GameSpeed+1).to_s)
+System.set_window_title("Kuray's Infinite Fusion Revamp | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s)
 $frame = 0
 $CanToggle = true
 
@@ -65,7 +65,7 @@ module Graphics
         end
       else
         $GameSpeed = 0
-        System.set_window_title("Kuray's Infinite Fusion Revamp | Version: " + KURAYVERSION + " | Speed: x" + ($GameSpeed+1).to_s)
+        System.set_window_title("Kuray's Infinite Fusion Revamp | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s)
       end
       # $GameSpeed = 4 if $GameSpeed < 0
       #KurayX
@@ -74,7 +74,7 @@ module Graphics
       $GameSpeed += 1
       $GameSpeed = 0 if $GameSpeed >= SPEEDUP_STAGES.size
       #KurayX
-      System.set_window_title("Kuray's Infinite Fusion Revamp | Version: " + KURAYVERSION + " | Speed: x" + ($GameSpeed+1).to_s)
+      System.set_window_title("Kuray's Infinite Fusion Revamp | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s)
     end
     $frame += 1
     return unless $frame % SPEEDUP_STAGES[$GameSpeed] == 0
