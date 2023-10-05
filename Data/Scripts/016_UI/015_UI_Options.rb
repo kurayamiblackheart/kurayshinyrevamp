@@ -570,7 +570,8 @@ class PokemonOption_Scene
   def pbGetOptions(inloadscreen = false)
     options = []
     
-    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    options << ButtonOption.new(_INTL("### GLOBAL ###"),
+      proc {}
     )
 
     options << SliderOption.new(_INTL("Music Volume"), 0, 100, 5,
@@ -678,7 +679,8 @@ class PokemonOption_Scene
                               "Use Field Moves quicker"
     )
 
-    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
+      proc {}
     )
 
     if $game_switches
@@ -907,11 +909,6 @@ class KurayOptionsScene < PokemonOption_Scene
         openKuray4()
       }, "Customize others features"
     )
-    options << ButtonOption.new(_INTL("### GLOBAL ###")
-    )
-    
-    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
-    )
 
     # if $scene && $scene.is_a?(Scene_Map)
     #   options.concat(pbGetInGameOptions())
@@ -995,10 +992,12 @@ class KurayOptSc_1 < PokemonOptionScreen
   def pbGetOptions(inloadscreen = false)
     options = []
     
-    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    options << ButtonOption.new(_INTL("### GLOBAL ###"),
+    proc {}
     )
 
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
                       proc { $PokemonSystem.kuraynormalshiny },
@@ -1029,11 +1028,11 @@ class KurayOptSc_1 < PokemonOptionScreen
   
   def pbGetInGameOptions()
     options = []
-    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
+    proc {}
     )
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
-    )
-    options << ButtonOption.new(_INTL("- by JustAnotherUser -")
+    options << ButtonOption.new(_INTL("- by JustAnotherUser -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Shiny Fuse Dye"), [_INTL("Off"), _INTL("On"), _INTL("Random")],
                       proc { $PokemonSystem.shinyfusedye },
@@ -1042,7 +1041,8 @@ class KurayOptSc_1 < PokemonOptionScreen
                       "Use the shiny fusion color dye system",
                       "Re-roll shiny color after each fusion/unfusion"]
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    options << ButtonOption.new(_INTL("- by Trapstarr -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.shiny_trainer_pkmn },
@@ -1086,9 +1086,11 @@ class KurayOptSc_2 < PokemonOptionScreen
   def pbGetOptions(inloadscreen = false)
     options = []
     
-    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    options << ButtonOption.new(_INTL("### GLOBAL ###"),
+    proc {}
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    options << ButtonOption.new(_INTL("- by Trapstarr -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
                       proc { $PokemonSystem.typedisplay },
@@ -1099,9 +1101,11 @@ class KurayOptSc_2 < PokemonOptionScreen
                       "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
                       "Draws the text type display in battle"]
     )#sister clone in GRAPHICS!!!
-    options << ButtonOption.new(_INTL("- by DemICE -")
+    options << ButtonOption.new(_INTL("- by DemICE -"),
+    proc {}
     )
-    options << ButtonOption.new(_INTL("Powerful AI")
+    options << ButtonOption.new(_INTL("Powerful AI"),
+    proc {}
     )
 
     if $scene && $scene.is_a?(Scene_Map)
@@ -1113,9 +1117,11 @@ class KurayOptSc_2 < PokemonOptionScreen
   
   def pbGetInGameOptions()
     options = []
-    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
+    proc {}
     )
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Wild Battles"), [_INTL("1v1"), _INTL("2v2"), _INTL("3v3")],
                       proc { $PokemonSystem.force_double_wild },
@@ -1154,7 +1160,8 @@ class KurayOptSc_2 < PokemonOptionScreen
                         end
                       }, "<x> out of 65536 | Choose the Shiny Odds"
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    options << ButtonOption.new(_INTL("- by Trapstarr -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Recover Consumables"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.recover_consumables },
@@ -1179,7 +1186,8 @@ class KurayOptSc_2 < PokemonOptionScreen
                       ["You fight your own battles",
                       "Allows Trapstarr to take control of your pokemon"]
     )
-    options << ButtonOption.new(_INTL("- by DemICE -")
+    options << ButtonOption.new(_INTL("- by DemICE -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Damage Variance"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.damage_variance },
@@ -1225,10 +1233,12 @@ class KurayOptSc_3 < PokemonOptionScreen
   def pbGetOptions(inloadscreen = false)
     options = []
     
-    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    options << ButtonOption.new(_INTL("### GLOBAL ###"),
+    proc {}
     )
 
-    options << ButtonOption.new(_INTL("- by Sylvi -")
+    options << ButtonOption.new(_INTL("- by Sylvi -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Big Pokémon Icons"), [_INTL("Off"), _INTL("Limited"), _INTL("All")],
                       proc { $PokemonSystem.kuraybigicons },
@@ -1237,7 +1247,8 @@ class KurayOptSc_3 < PokemonOptionScreen
                       "Pokémon icons will use their full-size battle sprites (except in boxes)",
                       "Pokémon icons will use their full-size battle sprites"]
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    options << ButtonOption.new(_INTL("- by Trapstarr -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
                       proc { $PokemonSystem.typedisplay },
@@ -1250,7 +1261,8 @@ class KurayOptSc_3 < PokemonOptionScreen
     )#sister clone in BATTLE!!!
 
 
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
+    proc {}
     )    
     options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayfusepreview },
@@ -1264,7 +1276,8 @@ class KurayOptSc_3 < PokemonOptionScreen
                       ["Two of the same Pokemons can use different sprites (mod)",
                       "Two of the same Pokemons will use the same sprite (vanilla)"]
     )
-    options << ButtonOption.new(_INTL("- by Luminatron -")
+    options << ButtonOption.new(_INTL("- by Luminatron -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
                       proc { $PokemonSystem.kurayfonts },
@@ -1349,9 +1362,11 @@ class KurayOptSc_4 < PokemonOptionScreen
   def pbGetOptions(inloadscreen = false)
     options = []
     
-    options << ButtonOption.new(_INTL("### GLOBAL ###")
+    options << ButtonOption.new(_INTL("### GLOBAL ###"),
+    proc {}
     )
-    options << ButtonOption.new(_INTL("- by Sylvi -")
+    options << ButtonOption.new(_INTL("- by Sylvi -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Global Options"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.globalvalues },
@@ -1369,9 +1384,11 @@ class KurayOptSc_4 < PokemonOptionScreen
   
   def pbGetInGameOptions()
     options = []
-    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###")
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
+    proc {}
     )
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -")
+    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kuray_no_evo },
@@ -1410,7 +1427,8 @@ class KurayOptSc_4 < PokemonOptionScreen
                       "Rare Candies/Master Balls and more are free in Kuray Shop",
                       "Also Unlimited WonderTrades (need 1 badge)"]
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -")
+    options << ButtonOption.new(_INTL("- by Trapstarr -"),
+    proc {}
     )
     options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.improved_pokedex },
