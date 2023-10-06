@@ -3690,13 +3690,19 @@ class PokemonStorageScreen
       _INTL("Wallpaper"),
       _INTL("Name"),
       _INTL("Buy Box"),
-      _INTL("Export All"),
-      _INTL("Import"),
-      _INTL("Import Randomly"),
+      # _INTL("Export All"),
+      # _INTL("Import"),
+      # _INTL("Import Randomly"),
       _INTL("Sort"),
       _INTL("Sort (all Boxes)"),
-      _INTL("Cancel"),
+      # _INTL("Cancel"),
     ]
+    if $DEBUG
+      commands[commands.length] = _INTL("Export All")
+      commands[commands.length] = _INTL("Import")
+      commands[commands.length] = _INTL("Import Randomly")
+    end
+    commands[commands.length] = _INTL("Cancel")
     command = pbShowCommands(
       _INTL("What do you want to do?"), commands)
     case command
@@ -3743,149 +3749,6 @@ class PokemonStorageScreen
         end
       end
     when 4
-      #Export (all)
-      if !$DEBUG
-        pbPlayBuzzerSE
-        pbDisplay(_INTL("DEBUG needed!"))
-      else
-        pbExportAll()
-      end
-    when 5
-      if !$DEBUG
-        pbPlayBuzzerSE
-        pbDisplay(_INTL("DEBUG needed!"))
-      else
-        #Import (all)
-        directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
-        Dir.mkdir(directory_name) unless File.exists?(directory_name)
-        # Use Dir.glob to get a list of JSON files in the folder
-        json_files = Dir.glob(File.join(directory_name, "*.json"))
-        x = @storage.currentBox
-        y = 0
-        triedcurrent = false
-        outofspace = 0
-        # x = box, max is @storage.maxBoxes
-        # y = space, max is 29
-        # Check if there are JSON files
-        if json_files.empty?
-          pbPlayBuzzerSE
-          pbDisplay(_INTL("No Pokemon to Import!"))
-        else
-          # Iterate through the JSON files
-          json_files.each do |json_file|
-            # Load and process the JSON data
-            pokemon = Pokemon.new(:BULBASAUR, 1)
-            json_data = File.read(json_file)
-            pokemon.load_json(eval(json_data))
-            while @storage[x, y]
-              y += 1
-              if y > 29
-                y = 0
-                if x == @storage.currentBox && x != 0 && !triedcurrent
-                  x = 0
-                  triedcurrent = true
-                end
-                x += 1
-                if x >= @storage.maxBoxes
-                  x = 0
-                  outofspace = 1
-                  break
-                end
-              end
-            end
-            unless @storage[x, y]
-              if outofspace == 0
-                @storage.pbImportKuray(x, y, pokemon)
-                File.delete(json_file)
-              end
-            end
-            #redo it for the next slot for the next import
-            y += 1
-            if y > 29
-              y = 0
-              if x == @storage.currentBox && x != 0 && !triedcurrent
-                x = 0
-                triedcurrent = true
-              end
-              x += 1
-              if x >= @storage.maxBoxes
-                x = 0
-                outofspace = 1
-                break
-              end
-            end
-            # code to add pokemon here, break if cannot add it
-          end
-          if outofspace == 1
-            pbPlayBuzzerSE
-            pbHardRefresh
-            pbDisplay(_INTL("Out of place!"))
-          else
-            pbHardRefresh
-            pbDisplay(_INTL("Pokemon(s) Imported!"))
-          end
-        end
-      end
-    when 6
-      if !$DEBUG
-        pbPlayBuzzerSE
-        pbDisplay(_INTL("DEBUG needed!"))
-      else
-        #Import 1 random
-        directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
-        Dir.mkdir(directory_name) unless File.exists?(directory_name)
-        # Use Dir.glob to get a list of JSON files in the folder
-        json_files = Dir.glob(File.join(directory_name, "*.json"))
-        x = @storage.currentBox
-        y = 0
-        triedcurrent = false
-        outofspace = 0
-        # x = box, max is @storage.maxBoxes
-        # y = space, max is 29
-        # Check if there are JSON files
-        if json_files.empty?
-          pbPlayBuzzerSE
-          pbDisplay(_INTL("No Pokemon to Import!"))
-        else
-          # Choose a random JSON file from the list
-          random_json_file = json_files.sample
-          # Load and process the JSON data
-          pokemon = Pokemon.new(:BULBASAUR, 1)
-          json_data = File.read(random_json_file)
-          pokemon.load_json(eval(json_data))
-          while @storage[x, y]
-            y += 1
-            if y > 29
-              y = 0
-              if x == @storage.currentBox && x != 0 && !triedcurrent
-                x = 0
-                triedcurrent = true
-              end
-              x += 1
-              if x >= @storage.maxBoxes
-                x = 0
-                outofspace = 1
-                break
-              end
-            end
-          end
-          unless @storage[x, y]
-            if outofspace == 0
-              @storage.pbImportKuray(x, y, pokemon)
-              File.delete(random_json_file)
-            end
-          end
-          if outofspace == 1
-            pbPlayBuzzerSE
-            pbHardRefresh
-            pbDisplay(_INTL("Out of place!"))
-          else
-            pbHardRefresh
-            pbDisplay(_INTL("Pokemon(s) Imported!"))
-          end
-        end
-      end
-    when 7
       #Sort Pokemons
       # box = selected[0]
       # index = selected[1]
@@ -4190,7 +4053,7 @@ class PokemonStorageScreen
           pbDisplay(_INTL("Pokemons sorted!"))
         end
       end
-    when 8
+    when 5
       #Sort Pokemons
       # box = selected[0]
       # index = selected[1]
@@ -4682,6 +4545,150 @@ class PokemonStorageScreen
           # @scene.pbRefresh
           # pbRefresh
           pbDisplay(_INTL("Pokemons sorted!"))
+        end
+      end
+      
+    when 6
+      #Export (all)
+      if !$DEBUG
+        pbPlayBuzzerSE
+        pbDisplay(_INTL("DEBUG needed!"))
+      else
+        pbExportAll()
+      end
+    when 7
+      if !$DEBUG
+        pbPlayBuzzerSE
+        pbDisplay(_INTL("DEBUG needed!"))
+      else
+        #Import (all)
+        directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
+        Dir.mkdir(directory_name) unless File.exists?(directory_name)
+        # Use Dir.glob to get a list of JSON files in the folder
+        json_files = Dir.glob(File.join(directory_name, "*.json"))
+        x = @storage.currentBox
+        y = 0
+        triedcurrent = false
+        outofspace = 0
+        # x = box, max is @storage.maxBoxes
+        # y = space, max is 29
+        # Check if there are JSON files
+        if json_files.empty?
+          pbPlayBuzzerSE
+          pbDisplay(_INTL("No Pokemon to Import!"))
+        else
+          # Iterate through the JSON files
+          json_files.each do |json_file|
+            # Load and process the JSON data
+            pokemon = Pokemon.new(:BULBASAUR, 1)
+            json_data = File.read(json_file)
+            pokemon.load_json(eval(json_data))
+            while @storage[x, y]
+              y += 1
+              if y > 29
+                y = 0
+                if x == @storage.currentBox && x != 0 && !triedcurrent
+                  x = 0
+                  triedcurrent = true
+                end
+                x += 1
+                if x >= @storage.maxBoxes
+                  x = 0
+                  outofspace = 1
+                  break
+                end
+              end
+            end
+            unless @storage[x, y]
+              if outofspace == 0
+                @storage.pbImportKuray(x, y, pokemon)
+                File.delete(json_file)
+              end
+            end
+            #redo it for the next slot for the next import
+            y += 1
+            if y > 29
+              y = 0
+              if x == @storage.currentBox && x != 0 && !triedcurrent
+                x = 0
+                triedcurrent = true
+              end
+              x += 1
+              if x >= @storage.maxBoxes
+                x = 0
+                outofspace = 1
+                break
+              end
+            end
+            # code to add pokemon here, break if cannot add it
+          end
+          if outofspace == 1
+            pbPlayBuzzerSE
+            pbHardRefresh
+            pbDisplay(_INTL("Out of place!"))
+          else
+            pbHardRefresh
+            pbDisplay(_INTL("Pokemon(s) Imported!"))
+          end
+        end
+      end
+    when 8
+      if !$DEBUG
+        pbPlayBuzzerSE
+        pbDisplay(_INTL("DEBUG needed!"))
+      else
+        #Import 1 random
+        directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
+        Dir.mkdir(directory_name) unless File.exists?(directory_name)
+        # Use Dir.glob to get a list of JSON files in the folder
+        json_files = Dir.glob(File.join(directory_name, "*.json"))
+        x = @storage.currentBox
+        y = 0
+        triedcurrent = false
+        outofspace = 0
+        # x = box, max is @storage.maxBoxes
+        # y = space, max is 29
+        # Check if there are JSON files
+        if json_files.empty?
+          pbPlayBuzzerSE
+          pbDisplay(_INTL("No Pokemon to Import!"))
+        else
+          # Choose a random JSON file from the list
+          random_json_file = json_files.sample
+          # Load and process the JSON data
+          pokemon = Pokemon.new(:BULBASAUR, 1)
+          json_data = File.read(random_json_file)
+          pokemon.load_json(eval(json_data))
+          while @storage[x, y]
+            y += 1
+            if y > 29
+              y = 0
+              if x == @storage.currentBox && x != 0 && !triedcurrent
+                x = 0
+                triedcurrent = true
+              end
+              x += 1
+              if x >= @storage.maxBoxes
+                x = 0
+                outofspace = 1
+                break
+              end
+            end
+          end
+          unless @storage[x, y]
+            if outofspace == 0
+              @storage.pbImportKuray(x, y, pokemon)
+              File.delete(random_json_file)
+            end
+          end
+          if outofspace == 1
+            pbPlayBuzzerSE
+            pbHardRefresh
+            pbDisplay(_INTL("Out of place!"))
+          else
+            pbHardRefresh
+            pbDisplay(_INTL("Pokemon(s) Imported!"))
+          end
         end
       end
     # when 6
