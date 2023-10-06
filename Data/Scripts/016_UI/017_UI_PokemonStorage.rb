@@ -1858,11 +1858,11 @@ class PokemonStorageScene
     helptext = _INTL("{1} is selected.", pokemon.name)
     commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
     commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 1)
-    commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny (P1000)") if !pokemon.shiny?
-    commands[cmdShinify = commands.length] = _INTL("Gamble for new Color (P1000)") if pokemon.shiny? && $PokemonSystem.kuraynormalshiny != 1
+    commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny") if !pokemon.shiny?
+    commands[cmdShinify = commands.length] = _INTL("Gamble for new Color") if pokemon.shiny? && $PokemonSystem.kuraynormalshiny != 1
     commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if pokemon.shiny?
-    commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite (P5000)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
-    commands[cmdDefSprite = commands.length] = _INTL("Use Default Sprite (P500)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
+    commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
+    commands[cmdDefSprite = commands.length] = _INTL("Use Default Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdShowSprite = commands.length] = _INTL("Show Spritename") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdBlacklist = commands.length] = _INTL("Blacklist Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     # commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
@@ -1907,20 +1907,22 @@ class PokemonStorageScene
 
   def pbRerollSprite(selected, heldpoke)
     while true
-      if $Trainer.money < 5000
+      pricenow = 5000
+      pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
+      if $Trainer.money < pricenow
         pbPlayBuzzerSE
         pbDisplay(_INTL("Not enough Money!"))
         break
       else
         kuraychoices = [
-          _INTL("Re-roll Sprite (P5000)"),
+          _INTL("Re-roll Sprite (P" + pricenow.to_s + ")"),
           _INTL("Nevermind"),
         ]
         kuraychoice = pbShowCommands(
           _INTL("You have P" + $Trainer.money.to_s_formatted), kuraychoices)
         case kuraychoice
         when 0
-          $Trainer.money -= 5000
+          $Trainer.money -= pricenow
           pokemon = heldpoke
           if heldpoke
             pokemon = heldpoke
@@ -1945,7 +1947,7 @@ class PokemonStorageScene
             break
           else
             pbDisplay(_INTL("Maybe it can't do that..."))
-            $Trainer.money += 5000
+            $Trainer.money += pricenow
             #Best option to refresh sprites so far \/
             break
           end
@@ -1957,19 +1959,21 @@ class PokemonStorageScene
   end
 
   def pbDefaultSprite(selected, heldpoke)
-    if $Trainer.money < 500
+    pricenow = 500
+    pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
+    if $Trainer.money < pricenow
       pbPlayBuzzerSE
       pbDisplay(_INTL("Not enough Money!"))
     else
       kuraychoices = [
-        _INTL("Use Default Sprite (P500)"),
+        _INTL("Use Default Sprite (P" + pricenow.to_s + ")"),
         _INTL("Nevermind"),
       ]
       kuraychoice = pbShowCommands(
         _INTL("You have P" + $Trainer.money.to_s_formatted), kuraychoices)
       case kuraychoice
       when 0
-        $Trainer.money -= 500
+        $Trainer.money -= pricenow
         pokemon = heldpoke
         if heldpoke
           pokemon = heldpoke
@@ -1993,12 +1997,12 @@ class PokemonStorageScene
             #   pbDisplay(_INTL("Its sprite went back to default!"))
             # else
             #   pbDisplay(_INTL("Maybe it can't do that..."))
-            #   $Trainer.money += 500
+            #   $Trainer.money += pricenow
             # end
           # end
           # if pokemon.kuraycustomfiledefault?
           #   pbDisplay(_INTL("Already on default!"))
-          #   $Trainer.money += 500
+          #   $Trainer.money += pricenow
           # else
           #   pokemon.kuraycustomfile = "none"
           #   pbHardRefresh
@@ -2097,8 +2101,10 @@ class PokemonStorageScene
   end
 
   def pbKuraShinify(selected, heldpoke)
+    pricenow = 1000
+    pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
     while true
-      if $Trainer.money < 1000
+      if $Trainer.money < pricenow
         pbPlayBuzzerSE
         pbDisplay(_INTL("Not enough Money!"))
         break
@@ -2116,8 +2122,8 @@ class PokemonStorageScene
           pbDisplay(_INTL("Pokemon already Shiny!"))
           break
         end
-        gambletext="Gamble for Shiny (P1000)" if !pokemon.shiny?
-        gambletext="Gamble for new Color (P1000)" if pokemon.shiny?
+        gambletext="Gamble for Shiny (P" + pricenow.to_s + ")" if !pokemon.shiny?
+        gambletext="Gamble for new Color (P" + pricenow.to_s + ")" if pokemon.shiny?
         kuraychoices = [
           _INTL(gambletext),
           _INTL("Nevermind"),
@@ -2126,7 +2132,7 @@ class PokemonStorageScene
           _INTL("You have P" + $Trainer.money.to_s_formatted), kuraychoices)
         case kuraychoice
         when 0
-          $Trainer.money -= 1000
+          $Trainer.money -= pricenow
           if $PokemonSystem.kuraygambleodds == nil || !$PokemonSystem.kuraygambleodds
             $PokemonSystem.kuraygambleodds = 100
           end
@@ -2897,7 +2903,7 @@ class PokemonStorageScreen
               commands[cmdMove = commands.length] = _INTL("Move")
               commands[cmdRelease = commands.length] = _INTL("Release")
               # WIP
-              # commands[cmdBattle = commands.length] = _INTL("Battle Selected") if pokemonCount < 7 && pokemonCount > 0
+              commands[cmdBattle = commands.length] = _INTL("Battle Selected") if pokemonCount < 7 && pokemonCount > 0
               commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
               commands[cmdCancel = commands.length] = _INTL("Cancel")
 
@@ -2910,7 +2916,7 @@ class PokemonStorageScreen
               elsif cmdExport >= 0 && command == cmdExport # Export
                 pbExportSelected(selected[0])
               elsif cmdBattle >= 0 && command == cmdBattle # Battle
-                pbBattleSelected(selected[0])
+                pbBattleSelected(selected[0], true)
               end
 
               @multiSelectRange = nil
@@ -3487,36 +3493,124 @@ class PokemonStorageScreen
     @scene.pbRefresh
     @multiheldpkmn = []
   end
+  
+  def init_trainer(trainer_data)
+    return trainer_data  # Just return the provided data without trying to convert it
+  end
+  
+  def createTrainer(trainerid,trainername,party,items=[])
+    name = pbGetMessageFromHash(MessageTypes::TrainerNames, trainername)
 
-  def pbBattleSelected(box)
-    selected = getMultiSelection(box, nil)
-    return if selected.length == 0 || selected.length > 6
-    buildparty = []
-    partysize = selected.length
-    for index in selected
-      working = @storage[box, index]
-      # working.iv = []
-      # working.ev = []
-      # working.iv[0] = @storage[box, index].iv[:HP]
-      # working.iv[1] = @storage[box, index].iv[:ATTACK]
-      # working.iv[2] = @storage[box, index].iv[:DEFENSE]
-      # working.iv[3] = @storage[box, index].iv[:SPECIAL_ATTACK]
-      # working.iv[4] = @storage[box, index].iv[:SPECIAL_DEFENSE]
-      # working.iv[5] = @storage[box, index].iv[:SPEED]
-      # working.ev[0] = @storage[box, index].ev[:HP]
-      # working.ev[1] = @storage[box, index].ev[:ATTACK]
-      # working.ev[2] = @storage[box, index].ev[:DEFENSE]
-      # working.ev[3] = @storage[box, index].ev[:SPECIAL_ATTACK]
-      # working.ev[4] = @storage[box, index].ev[:SPECIAL_DEFENSE]
-      # working.ev[5] = @storage[box, index].ev[:SPEED]
-      # working = createPokemon("B341H250",100,:PASSHOBERRY,[:EARTHQUAKE,:SACREDFIRE,:SOLARBEAM,:STONEEDGE],0,0,:JOLLY,154,184,154,94,244,154)
-      # NOT WORKING!!!
-      buildparty.push(working)
+    trainer_hash = {
+      :id_number    => 999,
+      :trainer_type => trainerid,
+      :name         => name,
+      :version      => 0,
+      :pokemon      => party,
+      :items        => items
+    }
+    opponent = GameData::Trainer.new(trainer_hash)
+    # opponent.setForeignID($Trainer) if $Trainer
+    # opponent.party = party
+    return [opponent, items, party]
+  end
+ 
+  def customTrainerBattle(trainerName, trainerType, party_array, default_level=50, endSpeech="", sprite_override=nil)
+    trainer = NPCTrainer.new(trainerName, trainerType, sprite_override)
+    trainer.lose_text = endSpeech
+    party = []
+    party_array.each do |pokemon|
+    if pokemon.is_a?(Pokemon)
+      party << pokemon
+    elsif pokemon.is_a?(Symbol)
+      party << Pokemon.new(pokemon, default_level, trainer)
+    elsif pokemon.is_a?(Hash)  # Handle hash representations
+      new_pokemon = Pokemon.new(pokemon[:species], pokemon[:level], trainer)
+      # You can set other attributes like moves, IVs, EVs here if needed
+      party << new_pokemon
+      end
     end
-    # trainer = createTrainer(110,$Trainer.name,buildparty)
-    trainer = createTrainer(110,$Trainer.name,buildparty)
-    result = customTrainerBattle(trainer,"...",false,true)
-    pbSet(1,result == BR_WIN ? 0 :1)
+    trainer.party = party
+    $PokemonSystem.nomoneylost = 1
+    setBattleRule("canLose")
+    Events.onTrainerPartyLoad.trigger(nil, trainer)
+    decision = pbTrainerBattleCore(trainer)
+    # Return true if the player won the battle, false otherwise
+    return decision == 1
+  end
+
+  def pbBattleSelected(box, frommulti=true)
+    tempclone = ""
+    clone = true
+    if $PokemonSystem.sb_soullinked != nil && $PokemonSystem.sb_soullinked == 1
+      clone = false
+    end
+    buildparty = []
+    buildobject = []
+    if frommulti
+      selected = getMultiSelection(box, nil)
+      return if selected.length == 0 || selected.length > 6
+    else
+      selected = box
+    end
+    for index in selected
+      if frommulti#we take from multi select, creating the array and working another way
+        if clone
+          tmppkm = @storage[box, index].clone
+          tempclone = tmppkm.to_json
+          pokemon = Pokemon.new(:BULBASAUR, 1)
+          pokemon.load_json(tempclone)
+        else
+          pokemon = @storage[box, index]
+        end
+      else#we already have an array in this variable!
+        if clone
+          tmppkm = index.clone
+          tempclone = tmppkm.to_json
+          pokemon = Pokemon.new(:BULBASAUR, 1)
+          pokemon.load_json(tempclone)
+        else
+          pokemon = index
+        end
+      end
+      if pokemon
+        pkmn_data = {
+          species: pokemon.species,
+          level: pokemon.level,
+          moves: pokemon.moves.map { |m| m.id },
+          iv: pokemon.iv,
+          ev: pokemon.ev,
+        }
+      buildparty.push(pkmn_data)
+      buildobject.push(pokemon)
+      end
+    end
+    return if buildparty.length == 0  # Ensure there's at least one Pokémon to battle
+    $Trainer.heal_party # healing player
+    choicelimit = buildparty.length
+    if $PokemonSystem.sb_maxing != nil && $PokemonSystem.sb_maxing == 1
+      choicelimit = 6
+    end
+    if PokemonSelection.choose(1,choicelimit,true,true)
+      # Create a trainer with the selected Pokémon as their party
+      trainer_data = createTrainer(110, $Trainer.name, buildparty)
+      return if !trainer_data  # Ensure the trainer was successfully created
+
+      # Battle against the created trainer
+      trainer = init_trainer(trainer_data[0])
+
+      trainer.pokemon.each_with_index do |pkmn, i|
+        pkmn = buildobject[i]   # Turns a pokemon of this party index into the pokemon of the player's party of the same index   
+        pkmn.heal#healing enemy
+        pkmn.calc_stats
+      end
+
+      result = customTrainerBattle(trainer.name, trainer.trainer_type, buildobject, "...", nil)
+      # Set the result
+      pbSet(1, result == 1 ? 0 : 1)
+      $PokemonSystem.nomoneylost = 0
+      $Trainer.heal_party# healing player again
+    end
   end
 
   #KurayX
@@ -3695,6 +3789,7 @@ class PokemonStorageScreen
       # _INTL("Import Randomly"),
       _INTL("Sort"),
       _INTL("Sort (all Boxes)"),
+      _INTL("Battle"),
       # _INTL("Cancel"),
     ]
     if $DEBUG
@@ -3730,6 +3825,7 @@ class PokemonStorageScreen
       if pricenow > 100000
         pricenow = 100000
       end
+      pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
       if $Trainer.money < pricenow
         pbPlayBuzzerSE
         pbDisplay(_INTL("Not enough Money ! Cost P" + pricenow.to_s))
@@ -4549,6 +4645,191 @@ class PokemonStorageScreen
       end
       
     when 6
+      #battle
+      numberbattler = 1
+      
+      battlerchoices = [
+        _INTL("Battle 6 Pokemons"),
+        _INTL("Battle 5 Pokemons"),
+        _INTL("Battle 4 Pokemons"),
+        _INTL("Battle 3 Pokemons"),
+        _INTL("Battle 2 Pokemons"),
+        _INTL("Battle 1 Pokemon"),
+        _INTL("Nevermind"),
+      ]
+      battlerchoice = pbShowCommands(
+        _INTL("Battle system"), battlerchoices)
+      battlerchoice += 1
+      if battlerchoice > 0 && battlerchoice < 7
+        #battler logic
+        kuraychoices = [
+          _INTL("Battle Randomly this Box"),
+          _INTL("Battle Randomly this Box + Team"),
+          _INTL("Battle Randomly entire Storage"),
+          _INTL("Battle Randomly entire Storage + Team"),
+          _INTL("Battle Randomly from Battlers folder"),
+          _INTL("Nevermind"),
+        ]
+        kuraychoice = pbShowCommands(
+          _INTL("Battle system"), kuraychoices)
+        # battlertimes = battlerchoice
+        krbattlers = []
+        pokekurays = []
+        case kuraychoice
+        when 0 # box - IMPORT THE CURRENT BOX
+          for k in 0..29
+            if @storage[@storage.currentBox, k]
+              pokekuray = @storage[@storage.currentBox, k]
+              pokekurays.append(pokekuray)
+            end
+          end
+          if pokekurays.empty?
+            pbPlayBuzzerSE
+            pbDisplay(_INTL("No Battler to Fight!"))
+          else
+            if pokekurays.length < 6
+              battlerchoice = pokekurays.length
+              pbDisplay(_INTL("Battling only {1} Pokemon(s)", battlerchoice))
+            end
+            battlerchoice.times do
+              # Choose a random JSON file from the list
+              randomkuray = pokekurays.sample
+              krbattlers.push(randomkuray)
+              # Remove the chosen file from the list
+              pokekurays.delete(randomkuray)
+            end
+            pbBattleSelected(krbattlers, false)
+          end
+        when 1 # box + team - IMPORT THE CURRENT BOX + THE TEAM
+          for j in 0..5
+            if @storage.party[j]
+              pokekuray = @storage.party[j]
+              pokekurays.append(pokekuray)
+            end
+          end
+          for k in 0..29
+            if @storage[@storage.currentBox, k]
+              pokekuray = @storage[@storage.currentBox, k]
+              pokekurays.append(pokekuray)
+            end
+          end
+          if pokekurays.empty?
+            pbPlayBuzzerSE
+            pbDisplay(_INTL("No Battler to Fight!"))
+          else
+            if pokekurays.length < 6
+              battlerchoice = pokekurays.length
+              pbDisplay(_INTL("Battling only {1} Pokemon(s)", battlerchoice))
+            end
+            battlerchoice.times do
+              # Choose a random JSON file from the list
+              randomkuray = pokekurays.sample
+              krbattlers.push(randomkuray)
+              # Remove the chosen file from the list
+              pokekurays.delete(randomkuray)
+            end
+            pbBattleSelected(krbattlers, false)
+          end
+        when 2 # storage
+          for j in 0...@storage.maxBoxes
+            if @storage[j].empty?
+              next
+            end
+            for k in 0..29
+              if @storage[j, k]
+                pokekuray = @storage[j, k]
+                pokekurays.append(pokekuray)
+              end
+            end
+          end
+          if pokekurays.empty?
+            pbPlayBuzzerSE
+            pbDisplay(_INTL("No Battler to Fight!"))
+          else
+            if pokekurays.length < 6
+              battlerchoice = pokekurays.length
+              pbDisplay(_INTL("Battling only {1} Pokemon(s)", battlerchoice))
+            end
+            battlerchoice.times do
+              # Choose a random JSON file from the list
+              randomkuray = pokekurays.sample
+              krbattlers.push(randomkuray)
+              # Remove the chosen file from the list
+              pokekurays.delete(randomkuray)
+            end
+            pbBattleSelected(krbattlers, false)
+          end
+        when 3 # storage + team
+          for j in 0..5
+            if @storage.party[j]
+              pokekuray = @storage.party[j]
+              pokekurays.append(pokekuray)
+            end
+          end
+          for j in 0...@storage.maxBoxes
+            if @storage[j].empty?
+              next
+            end
+            for k in 0..29
+              if @storage[j, k]
+                pokekuray = @storage[j, k]
+                pokekurays.append(pokekuray)
+              end
+            end
+          end
+          if pokekurays.empty?
+            pbPlayBuzzerSE
+            pbDisplay(_INTL("No Battler to Fight!"))
+          else
+            if pokekurays.length < 6
+              battlerchoice = pokekurays.length
+              pbDisplay(_INTL("Battling only {1} Pokemon(s)", battlerchoice))
+            end
+            battlerchoice.times do
+              # Choose a random JSON file from the list
+              randomkuray = pokekurays.sample
+              krbattlers.push(randomkuray)
+              # Remove the chosen file from the list
+              pokekurays.delete(randomkuray)
+            end
+            pbBattleSelected(krbattlers, false)
+          end
+        when 4 # battler folder
+          #Import 1 random
+          directory_name = "ExportedPokemons/Battlers"  # Replace with the actual path to your folder
+          Dir.mkdir(directory_name) unless File.exists?(directory_name)
+          # Use Dir.glob to get a list of JSON files in the folder
+          json_files = Dir.glob(File.join(directory_name, "*.json"))
+          if json_files.empty?
+            pbPlayBuzzerSE
+            pbDisplay(_INTL("No Battler to Import!"))
+          else
+            if json_files.length < 6
+              battlerchoice = json_files.length
+            end
+            battlerchoice.times do
+              # Choose a random JSON file from the list
+              random_json_file = json_files.sample
+          
+              # Load and process the JSON data
+              pokemon = Pokemon.new(:BULBASAUR, 1)
+              json_data = File.read(random_json_file)
+              pokemon.load_json(eval(json_data))
+          
+              # Your code to process the JSON data goes here
+              # For example, you can print the loaded data
+              krbattlers.push(pokemon)
+          
+              # Delete the chosen JSON file
+              # File.delete(random_json_file)
+              # Remove the chosen file from the list
+              json_files.delete(random_json_file)
+            end
+            pbBattleSelected(krbattlers, false)
+          end
+        end
+      end
+    when 7
       #Export (all)
       if !$DEBUG
         pbPlayBuzzerSE
@@ -4556,7 +4837,7 @@ class PokemonStorageScreen
       else
         pbExportAll()
       end
-    when 7
+    when 8
       if !$DEBUG
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))
@@ -4632,7 +4913,7 @@ class PokemonStorageScreen
           end
         end
       end
-    when 8
+    when 9
       if !$DEBUG
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))

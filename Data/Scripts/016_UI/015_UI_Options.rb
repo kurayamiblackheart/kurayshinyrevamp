@@ -53,6 +53,11 @@ class PokemonSystem
   attr_accessor :shinyodds # overwrite the shiny odds
 
 
+  attr_accessor :nomoneylost # temp variable for self-battles
+
+
+  attr_accessor :sb_maxing # allows to have more pokemons than the opponent
+  attr_accessor :sb_soullinked # pokemons of the team are soul-linked (not recommended)
 
   attr_accessor :raiser
   attr_accessor :raiserb
@@ -101,6 +106,8 @@ class PokemonSystem
     @shenanigans = 0
     @kuraystreamerdream = 0
     @autobattler = 0
+    @sb_maxing = 0
+    @sb_soullinked = 0
     @globalvalues = 0
     if Settings::SHINY_POKEMON_CHANCE
       @shinyodds = Settings::SHINY_POKEMON_CHANCE
@@ -161,6 +168,8 @@ class PokemonSystem
     @shenanigans = saved.shenanigans if saved.shenanigans
     @autobattler = saved.autobattler if saved.autobattler
     @shinyodds = saved.shinyodds if saved.shinyodds
+    @sb_maxing = saved.sb_maxing if saved.sb_maxing
+    @sb_soullinked = saved.sb_soullinked if saved.sb_soullinked
   end
 end
 
@@ -918,6 +927,12 @@ class KurayOptionsScene < PokemonOption_Scene
         openKuray3()
       }, "Customize graphics features"
     )
+    options << ButtonOption.new(_INTL("Self-Battle"),
+      proc {
+        @kuray_menu = true
+        openKuray5()
+      }, "Self-battling features"
+    )
     options << ButtonOption.new(_INTL("Others"),
       proc {
         @kuray_menu = true
@@ -985,6 +1000,15 @@ class KurayOptionsScene < PokemonOption_Scene
     return if !@kuray_menu
     pbFadeOutIn {
       scene = KurayOptSc_4.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @kuray_menu = false
+  end
+  def openKuray5()
+    return if !@kuray_menu
+    pbFadeOutIn {
+      scene = KurayOptSc_5.new
       screen = PokemonOptionScreen.new(scene)
       screen.pbStartScreen
     }
@@ -1440,6 +1464,71 @@ class KurayOptSc_4 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.improved_pokedex = value },
                       ["Don't use the Improved Pokedex",
                       "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]
+    )
+    return options
+  end
+end
+
+#===============================================================================
+# SELF BATTLE
+#===============================================================================
+class KurayOptSc_5 < PokemonOption_Scene
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = Color.new(200, 35, 200)
+    @sprites["option"].nameShadowColor = Color.new(115, 20, 115)
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Self-Battle settings"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Customize modded features")
+
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbGetOptions(inloadscreen = false)
+    options = []
+
+    if $scene && $scene.is_a?(Scene_Map)
+      options.concat(pbGetInGameOptions())
+    else
+      options << ButtonOption.new(_INTL("### EMPTY ###"),
+      proc {}
+      )
+    end
+    return options
+  end
+
+  
+  def pbGetInGameOptions()
+    options = []
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
+    proc {}
+    )
+
+    options << EnumOption.new(_INTL("Limitless Select"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.sb_maxing },
+                      proc { |value| $PokemonSystem.sb_maxing = value },
+                      ["You may only use the same party size",
+                      "You may perform 6v1, etc (bypass the party size)"]
+    )
+    options << EnumOption.new(_INTL("Soul-Linked"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.sb_soullinked },
+                      proc { |value| $PokemonSystem.sb_soullinked = value },
+                      ["Pokemons are all individual/indepedent copies",
+                      "The same Pokemons between your team are linked"]
     )
     return options
   end

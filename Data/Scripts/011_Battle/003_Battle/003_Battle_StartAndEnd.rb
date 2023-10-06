@@ -379,6 +379,12 @@ class PokeBattle_Battle
   def pbLoseMoney
     return if !@internalBattle || !@moneyGain
     return if $game_switches[Settings::NO_MONEY_LOSS]
+    if $PokemonSystem.nomoneylost
+      if $PokemonSystem.nomoneylost != 0
+        $PokemonSystem.nomoneylost = 0
+        return
+      end
+    end
     maxLevel = pbMaxLevelInTeam(0,0)   # Player's Pokémon only, not partner's
     multiplier = [8,16,24,36,48,64,80,100,120]
     idxMultiplier = [pbPlayer.badge_count, multiplier.length - 1].min
