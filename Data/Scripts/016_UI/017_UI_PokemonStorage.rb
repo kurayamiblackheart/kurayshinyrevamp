@@ -4661,7 +4661,8 @@ class PokemonStorageScreen
       ]
       battlerchoice = pbShowCommands(
         _INTL("Battle system"), battlerchoices)
-      battlerchoice += 1
+      # Convert to the desired values
+      battlerchoice = 6 - battlerchoice
       if battlerchoice > 0 && battlerchoice < 7
         #battler logic
         kuraychoices = [
