@@ -161,7 +161,7 @@ class PokeBattle_AI
 					score-=150 if maxdam>halfhealth
 				end	
 				if skill >= PBTrainerAI.mediumSkill
-					score -= 50 if target.effects[PBEffects::Yawn] > 0
+					score -=300 if target.effects[PBEffects::Yawn] > 0 && move.function == "004"
 				end
 				if skill >= PBTrainerAI.highSkill
 					score -= 30 if target.hasActiveAbility?(:MARVELSCALE)
