@@ -2890,11 +2890,14 @@ class PokemonStorageScreen
               cmdRelease = -1
               cmdCancel = -1
               cmdExport = -1
-
+              cmdBattle = -1
+              
               helptext = _INTL("Selected {1} Pokémon.", pokemonCount)
 
               commands[cmdMove = commands.length] = _INTL("Move")
               commands[cmdRelease = commands.length] = _INTL("Release")
+              # WIP
+              # commands[cmdBattle = commands.length] = _INTL("Battle Selected") if pokemonCount < 7 && pokemonCount > 0
               commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
               commands[cmdCancel = commands.length] = _INTL("Cancel")
 
@@ -2906,6 +2909,8 @@ class PokemonStorageScreen
                 pbReleaseMulti(selected[0])
               elsif cmdExport >= 0 && command == cmdExport # Export
                 pbExportSelected(selected[0])
+              elsif cmdBattle >= 0 && command == cmdBattle # Battle
+                pbBattleSelected(selected[0])
               end
 
               @multiSelectRange = nil
@@ -3483,6 +3488,37 @@ class PokemonStorageScreen
     @multiheldpkmn = []
   end
 
+  def pbBattleSelected(box)
+    selected = getMultiSelection(box, nil)
+    return if selected.length == 0 || selected.length > 6
+    buildparty = []
+    partysize = selected.length
+    for index in selected
+      working = @storage[box, index]
+      # working.iv = []
+      # working.ev = []
+      # working.iv[0] = @storage[box, index].iv[:HP]
+      # working.iv[1] = @storage[box, index].iv[:ATTACK]
+      # working.iv[2] = @storage[box, index].iv[:DEFENSE]
+      # working.iv[3] = @storage[box, index].iv[:SPECIAL_ATTACK]
+      # working.iv[4] = @storage[box, index].iv[:SPECIAL_DEFENSE]
+      # working.iv[5] = @storage[box, index].iv[:SPEED]
+      # working.ev[0] = @storage[box, index].ev[:HP]
+      # working.ev[1] = @storage[box, index].ev[:ATTACK]
+      # working.ev[2] = @storage[box, index].ev[:DEFENSE]
+      # working.ev[3] = @storage[box, index].ev[:SPECIAL_ATTACK]
+      # working.ev[4] = @storage[box, index].ev[:SPECIAL_DEFENSE]
+      # working.ev[5] = @storage[box, index].ev[:SPEED]
+      # working = createPokemon("B341H250",100,:PASSHOBERRY,[:EARTHQUAKE,:SACREDFIRE,:SOLARBEAM,:STONEEDGE],0,0,:JOLLY,154,184,154,94,244,154)
+      # NOT WORKING!!!
+      buildparty.push(working)
+    end
+    # trainer = createTrainer(110,$Trainer.name,buildparty)
+    trainer = createTrainer(110,$Trainer.name,buildparty)
+    result = customTrainerBattle(trainer,"...",false,true)
+    pbSet(1,result == BR_WIN ? 0 :1)
+  end
+
   #KurayX
   def pbExportSelected(box)
     directory_name = "ExportedPokemons"
@@ -3737,7 +3773,7 @@ class PokemonStorageScreen
                 triedcurrent = true
               end
               x += 1
-              if x > @storage.maxBoxes
+              if x >= @storage.maxBoxes
                 outofspace = 1
                 break
               end
@@ -3756,7 +3792,7 @@ class PokemonStorageScreen
               triedcurrent = true
             end
             x += 1
-            if x > @storage.maxBoxes
+            if x >= @storage.maxBoxes
               outofspace = 1
               break
             end
@@ -3767,6 +3803,7 @@ class PokemonStorageScreen
           pbPlayBuzzerSE
           pbDisplay(_INTL("Out of place!"))
         else
+          pbHardRefresh
           pbDisplay(_INTL("Pokemon(s) Imported!"))
         end
       end
@@ -3802,7 +3839,7 @@ class PokemonStorageScreen
               triedcurrent = true
             end
             x += 1
-            if x > @storage.maxBoxes
+            if x >= @storage.maxBoxes
               outofspace = 1
               break
             end
@@ -3816,6 +3853,7 @@ class PokemonStorageScreen
           pbPlayBuzzerSE
           pbDisplay(_INTL("Out of place!"))
         else
+          pbHardRefresh
           pbDisplay(_INTL("Pokemon(s) Imported!"))
         end
       end
