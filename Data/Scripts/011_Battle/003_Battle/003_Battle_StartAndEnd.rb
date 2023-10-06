@@ -348,6 +348,12 @@ class PokeBattle_Battle
   def pbGainMoney
     return if $game_switches[SWITCH_IS_REMATCH] #is rematch
     return if !@internalBattle || !@moneyGain
+    if $PokemonSystem.nomoneylost
+      if $PokemonSystem.nomoneylost != 0
+        $PokemonSystem.nomoneylost = 0
+        return
+      end
+    end
     # Money rewarded from opposing trainers
     if trainerBattle?
       tMoney = 0
