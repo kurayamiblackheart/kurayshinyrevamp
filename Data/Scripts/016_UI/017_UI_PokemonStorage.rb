@@ -3592,8 +3592,10 @@ class PokemonStorageScreen
       choicelimit = 6
     end
     if PokemonSelection.choose(1,choicelimit,true,true)
+      possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
+      ktrainertype = possibletrainers.sample
       # Create a trainer with the selected Pokémon as their party
-      trainer_data = createTrainer(110, $Trainer.name, buildparty)
+      trainer_data = createTrainer(ktrainertype, $Trainer.name, buildparty)
       return if !trainer_data  # Ensure the trainer was successfully created
 
       # Battle against the created trainer
