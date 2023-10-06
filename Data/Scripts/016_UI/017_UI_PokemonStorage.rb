@@ -1865,7 +1865,7 @@ class PokemonStorageScene
     commands[cmdDefSprite = commands.length] = _INTL("Use Default Sprite (P500)") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdShowSprite = commands.length] = _INTL("Show Spritename") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdBlacklist = commands.length] = _INTL("Blacklist Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
-    commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
+    # commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
     commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
     commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
@@ -1880,8 +1880,8 @@ class PokemonStorageScene
       pbExport(selected, heldpoke, 0)
     elsif cmdExportAll >= 0 && command == cmdExportAll # Export ALL
       pbExportAll(selected, heldpoke, 0)
-    elsif cmdImportJson >= 0 && command == cmdImportJson # Import Json
-      pbImportJson(selected, heldpoke)
+    # elsif cmdImportJson >= 0 && command == cmdImportJson # Import Json
+    #   pbImportJson(selected, heldpoke)
     elsif cmdToggleShiny >= 0 && command == cmdToggleShiny # Toggle Shiny
       pbToggleShiny(selected, heldpoke)
     elsif cmdRerollSprite >= 0 && command == cmdRerollSprite # Reroll Sprite
@@ -3654,6 +3654,8 @@ class PokemonStorageScreen
       _INTL("Wallpaper"),
       _INTL("Name"),
       _INTL("Buy Box"),
+      _INTL("Import"),
+      _INTL("Import Randomly"),
       _INTL("Sort"),
       _INTL("Sort (all Boxes)"),
       _INTL("Cancel"),
@@ -3704,6 +3706,120 @@ class PokemonStorageScreen
         end
       end
     when 4
+      #Import (all)
+      directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
+      Dir.mkdir(directory_name) unless File.exists?(directory_name)
+      # Use Dir.glob to get a list of JSON files in the folder
+      json_files = Dir.glob(File.join(directory_name, "*.json"))
+      x = @storage.currentBox
+      y = 0
+      triedcurrent = false
+      outofspace = 0
+      # x = box, max is @storage.maxBoxes
+      # y = space, max is 29
+      # Check if there are JSON files
+      if json_files.empty?
+        pbPlayBuzzerSE
+        pbDisplay(_INTL("No Pokemon to Import!"))
+      else
+        # Iterate through the JSON files
+        json_files.each do |json_file|
+          # Load and process the JSON data
+          pokemon = Pokemon.new(:BULBASAUR, 1)
+          json_data = File.read(json_file)
+          pokemon.load_json(eval(json_data))
+          while @storage[x, y]
+            y += 1
+            if y > 29
+              y = 0
+              if x == @storage.currentBox && x != 0 && !triedcurrent
+                x = 0
+                triedcurrent = true
+              end
+              x += 1
+              if x > @storage.maxBoxes
+                outofspace = 1
+                break
+              end
+            end
+          end
+          unless @storage[x, y]
+            @storage.pbImportKuray(x, y, pokemon)
+            File.delete(json_file)
+          end
+          #redo it for the next slot for the next import
+          y += 1
+          if y > 29
+            y = 0
+            if x == @storage.currentBox && x != 0 && !triedcurrent
+              x = 0
+              triedcurrent = true
+            end
+            x += 1
+            if x > @storage.maxBoxes
+              outofspace = 1
+              break
+            end
+          end
+          # code to add pokemon here, break if cannot add it
+        end
+        if outofspace == 1
+          pbPlayBuzzerSE
+          pbDisplay(_INTL("Out of place!"))
+        else
+          pbDisplay(_INTL("Pokemon(s) Imported!"))
+        end
+      end
+    when 5
+      #Import 1 random
+      directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
+      Dir.mkdir(directory_name) unless File.exists?(directory_name)
+      # Use Dir.glob to get a list of JSON files in the folder
+      json_files = Dir.glob(File.join(directory_name, "*.json"))
+      x = @storage.currentBox
+      y = 0
+      triedcurrent = false
+      outofspace = 0
+      # x = box, max is @storage.maxBoxes
+      # y = space, max is 29
+      # Check if there are JSON files
+      if json_files.empty?
+        pbPlayBuzzerSE
+        pbDisplay(_INTL("No Pokemon to Import!"))
+      else
+        # Choose a random JSON file from the list
+        random_json_file = json_files.sample
+        # Load and process the JSON data
+        pokemon = Pokemon.new(:BULBASAUR, 1)
+        json_data = File.read(random_json_file)
+        pokemon.load_json(eval(json_data))
+        while @storage[x, y]
+          y += 1
+          if y > 29
+            y = 0
+            if x == @storage.currentBox && x != 0 && !triedcurrent
+              x = 0
+              triedcurrent = true
+            end
+            x += 1
+            if x > @storage.maxBoxes
+              outofspace = 1
+              break
+            end
+          end
+        end
+        unless @storage[x, y]
+          @storage.pbImportKuray(x, y, pokemon)
+          File.delete(random_json_file)
+        end
+        if outofspace == 1
+          pbPlayBuzzerSE
+          pbDisplay(_INTL("Out of place!"))
+        else
+          pbDisplay(_INTL("Pokemon(s) Imported!"))
+        end
+      end
+    when 6
       #Sort Pokemons
       # box = selected[0]
       # index = selected[1]
@@ -4008,7 +4124,7 @@ class PokemonStorageScreen
           pbDisplay(_INTL("Pokemons sorted!"))
         end
       end
-    when 5
+    when 7
       #Sort Pokemons
       # box = selected[0]
       # index = selected[1]
