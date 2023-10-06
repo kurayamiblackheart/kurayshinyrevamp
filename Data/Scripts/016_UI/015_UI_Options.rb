@@ -886,7 +886,7 @@ class KurayOptionsScene < PokemonOption_Scene
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
     end
     @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
-      _INTL("Kuray's PIF Revamp settings"),0,0,Graphics.width,64,@viewport)
+      _INTL("Kuray IF settings"),0,0,Graphics.width,64,@viewport)
     @sprites["textbox"].text=_INTL("Customize modded features")
 
 
@@ -1029,9 +1029,7 @@ class KurayOptSc_1 < PokemonOption_Scene
     proc {}
     )
 
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
                       proc { $PokemonSystem.kuraynormalshiny },
                       proc { |value| $PokemonSystem.kuraynormalshiny = value },
@@ -1064,9 +1062,7 @@ class KurayOptSc_1 < PokemonOption_Scene
     options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
     proc {}
     )
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
-    proc {}
-    )
+
     options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, $PokemonSystem.raiser,
                       proc { $PokemonSystem.kuraygambleodds },
                       proc { |value|
@@ -1084,9 +1080,6 @@ class KurayOptSc_1 < PokemonOption_Scene
                         end
                       }, "<x> out of 65536 | Choose the Shiny Odds"
     )
-    options << ButtonOption.new(_INTL("- by JustAnotherUser -"),
-    proc {}
-    )
     options << EnumOption.new(_INTL("Shiny Fuse Dye"), [_INTL("Off"), _INTL("On"), _INTL("Random")],
                       proc { $PokemonSystem.shinyfusedye },
                       proc { |value| $PokemonSystem.shinyfusedye = value },
@@ -1094,9 +1087,7 @@ class KurayOptSc_1 < PokemonOption_Scene
                       "Use the shiny fusion color dye system",
                       "Re-roll shiny color after each fusion/unfusion"]
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("Ace"), _INTL("All")],
                       proc { $PokemonSystem.shiny_trainer_pkmn },
                       proc { |value| $PokemonSystem.shiny_trainer_pkmn = value },
@@ -1143,9 +1134,7 @@ class KurayOptSc_2 < PokemonOption_Scene
     options << ButtonOption.new(_INTL("### GLOBAL ###"),
     proc {}
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
                       proc { $PokemonSystem.typedisplay },
                       proc { |value| $PokemonSystem.typedisplay = value },
@@ -1155,9 +1144,7 @@ class KurayOptSc_2 < PokemonOption_Scene
                       "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
                       "Draws the text type display in battle"]
     )#sister clone in GRAPHICS!!!
-    options << ButtonOption.new(_INTL("- by DemICE -"),
-    proc {}
-    )
+
     options << ButtonOption.new(_INTL("Powerful AI"),
     proc {}
     )
@@ -1174,9 +1161,7 @@ class KurayOptSc_2 < PokemonOption_Scene
     options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
     proc {}
     )
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Wild Battles"), [_INTL("1v1"), _INTL("2v2"), _INTL("3v3")],
                       proc { $PokemonSystem.force_double_wild },
                       proc { |value| $PokemonSystem.force_double_wild = value },
@@ -1198,9 +1183,7 @@ class KurayOptSc_2 < PokemonOption_Scene
                       ["Stat boost for self-fusions is disabled.",
                       "Stat boost for self-fusions is enabled."]
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Recover Consumables"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.recover_consumables },
                       proc { |value| $PokemonSystem.recover_consumables = value },
@@ -1225,9 +1208,7 @@ class KurayOptSc_2 < PokemonOption_Scene
                       ["You fight your own battles",
                       "Allows Trapstarr to take control of your pokemon"]
     )
-    options << ButtonOption.new(_INTL("- by DemICE -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Damage Variance"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.damage_variance },
                       proc { |value| $PokemonSystem.damage_variance = value },
@@ -1276,9 +1257,7 @@ class KurayOptSc_3 < PokemonOption_Scene
     proc {}
     )
 
-    options << ButtonOption.new(_INTL("- by Sylvi -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Big Pokémon Icons"), [_INTL("Off"), _INTL("Limited"), _INTL("All")],
                       proc { $PokemonSystem.kuraybigicons },
                       proc { |value| $PokemonSystem.kuraybigicons = value },
@@ -1286,9 +1265,7 @@ class KurayOptSc_3 < PokemonOption_Scene
                       "Pokémon icons will use their full-size battle sprites (except in boxes)",
                       "Pokémon icons will use their full-size battle sprites"]
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
                       proc { $PokemonSystem.typedisplay },
                       proc { |value| $PokemonSystem.typedisplay = value },
@@ -1300,9 +1277,7 @@ class KurayOptSc_3 < PokemonOption_Scene
     )#sister clone in BATTLE!!!
 
 
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
-    proc {}
-    )    
+    
     options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayfusepreview },
                       proc { |value| $PokemonSystem.kurayfusepreview = value },
@@ -1314,9 +1289,6 @@ class KurayOptSc_3 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.kurayindividcustomsprite = value },
                       ["Two of the same Pokemons can use different sprites (mod)",
                       "Two of the same Pokemons will use the same sprite (vanilla)"]
-    )
-    options << ButtonOption.new(_INTL("- by Luminatron -"),
-    proc {}
     )
     options << EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
                       proc { $PokemonSystem.kurayfonts },
@@ -1404,9 +1376,7 @@ class KurayOptSc_4 < PokemonOption_Scene
     options << ButtonOption.new(_INTL("### GLOBAL ###"),
     proc {}
     )
-    options << ButtonOption.new(_INTL("- by Sylvi -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Global Options"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.globalvalues },
                       proc { |value| $PokemonSystem.globalvalues = value },
@@ -1426,9 +1396,7 @@ class KurayOptSc_4 < PokemonOption_Scene
     options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
     proc {}
     )
-    options << ButtonOption.new(_INTL("- by Reïzod/Kurayami -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kuray_no_evo },
                       proc { |value| $PokemonSystem.kuray_no_evo = value },
@@ -1466,9 +1434,7 @@ class KurayOptSc_4 < PokemonOption_Scene
                       "Rare Candies/Master Balls and more are free in Kuray Shop",
                       "Also Unlimited WonderTrades (need 1 badge)"]
     )
-    options << ButtonOption.new(_INTL("- by Trapstarr -"),
-    proc {}
-    )
+
     options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.improved_pokedex },
                       proc { |value| $PokemonSystem.improved_pokedex = value },
