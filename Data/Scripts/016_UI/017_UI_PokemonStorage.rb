@@ -3677,7 +3677,7 @@ class PokemonStorageScreen
       end
       File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
     end
-    pbDisplay(_INTL("Pokemons Exported!"))
+    pbDisplay(_INTL("Pokemon(s) Exported!"))
   end
 
   def pbReleaseMulti(box)
