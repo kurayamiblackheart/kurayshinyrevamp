@@ -2084,7 +2084,7 @@ class PokemonStorageScene
     else
       if File.exists?("Shiny Finder.exe")
         exe_path = 'Shiny Finder.exe'
-        arguments = ' --pxd="' + pokemon.kuraycustomfile.to_s + '" --red=' + pokemon.shinyR.to_s + ' --green=' + pokemon.shinyG.to_s + ' --blue=' + pokemon.shinyB.to_s + ' --hue=' + (pokemon.shinyValue-180).to_s
+        arguments = ' --pxd="' + pokemon.kuraycustomfile.to_s + '" --red=' + pokemon.shinyR.to_s + ' --green=' + pokemon.shinyG.to_s + ' --blue=' + pokemon.shinyB.to_s + ' --hue=' + (pokemon.shinyValue).to_s
         system('start "ini" "' + exe_path.to_s + '" ' + arguments.to_s)
       else
         pbPlayBuzzerSE
