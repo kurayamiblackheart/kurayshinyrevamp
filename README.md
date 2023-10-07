@@ -1,8 +1,8 @@
-# Kuray's PIF Revamp
+# Kuray Infinite Fusion (KIF)
 
-Kuray's PIF Revamp is a fork of Infinite Fusion, which adds countless new features, including infinite colors for shinies, mods support (people can create mods and load them from a "Mods" folder), a powerful AI (thanks to DemICE), and more!
+Kuray Infinite Fusion (KIF) is a fork of Infinite Fusion, which adds countless new features, including infinite colors for shinies, mods support (people can create mods and load them from a "Mods" folder), a powerful AI (thanks to DemICE), and more!
 
-Kuray's PIF Revamp is community-based and community-focused, it's made by the community, for the community, allowing anyone to easily create new features for Infinite Fusion and to have a better experience overall.
+Kuray Infinite Fusion (KIF) is community-based and community-focused, it's made by the community, for the community, allowing anyone to easily create new features for Infinite Fusion and to have a better experience overall.
 
 -----------------------------------------------
 
@@ -12,7 +12,7 @@ Google Docs of the game: https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2z
 
 The Google Docs already explain everything about this game.
 
-This Github allows you to see the game (open-source), but also to contribute to the development of this project with pull-requests, and download the latest release to stay up-to-date. You need to download the mediafire base of the Kuray's PIF Revamp before applying the new releases of the github.
+This Github allows you to see the game (open-source), but also to contribute to the development of this project with pull-requests, and download the latest release to stay up-to-date. You need to download the mediafire base of the Kuray Infinite Fusion (KIF) before applying the new releases of the github.
 
 # List of Constant Features
 
@@ -28,6 +28,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Endgame challenge & Powerful AI by DemICE, now opponents fight for real!
 - Infinite Save Files, new backup file created at each save
 - Custom Fusion Icons support
+- Self-Battle (battle your own Pokemons from your PC/"Battlers folder"/Team !)
 
 # List of Optional Features (you can turn them ON/OFF and/or configure/customize them!)
 
@@ -36,7 +37,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - 1v1/2v2/3v3 Wild Battles
 - 1v1/2v2/3v3 Trainer Battles
 - Shiny Icons
-- Export/Export All/Import Pokemons (from/to .json file, store your Pokemons on your computer&share them to other players!)
+- Export/Export All/Import One Random/Import All Pokemons (from/to .json file, store your Pokemons on your computer&share them to other players!)
 - Lock Evolution (prevents a Pokemon from evolving until unlocked)
 - Choose/Re-roll Shiny Colors (DEBUG only)
 - Shiny Dye Fusing
