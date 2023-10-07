@@ -28,7 +28,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Endgame challenge & Powerful AI by DemICE, now opponents fight for real!
 - Infinite Save Files, new backup file created at each save
 - Custom Fusion Icons support
-- Self-Battle (battle your own Pokemons from your PC/"Battlers folder"/Team !)
+- Self-Battle (battle your own Pokemons from your PC/"Battlers" folder/Team !)
 
 # List of Optional Features (you can turn them ON/OFF and/or configure/customize them!)
 
