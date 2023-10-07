@@ -34,6 +34,7 @@ class PokemonSystem
   attr_accessor :kurayindividcustomsprite
   attr_accessor :typedisplay
   attr_accessor :globalvalues # allows to disable the per-save file functionnality
+  attr_accessor :quicksave
   # Per-save file
   attr_accessor :force_double_wild
   attr_accessor :improved_pokedex # adds base form pkmn of fusions to pokedex when catching/evolving fusions
@@ -78,6 +79,7 @@ class PokemonSystem
     @textinput = 1 # Text input mode (0=cursor, 1=keyboard)
     @quicksurf = 0
     @download_sprites = 0
+    @quicksave = 1
     # Vanilla Per-save file
     @battlestyle = 0 # Battle style (0=switch, 1=set)
     @battle_type = 0
@@ -129,6 +131,7 @@ class PokemonSystem
     @sevolume = saved.sevolume if saved.sevolume
     @textinput = saved.textinput if saved.textinput
     @quicksurf = saved.quicksurf if saved.quicksurf
+    @quicksave = saved.quicksave if saved.quicksave
     @download_sprites = saved.download_sprites if saved.download_sprites
     # Modded
     @shiny_icons_kuray = saved.shiny_icons_kuray if saved.shiny_icons_kuray
@@ -693,6 +696,11 @@ class PokemonOption_Scene
                               proc { $PokemonSystem.quicksurf },
                               proc { |value| $PokemonSystem.quicksurf = value },
                               "Use Field Moves quicker"
+    )
+    options << EnumOption.new(_INTL("Quicksave with S"), [_INTL("Off"), _INTL("On")],
+                              proc { $PokemonSystem.quicksave },
+                              proc { |value| $PokemonSystem.quicksave = value },
+                              "Quicksave with S"
     )
 
     if $scene && $scene.is_a?(Scene_Map)
