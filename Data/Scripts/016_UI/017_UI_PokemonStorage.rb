@@ -3613,6 +3613,7 @@ class PokemonStorageScreen
       # Set the result
       pbSet(1, result == 1 ? 0 : 1)
       $PokemonSystem.nomoneylost = 0
+      @scene.pbHardRefresh
       $Trainer.heal_party# healing player again
     end
   end
