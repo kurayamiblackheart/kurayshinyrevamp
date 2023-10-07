@@ -3542,8 +3542,10 @@ class PokemonStorageScreen
   def pbBattleSelected(box, frommulti=true)
     tempclone = ""
     clone = true
-    if $PokemonSystem.sb_soullinked != nil && $PokemonSystem.sb_soullinked == 1
-      clone = false
+    if $PokemonSystem.sb_soullinked
+      if $PokemonSystem.sb_soullinked == 1
+        clone = false
+      end
     end
     buildparty = []
     buildobject = []
@@ -3590,8 +3592,10 @@ class PokemonStorageScreen
     return if buildparty.length == 0  # Ensure there's at least one Pokémon to battle
     $Trainer.heal_party # healing player
     choicelimit = buildparty.length
-    if $PokemonSystem.sb_maxing != nil && $PokemonSystem.sb_maxing == 1
-      choicelimit = 6
+    if $PokemonSystem.sb_maxing
+      if $PokemonSystem.sb_maxing == 1
+        choicelimit = 6
+      end
     end
     if PokemonSelection.choose(1,choicelimit,true,true)
       possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
