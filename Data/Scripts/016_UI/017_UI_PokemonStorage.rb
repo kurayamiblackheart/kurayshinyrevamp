@@ -1854,6 +1854,7 @@ class PokemonStorageScene
     cmdShininessSell = -1
     cmdBlacklist = -1
     cmdDefSprite = -1
+    cmdOpenShinyFinder = -1
     cmdShowSprite = -1
     helptext = _INTL("{1} is selected.", pokemon.name)
     commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
@@ -1865,6 +1866,7 @@ class PokemonStorageScene
     commands[cmdDefSprite = commands.length] = _INTL("Use Default Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdShowSprite = commands.length] = _INTL("Show Spritename") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdBlacklist = commands.length] = _INTL("Blacklist Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
+    commands[cmdOpenShinyFinder = commands.length] = _INTL("Start Shiny Finder") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     # commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
     commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
@@ -1902,6 +1904,8 @@ class PokemonStorageScene
       pbDefaultSprite(selected, heldpoke)
     elsif cmdShowSprite >= 0 && command == cmdShowSprite # Show Sprite
       pbShowSprite(selected, heldpoke)
+    elsif cmdOpenShinyFinder >= 0 && command == cmdOpenShinyFinder # Show Sprite
+      pbShinyFinder(selected, heldpoke)
     end
   end
 
@@ -2062,6 +2066,28 @@ class PokemonStorageScene
     else
       krtempname = File.basename(pokemon.kuraycustomfile)
       pbDisplay(_INTL(krtempname))
+    end
+  end
+
+  def pbShinyFinder(selected, heldpoke)
+    pokemon = heldpoke
+    if heldpoke
+      pokemon = heldpoke
+    elsif selected[0] == -1
+      pokemon = @storage.party[selected[1]]
+    else
+      pokemon = @storage.boxes[selected[0]][selected[1]]
+    end
+    if pokemon.kuraycustomfile == nil
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("No Custom Sprite!"))
+    else
+      if File.exists("Shiny Finder.exe")
+        'Shiny Finder.exe --pxd="' + str(pokemon.kuraycustomfile) + '" --red=' + str(pokemon.shinyR) + ' --green=' + str(pokemon.shinyG) + ' --blue=' + str(pokemon.shinyB) + ' --hue=' + str(pokemon.shinyValue)
+      else
+        pbPlayBuzzerSE
+        pbDisplay(_INTL("'Shiny Finder.exe' not found!"))
+      end
     end
   end
 
