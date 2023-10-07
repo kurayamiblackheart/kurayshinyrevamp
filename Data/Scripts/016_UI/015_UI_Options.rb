@@ -52,6 +52,7 @@ class PokemonSystem
   attr_accessor :kuraystreamerdream
   attr_accessor :autobattler
   attr_accessor :shinyodds # overwrite the shiny odds
+  attr_accessor :unfusetraded # allow to unfuse traded pokemons
 
 
   attr_accessor :nomoneylost # temp variable for self-battles
@@ -109,6 +110,7 @@ class PokemonSystem
     @kuraystreamerdream = 0
     @autobattler = 0
     @sb_maxing = 0
+    @unfusetraded = 0
     @sb_soullinked = 0
     @globalvalues = 0
     if Settings::SHINY_POKEMON_CHANCE
@@ -173,6 +175,7 @@ class PokemonSystem
     @shinyodds = saved.shinyodds if saved.shinyodds
     @sb_maxing = saved.sb_maxing if saved.sb_maxing
     @sb_soullinked = saved.sb_soullinked if saved.sb_soullinked
+    @unfusetraded = saved.unfusetraded if saved.unfusetraded
   end
 end
 
@@ -1472,6 +1475,13 @@ class KurayOptSc_4 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.improved_pokedex = value },
                       ["Don't use the Improved Pokedex",
                       "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]
+    )
+
+    options << EnumOption.new(_INTL("Unfuse Traded"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.unfusetraded },
+                      proc { |value| $PokemonSystem.unfusetraded = value },
+                      ["You cannot unfuse traded Pokemons.",
+                      "You can unfuse traded Pokemons."]
     )
     return options
   end

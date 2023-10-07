@@ -1503,8 +1503,8 @@ end
 def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
   bodyPoke = getBasePokemonID(pokemon.species_data.id_number, true)
   headPoke = getBasePokemonID(pokemon.species_data.id_number, false)
-
-  if (pokemon.obtain_method == 2 || pokemon.ot != $Trainer.name) # && !canunfuse
+  $PokemonSystem.unfusetraded = 0 unless $PokemonSystem.unfusetraded
+  if (pokemon.obtain_method == 2 || pokemon.ot != $Trainer.name) && $PokemonSystem.unfusetraded == 0 # && !canunfuse
     scene.pbDisplay(_INTL("You can't unfuse a Pokémon obtained in a trade!"))
     return false
   else
