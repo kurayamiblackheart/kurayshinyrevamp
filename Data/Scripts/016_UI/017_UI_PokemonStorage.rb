@@ -3775,6 +3775,11 @@ class PokemonStorageScreen
   end
 
   #KurayX
+  def pbExportBox()
+    @scene.pbExportBox()
+  end
+
+  #KurayX
   def pbExportAll()
     @scene.pbExportAll()
   end
