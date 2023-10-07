@@ -3555,6 +3555,7 @@ class PokemonStorageScreen
     end
     for index in selected
       if frommulti#we take from multi select, creating the array and working another way
+        next unless @storage[box, index]
         if clone
           tmppkm = @storage[box, index].clone
           tempclone = tmppkm.to_json
@@ -3564,6 +3565,7 @@ class PokemonStorageScreen
           pokemon = @storage[box, index]
         end
       else#we already have an array in this variable!
+        next unless index
         if clone
           tmppkm = index.clone
           tempclone = tmppkm.to_json
