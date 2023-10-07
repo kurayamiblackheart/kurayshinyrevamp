@@ -2334,6 +2334,33 @@ class PokemonStorageScene
     pbDisplay(_INTL("Pokemon Exported!"))
   end
 
+  def pbExportBox(box)
+    directory_name = "ExportedPokemons"
+    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    if @storage[box].empty?
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("Box is empty!"))
+      return
+    end
+    for k in 0..29
+      if @storage[box, k]
+        pokemon = @storage[box, k]
+        addincra = 0
+        importname = directory_name + "/" + pokemon.speciesName + "-" + pokemon.name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
+        classyname = importname
+        while File.exists?(importname + ".json")
+          importname = classyname + "(" + addincra.to_s + ")"
+          addincra += 1
+          if addincra > 9999
+            break
+          end
+        end
+        File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+      end
+    end
+    pbDisplay(_INTL("Pokemon(s) Exported!"))
+  end
+
   #KurayX
   def pbExportAll()
     directory_name = "ExportedPokemons"
@@ -3623,13 +3650,21 @@ class PokemonStorageScreen
   end
 
   #KurayX
-  def pbExportSelected(box)
+  def pbExportSelected(box, frombox=false)
     directory_name = "ExportedPokemons"
     Dir.mkdir(directory_name) unless File.exists?(directory_name)
-    selected = getMultiSelection(box, nil)
+    unless frombox
+      selected = getMultiSelection(box, nil)
+    end
     return if selected.length == 0
     for index in selected
-      pokemon = @storage[box, index]
+      if frombox
+        next unless index
+        pokemon = index
+      else
+        next unless @storage[box, index]
+        pokemon = @storage[box, index]
+      end
       addincra = 0
       importname = directory_name + "/" + pokemon.speciesName + "-" + pokemon.name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
       classyname = importname
@@ -3802,6 +3837,7 @@ class PokemonStorageScreen
       # _INTL("Cancel"),
     ]
     if $DEBUG
+      commands[commands.length] = _INTL("Export this Box")
       commands[commands.length] = _INTL("Export All")
       commands[commands.length] = _INTL("Import")
       commands[commands.length] = _INTL("Import Randomly")
@@ -4840,6 +4876,14 @@ class PokemonStorageScreen
         end
       end
     when 7
+      # Export (box)
+      if !$DEBUG
+        pbPlayBuzzerSE
+        pbDisplay(_INTL("DEBUG needed!"))
+      else
+        pbExportBox(@storage.currentBox)
+      end
+    when 8
       #Export (all)
       if !$DEBUG
         pbPlayBuzzerSE
@@ -4847,7 +4891,7 @@ class PokemonStorageScreen
       else
         pbExportAll()
       end
-    when 8
+    when 9
       if !$DEBUG
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))
@@ -4923,7 +4967,7 @@ class PokemonStorageScreen
           end
         end
       end
-    when 9
+    when 10
       if !$DEBUG
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))
