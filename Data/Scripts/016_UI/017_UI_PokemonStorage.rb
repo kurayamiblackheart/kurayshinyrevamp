@@ -2082,8 +2082,10 @@ class PokemonStorageScene
       pbPlayBuzzerSE
       pbDisplay(_INTL("No Custom Sprite!"))
     else
-      if File.exists("Shiny Finder.exe")
-        'Shiny Finder.exe --pxd="' + str(pokemon.kuraycustomfile) + '" --red=' + str(pokemon.shinyR) + ' --green=' + str(pokemon.shinyG) + ' --blue=' + str(pokemon.shinyB) + ' --hue=' + str(pokemon.shinyValue)
+      if File.exists?("Shiny Finder.exe")
+        exe_path = 'Shiny Finder.exe'
+        arguments = ' --pxd="' + pokemon.kuraycustomfile.to_s + '" --red=' + pokemon.shinyR.to_s + ' --green=' + pokemon.shinyG.to_s + ' --blue=' + pokemon.shinyB.to_s + ' --hue=' + (pokemon.shinyValue-180).to_s
+        system('start "ini" "' + exe_path.to_s + '" ' + arguments.to_s)
       else
         pbPlayBuzzerSE
         pbDisplay(_INTL("'Shiny Finder.exe' not found!"))
@@ -3650,29 +3652,50 @@ class PokemonStorageScreen
         choicelimit = 6
       end
     end
-    if PokemonSelection.choose(1,choicelimit,true,true)
-      possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
-      ktrainertype = possibletrainers.sample
-      # Create a trainer with the selected Pokémon as their party
-      trainer_data = createTrainer(ktrainertype, $Trainer.name, buildparty)
-      return if !trainer_data  # Ensure the trainer was successfully created
+    possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
+    ktrainertype = possibletrainers.sample
+    # Create a trainer with the selected Pokémon as their party
+    trainer_data = createTrainer(ktrainertype, $Trainer.name, buildparty)
+    return if !trainer_data  # Ensure the trainer was successfully created
 
-      # Battle against the created trainer
-      trainer = init_trainer(trainer_data[0])
+    # Battle against the created trainer
+    trainer = init_trainer(trainer_data[0])
 
-      trainer.pokemon.each_with_index do |pkmn, i|
-        pkmn = buildobject[i]   # Turns a pokemon of this party index into the pokemon of the player's party of the same index   
-        pkmn.heal#healing enemy
-        pkmn.calc_stats
-      end
-
-      result = customTrainerBattle(trainer.name, trainer.trainer_type, buildobject, "...", nil)
-      # Set the result
-      pbSet(1, result == 1 ? 0 : 1)
-      $PokemonSystem.nomoneylost = 0
-      @scene.pbHardRefresh
-      $Trainer.heal_party# healing player again
+    trainer.pokemon.each_with_index do |pkmn, i|
+      pkmn = buildobject[i]   # Turns a pokemon of this party index into the pokemon of the player's party of the same index   
+      pkmn.heal#healing enemy
+      pkmn.calc_stats
     end
+
+    result = customTrainerBattle(trainer.name, trainer.trainer_type, buildobject, "...", nil)
+    # Set the result
+    pbSet(1, result == 1 ? 0 : 1)
+    $PokemonSystem.nomoneylost = 0
+    @scene.pbHardRefresh
+    $Trainer.heal_party# healing player again
+    # if PokemonSelection.choose(1,choicelimit,true,true)
+    #   possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
+    #   ktrainertype = possibletrainers.sample
+    #   # Create a trainer with the selected Pokémon as their party
+    #   trainer_data = createTrainer(ktrainertype, $Trainer.name, buildparty)
+    #   return if !trainer_data  # Ensure the trainer was successfully created
+
+    #   # Battle against the created trainer
+    #   trainer = init_trainer(trainer_data[0])
+
+    #   trainer.pokemon.each_with_index do |pkmn, i|
+    #     pkmn = buildobject[i]   # Turns a pokemon of this party index into the pokemon of the player's party of the same index   
+    #     pkmn.heal#healing enemy
+    #     pkmn.calc_stats
+    #   end
+
+    #   result = customTrainerBattle(trainer.name, trainer.trainer_type, buildobject, "...", nil)
+    #   # Set the result
+    #   pbSet(1, result == 1 ? 0 : 1)
+    #   $PokemonSystem.nomoneylost = 0
+    #   @scene.pbHardRefresh
+    #   $Trainer.heal_party# healing player again
+    # end
   end
 
   #KurayX
