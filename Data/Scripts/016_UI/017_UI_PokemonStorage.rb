@@ -4864,20 +4864,20 @@ class PokemonStorageScreen
           for k in 0..29
             if @storage[@storage.currentBox, k]
               pokekuray = @storage[@storage.currentBox, k]
-              pokekurays.append(pokekuray)
+              pokekurays.append(pokekuray) if !pokekuray.egg?
             end
           end
         when 1 # box + team - IMPORT THE CURRENT BOX + THE TEAM
           for j in 0..5
             if @storage.party[j]
               pokekuray = @storage.party[j]
-              pokekurays.append(pokekuray)
+              pokekurays.append(pokekuray) if !pokekuray.egg?
             end
           end
           for k in 0..29
             if @storage[@storage.currentBox, k]
               pokekuray = @storage[@storage.currentBox, k]
-              pokekurays.append(pokekuray)
+              pokekurays.append(pokekuray) if !pokekuray.egg?
             end
           end
         when 2 # storage
@@ -4888,7 +4888,7 @@ class PokemonStorageScreen
             for k in 0..29
               if @storage[j, k]
                 pokekuray = @storage[j, k]
-                pokekurays.append(pokekuray)
+                pokekurays.append(pokekuray) if !pokekuray.egg?
               end
             end
           end
@@ -4896,7 +4896,7 @@ class PokemonStorageScreen
           for j in 0..5
             if @storage.party[j]
               pokekuray = @storage.party[j]
-              pokekurays.append(pokekuray)
+              pokekurays.append(pokekuray) if !pokekuray.egg?
             end
           end
           for j in 0...@storage.maxBoxes
@@ -4906,7 +4906,7 @@ class PokemonStorageScreen
             for k in 0..29
               if @storage[j, k]
                 pokekuray = @storage[j, k]
-                pokekurays.append(pokekuray)
+                pokekurays.append(pokekuray) if !pokekuray.egg?
               end
             end
           end
