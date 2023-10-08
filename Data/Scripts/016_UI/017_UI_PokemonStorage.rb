@@ -4969,15 +4969,15 @@ class PokemonStorageScreen
           end
           playernum.times do
             # Choose a random JSON file from the list
+            randomkuray = pokekuraysplayer.sample
             if isjson
-              randomkr2 = pokekuraysplayer.sample
-              randomkuray = Pokemon.new(:BULBASAUR, 1)
-              json_data = File.read(randomkr2)
-              randomkuray.load_json(eval(json_data))
+              pokemon = Pokemon.new(:BULBASAUR, 1)
+              json_data = File.read(randomkuray)
+              pokemon.load_json(eval(json_data))
+              krplayer.push(pokemon)
             else
-              randomkuray = pokekuraysplayer.sample
+              krplayer.push(randomkuray)
             end
-            krplayer.push(randomkuray)
             # Remove the chosen file from the list
             pokekuraysplayer.delete(randomkuray)
           end
