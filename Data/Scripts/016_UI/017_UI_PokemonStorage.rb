@@ -2468,15 +2468,20 @@ class PokemonStorageScene
     if File.file?(importname)
       importunevo = false
       importlevel = 0
-      if $PokemonSystem.importlevel
-        if $PokemonSystem.importlevel == 1
+      if $PokemonSystem.importlvl
+        if $PokemonSystem.importlvl == 1
           importlevel = 1
-        elsif $PokemonSystem.importlevel == 2
+        elsif $PokemonSystem.importlvl == 2
           importlevel = 5
-        elsif $PokemonSystem.importlevel == 3
+        elsif $PokemonSystem.importlvl == 3
           importlevel = 50
-        elsif $PokemonSystem.importlevel == 4
+        elsif $PokemonSystem.importlvl == 4
           importlevel = 100
+        end
+      end
+      if $PokemonSystem.importdevolve
+        if $PokemonSystem.importdevolve == 1
+          importunevo = true
         end
       end
       pokemon = Pokemon.new(:BULBASAUR, 1)
@@ -2542,15 +2547,20 @@ class PokemonStorageScene
     if File.file?(importname)
       importunevo = false
       importlevel = 0
-      if $PokemonSystem.importlevel
-        if $PokemonSystem.importlevel == 1
+      if $PokemonSystem.importlvl
+        if $PokemonSystem.importlvl == 1
           importlevel = 1
-        elsif $PokemonSystem.importlevel == 2
+        elsif $PokemonSystem.importlvl == 2
           importlevel = 5
-        elsif $PokemonSystem.importlevel == 3
+        elsif $PokemonSystem.importlvl == 3
           importlevel = 50
-        elsif $PokemonSystem.importlevel == 4
+        elsif $PokemonSystem.importlvl == 4
           importlevel = 100
+        end
+      end
+      if $PokemonSystem.importdevolve
+        if $PokemonSystem.importdevolve == 1
+          importunevo = true
         end
       end
       if selected[0] == -1
@@ -5107,14 +5117,14 @@ class PokemonStorageScreen
         else
           importunevo = false
           importlevel = 0
-          if $PokemonSystem.importlevel
-            if $PokemonSystem.importlevel == 1
+          if $PokemonSystem.importlvl
+            if $PokemonSystem.importlvl == 1
               importlevel = 1
-            elsif $PokemonSystem.importlevel == 2
+            elsif $PokemonSystem.importlvl == 2
               importlevel = 5
-            elsif $PokemonSystem.importlevel == 3
+            elsif $PokemonSystem.importlvl == 3
               importlevel = 50
-            elsif $PokemonSystem.importlevel == 4
+            elsif $PokemonSystem.importlvl == 4
               importlevel = 100
             end
           end
@@ -5208,14 +5218,14 @@ class PokemonStorageScreen
         else
           importunevo = false
           importlevel = 0
-          if $PokemonSystem.importlevel
-            if $PokemonSystem.importlevel == 1
+          if $PokemonSystem.importlvl
+            if $PokemonSystem.importlvl == 1
               importlevel = 1
-            elsif $PokemonSystem.importlevel == 2
+            elsif $PokemonSystem.importlvl == 2
               importlevel = 5
-            elsif $PokemonSystem.importlevel == 3
+            elsif $PokemonSystem.importlvl == 3
               importlevel = 50
-            elsif $PokemonSystem.importlevel == 4
+            elsif $PokemonSystem.importlvl == 4
               importlevel = 100
             end
           end
