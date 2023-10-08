@@ -3622,6 +3622,27 @@ class PokemonStorageScreen
         battlebr(defaultteam)
         return
       end
+      defaultteam = $Trainer.party.clone
+      finaleparty = $Trainer.party.clone
+      for i in 0...finaleparty.length
+        # player level setup
+        $Trainer.party[i] = finaleparty[i].clone
+        if $PokemonSystem.sb_level
+          if $PokemonSystem.sb_level == 1
+            $Trainer.party[i].level = 1
+          elsif $PokemonSystem.sb_level == 2
+            $Trainer.party[i].level = 5
+          elsif $PokemonSystem.sb_level == 3
+            $Trainer.party[i].level = 10
+          elsif $PokemonSystem.sb_level == 4
+            $Trainer.party[i].level = 50
+          elsif $PokemonSystem.sb_level == 5
+            $Trainer.party[i].level = 70
+          elsif $PokemonSystem.sb_level == 6
+            $Trainer.party[i].level = 100
+          end
+        end
+      end
     else
       selected = box
     end
@@ -4983,7 +5004,6 @@ class PokemonStorageScreen
               end
             end
           end
-          $Trainer.heal_party
           pbBattleSelected(krbattlers, false, defaultteam)
         end
       end
