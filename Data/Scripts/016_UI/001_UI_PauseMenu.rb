@@ -116,6 +116,13 @@ class PokemonPauseMenu
     cmdQuit = -1
     cmdEndGame = -1
     cmdPC = -1
+    cmdDebugDebug = -1
+    fkdebug = false
+    if $PokemonSystem.debug
+      if $PokemonSystem.debug == 1
+        fkdebug = true
+      end
+    end
     cmdKurayHeal = -1
     if $Trainer.has_pokedex && $Trainer.pokedex.accessible_dexes.length > 0
       commands[cmdPokedex = commands.length] = _INTL("Pokédex")
@@ -151,6 +158,7 @@ class PokemonPauseMenu
     end
     commands[cmdOption = commands.length] = _INTL("Options")
     commands[cmdDebug = commands.length] = _INTL("Debug") if $DEBUG
+    commands[cmdDebugDebug = commands.length] = _INTL("Debug") if fkdebug
     commands[cmdEndGame = commands.length] = _INTL("Title screen")
     loop do
       command = @scene.pbShowCommands(commands)
@@ -435,6 +443,9 @@ class PokemonPauseMenu
           pbDebugMenu
           @scene.pbRefresh
         }
+      elsif cmdDebugDebug >= 0 && command == cmdDebugDebug
+        pbPlayDecisionSE
+        `open https://www.youtube.com/watch?v=dQw4w9WgXcQ`
       elsif cmdEndGame >= 0 && command == cmdEndGame
         @scene.pbHideMenu
         if pbConfirmMessage(_INTL("Are you sure you want to quit the game and return to the main menu?"))

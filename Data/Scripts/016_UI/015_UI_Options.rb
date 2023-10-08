@@ -70,6 +70,8 @@ class PokemonSystem
 
   attr_accessor :debugfeature
 
+  attr_accessor :debug
+
   attr_accessor :is_in_battle
 
   attr_accessor :importlvl
@@ -136,6 +138,7 @@ class PokemonSystem
     @sb_select = 0
     @sb_level = 0
     @debugfeature = 0
+    @debug = 0
     @is_in_battle = false
     if Settings::SHINY_POKEMON_CHANCE
       @shinyodds = Settings::SHINY_POKEMON_CHANCE
@@ -169,6 +172,7 @@ class PokemonSystem
     @kurayindividcustomsprite = saved.kurayindividcustomsprite if saved.kurayindividcustomsprite
     @typedisplay = saved.typedisplay if saved.typedisplay
     @debugfeature = saved.debugfeature if saved.debugfeature
+    @debug = saved.debug if saved.debug
     if saved.globalvalues
       @globalvalues = saved.globalvalues
       if saved.globalvalues != 0
@@ -1001,10 +1005,12 @@ class KurayOptionsScene < PokemonOption_Scene
                      $PokemonSystem.raiserb = value
                    }, "For shiny gamble and shiny odds, changes the increment rate of those sliders."
     )
-    options << ButtonOption.new(_INTL("Activate Debug"),
-      proc {
-        openDebug()
-      }, "Allows to toggle DEBUG ON/OFF."
+    options <<
+    EnumOption.new(_INTL("DEBUG"), [_INTL("Off"), _INTL("On")],
+      proc { $PokemonSystem.debug },
+      proc { |value| $PokemonSystem.debug = value },
+      ["Doesn't force debug to be activated",
+      "Force debug to be activated"]
     )
 
     # if $scene && $scene.is_a?(Scene_Map)
@@ -1018,9 +1024,6 @@ class KurayOptionsScene < PokemonOption_Scene
   #   return options
   # end
 
-  def openDebug()
-    `open https://www.youtube.com/watch?v=dQw4w9WgXcQ`
-  end
   def openKuray1()
     return if !@kuray_menu
     pbFadeOutIn {
