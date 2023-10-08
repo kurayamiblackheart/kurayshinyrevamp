@@ -1003,7 +1003,7 @@ class KurayOptionsScene < PokemonOption_Scene
     )
     options << ButtonOption.new(_INTL("Activate Debug"),
       proc {
-        `open https://www.youtube.com/watch?v=dQw4w9WgXcQ`
+        openDebug()
       }, "Allows to toggle DEBUG ON/OFF."
     )
 
@@ -1018,6 +1018,9 @@ class KurayOptionsScene < PokemonOption_Scene
   #   return options
   # end
 
+  def openDebug()
+    `open https://www.youtube.com/watch?v=dQw4w9WgXcQ`
+  end
   def openKuray1()
     return if !@kuray_menu
     pbFadeOutIn {
