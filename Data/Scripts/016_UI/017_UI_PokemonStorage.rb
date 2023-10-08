@@ -4836,7 +4836,7 @@ class PokemonStorageScreen
         # battlertimes = battlerchoice
         krbattlers = []
         krplayer = []
-        defaultteam = $Trainer.party.clone
+        defaultteam = $Trainer.party
         pokekurays = []
         case kuraychoice
         when 0 # box - IMPORT THE CURRENT BOX
@@ -4963,21 +4963,23 @@ class PokemonStorageScreen
           if randteam
             $Trainer.party = krplayer.clone
           end
-          for i in $Trainer.party
+          finaleparty = $Trainer.party.clone
+          for i in 0...finaleparty.length
             # player level setup
+            $Trainer.party[i] = finaleparty[i].clone
             if $PokemonSystem.sb_level
               if $PokemonSystem.sb_level == 1
-                i.level = 1
+                $Trainer.party[i].level = 1
               elsif $PokemonSystem.sb_level == 2
-                i.level = 5
+                $Trainer.party[i].level = 5
               elsif $PokemonSystem.sb_level == 3
-                i.level = 10
+                $Trainer.party[i].level = 10
               elsif $PokemonSystem.sb_level == 4
-                i.level = 50
+                $Trainer.party[i].level = 50
               elsif $PokemonSystem.sb_level == 5
-                i.level = 70
+                $Trainer.party[i].level = 70
               elsif $PokemonSystem.sb_level == 6
-                i.level = 100
+                $Trainer.party[i].level = 100
               end
             end
           end
