@@ -4893,12 +4893,10 @@ class PokemonStorageScreen
               pokemon = Pokemon.new(:BULBASAUR, 1)
               json_data = File.read(randomkuray)
               pokemon.load_json(eval(json_data))
-              pokekurays.delete(randomkuray)
-              unless battleshare
-                pokekuraysplayer.delete(randomkuray)
-              end
+              krbattlers.push(pokemon)
+            else
+              krbattlers.push(randomkuray)
             end
-            krbattlers.push(randomkuray)
             # Remove the chosen file from the list
             pokekurays.delete(randomkuray)
             unless battleshare
@@ -4912,9 +4910,10 @@ class PokemonStorageScreen
               pokemon = Pokemon.new(:BULBASAUR, 1)
               json_data = File.read(randomkuray)
               pokemon.load_json(eval(json_data))
-              pokekuraysplayer.delete(randomkuray)
+              krplayer.push(pokemon)
+            else
+              krplayer.push(randomkuray)
             end
-            krplayer.push(randomkuray)
             # Remove the chosen file from the list
             pokekuraysplayer.delete(randomkuray)
           end
