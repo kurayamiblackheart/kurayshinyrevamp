@@ -68,6 +68,8 @@ class PokemonSystem
   attr_accessor :sb_select
   attr_accessor :sb_level
 
+  attr_accessor :is_in_battle
+
   attr_accessor :raiser
   attr_accessor :raiserb
 
@@ -126,6 +128,7 @@ class PokemonSystem
     @sb_battlesize = 0
     @sb_select = 0
     @sb_level = 0
+    @is_in_battle = false
     if Settings::SHINY_POKEMON_CHANCE
       @shinyodds = Settings::SHINY_POKEMON_CHANCE
     else

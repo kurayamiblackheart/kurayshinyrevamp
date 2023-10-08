@@ -258,6 +258,7 @@ def pbWildBattleCore(*args)
     pbMEStop
     return 1   # Treat it as a win
   end
+  $PokemonSystem.is_in_battle = true
   # Record information about party Pokémon to be used at the end of battle (e.g.
   # comparing levels for an evolution check)
   Events.onStartBattle.trigger(nil)
@@ -416,6 +417,7 @@ def pbTrainerBattleCore(*args)
     pbMEStop
     return ($Trainer.able_pokemon_count == 0) ? 0 : 1   # Treat it as undecided/a win
   end
+  $PokemonSystem.is_in_battle = true
   # Record information about party Pokémon to be used at the end of battle (e.g.
   # comparing levels for an evolution check)
   Events.onStartBattle.trigger(nil)
@@ -688,6 +690,7 @@ def pbAfterBattle(decision,canLose)
       (Graphics.frame_rate/4).times { Graphics.update }
     end
   end
+  $PokemonSystem.is_in_battle = false
   Events.onEndBattle.trigger(nil,decision,canLose)
   $game_player.straighten
 end

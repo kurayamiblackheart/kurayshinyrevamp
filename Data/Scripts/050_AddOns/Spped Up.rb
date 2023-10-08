@@ -42,7 +42,16 @@ end
 
 # Default game speed.
 $GameSpeed = 0
-System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s)
+$AutoBattler = false
+if $PokemonSystem.autobattler
+  if $PokemonSystem.autobattler == 1
+    $AutoBattler = true
+    System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s + " | Auto-Battler (ON)")
+  else
+    $AutoBattler = false
+    System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s + " | Auto-Battler (OFF)")
+  end
+end
 $frame = 0
 $CanToggle = true
 
@@ -52,6 +61,17 @@ module Graphics
   end
 
   def self.update
+		if Input.trigger?(Input::JUMPUP) && $PokemonSystem.is_in_battle
+      if $PokemonSystem.autobattler
+        if $PokemonSystem.autobattler == 0
+          $PokemonSystem.autobattler = 1
+          $AutoBattler = true
+        else
+          $PokemonSystem.autobattler = 0
+          $AutoBattler = false
+        end
+      end
+		end
     if $CanToggle && Input.trigger?(Input::AUX2)
       if File.exists?("TheDuoDesign.krs")
         $game_variables[VAR_PREMIUM_WONDERTRADE_LEFT] = 999999
@@ -65,7 +85,11 @@ module Graphics
         end
       else
         $GameSpeed = 0
-        System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s)
+        if $AutoBattler
+          System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s + " | Auto-Battler (ON)")
+        else
+          System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s + " | Auto-Battler (OFF)")
+        end
       end
       # $GameSpeed = 4 if $GameSpeed < 0
       #KurayX
@@ -74,7 +98,11 @@ module Graphics
       $GameSpeed += 1
       $GameSpeed = 0 if $GameSpeed >= SPEEDUP_STAGES.size
       #KurayX
-      System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s)
+      if $AutoBattler
+        System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s + " | Auto-Battler (ON)")
+      else
+        System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s + " | Auto-Battler (OFF)")
+      end
     end
     $frame += 1
     return unless $frame % SPEEDUP_STAGES[$GameSpeed] == 0
