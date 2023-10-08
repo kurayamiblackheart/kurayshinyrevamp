@@ -66,6 +66,7 @@ class PokemonSystem
   attr_accessor :sb_randomizesize
   attr_accessor :sb_battlesize
   attr_accessor :sb_select
+  attr_accessor :sb_level
 
   attr_accessor :raiser
   attr_accessor :raiserb
@@ -124,6 +125,7 @@ class PokemonSystem
     @sb_randomizesize = 0
     @sb_battlesize = 0
     @sb_select = 0
+    @sb_level = 0
     if Settings::SHINY_POKEMON_CHANCE
       @shinyodds = Settings::SHINY_POKEMON_CHANCE
     else
@@ -191,6 +193,7 @@ class PokemonSystem
     @sb_randomizesize = saved.sb_randomizesize if saved.sb_randomizesize
     @sb_battlesize = saved.sb_battlesize if saved.sb_battlesize
     @sb_select = saved.sb_select if saved.sb_select
+    @sb_level = saved.sb_level if saved.sb_level
     @unfusetraded = saved.unfusetraded if saved.unfusetraded
   end
 end
@@ -1572,6 +1575,17 @@ class KurayOptSc_5 < PokemonOption_Scene
                         "5 player Pokemons",
                         "6 player Pokemons"]
     )
+    options << EnumOption.new(_INTL("Level"), [_INTL("Default"), _INTL("1"), _INTL("5"), _INTL("10"), _INTL("50"), _INTL("70"), _INTL("100")],
+                      proc { $PokemonSystem.sb_level },
+                      proc { |value| $PokemonSystem.sb_level = value },
+                      ["Pokemons keep their original level",
+                        "Pokemons are level 1",
+                        "Pokemons are level 5",
+                        "Pokemons are level 10",
+                        "Pokemons are level 50",
+                        "Pokemons are level 70",
+                        "Pokemons are level 100"]
+    )
     options << EnumOption.new(_INTL("Randomize Team"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.sb_randomizeteam },
                       proc { |value| $PokemonSystem.sb_randomizeteam = value },
@@ -1596,12 +1610,12 @@ class KurayOptSc_5 < PokemonOption_Scene
                       ["You may only use the same party size",
                       "You may perform 6v1, etc (bypass the party size)"]
     )
-    options << EnumOption.new(_INTL("Soul-Linked"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.sb_soullinked },
-                      proc { |value| $PokemonSystem.sb_soullinked = value },
-                      ["Pokemons are all individual/indepedent copies",
-                      "The same Pokemons between your team are linked"]
-    )
+    # options << EnumOption.new(_INTL("Soul-Linked"), [_INTL("Off"), _INTL("On")],
+    #                   proc { $PokemonSystem.sb_soullinked },
+    #                   proc { |value| $PokemonSystem.sb_soullinked = value },
+    #                   ["Pokemons are all individual/indepedent copies",
+    #                   "The same Pokemons between your team are linked"]
+    # )
     return options
   end
 end

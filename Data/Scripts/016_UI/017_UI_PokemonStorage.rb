@@ -3589,6 +3589,7 @@ class PokemonStorageScreen
     end
     trainer.party = party
     $PokemonSystem.nomoneylost = 1
+    setBattleRule("noexp")
     setBattleRule("canLose")
     Events.onTrainerPartyLoad.trigger(nil, trainer)
     decision = pbTrainerBattleCore(trainer)
@@ -3608,11 +3609,11 @@ class PokemonStorageScreen
   def pbBattleSelected(box, frommulti=true, defaultteam=nil)
     tempclone = ""
     clone = true
-    if $PokemonSystem.sb_soullinked
-      if $PokemonSystem.sb_soullinked == 1
-        clone = false
-      end
-    end
+    # if $PokemonSystem.sb_soullinked
+    #   if $PokemonSystem.sb_soullinked == 1
+    #     clone = false
+    #   end
+    # end
     buildparty = []
     buildobject = []
     if frommulti
@@ -3627,26 +3628,51 @@ class PokemonStorageScreen
     for index in selected
       if frommulti#we take from multi select, creating the array and working another way
         next unless @storage[box, index]
-        if clone
-          tmppkm = @storage[box, index].clone
-          tempclone = tmppkm.to_json
-          pokemon = Pokemon.new(:BULBASAUR, 1)
-          pokemon.load_json(tempclone)
-        else
-          pokemon = @storage[box, index]
-        end
+        tmppkm = @storage[box, index].clone
+        tempclone = tmppkm.to_json
+        pokemon = Pokemon.new(:BULBASAUR, 1)
+        pokemon.load_json(tempclone)
+        # if clone
+        #   tmppkm = @storage[box, index].clone
+        #   tempclone = tmppkm.to_json
+        #   pokemon = Pokemon.new(:BULBASAUR, 1)
+        #   pokemon.load_json(tempclone)
+        # else
+        #   pokemon = @storage[box, index]
+        # end
       else#we already have an array in this variable!
         next unless index
-        if clone
-          tmppkm = index.clone
-          tempclone = tmppkm.to_json
-          pokemon = Pokemon.new(:BULBASAUR, 1)
-          pokemon.load_json(tempclone)
-        else
-          pokemon = index
-        end
+        tmppkm = index.clone
+        tempclone = tmppkm.to_json
+        pokemon = Pokemon.new(:BULBASAUR, 1)
+        pokemon.load_json(tempclone)
+        # if clone
+        #   tmppkm = index.clone
+        #   tempclone = tmppkm.to_json
+        #   pokemon = Pokemon.new(:BULBASAUR, 1)
+        #   pokemon.load_json(tempclone)
+        # else
+        #   pokemon = index
+        # end
       end
       if pokemon
+        # finalpokemon = pokemon.clone
+        # enemy level setup
+        if $PokemonSystem.sb_level
+          if $PokemonSystem.sb_level == 1
+            pokemon.level = 1
+          elsif $PokemonSystem.sb_level == 2
+            pokemon.level = 5
+          elsif $PokemonSystem.sb_level == 3
+            pokemon.level = 10
+          elsif $PokemonSystem.sb_level == 4
+            pokemon.level = 50
+          elsif $PokemonSystem.sb_level == 5
+            pokemon.level = 70
+          elsif $PokemonSystem.sb_level == 6
+            pokemon.level = 100
+          end
+        end
         pkmn_data = {
           species: pokemon.species,
           level: pokemon.level,
@@ -4810,11 +4836,7 @@ class PokemonStorageScreen
         # battlertimes = battlerchoice
         krbattlers = []
         krplayer = []
-        if randteam
-          defaultteam = $Trainer.party
-        else
-          defaultteam = nil
-        end
+        defaultteam = $Trainer.party
         pokekurays = []
         case kuraychoice
         when 0 # box - IMPORT THE CURRENT BOX
@@ -4926,19 +4948,39 @@ class PokemonStorageScreen
           end
           playernum.times do
             # Choose a random JSON file from the list
-            randomkuray = pokekuraysplayer.sample
             if isjson
-              pokemon = Pokemon.new(:BULBASAUR, 1)
-              json_data = File.read(randomkuray)
-              pokemon.load_json(eval(json_data))
-              krplayer.push(pokemon)
+              randomkr2 = pokekuraysplayer.sample
+              randomkuray = Pokemon.new(:BULBASAUR, 1)
+              json_data = File.read(randomkr2)
+              randomkuray.load_json(eval(json_data))
             else
-              krplayer.push(randomkuray)
+              randomkuray = pokekuraysplayer.sample
             end
+            krplayer.push(randomkuray)
             # Remove the chosen file from the list
             pokekuraysplayer.delete(randomkuray)
           end
-          $Trainer.party = krplayer.clone
+          if randteam
+            $Trainer.party = krplayer.clone
+          end
+          for i in $Trainer.party
+            # player level setup
+            if $PokemonSystem.sb_level
+              if $PokemonSystem.sb_level == 1
+                $Trainer.party[i].level = 1
+              elsif $PokemonSystem.sb_level == 2
+                $Trainer.party[i].level = 5
+              elsif $PokemonSystem.sb_level == 3
+                $Trainer.party[i].level = 10
+              elsif $PokemonSystem.sb_level == 4
+                $Trainer.party[i].level = 50
+              elsif $PokemonSystem.sb_level == 5
+                $Trainer.party[i].level = 70
+              elsif $PokemonSystem.sb_level == 6
+                $Trainer.party[i].level = 100
+              end
+            end
+          end
           $Trainer.heal_party
           pbBattleSelected(krbattlers, false, defaultteam)
         end
