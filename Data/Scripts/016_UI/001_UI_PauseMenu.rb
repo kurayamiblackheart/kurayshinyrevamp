@@ -157,7 +157,7 @@ class PokemonPauseMenu
       commands[cmdSave = commands.length] = _INTL("Save") if $game_system && !$game_system.save_disabled
     end
     commands[cmdOption = commands.length] = _INTL("Options")
-    commands[cmdDebug = commands.length] = _INTL("Debug") if $DEBUG
+    commands[cmdDebug = commands.length] = _INTL("Debug") if $DEBUG && !fkdebug
     commands[cmdDebugDebug = commands.length] = _INTL("Debug") if fkdebug
     commands[cmdEndGame = commands.length] = _INTL("Title screen")
     loop do
