@@ -3676,8 +3676,12 @@ class PokemonStorageScreen
     end
     possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
     ktrainertype = possibletrainers.sample
+    playernum = 1
+    if $PokemonSystem.sb_randomizesize
+      playernum = $PokemonSystem.sb_randomizesize+1
+    end
     # Create a trainer with the selected Pokémon as their party
-    trainer_data = createTrainer(ktrainertype, $Trainer.name, buildparty)
+    trainer_data = createTrainer(ktrainertype, $Trainer.name, playernum)
     return if !trainer_data  # Ensure the trainer was successfully created
 
     # Battle against the created trainer

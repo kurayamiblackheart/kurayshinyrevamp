@@ -1562,6 +1562,16 @@ class KurayOptSc_5 < PokemonOption_Scene
                         "5 enemy Pokemons",
                         "6 enemy Pokemons"]
     )
+    options << EnumOption.new(_INTL("Player Size"), [_INTL("1"), _INTL("2"), _INTL("3"), _INTL("4"), _INTL("5"), _INTL("6")],
+                      proc { $PokemonSystem.sb_randomizesize },
+                      proc { |value| $PokemonSystem.sb_randomizesize = value },
+                      ["1 player Pokemon",
+                        "2 player Pokemons",
+                        "3 player Pokemons",
+                        "4 player Pokemons",
+                        "5 player Pokemons",
+                        "6 player Pokemons"]
+    )
     options << EnumOption.new(_INTL("Randomize Team"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.sb_randomizeteam },
                       proc { |value| $PokemonSystem.sb_randomizeteam = value },
@@ -1573,16 +1583,6 @@ class KurayOptSc_5 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.sb_randomizeshare = value },
                       ["Doesn't allow randomize to make you share the same Pokemons",
                       "Randomize might give you and the enemy the same Pokemons"]
-    )
-    options << EnumOption.new(_INTL("Player Size"), [_INTL("1"), _INTL("2"), _INTL("3"), _INTL("4"), _INTL("5"), _INTL("6")],
-                      proc { $PokemonSystem.sb_randomizesize },
-                      proc { |value| $PokemonSystem.sb_randomizesize = value },
-                      ["1 player Pokemon",
-                        "2 player Pokemons",
-                        "3 player Pokemons",
-                        "4 player Pokemons",
-                        "5 player Pokemons",
-                        "6 player Pokemons"]
     )
     options << EnumOption.new(_INTL("Team Select"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.sb_select },
