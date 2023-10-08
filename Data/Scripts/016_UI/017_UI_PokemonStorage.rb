@@ -4766,6 +4766,12 @@ class PokemonStorageScreen
       else
         randteam = true
       end
+      battleshare = false
+      if $PokemonSystem.sb_randomizeshare
+        if $PokemonSystem.sb_randomizeshare == 1
+          battleshare = true
+        end
+      end
 
       if battlerchoice < 7
         #battler logic
@@ -4878,12 +4884,6 @@ class PokemonStorageScreen
           pbPlayBuzzerSE
           pbDisplay(_INTL("No Battler to Fight!"))
         else
-          battleshare = false
-          if $PokemonSystem.sb_randomizeshare
-            if $PokemonSystem.sb_randomizeshare == 1
-              battleshare = true
-            end
-          end
           if randteam && !battleshare
             needingval = battlerchoice+playernum
           else
