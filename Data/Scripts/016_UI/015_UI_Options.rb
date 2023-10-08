@@ -1001,6 +1001,11 @@ class KurayOptionsScene < PokemonOption_Scene
                      $PokemonSystem.raiserb = value
                    }, "For shiny gamble and shiny odds, changes the increment rate of those sliders."
     )
+    options << ButtonOption.new(_INTL("Activate Debug"),
+      proc {
+        `open https://www.youtube.com/watch?v=dQw4w9WgXcQ`
+      }, "Allows to toggle DEBUG ON/OFF."
+    )
 
     # if $scene && $scene.is_a?(Scene_Map)
     #   options.concat(pbGetInGameOptions())
