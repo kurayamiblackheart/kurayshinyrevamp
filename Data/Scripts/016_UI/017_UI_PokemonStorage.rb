@@ -3651,7 +3651,11 @@ class PokemonStorageScreen
     end
     return if buildparty.length == 0  # Ensure there's at least one Pokémon to battle
     $Trainer.heal_party # healing player
-    choicelimit = buildparty.length
+    # choicelimit = buildparty.length
+    choicelimit = 1
+    if $PokemonSystem.sb_randomizesize
+      choicelimit = $PokemonSystem.sb_randomizesize+1
+    end
     if $PokemonSystem.sb_maxing
       if $PokemonSystem.sb_maxing == 1
         choicelimit = 6
@@ -3676,12 +3680,8 @@ class PokemonStorageScreen
     end
     possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
     ktrainertype = possibletrainers.sample
-    playernum = 1
-    if $PokemonSystem.sb_randomizesize
-      playernum = $PokemonSystem.sb_randomizesize+1
-    end
     # Create a trainer with the selected Pokémon as their party
-    trainer_data = createTrainer(ktrainertype, $Trainer.name, playernum)
+    trainer_data = createTrainer(ktrainertype, $Trainer.name, buildparty)
     return if !trainer_data  # Ensure the trainer was successfully created
 
     # Battle against the created trainer
