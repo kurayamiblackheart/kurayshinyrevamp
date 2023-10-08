@@ -242,6 +242,7 @@ class PokemonStorage
       end
       return false if !found
     end
+    importpoke.calc_stats
     if boxDst==-1   # Copying into party
       return false if party_full?
       self.party[self.party.length] = importpoke.clone

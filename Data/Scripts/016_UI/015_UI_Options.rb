@@ -72,6 +72,9 @@ class PokemonSystem
 
   attr_accessor :is_in_battle
 
+  attr_accessor :importlvl
+  attr_accessor :importdevolve
+
   attr_accessor :raiser
   attr_accessor :raiserb
 
@@ -128,6 +131,8 @@ class PokemonSystem
     @sb_randomizeshare = 0
     @sb_randomizesize = 0
     @sb_battlesize = 0
+    @importlvl = 0
+    @importdevolve = 0
     @sb_select = 0
     @sb_level = 0
     @debugfeature = 0
@@ -202,6 +207,8 @@ class PokemonSystem
     @sb_select = saved.sb_select if saved.sb_select
     @sb_level = saved.sb_level if saved.sb_level
     @unfusetraded = saved.unfusetraded if saved.unfusetraded
+    @importlvl = saved.importlvl if saved.importlvl
+    @importdevolve = saved.importdevolve if saved.importdevolve
   end
 end
 
@@ -1514,6 +1521,21 @@ class KurayOptSc_4 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.unfusetraded = value },
                       ["You cannot unfuse traded Pokemons.",
                       "You can unfuse traded Pokemons."]
+    )
+    options << EnumOption.new(_INTL("Import Level"), [_INTL("Default"), _INTL("1"), _INTL("5"), _INTL("50"), _INTL("100")],
+                      proc { $PokemonSystem.importlvl },
+                      proc { |value| $PokemonSystem.importlvl = value },
+                      ["Imported Pokemons keep their original level.",
+                      "Imported Pokemons are set to level 1.",
+                      "Imported Pokemons are set to level 5.",
+                      "Imported Pokemons are set to level 50.",
+                      "Imported Pokemons are set to level 100."]
+    )
+    options << EnumOption.new(_INTL("Import De-Evolve"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.importdevolve },
+                      proc { |value| $PokemonSystem.importdevolve = value },
+                      ["Imported Pokemons remain intact.",
+                      "Imported Pokemons are de-evolved into babies."]
     )
     return options
   end

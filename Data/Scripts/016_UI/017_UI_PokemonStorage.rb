@@ -2466,9 +2466,29 @@ class PokemonStorageScene
     Dir.mkdir(directory_name) unless File.exists?(directory_name)
     importname = directory_name + "/" + "CarpFill.json"
     if File.file?(importname)
+      importunevo = false
+      importlevel = 0
+      if $PokemonSystem.importlevel
+        if $PokemonSystem.importlevel == 1
+          importlevel = 1
+        elsif $PokemonSystem.importlevel == 2
+          importlevel = 5
+        elsif $PokemonSystem.importlevel == 3
+          importlevel = 50
+        elsif $PokemonSystem.importlevel == 4
+          importlevel = 100
+        end
+      end
       pokemon = Pokemon.new(:BULBASAUR, 1)
       importdata = File.read(importname)
       pokemon.load_json(eval(importdata))
+      if importunevo
+        pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
+      end
+      if importlevel != 0
+        pokemon.level = importlevel
+      end
+      # pokemon.calc_stats
       relta = 0
       gelta = 0
       belta = 0
@@ -2520,22 +2540,39 @@ class PokemonStorageScene
     Dir.mkdir(directory_name) unless File.exists?(directory_name)
     importname = directory_name + "/" + "Exported.json"
     if File.file?(importname)
+      importunevo = false
+      importlevel = 0
+      if $PokemonSystem.importlevel
+        if $PokemonSystem.importlevel == 1
+          importlevel = 1
+        elsif $PokemonSystem.importlevel == 2
+          importlevel = 5
+        elsif $PokemonSystem.importlevel == 3
+          importlevel = 50
+        elsif $PokemonSystem.importlevel == 4
+          importlevel = 100
+        end
+      end
       if selected[0] == -1
         pokemon = @storage.party[selected[1]]
         importdata = File.read(importname)
         pokemon.load_json(eval(importdata))
-        @storage.pbImportKuray(selected[0], selected[1], pokemon)
-        pbHardRefresh
-        pbDisplay(_INTL("Pokemon Imported!"))
       else
         # pokemon = @storage.boxes[selected[0]][selected[1]]
         pokemon = Pokemon.new(:BULBASAUR, 1)
         importdata = File.read(importname)
         pokemon.load_json(eval(importdata))
-        @storage.pbImportKuray(selected[0], selected[1], pokemon)
-        pbHardRefresh
-        pbDisplay(_INTL("Pokemon Imported!"))
       end
+      if importunevo
+        pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
+      end
+      if importlevel != 0
+        pokemon.level = importlevel
+      end
+      # pokemon.calc_stats
+      @storage.pbImportKuray(selected[0], selected[1], pokemon)
+      pbHardRefresh
+      pbDisplay(_INTL("Pokemon Imported!"))
     else
       pbPlayBuzzerSE
       pbDisplay(_INTL("'Exported.json' not found!"))
@@ -5068,12 +5105,37 @@ class PokemonStorageScreen
           pbPlayBuzzerSE
           pbDisplay(_INTL("No Pokemon to Import!"))
         else
+          importunevo = false
+          importlevel = 0
+          if $PokemonSystem.importlevel
+            if $PokemonSystem.importlevel == 1
+              importlevel = 1
+            elsif $PokemonSystem.importlevel == 2
+              importlevel = 5
+            elsif $PokemonSystem.importlevel == 3
+              importlevel = 50
+            elsif $PokemonSystem.importlevel == 4
+              importlevel = 100
+            end
+          end
+          if $PokemonSystem.importdevolve
+            if $PokemonSystem.importdevolve == 1
+              importunevo = true
+            end
+          end
           # Iterate through the JSON files
           json_files.each do |json_file|
             # Load and process the JSON data
             pokemon = Pokemon.new(:BULBASAUR, 1)
             json_data = File.read(json_file)
             pokemon.load_json(eval(json_data))
+            if importunevo
+              pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
+            end
+            if importlevel != 0
+              pokemon.level = importlevel
+            end
+            # pokemon.calc_stats
             while @storage[x, y]
               y += 1
               if y > 29
@@ -5144,12 +5206,37 @@ class PokemonStorageScreen
           pbPlayBuzzerSE
           pbDisplay(_INTL("No Pokemon to Import!"))
         else
+          importunevo = false
+          importlevel = 0
+          if $PokemonSystem.importlevel
+            if $PokemonSystem.importlevel == 1
+              importlevel = 1
+            elsif $PokemonSystem.importlevel == 2
+              importlevel = 5
+            elsif $PokemonSystem.importlevel == 3
+              importlevel = 50
+            elsif $PokemonSystem.importlevel == 4
+              importlevel = 100
+            end
+          end
+          if $PokemonSystem.importdevolve
+            if $PokemonSystem.importdevolve == 1
+              importunevo = true
+            end
+          end
           # Choose a random JSON file from the list
           random_json_file = json_files.sample
           # Load and process the JSON data
           pokemon = Pokemon.new(:BULBASAUR, 1)
           json_data = File.read(random_json_file)
           pokemon.load_json(eval(json_data))
+          if importunevo
+            pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
+          end
+          if importlevel != 0
+            pokemon.level = importlevel
+          end
+          # pokemon.calc_stats
           while @storage[x, y]
             y += 1
             if y > 29
