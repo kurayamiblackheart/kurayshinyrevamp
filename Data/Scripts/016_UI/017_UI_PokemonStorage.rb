@@ -2935,8 +2935,14 @@ class PokemonStorageScreen
               @multiSelectRange[1] = selected[1]
 
               pokemonCount = 0
+              noneggCount = 0
               for index in getMultiSelection(selected[0], nil)
                 pokemonCount += 1 if @storage[selected[0], index]
+                if @storage[selected[0], index]
+                  unless @storage[selected[0], index].egg?
+                    noneggCount += 1
+                  end
+                end
               end
 
               if pokemonCount == 0
@@ -2958,7 +2964,7 @@ class PokemonStorageScreen
               commands[cmdMove = commands.length] = _INTL("Move")
               commands[cmdRelease = commands.length] = _INTL("Release")
               # WIP
-              commands[cmdBattle = commands.length] = _INTL("Battle Selected") if pokemonCount < 7 && pokemonCount > 0
+              commands[cmdBattle = commands.length] = _INTL("Battle Selected") if noneggCount < 7 && noneggCount > 0
               commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
               commands[cmdCancel = commands.length] = _INTL("Cancel")
 
