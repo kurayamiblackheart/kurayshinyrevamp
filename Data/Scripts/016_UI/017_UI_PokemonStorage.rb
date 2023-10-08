@@ -1856,6 +1856,12 @@ class PokemonStorageScene
     cmdDefSprite = -1
     cmdOpenShinyFinder = -1
     cmdShowSprite = -1
+    canExportImport = true
+    if $PokemonSystem.debugfeature
+      if $PokemonSystem.debugfeature == 1
+        canExportImport = false
+      end
+    end
     helptext = _INTL("{1} is selected.", pokemon.name)
     commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
     commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 1)
@@ -1868,8 +1874,8 @@ class PokemonStorageScene
     commands[cmdBlacklist = commands.length] = _INTL("Blacklist Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdOpenShinyFinder = commands.length] = _INTL("Start Shiny Finder") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     # commands[cmdImportJson = commands.length] = _INTL("Import") if $DEBUG
-    commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
-    commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG
+    commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG || canExportImport
+    commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG || canExportImport
     commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
     commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
     commands[cmdCarpFill = commands.length] = _INTL("CarpFill") if $DEBUG && File.exists?("Kurayami.krs")
@@ -2958,6 +2964,12 @@ class PokemonStorageScreen
               cmdCancel = -1
               cmdExport = -1
               cmdBattle = -1
+              canExportImport = true
+              if $PokemonSystem.debugfeature
+                if $PokemonSystem.debugfeature == 1
+                  canExportImport = false
+                end
+              end
               
               helptext = _INTL("Selected {1} Pokémon.", pokemonCount)
 
@@ -2965,7 +2977,7 @@ class PokemonStorageScreen
               commands[cmdRelease = commands.length] = _INTL("Release")
               # WIP
               commands[cmdBattle = commands.length] = _INTL("Battle Selected") if noneggCount < 7 && noneggCount > 0
-              commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG
+              commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG || canExportImport
               commands[cmdCancel = commands.length] = _INTL("Cancel")
 
               command = pbShowCommands(helptext, commands)
@@ -3966,7 +3978,13 @@ class PokemonStorageScreen
       _INTL("Battle"),
       # _INTL("Cancel"),
     ]
-    if $DEBUG
+    canExportImport = true
+    if $PokemonSystem.debugfeature
+      if $PokemonSystem.debugfeature == 1
+        canExportImport = false
+      end
+    end
+    if $DEBUG || canExportImport
       commands[commands.length] = _INTL("Export this Box")
       commands[commands.length] = _INTL("Export All")
       commands[commands.length] = _INTL("Import")
@@ -5015,7 +5033,7 @@ class PokemonStorageScreen
       end
     when 7
       # Export (box)
-      if !$DEBUG
+      if !$DEBUG && !canExportImport
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))
       else
@@ -5023,14 +5041,14 @@ class PokemonStorageScreen
       end
     when 8
       #Export (all)
-      if !$DEBUG
+      if !$DEBUG && !canExportImport
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))
       else
         pbExportAll()
       end
     when 9
-      if !$DEBUG
+      if !$DEBUG && !canExportImport
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))
       else
@@ -5106,7 +5124,7 @@ class PokemonStorageScreen
         end
       end
     when 10
-      if !$DEBUG
+      if !$DEBUG && !canExportImport
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))
       else

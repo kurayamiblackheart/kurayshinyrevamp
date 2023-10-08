@@ -68,6 +68,8 @@ class PokemonSystem
   attr_accessor :sb_select
   attr_accessor :sb_level
 
+  attr_accessor :debugfeature
+
   attr_accessor :is_in_battle
 
   attr_accessor :raiser
@@ -128,6 +130,7 @@ class PokemonSystem
     @sb_battlesize = 0
     @sb_select = 0
     @sb_level = 0
+    @debugfeature = 0
     @is_in_battle = false
     if Settings::SHINY_POKEMON_CHANCE
       @shinyodds = Settings::SHINY_POKEMON_CHANCE
@@ -160,6 +163,7 @@ class PokemonSystem
     @kuraybigicons = saved.kuraybigicons if saved.kuraybigicons
     @kurayindividcustomsprite = saved.kurayindividcustomsprite if saved.kurayindividcustomsprite
     @typedisplay = saved.typedisplay if saved.typedisplay
+    @debugfeature = saved.debugfeature if saved.debugfeature
     if saved.globalvalues
       @globalvalues = saved.globalvalues
       if saved.globalvalues != 0
@@ -1439,6 +1443,12 @@ class KurayOptSc_4 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.globalvalues = value },
                       ["Some options stays per-save file",
                       "All options are applied globally"]
+    )
+    options << EnumOption.new(_INTL("Debug Exclusive"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.debugfeature },
+                      proc { |value| $PokemonSystem.debugfeature = value },
+                      ["Some debug features are available without debug (magic boots)",
+                      "All debug features requires debug (magic boots)"]
     )
 
     if $scene && $scene.is_a?(Scene_Map)
