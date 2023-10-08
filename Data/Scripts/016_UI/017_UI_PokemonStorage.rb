@@ -4892,13 +4892,18 @@ class PokemonStorageScreen
           else
             needingval = battlerchoice
           end
+          if randteam && !battleshare && pokekurays.length < 2
+            pbPlayBuzzerSE
+            pbDisplay(_INTL("No Battler to Fight!"))
+            return
+          end
           if pokekurays.length < needingval
             if battleshare
-              playernum = pokekurays.length/2
-              battlerchoice = pokekurays.length/2
-            else
               playernum = pokekurays.length
               battlerchoice = pokekurays.length
+            else
+              playernum = pokekurays.length/2
+              battlerchoice = pokekurays.length/2
             end
               pbDisplay(_INTL("Battling with only {1} Pokemon(s)", battlerchoice))
           end
