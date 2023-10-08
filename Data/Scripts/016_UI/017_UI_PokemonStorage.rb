@@ -4773,6 +4773,8 @@ class PokemonStorageScreen
         end
       end
 
+      isjson = false
+
       if battlerchoice < 7
         #battler logic
         kuraychoices = [
@@ -4854,35 +4856,16 @@ class PokemonStorageScreen
           if json_files.empty?
             pbPlayBuzzerSE
             pbDisplay(_INTL("No Battler to Import!"))
-          else
-            if json_files.length < 6
-              battlerchoice = json_files.length
-            end
-            battlerchoice.times do
-              # Choose a random JSON file from the list
-              random_json_file = json_files.sample
-          
-              # Load and process the JSON data
-              pokemon = Pokemon.new(:BULBASAUR, 1)
-              json_data = File.read(random_json_file)
-              pokemon.load_json(eval(json_data))
-          
-              # Your code to process the JSON data goes here
-              # For example, you can print the loaded data
-              krbattlers.push(pokemon)
-          
-              # Delete the chosen JSON file
-              # File.delete(random_json_file)
-              # Remove the chosen file from the list
-              json_files.delete(random_json_file)
-            end
-            pbBattleSelected(krbattlers, false, defaultteam)
+            return
           end
+          pokekurays = json_files
+          isjson = true
         end
         pokekuraysplayer = pokekurays.clone
         if pokekurays.empty?
           pbPlayBuzzerSE
           pbDisplay(_INTL("No Battler to Fight!"))
+          return
         else
           if randteam && !battleshare
             needingval = battlerchoice+playernum
@@ -4902,6 +4885,15 @@ class PokemonStorageScreen
           battlerchoice.times do
             # Choose a random JSON file from the list
             randomkuray = pokekurays.sample
+            if isjson
+              pokemon = Pokemon.new(:BULBASAUR, 1)
+              json_data = File.read(randomkuray)
+              pokemon.load_json(eval(json_data))
+              pokekurays.delete(randomkuray)
+              unless battleshare
+                pokekuraysplayer.delete(randomkuray)
+              end
+            end
             krbattlers.push(randomkuray)
             # Remove the chosen file from the list
             pokekurays.delete(randomkuray)
@@ -4912,6 +4904,12 @@ class PokemonStorageScreen
           playernum.times do
             # Choose a random JSON file from the list
             randomkuray = pokekuraysplayer.sample
+            if isjson
+              pokemon = Pokemon.new(:BULBASAUR, 1)
+              json_data = File.read(randomkuray)
+              pokemon.load_json(eval(json_data))
+              pokekuraysplayer.delete(randomkuray)
+            end
             krplayer.push(randomkuray)
             # Remove the chosen file from the list
             pokekuraysplayer.delete(randomkuray)
