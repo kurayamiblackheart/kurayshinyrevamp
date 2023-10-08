@@ -75,6 +75,11 @@ module Graphics
             $PokemonSystem.autobattler = 0
             $AutoBattler = false
           end
+          if $AutoBattler
+            System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s + " | Auto-Battler (ON)")
+          else
+            System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | Speed: x" + ($GameSpeed+1).to_s + " | Auto-Battler (OFF)")
+          end
         end
       end
     end
