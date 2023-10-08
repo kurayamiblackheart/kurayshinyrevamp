@@ -4967,17 +4967,17 @@ class PokemonStorageScreen
             # player level setup
             if $PokemonSystem.sb_level
               if $PokemonSystem.sb_level == 1
-                $Trainer.party[i].level = 1
+                i.level = 1
               elsif $PokemonSystem.sb_level == 2
-                $Trainer.party[i].level = 5
+                i.level = 5
               elsif $PokemonSystem.sb_level == 3
-                $Trainer.party[i].level = 10
+                i.level = 10
               elsif $PokemonSystem.sb_level == 4
-                $Trainer.party[i].level = 50
+                i.level = 50
               elsif $PokemonSystem.sb_level == 5
-                $Trainer.party[i].level = 70
+                i.level = 70
               elsif $PokemonSystem.sb_level == 6
-                $Trainer.party[i].level = 100
+                i.level = 100
               end
             end
           end
