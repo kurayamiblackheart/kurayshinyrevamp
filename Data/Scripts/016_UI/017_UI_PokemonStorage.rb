@@ -3577,12 +3577,14 @@ class PokemonStorageScreen
     party_array.each do |pokemon|
     if pokemon.is_a?(Pokemon)
       party << pokemon
-    elsif pokemon.is_a?(Symbol)
-      party << Pokemon.new(pokemon, default_level, trainer)
-    elsif pokemon.is_a?(Hash)  # Handle hash representations
-      new_pokemon = Pokemon.new(pokemon[:species], pokemon[:level], trainer)
-      # You can set other attributes like moves, IVs, EVs here if needed
-      party << new_pokemon
+    # elsif pokemon.is_a?(Symbol)
+    #   party << Pokemon.new(pokemon, default_level, trainer)
+    # elsif pokemon.is_a?(Hash)  # Handle hash representations
+    #   new_pokemon = Pokemon.new(pokemon[:species], pokemon[:level], trainer)
+    #   new_pokemon.ability = pokemon[:ability]
+	#   new_pokemon.ability_index = pokemon[:ability_index]
+	#   # You can set other attributes like moves, IVs, EVs here if needed
+    #   party << new_pokemon
       end
     end
     trainer.party = party
@@ -3604,6 +3606,7 @@ class PokemonStorageScreen
     end
     buildparty = []
     buildobject = []
+	  buildabilities = []
     if frommulti
       selected = getMultiSelection(box, nil)
       return if selected.length == 0 || selected.length > 6
@@ -3613,6 +3616,7 @@ class PokemonStorageScreen
     for index in selected
       if frommulti#we take from multi select, creating the array and working another way
         next unless @storage[box, index]
+        buildabilities.push(@storage[box, index].ability.id)
         if clone
           tmppkm = @storage[box, index].clone
           tempclone = tmppkm.to_json
@@ -3623,6 +3627,7 @@ class PokemonStorageScreen
         end
       else#we already have an array in this variable!
         next unless index
+        buildabilities.push(index.ability.id)
         if clone
           tmppkm = index.clone
           tempclone = tmppkm.to_json
@@ -3639,7 +3644,10 @@ class PokemonStorageScreen
           moves: pokemon.moves.map { |m| m.id },
           iv: pokemon.iv,
           ev: pokemon.ev,
+		  ability: pokemon.ability,
+		  ability_index: pokemon.ability_index,
         }
+	  # puts "Captured Ability: #{pokemon.ability}"  # Debug line
       buildparty.push(pkmn_data)
       buildobject.push(pokemon)
       end
@@ -3663,8 +3671,10 @@ class PokemonStorageScreen
 
     trainer.pokemon.each_with_index do |pkmn, i|
       pkmn = buildobject[i]   # Turns a pokemon of this party index into the pokemon of the player's party of the same index   
+      pkmn.ability = buildabilities[i]
+      # puts "Assigned Ability: #{pkmn.ability}"  # Debug line
       pkmn.heal#healing enemy
-      pkmn.calc_stats
+        pkmn.calc_stats
     end
 
     result = customTrainerBattle(trainer.name, trainer.trainer_type, buildobject, "...", nil)

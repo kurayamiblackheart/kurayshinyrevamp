@@ -56,6 +56,8 @@ class Pokemon
   attr_accessor :kuraycustomfile
   attr_accessor :oldkuraycustomfile
 
+
+  
   # The index of this Pokémon's ability (0, 1 are natural abilities, 2+ are
   # hidden abilities)as defined for its species/form. An ability may not be
   # defined at this index. Is recalculated (as 0 or 1) if made nil.
@@ -63,7 +65,6 @@ class Pokemon
   attr_writer :ability_index
   attr_accessor :body_original_ability_index
   attr_accessor :head_original_ability_index
-
 
   # @return [Array<Pokemon::Move>] the moves known by this Pokémon
   attr_accessor :moves
@@ -1695,6 +1696,7 @@ class Pokemon
   #KurayX
   def as_json(options={})
     {
+      "json_version" => "0.1",
       "species" => @species,
       "form" => @form,
       "forced_form" => @forced_form,
@@ -1792,10 +1794,10 @@ class Pokemon
     @shinyR = jsonparse['shinyR']
     @shinyG = jsonparse['shinyG']
     @shinyB = jsonparse['shinyB']
-    @ability_index = jsonparse['ability_index']
     @ability = jsonparse['ability']
-    @ability_index = jsonparse['ability2_index']
-    @ability = jsonparse['ability2']
+    @ability2 = jsonparse['ability2']
+    @ability_index = jsonparse['ability_index']
+    @ability2_index = jsonparse['ability2_index']
     @nature = jsonparse['nature']
     @nature_for_stats = jsonparse['nature_for_stats']
     @item = jsonparse['item']
