@@ -327,7 +327,8 @@ class PokemonPauseMenu
         $game_temp.mart_prices[568] = [999999, 24000] if !$game_switches[SWITCH_GOT_BADGE_8] && $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[568] = [42000, 24000] if $game_switches[SWITCH_GOT_BADGE_8] && $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[568] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
-        # $game_temp.mart_prices[569] = [8200, 4100]
+        $game_temp.mart_prices[569] = [8200, 4100] if $PokemonSystem.kuraystreamerdream == 0
+        $game_temp.mart_prices[569] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         $game_temp.mart_prices[245] = [1200, 600]
         $game_temp.mart_prices[247] = [4000, 2000]
         $game_temp.mart_prices[249] = [9100, 4550]
@@ -356,7 +357,7 @@ class PokemonPauseMenu
         #   114, 115, 116, 100
         # ]
         allitems = [
-          570, 568, 245, 247, 249, 246, 248, 250,
+          570, 569, 568, 245, 247, 249, 246, 248, 250,
           314, 329, 335, 343, 345, 346, 356, 358, 367, 371,
           618, 619, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656,
           657, 659,

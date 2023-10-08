@@ -1268,24 +1268,24 @@ ItemHandlers::UseOnPokemon.add(:MISTSTONE, proc { |item, pokemon, scene|
 })
 
 #KurayX DEvolution
-# ItemHandlers::UseOnPokemon.add(:DEVOLUTIONSPRAY, proc { |item, pokemon, scene|
-#   next false if pokemon.egg?
-#   if pbForceDevo(pokemon)
-#     next true
-#   else
-#     scene.pbDisplay(_INTL("It won't have any effect."))
-#     next false
-#   end
-# })
+ItemHandlers::UseOnPokemon.add(:DEVOLUTIONSPRAY, proc { |item, pokemon, scene|
+  next false if pokemon.egg?
+  if pbForceDevo(pokemon)
+    next true
+  else
+    scene.pbDisplay(_INTL("It won't have any effect."))
+    next false
+  end
+})
 
 def pbForceEvo(pokemon)
+  return false if pokemon.kuray_no_evo? == 1 && $PokemonSystem.kuray_no_evo == 1
   evolutions = getEvolvedSpecies(pokemon)
   return false if evolutions.empty?
   #if multiple evolutions, pick a random one
   #(format of returned value is [[speciesNum, level]])
   newspecies = evolutions[rand(evolutions.length - 1)][0]
   return false if newspecies == nil
-  return false if pokemon.kuray_no_evo? == 1 && $PokemonSystem.kuray_no_evo == 1
   evo = PokemonEvolutionScene.new
   evo.pbStartScreen(pokemon, newspecies)
   evo.pbEvolution
@@ -1294,21 +1294,21 @@ def pbForceEvo(pokemon)
 end
 
 #KurayX DEvolution
-# def pbForceDevo(pokemon)
-#   evolutions = getDevolvedSpecies(pokemon)
-#   return false if !evolutions
-#   return false if evolutions.empty?
-#   #if multiple evolutions, pick a random one
-#   #(format of returned value is [[speciesNum, level]])
-#   newspecies = evolutions[rand(evolutions.length - 1)][0]
-#   return false if newspecies == nil
-#   return false if pokemon.kuray_no_evo? == 1 && $PokemonSystem.kuray_no_evo == 1
-#   evo = PokemonEvolutionScene.new
-#   evo.pbStartScreen(pokemon, newspecies)
-#   evo.pbEvolution
-#   evo.pbEndScreen
-#   return true
-# end
+def pbForceDevo(pokemon)
+  return false if pokemon.kuray_no_evo? == 1 && $PokemonSystem.kuray_no_evo == 1
+  evolution = getDevolvedSpecies(pokemon)
+  return false if evolution == pokemon.species
+  # return false if evolutions.empty?
+  #if multiple evolutions, pick a random one
+  #(format of returned value is [[speciesNum, level]])
+  # newspecies = evolutions[rand(evolutions.length - 1)][0]
+  # return false if newspecies == nil
+  evo = PokemonEvolutionScene.new
+  evo.pbStartScreen(pokemon, evolution)
+  evo.pbEvolution
+  evo.pbEndScreen
+  return true
+end
 
 # format of returned value is [[speciesNum, evolutionMethod],[speciesNum, evolutionMethod],etc.]
 def getEvolvedSpecies(pokemon)
@@ -1316,13 +1316,9 @@ def getEvolvedSpecies(pokemon)
 end
 
 #KurayX DEvolution
-# def getDevolvedSpecies(pokemon)
-#   if GameData::Species.get(pokemon.species).get_previous_species == pokemon.species
-#     return false
-#   else
-#     return GameData::Species.get(pokemon.species).get_previous_species
-#   end
-# end
+def getDevolvedSpecies(pokemon)
+    return GameData::Species.get(pokemon.species).get_previous_species
+end
 
 #(copie de fixEvolutionOverflow dans FusionScene)
 def getCorrectEvolvedSpecies(pokemon)
