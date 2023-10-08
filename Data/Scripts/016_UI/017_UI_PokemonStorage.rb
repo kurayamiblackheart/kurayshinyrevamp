@@ -3596,6 +3596,15 @@ class PokemonStorageScreen
     return decision == 1
   end
 
+  def battlebr(defaultteam)
+    if defaultteam
+      $Trainer.party=defaultteam
+    end
+    @scene.pbHardRefresh
+    $Trainer.heal_party# healing player again
+    return
+  end
+
   def pbBattleSelected(box, frommulti=true, defaultteam=nil)
     tempclone = ""
     clone = true
@@ -3608,7 +3617,10 @@ class PokemonStorageScreen
     buildobject = []
     if frommulti
       selected = getMultiSelection(box, nil)
-      return if selected.length == 0 || selected.length > 6
+      if selected.length == 0 || selected.length > 6
+        battlebr(defaultteam)
+        return
+      end
     else
       selected = box
     end
@@ -3649,7 +3661,10 @@ class PokemonStorageScreen
       buildobject.push(pokemon)
       end
     end
-    return if buildparty.length == 0  # Ensure there's at least one Pokémon to battle
+    if buildparty.length == 0  # Ensure there's at least one Pokémon to battle
+      battlebr(defaultteam)
+      return
+    end
     $Trainer.heal_party # healing player
     # choicelimit = buildparty.length
     choicelimit = 1
@@ -3676,13 +3691,17 @@ class PokemonStorageScreen
       continuingbattle = true
     end
     unless continuingbattle
+      battlebr(defaultteam)
       return
     end
     possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
     ktrainertype = possibletrainers.sample
     # Create a trainer with the selected Pokémon as their party
     trainer_data = createTrainer(ktrainertype, $Trainer.name, buildparty)
-    return if !trainer_data  # Ensure the trainer was successfully created
+    if !trainer_data  # Ensure the trainer was successfully created
+      battlebr(defaultteam)
+      return
+    end
 
     # Battle against the created trainer
     trainer = init_trainer(trainer_data[0])
@@ -3698,11 +3717,8 @@ class PokemonStorageScreen
     pbSet(1, result == 1 ? 0 : 1)
     $PokemonSystem.nomoneylost = 0
     PokemonSelection.restore()
-    if defaultteam
-      $Trainer.party=defaultteam
-    end
-    @scene.pbHardRefresh
-    $Trainer.heal_party# healing player again
+    battlebr(defaultteam)
+    return
   end
 
   #KurayX
