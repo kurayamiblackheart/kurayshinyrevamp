@@ -29,6 +29,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Infinite Save Files, new backup file created at each save
 - Custom Fusion Icons support
 - Self-Battle (battle your own Pokemons from your PC/"Battlers" folder/Team !)
+- Shiny Finder.exe (A program created by Reïzod which allows you to quickly see all the shiny possibilities of a .png sprite)
 
 # List of Optional Features (you can turn them ON/OFF and/or configure/customize them!)
 
@@ -63,3 +64,5 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Auto-Battle
 - Trainers use Shinies
 - Damage Variance deactivatable
+- Option to unfuse traded Pokemons (can be turned ON/OFF in the Options Menu)
+- Quicksave Feature (from DemICE)
