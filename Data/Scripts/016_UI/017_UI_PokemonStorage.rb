@@ -3696,6 +3696,7 @@ class PokemonStorageScreen
     PokemonSelection.restore()
     if defaultteam
       $Trainer.party=defaultteam
+    end
     @scene.pbHardRefresh
     $Trainer.heal_party# healing player again
   end
