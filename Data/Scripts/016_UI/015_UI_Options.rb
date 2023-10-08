@@ -61,6 +61,12 @@ class PokemonSystem
   attr_accessor :sb_maxing # allows to have more pokemons than the opponent
   attr_accessor :sb_soullinked # pokemons of the team are soul-linked (not recommended)
 
+  attr_accessor :sb_randomizeteam
+  attr_accessor :sb_randomizeshare
+  attr_accessor :sb_randomizesize
+  attr_accessor :sb_battlesize
+  attr_accessor :sb_select
+
   attr_accessor :raiser
   attr_accessor :raiserb
 
@@ -113,6 +119,11 @@ class PokemonSystem
     @unfusetraded = 0
     @sb_soullinked = 0
     @globalvalues = 0
+    @sb_randomizeteam = 0
+    @sb_randomizeshare = 0
+    @sb_randomizesize = 0
+    @sb_battlesize = 0
+    @sb_select = 0
     if Settings::SHINY_POKEMON_CHANCE
       @shinyodds = Settings::SHINY_POKEMON_CHANCE
     else
@@ -175,6 +186,11 @@ class PokemonSystem
     @shinyodds = saved.shinyodds if saved.shinyodds
     @sb_maxing = saved.sb_maxing if saved.sb_maxing
     @sb_soullinked = saved.sb_soullinked if saved.sb_soullinked
+    @sb_randomizeshare = saved.sb_randomizeshare if saved.sb_randomizeshare
+    @sb_randomizeteam = saved.sb_randomizeteam if saved.sb_randomizeteam
+    @sb_randomizesize = saved.sb_randomizesize if saved.sb_randomizesize
+    @sb_battlesize = saved.sb_battlesize if saved.sb_battlesize
+    @sb_select = saved.sb_select if saved.sb_select
     @unfusetraded = saved.unfusetraded if saved.unfusetraded
   end
 end
@@ -1536,6 +1552,44 @@ class KurayOptSc_5 < PokemonOption_Scene
     proc {}
     )
 
+    options << EnumOption.new(_INTL("Battle Size"), [_INTL("1"), _INTL("2"), _INTL("3"), _INTL("4"), _INTL("5"), _INTL("6")],
+                      proc { $PokemonSystem.sb_battlesize },
+                      proc { |value| $PokemonSystem.sb_battlesize = value },
+                      ["1 enemy Pokemon",
+                        "2 enemy Pokemons",
+                        "3 enemy Pokemons",
+                        "4 enemy Pokemons",
+                        "5 enemy Pokemons",
+                        "6 enemy Pokemons"]
+    )
+    options << EnumOption.new(_INTL("Randomize Team"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.sb_randomizeteam },
+                      proc { |value| $PokemonSystem.sb_randomizeteam = value },
+                      ["Doesn't randomize your player team",
+                      "Randomize your player team as well"]
+    )
+    options << EnumOption.new(_INTL("Randomize Share"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.sb_randomizeshare },
+                      proc { |value| $PokemonSystem.sb_randomizeshare = value },
+                      ["Doesn't allow randomize to make you share the same Pokemons",
+                      "Randomize might give you and the enemy the same Pokemons"]
+    )
+    options << EnumOption.new(_INTL("Player Size"), [_INTL("1"), _INTL("2"), _INTL("3"), _INTL("4"), _INTL("5"), _INTL("6")],
+                      proc { $PokemonSystem.sb_randomizesize },
+                      proc { |value| $PokemonSystem.sb_randomizesize = value },
+                      ["1 player Pokemon",
+                        "2 player Pokemons",
+                        "3 player Pokemons",
+                        "4 player Pokemons",
+                        "5 player Pokemons",
+                        "6 player Pokemons"]
+    )
+    options << EnumOption.new(_INTL("Team Select"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.sb_select },
+                      proc { |value| $PokemonSystem.sb_select = value },
+                      ["Doesn't prompt you to select your team",
+                      "Let you select your team"]
+    )
     options << EnumOption.new(_INTL("Limitless Select"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.sb_maxing },
                       proc { |value| $PokemonSystem.sb_maxing = value },

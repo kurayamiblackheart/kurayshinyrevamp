@@ -3596,7 +3596,7 @@ class PokemonStorageScreen
     return decision == 1
   end
 
-  def pbBattleSelected(box, frommulti=true)
+  def pbBattleSelected(box, frommulti=true, defaultteam=nil)
     tempclone = ""
     clone = true
     if $PokemonSystem.sb_soullinked
@@ -3657,6 +3657,23 @@ class PokemonStorageScreen
         choicelimit = 6
       end
     end
+    continuingbattle = false
+    selectpkmn = false
+    if $PokemonSystem.sb_select
+      if $PokemonSystem.sb_select == 1
+        selectpkmn = true
+      end
+    end
+    if selectpkmn
+      if PokemonSelection.choose(1,choicelimit,true,true)
+        continuingbattle = true
+      end
+    else
+      continuingbattle = true
+    end
+    unless continuingbattle
+      return
+    end
     possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
     ktrainertype = possibletrainers.sample
     # Create a trainer with the selected Pokémon as their party
@@ -3676,31 +3693,11 @@ class PokemonStorageScreen
     # Set the result
     pbSet(1, result == 1 ? 0 : 1)
     $PokemonSystem.nomoneylost = 0
+    PokemonSelection.restore()
+    if defaultteam
+      $Trainer.party=defaultteam
     @scene.pbHardRefresh
     $Trainer.heal_party# healing player again
-    # if PokemonSelection.choose(1,choicelimit,true,true)
-    #   possibletrainers = [0, 1, 2, 3] # put IDs of trainer sprites to use here :3
-    #   ktrainertype = possibletrainers.sample
-    #   # Create a trainer with the selected Pokémon as their party
-    #   trainer_data = createTrainer(ktrainertype, $Trainer.name, buildparty)
-    #   return if !trainer_data  # Ensure the trainer was successfully created
-
-    #   # Battle against the created trainer
-    #   trainer = init_trainer(trainer_data[0])
-
-    #   trainer.pokemon.each_with_index do |pkmn, i|
-    #     pkmn = buildobject[i]   # Turns a pokemon of this party index into the pokemon of the player's party of the same index   
-    #     pkmn.heal#healing enemy
-    #     pkmn.calc_stats
-    #   end
-
-    #   result = customTrainerBattle(trainer.name, trainer.trainer_type, buildobject, "...", nil)
-    #   # Set the result
-    #   pbSet(1, result == 1 ? 0 : 1)
-    #   $PokemonSystem.nomoneylost = 0
-    #   @scene.pbHardRefresh
-    #   $Trainer.heal_party# healing player again
-    # end
   end
 
   #KurayX
@@ -4750,22 +4747,26 @@ class PokemonStorageScreen
       
     when 6
       #battle
-      numberbattler = 1
-      
-      battlerchoices = [
-        _INTL("Battle 6 Pokemons"),
-        _INTL("Battle 5 Pokemons"),
-        _INTL("Battle 4 Pokemons"),
-        _INTL("Battle 3 Pokemons"),
-        _INTL("Battle 2 Pokemons"),
-        _INTL("Battle 1 Pokemon"),
-        _INTL("Nevermind"),
-      ]
-      battlerchoice = pbShowCommands(
-        _INTL("Battle system"), battlerchoices)
-      # Convert to the desired values
-      battlerchoice = 6 - battlerchoice
-      if battlerchoice > 0 && battlerchoice < 7
+      battlerchoice = 1
+      if $PokemonSystem.sb_battlesize
+        battlerchoice = $PokemonSystem.sb_battlesize+1
+      end
+      playernum = 1
+      if $PokemonSystem.sb_randomizesize
+        playernum = $PokemonSystem.sb_randomizesize+1
+      end
+      # randomize team?
+      randteam = 0
+      if $PokemonSystem.sb_randomizeteam
+        randteam = $PokemonSystem.sb_randomizeteam
+      end
+      if randteam == 0
+        randteam = false
+      else
+        randteam = true
+      end
+
+      if battlerchoice < 7
         #battler logic
         kuraychoices = [
           _INTL("Battle Randomly this Box"),
@@ -4779,6 +4780,12 @@ class PokemonStorageScreen
           _INTL("Battle system"), kuraychoices)
         # battlertimes = battlerchoice
         krbattlers = []
+        krplayer = []
+        if randteam
+          defaultteam = $Trainer.party
+        else
+          defaultteam = nil
+        end
         pokekurays = []
         case kuraychoice
         when 0 # box - IMPORT THE CURRENT BOX
@@ -4787,23 +4794,6 @@ class PokemonStorageScreen
               pokekuray = @storage[@storage.currentBox, k]
               pokekurays.append(pokekuray)
             end
-          end
-          if pokekurays.empty?
-            pbPlayBuzzerSE
-            pbDisplay(_INTL("No Battler to Fight!"))
-          else
-            if pokekurays.length < 6
-              battlerchoice = pokekurays.length
-              pbDisplay(_INTL("Battling only {1} Pokemon(s)", battlerchoice))
-            end
-            battlerchoice.times do
-              # Choose a random JSON file from the list
-              randomkuray = pokekurays.sample
-              krbattlers.push(randomkuray)
-              # Remove the chosen file from the list
-              pokekurays.delete(randomkuray)
-            end
-            pbBattleSelected(krbattlers, false)
           end
         when 1 # box + team - IMPORT THE CURRENT BOX + THE TEAM
           for j in 0..5
@@ -4818,23 +4808,6 @@ class PokemonStorageScreen
               pokekurays.append(pokekuray)
             end
           end
-          if pokekurays.empty?
-            pbPlayBuzzerSE
-            pbDisplay(_INTL("No Battler to Fight!"))
-          else
-            if pokekurays.length < 6
-              battlerchoice = pokekurays.length
-              pbDisplay(_INTL("Battling only {1} Pokemon(s)", battlerchoice))
-            end
-            battlerchoice.times do
-              # Choose a random JSON file from the list
-              randomkuray = pokekurays.sample
-              krbattlers.push(randomkuray)
-              # Remove the chosen file from the list
-              pokekurays.delete(randomkuray)
-            end
-            pbBattleSelected(krbattlers, false)
-          end
         when 2 # storage
           for j in 0...@storage.maxBoxes
             if @storage[j].empty?
@@ -4846,23 +4819,6 @@ class PokemonStorageScreen
                 pokekurays.append(pokekuray)
               end
             end
-          end
-          if pokekurays.empty?
-            pbPlayBuzzerSE
-            pbDisplay(_INTL("No Battler to Fight!"))
-          else
-            if pokekurays.length < 6
-              battlerchoice = pokekurays.length
-              pbDisplay(_INTL("Battling only {1} Pokemon(s)", battlerchoice))
-            end
-            battlerchoice.times do
-              # Choose a random JSON file from the list
-              randomkuray = pokekurays.sample
-              krbattlers.push(randomkuray)
-              # Remove the chosen file from the list
-              pokekurays.delete(randomkuray)
-            end
-            pbBattleSelected(krbattlers, false)
           end
         when 3 # storage + team
           for j in 0..5
@@ -4881,23 +4837,6 @@ class PokemonStorageScreen
                 pokekurays.append(pokekuray)
               end
             end
-          end
-          if pokekurays.empty?
-            pbPlayBuzzerSE
-            pbDisplay(_INTL("No Battler to Fight!"))
-          else
-            if pokekurays.length < 6
-              battlerchoice = pokekurays.length
-              pbDisplay(_INTL("Battling only {1} Pokemon(s)", battlerchoice))
-            end
-            battlerchoice.times do
-              # Choose a random JSON file from the list
-              randomkuray = pokekurays.sample
-              krbattlers.push(randomkuray)
-              # Remove the chosen file from the list
-              pokekurays.delete(randomkuray)
-            end
-            pbBattleSelected(krbattlers, false)
           end
         when 4 # battler folder
           #Import 1 random
@@ -4930,8 +4869,55 @@ class PokemonStorageScreen
               # Remove the chosen file from the list
               json_files.delete(random_json_file)
             end
-            pbBattleSelected(krbattlers, false)
+            pbBattleSelected(krbattlers, false, defaultteam)
           end
+        end
+        pokekuraysplayer = pokekurays.clone
+        if pokekurays.empty?
+          pbPlayBuzzerSE
+          pbDisplay(_INTL("No Battler to Fight!"))
+        else
+          battleshare = false
+          if $PokemonSystem.sb_randomizeshare
+            if $PokemonSystem.sb_randomizeshare == 1
+              battleshare = true
+            end
+          end
+          if randteam && !battleshare
+            needingval = battlerchoice+playernum
+          else
+            needingval = battlerchoice
+          end
+          if pokekurays.length < needingval
+            if battleshare
+              playernum = pokekurays.length/2
+              battlerchoice = pokekurays.length/2
+            else
+              playernum = pokekurays.length
+              battlerchoice = pokekurays.length
+            end
+              pbDisplay(_INTL("Battling with only {1} Pokemon(s)", battlerchoice))
+          end
+          battlerchoice.times do
+            # Choose a random JSON file from the list
+            randomkuray = pokekurays.sample
+            krbattlers.push(randomkuray)
+            # Remove the chosen file from the list
+            pokekurays.delete(randomkuray)
+            unless battleshare
+              pokekuraysplayer.delete(randomkuray)
+            end
+          end
+          playernum.times do
+            # Choose a random JSON file from the list
+            randomkuray = pokekuraysplayer.sample
+            krplayer.push(randomkuray)
+            # Remove the chosen file from the list
+            pokekuraysplayer.delete(randomkuray)
+          end
+          $Trainer.party = krplayer.clone
+          $Trainer.heal_party
+          pbBattleSelected(krbattlers, false, defaultteam)
         end
       end
     when 7
