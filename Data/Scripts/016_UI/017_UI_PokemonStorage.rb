@@ -4836,7 +4836,7 @@ class PokemonStorageScreen
         # battlertimes = battlerchoice
         krbattlers = []
         krplayer = []
-        defaultteam = $Trainer.party
+        defaultteam = $Trainer.party.clone
         pokekurays = []
         case kuraychoice
         when 0 # box - IMPORT THE CURRENT BOX
