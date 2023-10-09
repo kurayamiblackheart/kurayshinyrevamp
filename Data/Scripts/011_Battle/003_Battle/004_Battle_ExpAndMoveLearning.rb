@@ -223,9 +223,10 @@ class PokeBattle_Battle
       if $PokemonSystem.kuraylevelcap != 0 && pkmn.exp >= growth_rate.minimum_exp_for_level(getkuraylevelcap()+1)
         if tempExp1 < levelMaxExp
           @scene.pbEXPBar(battler, levelMinExp, levelMaxExp, tempExp1, levelMaxExp)  
+          @scene.pbRefreshOne(battler.index) if battler
         end
         pkmn.exp = expFinal
-        return
+        break
       end
       @scene.pbEXPBar(battler, levelMinExp, levelMaxExp, tempExp1, tempExp2)
       tempExp1 = tempExp2
