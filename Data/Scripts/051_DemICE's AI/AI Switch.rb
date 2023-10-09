@@ -335,7 +335,7 @@ class PokeBattle_AI
 							tempdam*=1.5 if newenemy.hasActiveAbility?(:SOLARPOWER) && j.specialMove?
 						end
 						if pokmon.hasActiveAbility?(:SANDSTREAM) && @battle.pbWeather != :Sandstorm 
-							tempdam*=0.67 if pokmon.type == :ROCK && j.specialMove?
+							tempdam*=0.67 if pokmon.pbHasType?(:ROCK) && j.specialMove?
 							tempdam*=1.3 if [:GROUND,:ROCK,:STEEL].include?(j.type) && newenemy.hasActiveAbility?(:SANDFORCE)
 						end
 						if pokmon.hasActiveAbility?([:ELECTRICSURGE,:HADRONENGINE]) && @battle.field.terrain != :Electric
@@ -469,7 +469,7 @@ class PokeBattle_AI
 						tempdam*=1.5 if pokmon.hasActiveAbility?(:SOLARPOWER) && m.specialMove?
 					end
 					if pokmon.hasActiveAbility?(:SANDSTREAM) && @battle.pbWeather != :Sandstorm 
-						tempdam*=0.67 if b.type == :ROCK && m.specialMove?
+						tempdam*=0.67 if b.pbHasType?(:ROCK) && m.specialMove?
 						tempdam*=1.3 if [:GROUND,:ROCK,:STEEL].include?(m.type) && pokmon.hasActiveAbility?(:SANDFORCE)
 					end
 					if pokmon.hasActiveAbility?([:ELECTRICSURGE,:HADRONENGINE]) && @battle.field.terrain != :Electric
