@@ -76,6 +76,9 @@ class PokemonSystem
 
   attr_accessor :is_in_battle
 
+  attr_accessor :sb_loopinput
+  attr_accessor :sb_loopbreaker
+
   attr_accessor :importnodelete
   attr_accessor :exportdelete
   attr_accessor :savefolder
@@ -148,6 +151,8 @@ class PokemonSystem
     @debugfeature = 0
     @debug = 0
     @importnodelete = 0
+    @sb_loopinput = 0
+    @sb_loopbreaker = 0
     @savefolder = 0
     @exportdelete = 0
     @is_in_battle = false

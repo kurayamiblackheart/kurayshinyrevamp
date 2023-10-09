@@ -418,21 +418,46 @@ class PokeBattle_Battle
       PBDebug.log("***Player won***")
       if trainerBattle?
         @scene.pbTrainerBattleSuccess
+        #stop here without more input if looping
+        dontdoit = false
+        if $PokemonSystem.sb_loopinput && $PokemonSystem.nomoneylost
+          if $PokemonSystem.sb_loopinput == 1 && $PokemonSystem.nomoneylost != 0
+            dontdoit = true
+          end
+        end
         case @opponent.length
         when 1
-          pbDisplayPaused(_INTL("You defeated {1}!",@opponent[0].full_name))
+          if dontdoit
+            pbDisplay(_INTL("You defeated {1}!",@opponent[0].full_name))
+          else
+            pbDisplayPaused(_INTL("You defeated {1}!",@opponent[0].full_name))
+          end
         when 2
-          pbDisplayPaused(_INTL("You defeated {1} and {2}!",@opponent[0].full_name,
-             @opponent[1].full_name))
+          if dontdoit
+            pbDisplay(_INTL("You defeated {1} and {2}!",@opponent[0].full_name,
+               @opponent[1].full_name))
+          else
+            pbDisplayPaused(_INTL("You defeated {1} and {2}!",@opponent[0].full_name,
+               @opponent[1].full_name))
+          end
         when 3
-          pbDisplayPaused(_INTL("You defeated {1}, {2} and {3}!",@opponent[0].full_name,
-             @opponent[1].full_name,@opponent[2].full_name))
+          if dontdoit
+            pbDisplay(_INTL("You defeated {1}, {2} and {3}!",@opponent[0].full_name,
+               @opponent[1].full_name,@opponent[2].full_name))
+          else
+            pbDisplayPaused(_INTL("You defeated {1}, {2} and {3}!",@opponent[0].full_name,
+               @opponent[1].full_name,@opponent[2].full_name))
+          end
         end
-        @opponent.each_with_index do |_t,i|
-          @scene.pbShowOpponent(i)
-          msg = (@endSpeeches[i] && @endSpeeches[i]!="") ? @endSpeeches[i] : "..."
-          pbDisplayPaused(msg.gsub(/\\[Pp][Nn]/,pbPlayer.name))
-        end
+          @opponent.each_with_index do |_t,i|
+            @scene.pbShowOpponent(i)
+            msg = (@endSpeeches[i] && @endSpeeches[i]!="") ? @endSpeeches[i] : "..."
+            if dontdoit
+              pbDisplay(msg.gsub(/\\[Pp][Nn]/,pbPlayer.name))
+            else
+              pbDisplayPaused(msg.gsub(/\\[Pp][Nn]/,pbPlayer.name))
+            end
+          end
       end
       # Gain money from winning a trainer battle, and from Pay Day
       pbGainMoney if @decision!=4
@@ -449,16 +474,37 @@ class PokeBattle_Battle
       PBDebug.log("***Player drew with opponent***") if @decision==5
       if @internalBattle
         pbDisplayPaused(_INTL("You have no more Pokémon that can fight!"))
+        #stop here without more input if looping
+        dontdoit = false
+        if $PokemonSystem.sb_loopinput && $PokemonSystem.nomoneylost
+          if $PokemonSystem.sb_loopinput == 1 && $PokemonSystem.nomoneylost != 0
+            dontdoit = true
+          end
+        end
         if trainerBattle?
           case @opponent.length
           when 1
-            pbDisplayPaused(_INTL("You lost against {1}!",@opponent[0].full_name))
+            if dontdoit
+              pbDisplay(_INTL("You lost against {1}!",@opponent[0].full_name))
+            else
+              pbDisplayPaused(_INTL("You lost against {1}!",@opponent[0].full_name))
+            end
           when 2
-            pbDisplayPaused(_INTL("You lost against {1} and {2}!",
-               @opponent[0].full_name,@opponent[1].full_name))
+            if dontdoit
+              pbDisplay(_INTL("You lost against {1} and {2}!",
+                 @opponent[0].full_name,@opponent[1].full_name))
+            else
+              pbDisplayPaused(_INTL("You lost against {1} and {2}!",
+                 @opponent[0].full_name,@opponent[1].full_name))
+            end
           when 3
-            pbDisplayPaused(_INTL("You lost against {1}, {2} and {3}!",
-               @opponent[0].full_name,@opponent[1].full_name,@opponent[2].full_name))
+            if dontdoit
+              pbDisplay(_INTL("You lost against {1}, {2} and {3}!",
+                 @opponent[0].full_name,@opponent[1].full_name,@opponent[2].full_name))
+            else
+              pbDisplayPaused(_INTL("You lost against {1}, {2} and {3}!",
+                 @opponent[0].full_name,@opponent[1].full_name,@opponent[2].full_name))
+            end
           end
         end
         # Lose money from losing a battle
