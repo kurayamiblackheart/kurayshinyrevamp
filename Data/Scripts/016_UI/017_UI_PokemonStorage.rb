@@ -3715,12 +3715,12 @@ class PokemonStorageScreen
           dir_cmd = 0
           directories.unshift("Default Folder (no subdir)")
           #prompt to choose a directory
-          dir_cmd = screen.pbShowCommands(_INTL("Choose Player Sub-Directory."), directories, dir_cmd)
+          dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directories, dir_cmd)
           if dir_cmd > 0
             directory_name = "ExportedPokemons/Players/" + directories[dir_cmd].to_s
           end
         end
-        
+
         # Use Dir.glob to get a list of JSON files in the folder
         json_files = Dir.glob(File.join(directory_name, "*.json"))
         if json_files.empty?
@@ -5096,7 +5096,7 @@ class PokemonStorageScreen
             dir_cmd = 0
             directories.unshift("Default Folder (no subdir)")
             #prompt to choose a directory
-            dir_cmd = screen.pbShowCommands(_INTL("Choose Battler Sub-Directory."), directories, dir_cmd)
+            dir_cmd = pbShowCommands(_INTL("Choose Battler Sub-Directory."), directories, dir_cmd)
             if dir_cmd > 0
               directory_name = "ExportedPokemons/Battlers/" + directories[dir_cmd].to_s
             end
@@ -5124,7 +5124,7 @@ class PokemonStorageScreen
             dir_cmd = 0
             directories.unshift("Default Folder (no subdir)")
             #prompt to choose a directory
-            dir_cmd = screen.pbShowCommands(_INTL("Choose Player Sub-Directory."), directories, dir_cmd)
+            dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directories, dir_cmd)
             if dir_cmd > 0
               directory_name = "ExportedPokemons/Players/" + directories[dir_cmd].to_s
             end
