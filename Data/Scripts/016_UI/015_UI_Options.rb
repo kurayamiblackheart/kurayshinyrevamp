@@ -753,11 +753,6 @@ class PokemonOption_Scene
                               proc { |value| $PokemonSystem.quicksurf = value },
                               "Use Field Moves quicker"
     )
-    options << EnumOption.new(_INTL("Quicksave with S"), [_INTL("Off"), _INTL("On")],
-                              proc { $PokemonSystem.quicksave },
-                              proc { |value| $PokemonSystem.quicksave = value },
-                              "Quicksave with S"
-    )
 
     if $scene && $scene.is_a?(Scene_Map)
       options.concat(pbGetInGameOptions())
@@ -979,11 +974,11 @@ class KurayOptionsScene < PokemonOption_Scene
         openKuray1()
       }, "Customize shinies features"
     )
-    options << ButtonOption.new(_INTL("Battles"),
+    options << ButtonOption.new(_INTL("Battles & Pokemons"),
       proc {
         @kuray_menu = true
         openKuray2()
-      }, "Customize battles features"
+      }, "Customize battles & pokemons features"
     )
     options << ButtonOption.new(_INTL("Graphics"),
       proc {
@@ -991,11 +986,11 @@ class KurayOptionsScene < PokemonOption_Scene
         openKuray3()
       }, "Customize graphics features"
     )
-    options << ButtonOption.new(_INTL("Self-Battle"),
+    options << ButtonOption.new(_INTL("Self-Battle & Import"),
       proc {
         @kuray_menu = true
         openKuray5()
-      }, "Self-battling features"
+      }, "Self-battling & import features"
     )
     options << ButtonOption.new(_INTL("Others"),
       proc {
@@ -1190,7 +1185,7 @@ class KurayOptSc_1 < PokemonOption_Scene
                       ["Trainer pokemon will have their normal shiny rates",
                       "Draws the opposing trainers ace pokemon as shiny",
                       "All trainers pokemon in their party will be shiny"]
-    )# sister clone in battles!!
+    )
     return options
   end
 end
@@ -1212,7 +1207,7 @@ class KurayOptSc_2 < PokemonOption_Scene
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
     end
     @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
-      _INTL("Battle settings"),0,0,Graphics.width,64,@viewport)
+      _INTL("Battles & Pokemons settings"),0,0,Graphics.width,64,@viewport)
     @sprites["textbox"].text=_INTL("Customize modded features")
 
 
@@ -1231,25 +1226,15 @@ class KurayOptSc_2 < PokemonOption_Scene
     proc {}
     )
 
-    options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
-                      proc { $PokemonSystem.typedisplay },
-                      proc { |value| $PokemonSystem.typedisplay = value },
-                      ["Don't draw the type indicator in battle",
-                      "Draws handmade custom type icons in battle | Artwork by Lolpy1",
-                      "Draws TCG themed type icons in battle",
-                      "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
-                      "Draws the text type display in battle"]
-    )#sister clone in GRAPHICS!!!
-	
-    options << EnumOption.new(_INTL("Battle GUI"), [_INTL("Off"), _INTL("Hp Bar")],
-                      proc { $PokemonSystem.battlegui },
-                      proc { |value| $PokemonSystem.battlegui = value },
-                      ["This feature is a work in progress, more to come soon",
-                      "Draws the custom battleGUI (WIP) created by Mirasein"]
-    )#sister clone in GRAPHICS!!!
-
     options << ButtonOption.new(_INTL("Powerful AI"),
     proc {}
+    )
+
+    options << EnumOption.new(_INTL("Ind. Custom Sprites"), [_INTL("On"), _INTL("Off")],
+                      proc { $PokemonSystem.kurayindividcustomsprite },
+                      proc { |value| $PokemonSystem.kurayindividcustomsprite = value },
+                      ["Two of the same Pokemons can use different sprites (mod)",
+                      "Two of the same Pokemons will use the same sprite (vanilla)"]
     )
 
     if $scene && $scene.is_a?(Scene_Map)
@@ -1286,6 +1271,26 @@ class KurayOptSc_2 < PokemonOption_Scene
                       ["Stat boost for self-fusions is disabled.",
                       "Stat boost for self-fusions is enabled."]
     )
+    
+    options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.improved_pokedex },
+                      proc { |value| $PokemonSystem.improved_pokedex = value },
+                      ["Don't use the Improved Pokedex",
+                      "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]
+    )
+
+    options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.kuray_no_evo },
+                      proc { |value| $PokemonSystem.kuray_no_evo = value },
+                      ["Can't EvoLock a Pokemon without holding everstone",
+                      "Can EvoLock Pokemons in the PC"]
+    )
+    options << EnumOption.new(_INTL("Unfuse Traded"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.unfusetraded },
+                      proc { |value| $PokemonSystem.unfusetraded = value },
+                      ["You cannot unfuse traded Pokemons.",
+                      "You can unfuse traded Pokemons."]
+    )
 
     options << EnumOption.new(_INTL("Recover Consumables"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.recover_consumables },
@@ -1298,13 +1303,6 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.expall_redist = value },
                       "0 = Off, 10 = Max | Redistributes total exp from expAll to lower level pokemon"
     )
-    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("Ace"), _INTL("All")],
-                      proc { $PokemonSystem.shiny_trainer_pkmn },
-                      proc { |value| $PokemonSystem.shiny_trainer_pkmn = value },
-                      ["Trainer pokemon will have their normal shiny rates",
-                      "Draws the opposing trainers ace pokemon as shiny",
-                      "All trainers pokemon in their party will be shiny"]
-    )# sister clone in shiny!!
     options << EnumOption.new(_INTL("Auto-Battle"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.autobattler },
                       proc { |value| $PokemonSystem.autobattler = value },
@@ -1377,26 +1375,20 @@ class KurayOptSc_3 < PokemonOption_Scene
                       "Draws TCG themed type icons in battle",
                       "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
                       "Draws the text type display in battle"]
-    )#sister clone in BATTLE!!!
+    )
 
     options << EnumOption.new(_INTL("Battle GUI"), [_INTL("Off"), _INTL("Hp Bar")],
                       proc { $PokemonSystem.battlegui },
                       proc { |value| $PokemonSystem.battlegui = value },
                       ["This feature is a work in progress, more to come soon",
                       "Draws the custom battleGUI (WIP) created by Mirasein"]
-    )#sister clone in BATTLE!!!
+    )
     
     options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayfusepreview },
                       proc { |value| $PokemonSystem.kurayfusepreview = value },
                       ["Don't preview what unknown fusions look like",
                       "Preview what unknown fusions look like"]
-    )
-    options << EnumOption.new(_INTL("Ind. Custom Sprites"), [_INTL("On"), _INTL("Off")],
-                      proc { $PokemonSystem.kurayindividcustomsprite },
-                      proc { |value| $PokemonSystem.kurayindividcustomsprite = value },
-                      ["Two of the same Pokemons can use different sprites (mod)",
-                      "Two of the same Pokemons will use the same sprite (vanilla)"]
     )
     options << EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
                       proc { $PokemonSystem.kurayfonts },
@@ -1497,6 +1489,11 @@ class KurayOptSc_4 < PokemonOption_Scene
                       ["Some debug features are available without debug (magic boots)",
                       "All debug features requires debug (magic boots)"]
     )
+    options << EnumOption.new(_INTL("Quicksave with S"), [_INTL("Off"), _INTL("On")],
+                              proc { $PokemonSystem.quicksave },
+                              proc { |value| $PokemonSystem.quicksave = value },
+                              "Quicksave with S"
+    )
 
     if $scene && $scene.is_a?(Scene_Map)
       options.concat(pbGetInGameOptions())
@@ -1511,12 +1508,6 @@ class KurayOptSc_4 < PokemonOption_Scene
     proc {}
     )
 
-    options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.kuray_no_evo },
-                      proc { |value| $PokemonSystem.kuray_no_evo = value },
-                      ["Can't EvoLock a Pokemon without holding everstone",
-                      "Can EvoLock Pokemons in the PC"]
-    )
     options << EnumOption.new(_INTL("Kuray QoL"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayqol },
                       proc { |value| $PokemonSystem.kurayqol = value },
@@ -1549,52 +1540,6 @@ class KurayOptSc_4 < PokemonOption_Scene
                       "Also Unlimited WonderTrades (need 1 badge)"]
     )
 
-    options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.improved_pokedex },
-                      proc { |value| $PokemonSystem.improved_pokedex = value },
-                      ["Don't use the Improved Pokedex",
-                      "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]
-    )
-
-    options << EnumOption.new(_INTL("Unfuse Traded"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.unfusetraded },
-                      proc { |value| $PokemonSystem.unfusetraded = value },
-                      ["You cannot unfuse traded Pokemons.",
-                      "You can unfuse traded Pokemons."]
-    )
-    options << EnumOption.new(_INTL("Import Level"), [_INTL("Default"), _INTL("1"), _INTL("5"), _INTL("50"), _INTL("100")],
-                      proc { $PokemonSystem.importlvl },
-                      proc { |value| $PokemonSystem.importlvl = value },
-                      ["Imported Pokemons keep their original level.",
-                      "Imported Pokemons are set to level 1.",
-                      "Imported Pokemons are set to level 5.",
-                      "Imported Pokemons are set to level 50.",
-                      "Imported Pokemons are set to level 100."]
-    )
-    options << EnumOption.new(_INTL("Import De-Evolve"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.importdevolve },
-                      proc { |value| $PokemonSystem.importdevolve = value },
-                      ["Imported Pokemons remain intact.",
-                      "Imported Pokemons are de-evolved into babies."]
-    )
-    options << EnumOption.new(_INTL("Import Without Deletion"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.importnodelete },
-                      proc { |value| $PokemonSystem.importnodelete = value },
-                      ["Imported Pokemons will have their .json deleted.",
-                      "Imported Pokemons will remain as .json in Import folder."]
-    )
-    options << EnumOption.new(_INTL("Delete on Export"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.exportdelete },
-                      proc { |value| $PokemonSystem.exportdelete = value },
-                      ["Exported Pokemons will not be deleted.",
-                      "Exported Pokemons will be deleted."]
-    )
-    options << EnumOption.new(_INTL("Use 'Saves' folder"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.savefolder },
-                      proc { |value| $PokemonSystem.savefolder = value },
-                      ["Battlers/Players/Import use their respective folders.",
-                      "Battlers/Players/Import etc all use the 'Saves' folder."]
-    )
     return options
   end
 end
@@ -1616,7 +1561,7 @@ class KurayOptSc_5 < PokemonOption_Scene
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
     end
     @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
-      _INTL("Self-Battle settings"),0,0,Graphics.width,64,@viewport)
+      _INTL("Self-Battle & Import settings"),0,0,Graphics.width,64,@viewport)
     @sprites["textbox"].text=_INTL("Customize modded features")
 
 
@@ -1715,6 +1660,39 @@ class KurayOptSc_5 < PokemonOption_Scene
     #                   ["Pokemons are all individual/indepedent copies",
     #                   "The same Pokemons between your team are linked"]
     # )
+    options << EnumOption.new(_INTL("Import Level"), [_INTL("Default"), _INTL("1"), _INTL("5"), _INTL("50"), _INTL("100")],
+                      proc { $PokemonSystem.importlvl },
+                      proc { |value| $PokemonSystem.importlvl = value },
+                      ["Imported Pokemons keep their original level.",
+                      "Imported Pokemons are set to level 1.",
+                      "Imported Pokemons are set to level 5.",
+                      "Imported Pokemons are set to level 50.",
+                      "Imported Pokemons are set to level 100."]
+    )
+    options << EnumOption.new(_INTL("Import De-Evolve"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.importdevolve },
+                      proc { |value| $PokemonSystem.importdevolve = value },
+                      ["Imported Pokemons remain intact.",
+                      "Imported Pokemons are de-evolved into babies."]
+    )
+    options << EnumOption.new(_INTL("Import Without Deletion"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.importnodelete },
+                      proc { |value| $PokemonSystem.importnodelete = value },
+                      ["Imported Pokemons will have their .json deleted.",
+                      "Imported Pokemons will remain as .json in Import folder."]
+    )
+    options << EnumOption.new(_INTL("Delete on Export"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.exportdelete },
+                      proc { |value| $PokemonSystem.exportdelete = value },
+                      ["Exported Pokemons will not be deleted.",
+                      "Exported Pokemons will be deleted."]
+    )
+    options << EnumOption.new(_INTL("Use 'Saves' folder"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.savefolder },
+                      proc { |value| $PokemonSystem.savefolder = value },
+                      ["Battlers/Players/Import use their respective folders.",
+                      "Battlers/Players/Import etc all use the 'Saves' folder."]
+    )
     return options
   end
 end
