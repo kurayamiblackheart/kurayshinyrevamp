@@ -1159,7 +1159,7 @@ class KurayOptSc_1 < PokemonOption_Scene
                         if $PokemonSystem.shinyodds != value
                           $PokemonSystem.shinyodds = value
                           $PokemonSystem.shinyodds = 1 if $PokemonSystem.shinyodds < 1
-                          Settings::SHINY_POKEMON_CHANCE = $PokemonSystem.shinyodds
+                          # Settings::SHINY_POKEMON_CHANCE = $PokemonSystem.shinyodds
                         end
                       }, "<x> out of 65536 | Choose the Shiny Odds"
     )
