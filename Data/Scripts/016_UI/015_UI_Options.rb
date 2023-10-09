@@ -67,6 +67,7 @@ class PokemonSystem
   attr_accessor :sb_battlesize
   attr_accessor :sb_select
   attr_accessor :sb_level
+  attr_accessor :sb_playerfolder
 
   attr_accessor :debugfeature
 
@@ -136,6 +137,7 @@ class PokemonSystem
     @importlvl = 0
     @importdevolve = 0
     @sb_select = 0
+    @sb_playerfolder = 0
     @sb_level = 0
     @debugfeature = 0
     @debug = 0
@@ -209,6 +211,7 @@ class PokemonSystem
     @sb_randomizesize = saved.sb_randomizesize if saved.sb_randomizesize
     @sb_battlesize = saved.sb_battlesize if saved.sb_battlesize
     @sb_select = saved.sb_select if saved.sb_select
+    @sb_playerfolder = saved.sb_playerfolder if saved.sb_playerfolder
     @sb_level = saved.sb_level if saved.sb_level
     @unfusetraded = saved.unfusetraded if saved.unfusetraded
     @importlvl = saved.importlvl if saved.importlvl
@@ -1644,6 +1647,12 @@ class KurayOptSc_5 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.sb_randomizeshare = value },
                       ["Doesn't allow randomize to make you share the same Pokemons",
                       "Randomize might give you and the enemy the same Pokemons"]
+    )
+    options << EnumOption.new(_INTL("Players Folder"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.sb_playerfolder },
+                      proc { |value| $PokemonSystem.sb_playerfolder = value },
+                      ["Does not use the Players folder to randomize the player's team.",
+                      "Uses the Players Folder to randomize the player's team."]
     )
     options << EnumOption.new(_INTL("Team Select"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.sb_select },

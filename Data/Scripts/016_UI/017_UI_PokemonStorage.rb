@@ -3682,6 +3682,86 @@ class PokemonStorageScreen
     buildparty = []
     buildobject = []
     if frommulti
+      #init player randomizer if necessary
+      playerfolder = false
+      if $PokemonSystem.sb_playerfolder
+        if $PokemonSystem.sb_playerfolder == 1
+          playerfolder = true
+        end
+      end
+      randteam = 0
+      if $PokemonSystem.sb_randomizeteam
+        randteam = $PokemonSystem.sb_randomizeteam
+      end
+      if randteam == 0
+        randteam = false
+      else
+        randteam = true
+      end
+      playernum = 1
+      if $PokemonSystem.sb_randomizesize
+        playernum = $PokemonSystem.sb_randomizesize+1
+      end
+      if playerfolder && randteam
+        # we randomize the player team
+        # load from playerfolder!
+        directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
+        Dir.mkdir(directory_name) unless File.exists?(directory_name)
+        # Use Dir.glob to get a list of JSON files in the folder
+        json_files = Dir.glob(File.join(directory_name, "*.json"))
+        if json_files.empty?
+          pbPlayBuzzerSE
+          pbDisplay(_INTL("No Players Battler to Import!"))
+          battlebr(defaultteam)
+          return
+        end
+        pokekuraysplayer = json_files
+        if pokekuraysplayer.empty?
+          pbDisplay(_INTL("No Player Team for Fighting! Using current team instead."))
+          playerfolder = false
+        end
+        if playerfolder && randteam || playernum != $Trainer.party.length
+          defaultteam = $Trainer.party.clone
+        end
+        if playerfolder && randteam
+          if pokekuraysplayer.length < playernum
+              playernum = pokekuraysplayer.length
+              pbDisplay(_INTL("Battling with only {1} Pokemon(s) (Player)", playernum))
+          end
+          playernum.times do
+            # Choose a random JSON file from the list
+            randomkuray = pokekuraysplayer.sample
+            pokemon = Pokemon.new(:BULBASAUR, 1)
+            json_data = File.read(randomkuray)
+            pokemon.load_json(eval(json_data))
+            krplayer.push(pokemon)
+            # Remove the chosen file from the list
+            pokekuraysplayer.delete(randomkuray)
+          end
+          $Trainer.party = krplayer.clone
+          # finaleparty = $Trainer.party.clone
+          # for i in 0...finaleparty.length
+          #   # player level setup
+          #   $Trainer.party[i] = finaleparty[i].clone
+          #   if $PokemonSystem.sb_level
+          #     if $PokemonSystem.sb_level == 1
+          #       $Trainer.party[i].level = 1
+          #     elsif $PokemonSystem.sb_level == 2
+          #       $Trainer.party[i].level = 5
+          #     elsif $PokemonSystem.sb_level == 3
+          #       $Trainer.party[i].level = 10
+          #     elsif $PokemonSystem.sb_level == 4
+          #       $Trainer.party[i].level = 50
+          #     elsif $PokemonSystem.sb_level == 5
+          #       $Trainer.party[i].level = 70
+          #     elsif $PokemonSystem.sb_level == 6
+          #       $Trainer.party[i].level = 100
+          #     end
+          #   end
+          # end
+        end
+      end
+
       selected = getMultiSelection(box, nil)
       if selected.length == 0 || selected.length > 6
         battlebr(defaultteam)
@@ -3692,6 +3772,9 @@ class PokemonStorageScreen
       for i in 0...finaleparty.length
         # player level setup
         $Trainer.party[i] = finaleparty[i].clone
+        if i >= playernum
+          break
+        end
         if $PokemonSystem.sb_level
           if $PokemonSystem.sb_level == 1
             $Trainer.party[i].level = 1
@@ -4911,6 +4994,13 @@ class PokemonStorageScreen
         end
       end
 
+      playerfolder = false
+      if $PokemonSystem.sb_playerfolder
+        if $PokemonSystem.sb_playerfolder == 1
+          playerfolder = true
+        end
+      end
+
       isjson = false
 
       if battlerchoice < 7
@@ -4982,26 +5072,44 @@ class PokemonStorageScreen
             end
           end
         when 4 # battler folder
-          #Import 1 random
           directory_name = "ExportedPokemons/Battlers"  # Replace with the actual path to your folder
           Dir.mkdir(directory_name) unless File.exists?(directory_name)
           # Use Dir.glob to get a list of JSON files in the folder
           json_files = Dir.glob(File.join(directory_name, "*.json"))
           if json_files.empty?
             pbPlayBuzzerSE
-            pbDisplay(_INTL("No Battler to Import!"))
+            pbDisplay(_INTL("No Enemies Battler to Import!"))
             return
           end
           pokekurays = json_files
           isjson = true
         end
-        pokekuraysplayer = pokekurays.clone
+        if playerfolder
+          # load from playerfolder!
+          directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
+          Dir.mkdir(directory_name) unless File.exists?(directory_name)
+          # Use Dir.glob to get a list of JSON files in the folder
+          json_files = Dir.glob(File.join(directory_name, "*.json"))
+          if json_files.empty?
+            pbPlayBuzzerSE
+            pbDisplay(_INTL("No Players Battler to Import!"))
+            return
+          end
+          pokekuraysplayer = json_files
+          if pokekuraysplayer.empty?
+            pbDisplay(_INTL("No Player Team for Fighting! Using Battler instead."))
+            pokekuraysplayer = pokekurays.clone
+            playerfolder = false
+          end
+        else
+          pokekuraysplayer = pokekurays.clone
+        end
         if pokekurays.empty?
           pbPlayBuzzerSE
           pbDisplay(_INTL("No Battler to Fight!"))
           return
         else
-          if randteam && !battleshare
+          if randteam && !battleshare && !playerfolder
             needingval = battlerchoice+playernum
           else
             needingval = battlerchoice
@@ -5021,6 +5129,10 @@ class PokemonStorageScreen
             end
               pbDisplay(_INTL("Battling with only {1} Pokemon(s)", battlerchoice))
           end
+          if pokekuraysplayer.length < playernum
+              playernum = pokekuraysplayer.length
+              pbDisplay(_INTL("Battling with only {1} Pokemon(s) (Player)", playernum))
+          end
           battlerchoice.times do
             # Choose a random JSON file from the list
             randomkuray = pokekurays.sample
@@ -5034,14 +5146,14 @@ class PokemonStorageScreen
             end
             # Remove the chosen file from the list
             pokekurays.delete(randomkuray)
-            unless battleshare
+            unless battleshare || playerfolder
               pokekuraysplayer.delete(randomkuray)
             end
           end
           playernum.times do
             # Choose a random JSON file from the list
             randomkuray = pokekuraysplayer.sample
-            if isjson
+            if isjson || playerfolder
               pokemon = Pokemon.new(:BULBASAUR, 1)
               json_data = File.read(randomkuray)
               pokemon.load_json(eval(json_data))
