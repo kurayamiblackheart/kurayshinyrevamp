@@ -52,6 +52,7 @@ class Pokemon
   attr_accessor :shinyB
   attr_accessor :kuray_no_evo
   attr_accessor :kuraygender
+  attr_accessor :imported
   #KurayX - Custom Filenames
   attr_accessor :kuraycustomfile
   attr_accessor :oldkuraycustomfile
@@ -218,6 +219,19 @@ class Pokemon
   #KurayX - KURAYX_ABOUT_GENDER
   def kuraygender=(value)
     @kuraygender=value
+  end
+
+  def imported=(value)
+    @imported=value
+  end
+
+  def imported?
+    if @imported
+      return @imported
+    else
+      @imported=false
+      return @imported
+    end
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
@@ -447,6 +461,10 @@ class Pokemon
     return @kuraygender
   end
 
+  def imported
+    return @imported
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES
   def shinyValue
     return @shinyValue
@@ -567,13 +585,6 @@ class Pokemon
   def level
     @level = growth_rate.level_from_exp(@exp) if !@level
     #Kurayx LevelCAP
-    if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2) # obtained from trade
-      levelcap = getkuraylevelcap()
-      if @level > levelcap
-        calc_stats(levelcap)
-        return levelcap
-      end
-    end
     calc_stats
     return @level
   end
@@ -582,7 +593,8 @@ class Pokemon
   # For when levelcapping or recalculating stats isn't wanted or needed
   # @return [Integer] this Pokémon's level
   def level_simple
-    @level = growth_rate.level_from_exp(@exp) if !@level
+    # @level = growth_rate.level_from_exp(@exp) if !@level
+    @level = growth_rate.level_from_exp(@exp)
     return @level
   end
 
@@ -590,6 +602,12 @@ class Pokemon
   # Recalculates this Pokémon's stats.
   # @param value [Integer] (between 1 and the maximum level) calc stats at this level instead
   def calc_stats(this_level = self.level_simple)
+    if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2 || self.imported?) # obtained from trade
+      levelcap = getkuraylevelcap()
+      if this_level > levelcap
+        this_level = levelcap
+      end
+    end
     base_stats = self.baseStats
     this_IV = self.calcIV
 
@@ -662,6 +680,7 @@ class Pokemon
     #End KurayX
     hpDiff = @totalhp - @hp
     #@totalhp = stats[:HP]
+    @level = this_level
     @totalhp = adjustHPForWonderGuard(stats)
     calculated_hp = @totalhp - hpDiff
     @hp = calculated_hp > 0 ? calculated_hp : 0
@@ -1711,6 +1730,7 @@ class Pokemon
 
   #KurayX
   def load_json(jsonparse)
+    @imported = true
     @species = jsonparse['species']
     @form = jsonparse['form']
     @forced_form = jsonparse['forced_form']
@@ -1807,6 +1827,7 @@ class Pokemon
     self.level = level
     @steps_to_hatch = 0
     heal_status
+    @imported = false
     @gender = nil
     @shiny = nil
     #KurayX - KURAYX_ABOUT_SHINIES
