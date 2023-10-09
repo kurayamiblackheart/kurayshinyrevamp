@@ -390,7 +390,7 @@ class PokeBattle_AI
 			if damagePercentage > 100   # Treat all lethal moves the same   # DemICE
 				damagePercentage = 110 
 				damagePercentage+=50 if move.function == "150"  # DemICE: Fell Stinger should be preferred among other moves that KO
-				if ["0DD","14F"].include?(move.function)
+				if ["0DD","14F"].include?(move.function) || (move.function=="0DE" && target.asleep?)
 					missinghp = (user.totalhp-user.hp) *100.0 / user.totalhp
 					damagePercentage += missinghp*0.5
 				end  
@@ -398,7 +398,7 @@ class PokeBattle_AI
 		end  
 		damagePercentage -= 1 if accuracy < 100  # DemICE
 		#damagePercentage += 40 if damagePercentage > 100   # Prefer moves likely to be lethal  # DemICE
-		score += damagePercentage.to_i
+		score += damagePercentage
 		return score
 	end
 	

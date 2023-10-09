@@ -3053,6 +3053,7 @@ class PokeBattle_AI
 		pri +=1 if user.hasWorkingAbility(:GALEWINGS) && user.hp==user.totalhp && move.type==:FLYING
 		pri +=1 if move.baseDamage==0 && user.hasActiveAbility?(:PRANKSTER)
 		pri +=1 if move.function=="HigherPriorityInGrassyTerrain" && @battle.field.terrain==:Grassy && user.affectedByTerrain?
+		pri +=3 if move.healingMove? && user.hasActiveAbility?(:TRIAGE)
 		return pri
 	end
 
