@@ -3703,6 +3703,26 @@ class PokemonStorageScreen
     tempclone = ""
     alreadycloned = false
     clone = true
+    #init player randomizer if necessary
+    playerfolder = false
+    if $PokemonSystem.sb_playerfolder
+      if $PokemonSystem.sb_playerfolder == 1
+        playerfolder = true
+      end
+    end
+    randteam = 0
+    if $PokemonSystem.sb_randomizeteam
+      randteam = $PokemonSystem.sb_randomizeteam
+    end
+    if randteam == 0
+      randteam = false
+    else
+      randteam = true
+    end
+    playernum = 1
+    if $PokemonSystem.sb_randomizesize
+      playernum = $PokemonSystem.sb_randomizesize+1
+    end
     # if $PokemonSystem.sb_soullinked
     #   if $PokemonSystem.sb_soullinked == 1
     #     clone = false
@@ -3711,26 +3731,6 @@ class PokemonStorageScreen
     buildparty = []
     buildobject = []
     if frommulti
-      #init player randomizer if necessary
-      playerfolder = false
-      if $PokemonSystem.sb_playerfolder
-        if $PokemonSystem.sb_playerfolder == 1
-          playerfolder = true
-        end
-      end
-      randteam = 0
-      if $PokemonSystem.sb_randomizeteam
-        randteam = $PokemonSystem.sb_randomizeteam
-      end
-      if randteam == 0
-        randteam = false
-      else
-        randteam = true
-      end
-      playernum = 1
-      if $PokemonSystem.sb_randomizesize
-        playernum = $PokemonSystem.sb_randomizesize+1
-      end
       if playerfolder && randteam
         krplayer = []
         # we randomize the player team
