@@ -5238,6 +5238,7 @@ class PokemonStorageScreen
               directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
             end
             Dir.mkdir(directory_name) unless File.exists?(directory_name)
+            playerdire = directory_name
             if firsttime
               #subdirectory support
               # Use Dir.glob to get a list of directories in the folder
