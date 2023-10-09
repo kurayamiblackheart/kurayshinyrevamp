@@ -3733,7 +3733,17 @@ class PokemonStorageScreen
       if playerfolder && randteam
         # we randomize the player team
         # load from playerfolder!
-        directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
+        checksavefolder = false
+        if $PokemonSystem.savefolder
+          if $PokemonSystem.savefolder == 1
+            checksavefolder = true
+          end
+        end
+        if checksavefolder
+          directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
+        else
+          directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
+        end
         Dir.mkdir(directory_name) unless File.exists?(directory_name)
 
         #subdirectory support
@@ -3749,7 +3759,7 @@ class PokemonStorageScreen
           #prompt to choose a directory
           dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directory_names, dir_cmd)
           if dir_cmd > 0
-            directory_name = "ExportedPokemons/Players/" + directory_names[dir_cmd].to_s
+            directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
           end
         end
 
@@ -5128,7 +5138,17 @@ class PokemonStorageScreen
             end
           end
         when 4 # battler folder
-          directory_name = "ExportedPokemons/Battlers"  # Replace with the actual path to your folder
+          checksavefolder = false
+          if $PokemonSystem.savefolder
+            if $PokemonSystem.savefolder == 1
+              checksavefolder = true
+            end
+          end
+          if checksavefolder
+            directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
+          else
+            directory_name = "ExportedPokemons/Battlers"  # Replace with the actual path to your folder
+          end
           Dir.mkdir(directory_name) unless File.exists?(directory_name)
 
           #subdirectory support
@@ -5144,7 +5164,7 @@ class PokemonStorageScreen
             #prompt to choose a directory
             dir_cmd = pbShowCommands(_INTL("Choose Battler Sub-Directory."), directory_names, dir_cmd)
             if dir_cmd > 0
-              directory_name = "ExportedPokemons/Battlers/" + directory_names[dir_cmd].to_s
+              directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
             end
           end
 
@@ -5166,7 +5186,17 @@ class PokemonStorageScreen
         end
         if playerfolder
           # load from playerfolder!
-          directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
+          checksavefolder = false
+          if $PokemonSystem.savefolder
+            if $PokemonSystem.savefolder == 1
+              checksavefolder = true
+            end
+          end
+          if checksavefolder
+            directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
+          else
+            directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
+          end
           Dir.mkdir(directory_name) unless File.exists?(directory_name)
 
           #subdirectory support
@@ -5182,7 +5212,7 @@ class PokemonStorageScreen
             #prompt to choose a directory
             dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directory_names, dir_cmd)
             if dir_cmd > 0
-              directory_name = "ExportedPokemons/Players/" + directory_names[dir_cmd].to_s
+              directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
             end
           end
 
@@ -5322,7 +5352,17 @@ class PokemonStorageScreen
         pbDisplay(_INTL("DEBUG needed!"))
       else
         #Import (all)
-        directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
+        checksavefolder = false
+        if $PokemonSystem.savefolder
+          if $PokemonSystem.savefolder == 1
+            checksavefolder = true
+          end
+        end
+        if checksavefolder
+          directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
+        else
+          directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
+        end
         Dir.mkdir(directory_name) unless File.exists?(directory_name)
 
         #subdirectory support
@@ -5338,7 +5378,7 @@ class PokemonStorageScreen
           #prompt to choose a directory
           dir_cmd = pbShowCommands(_INTL("Choose Import Sub-Directory."), directory_names, dir_cmd)
           if dir_cmd > 0
-            directory_name = "ExportedPokemons/Import/" + directory_names[dir_cmd].to_s
+            directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
           end
         end
 
@@ -5448,7 +5488,17 @@ class PokemonStorageScreen
         pbDisplay(_INTL("DEBUG needed!"))
       else
         #Import 1 random
-        directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
+        checksavefolder = false
+        if $PokemonSystem.savefolder
+          if $PokemonSystem.savefolder == 1
+            checksavefolder = true
+          end
+        end
+        if checksavefolder
+          directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
+        else
+          directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
+        end
         Dir.mkdir(directory_name) unless File.exists?(directory_name)
 
         #subdirectory support
@@ -5464,7 +5514,7 @@ class PokemonStorageScreen
           #prompt to choose a directory
           dir_cmd = pbShowCommands(_INTL("Choose Import Sub-Directory."), directory_names, dir_cmd)
           if dir_cmd > 0
-            directory_name = "ExportedPokemons/Import/" + directory_names[dir_cmd].to_s
+            directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
           end
         end
         

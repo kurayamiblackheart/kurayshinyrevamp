@@ -77,6 +77,7 @@ class PokemonSystem
 
   attr_accessor :importnodelete
   attr_accessor :exportdelete
+  attr_accessor :savefolder
 
   attr_accessor :importlvl
   attr_accessor :importdevolve
@@ -145,6 +146,7 @@ class PokemonSystem
     @debugfeature = 0
     @debug = 0
     @importnodelete = 0
+    @savefolder = 0
     @exportdelete = 0
     @is_in_battle = false
     if Settings::SHINY_POKEMON_CHANCE
@@ -223,6 +225,7 @@ class PokemonSystem
     @importdevolve = saved.importdevolve if saved.importdevolve
     @importnodelete = saved.importnodelete if saved.importnodelete
     @exportdelete = saved.exportdelete if saved.exportdelete
+    @savefolder = saved.savefolder if saved.savefolder
   end
 end
 
@@ -1570,6 +1573,12 @@ class KurayOptSc_4 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.exportdelete = value },
                       ["Exported Pokemons will not be deleted.",
                       "Exported Pokemons will be deleted."]
+    )
+    options << EnumOption.new(_INTL("Use 'Saves' folder"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.savefolder },
+                      proc { |value| $PokemonSystem.savefolder = value },
+                      ["Battlers/Players/Import use their respective folders.",
+                      "Battlers/Players/Import etc all use the 'Saves' folder."]
     )
     return options
   end
