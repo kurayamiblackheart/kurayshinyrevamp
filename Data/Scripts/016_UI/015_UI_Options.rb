@@ -33,6 +33,7 @@ class PokemonSystem
   attr_accessor :kuraybigicons
   attr_accessor :kurayindividcustomsprite
   attr_accessor :typedisplay
+  attr_accessor :battlegui
   attr_accessor :globalvalues # allows to disable the per-save file functionnality
   attr_accessor :quicksave
   # Per-save file
@@ -114,6 +115,7 @@ class PokemonSystem
     @kuraybigicons = 0
     @kurayindividcustomsprite = 0
     @typedisplay = 0
+    @battlegui = 0
     # Modded Per-save file
     @force_double_wild = 0
     @improved_pokedex = 0
@@ -180,6 +182,7 @@ class PokemonSystem
     @kuraybigicons = saved.kuraybigicons if saved.kuraybigicons
     @kurayindividcustomsprite = saved.kurayindividcustomsprite if saved.kurayindividcustomsprite
     @typedisplay = saved.typedisplay if saved.typedisplay
+    @battlegui = saved.battlegui if saved.battlegui
     @debugfeature = saved.debugfeature if saved.debugfeature
     @debug = saved.debug if saved.debug
     if saved.globalvalues
@@ -1237,6 +1240,13 @@ class KurayOptSc_2 < PokemonOption_Scene
                       "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
                       "Draws the text type display in battle"]
     )#sister clone in GRAPHICS!!!
+	
+    options << EnumOption.new(_INTL("Battle GUI"), [_INTL("Off"), _INTL("Hp Bar")],
+                      proc { $PokemonSystem.battlegui },
+                      proc { |value| $PokemonSystem.battlegui = value },
+                      ["This feature is a work in progress, more to come soon",
+                      "Draws the custom battleGUI (WIP) created by Mirasein"]
+    )#sister clone in GRAPHICS!!!
 
     options << ButtonOption.new(_INTL("Powerful AI"),
     proc {}
@@ -1369,7 +1379,12 @@ class KurayOptSc_3 < PokemonOption_Scene
                       "Draws the text type display in battle"]
     )#sister clone in BATTLE!!!
 
-
+    options << EnumOption.new(_INTL("Battle GUI"), [_INTL("Off"), _INTL("Hp Bar")],
+                      proc { $PokemonSystem.battlegui },
+                      proc { |value| $PokemonSystem.battlegui = value },
+                      ["This feature is a work in progress, more to come soon",
+                      "Draws the custom battleGUI (WIP) created by Mirasein"]
+    )#sister clone in BATTLE!!!
     
     options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayfusepreview },

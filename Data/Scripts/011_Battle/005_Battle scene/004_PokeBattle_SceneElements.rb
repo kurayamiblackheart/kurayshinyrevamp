@@ -49,17 +49,29 @@ class PokemonDataBox < SpriteWrapper
   def initializeDataBoxGraphic(sideSize)
     onPlayerSide = ((@battler.index%2)==0)
     # Get the data box graphic and set whether the HP numbers/Exp bar are shown
-    if sideSize==1   # One Pokémon on side, use the regular dara box BG
+
+    if sideSize == 1   # One Pokémon on side, use the regular data box BG
       bgFilename = ["Graphics/Pictures/Battle/databox_normal",
-                    "Graphics/Pictures/Battle/databox_normal_foe"][@battler.index%2]
+                        "Graphics/Pictures/Battle/databox_normal_foe"][@battler.index % 2]
       if onPlayerSide
         @showHP  = true
         @showExp = true
       end
-    else   # Multiple Pokémon on side, use the thin dara box BG
+    else   # Multiple Pokémon on side, use the thin data box BG
       bgFilename = ["Graphics/Pictures/Battle/databox_thin",
-                    "Graphics/Pictures/Battle/databox_thin_foe"][@battler.index%2]
+                        "Graphics/Pictures/Battle/databox_thin_foe"][@battler.index % 2]
     end
+
+    # Trapstarr - Adding swappable battle GUIs. WIP
+    if $PokemonSystem.battlegui != 0 && $PokemonSystem.battlegui != nil
+      case $PokemonSystem.battlegui
+      when 1
+        bgFilename = bgFilename.gsub("Battle", "BattleGUI") + "_M"
+      else
+        bgFilename = bgFilename
+      end
+    end
+
     @databoxBitmap  = AnimatedBitmap.new(bgFilename)
     # Determine the co-ordinates of the data box and the left edge padding width
     if onPlayerSide
@@ -84,10 +96,26 @@ class PokemonDataBox < SpriteWrapper
   def initializeOtherGraphics(viewport)
     # Create other bitmaps
     @numbersBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/icon_numbers"))
-    @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp"))
-    @expBarBitmap  = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_exp"))
-    # Trapstarr's Type Display
-    if $PokemonSystem.typedisplay != 0  && $PokemonSystem.typedisplay != nil
+    @hpBarBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp"))
+    @expBarBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_exp"))
+
+    # Use hardcoded paths to perform gsub
+    hpPath = "Graphics/Pictures/Battle/overlay_hp"
+    expPath = "Graphics/Pictures/Battle/overlay_exp"
+
+    # Trapstarr - Adding swappable battle GUIs. WIP
+    if $PokemonSystem.battlegui != 0 && $PokemonSystem.battlegui != nil
+      case $PokemonSystem.battlegui
+      when 1
+        hpPath = hpPath.gsub("Battle", "BattleGUI") + "_M"
+        expPath = expPath.gsub("Battle", "BattleGUI") + "_M"
+    
+        @hpBarBitmap = AnimatedBitmap.new(hpPath)
+        @expBarBitmap = AnimatedBitmap.new(expPath)
+      end
+    end
+	# Trapstarr's Type Display
+   if $PokemonSystem.typedisplay != 0  && $PokemonSystem.typedisplay != nil
       case $PokemonSystem.typedisplay
       when 1
         @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/TypeIcons_Lolpy1"))
