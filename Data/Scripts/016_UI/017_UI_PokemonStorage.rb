@@ -3699,6 +3699,7 @@ class PokemonStorageScreen
   end
 
   def pbBattleSelected(box, frommulti=true, defaultteam=nil)
+    playerteamok = true
     tempclone = ""
     clone = true
     # if $PokemonSystem.sb_soullinked
@@ -3765,6 +3766,9 @@ class PokemonStorageScreen
           pbDisplay(_INTL("No Player Team for Fighting! Using current team instead."))
           playerfolder = false
         end
+        if playerfolder
+          playerteamok = false
+        end
         if playerfolder && randteam || playernum != $Trainer.party.length
           defaultteam = $Trainer.party.clone
         end
@@ -3779,6 +3783,7 @@ class PokemonStorageScreen
             pokemon = Pokemon.new(:BULBASAUR, 1)
             json_data = File.read(randomkuray)
             pokemon.load_json(eval(json_data))
+            playerteamok = true if !pokemon.egg?
             krplayer.push(pokemon)
             # Remove the chosen file from the list
             pokekuraysplayer.delete(randomkuray)
@@ -3807,6 +3812,12 @@ class PokemonStorageScreen
         end
       end
 
+      if !playerteamok
+        pbPlayBuzzerSE
+        pbDisplay(_INTL("One of the team is empty!"))
+        battlebr(defaultteam)
+        return
+      end
       selected = getMultiSelection(box, nil)
       if selected.length == 0 || selected.length > 6
         battlebr(defaultteam)
@@ -5147,6 +5158,12 @@ class PokemonStorageScreen
           pokekurays = json_files
           isjson = true
         end
+        enemyteamok = true
+        playerteamok = true
+        if isjson
+          playerteamok = false
+          enemyteamok = false
+        end
         if playerfolder
           # load from playerfolder!
           directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
@@ -5187,6 +5204,9 @@ class PokemonStorageScreen
         else
           pokekuraysplayer = pokekurays.clone
         end
+        if playerfolder
+          playerteamok = false
+        end
         if pokekurays.empty?
           pbPlayBuzzerSE
           pbDisplay(_INTL("No Battler to Fight!"))
@@ -5223,6 +5243,7 @@ class PokemonStorageScreen
               pokemon = Pokemon.new(:BULBASAUR, 1)
               json_data = File.read(randomkuray)
               pokemon.load_json(eval(json_data))
+              enemyteamok = true if !pokemon.egg?
               krbattlers.push(pokemon)
             else
               krbattlers.push(randomkuray)
@@ -5240,12 +5261,18 @@ class PokemonStorageScreen
               pokemon = Pokemon.new(:BULBASAUR, 1)
               json_data = File.read(randomkuray)
               pokemon.load_json(eval(json_data))
+              playerteamok = true if !pokemon.egg?
               krplayer.push(pokemon)
             else
               krplayer.push(randomkuray)
             end
             # Remove the chosen file from the list
             pokekuraysplayer.delete(randomkuray)
+          end
+          if !enemyteamok || !playerteamok
+            pbPlayBuzzerSE
+            pbDisplay(_INTL("One of the team is empty!"))
+            return
           end
           if randteam
             $Trainer.party = krplayer.clone
