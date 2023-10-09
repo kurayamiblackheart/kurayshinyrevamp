@@ -3711,13 +3711,17 @@ class PokemonStorageScreen
         #subdirectory support
         # Use Dir.glob to get a list of directories in the folder
         directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
-        if !directories.empty?
+
+        # Extract just the directory names without the full path
+        directory_names = directories.map { |entry| File.basename(entry) }
+
+        if !directory_names.empty?
           dir_cmd = 0
-          directories.unshift("Default Folder (no subdir)")
+          directory_names.unshift("Default Folder (no subdir)")
           #prompt to choose a directory
-          dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directories, dir_cmd)
+          dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directory_names, dir_cmd)
           if dir_cmd > 0
-            directory_name = "ExportedPokemons/Players/" + directories[dir_cmd].to_s
+            directory_name = "ExportedPokemons/Players/" + directory_names[dir_cmd].to_s
           end
         end
 
@@ -5092,13 +5096,17 @@ class PokemonStorageScreen
           #subdirectory support
           # Use Dir.glob to get a list of directories in the folder
           directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
-          if !directories.empty?
+
+          # Extract just the directory names without the full path
+          directory_names = directories.map { |entry| File.basename(entry) }
+
+          if !directory_names.empty?
             dir_cmd = 0
-            directories.unshift("Default Folder (no subdir)")
+            directory_names.unshift("Default Folder (no subdir)")
             #prompt to choose a directory
-            dir_cmd = pbShowCommands(_INTL("Choose Battler Sub-Directory."), directories, dir_cmd)
+            dir_cmd = pbShowCommands(_INTL("Choose Battler Sub-Directory."), directory_names, dir_cmd)
             if dir_cmd > 0
-              directory_name = "ExportedPokemons/Battlers/" + directories[dir_cmd].to_s
+              directory_name = "ExportedPokemons/Battlers/" + directory_names[dir_cmd].to_s
             end
           end
 
@@ -5120,13 +5128,17 @@ class PokemonStorageScreen
           #subdirectory support
           # Use Dir.glob to get a list of directories in the folder
           directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
-          if !directories.empty?
+
+          # Extract just the directory names without the full path
+          directory_names = directories.map { |entry| File.basename(entry) }
+
+          if !directory_names.empty?
             dir_cmd = 0
-            directories.unshift("Default Folder (no subdir)")
+            directory_names.unshift("Default Folder (no subdir)")
             #prompt to choose a directory
-            dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directories, dir_cmd)
+            dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directory_names, dir_cmd)
             if dir_cmd > 0
-              directory_name = "ExportedPokemons/Players/" + directories[dir_cmd].to_s
+              directory_name = "ExportedPokemons/Players/" + directory_names[dir_cmd].to_s
             end
           end
 
