@@ -567,26 +567,30 @@ class Pokemon
   def level
     @level = growth_rate.level_from_exp(@exp) if !@level
     #Kurayx LevelCAP
-    # if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2) # obtained from trade
-    if $PokemonSystem.kuraylevelcap != 0
+    if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2) # obtained from trade
       levelcap = getkuraylevelcap()
-      if @iv
-        calc_stats_sp(levelcap)
+      if @level > levelcap
+        calc_stats(levelcap)
+        return levelcap
       end
-      return levelcap if @level > levelcap
     end
-    if @iv
-      calc_stats_sp(@level)
-    end
+    calc_stats
     return @level
   end
 
+  # Original level method from Pokemon Infinite Fusion
+  # For when levelcapping or recalculating stats isn't wanted or needed
+  # @return [Integer] this Pokémon's level
+  def level_simple
+    @level = growth_rate.level_from_exp(@exp) if !@level
+    return @level
+  end
 
   #Kurayx LevelCAP
   # Recalculates this Pokémon's stats.
-  def calc_stats_sp(kuraylevel)
+  # @param value [Integer] (between 1 and the maximum level) calc stats at this level instead
+  def calc_stats(this_level = self.level_simple)
     base_stats = self.baseStats
-    this_level = kuraylevel
     this_IV = self.calcIV
 
     if $game_switches[SWITCH_NO_LEVELS_MODE]
@@ -1144,7 +1148,7 @@ class Pokemon
 
   # Sets this Pokémon's movelist to the default movelist it originally had.
   def reset_moves
-    this_level = self.level
+    this_level = self.level_simple
     # Find all level-up moves that self could have learned
     moveset = self.getMoveList
     knowable_moves = []
@@ -1597,76 +1601,6 @@ class Pokemon
 
   def adjustHPForWonderGuard(stats)
     return self.ability == :WONDERGUARD ? 1 : stats[:HP]
-  end
-
-  # Recalculates this Pokémon's stats.
-  def calc_stats
-    base_stats = self.baseStats
-    this_level = self.level
-    this_IV = self.calcIV
-
-    if $game_switches[SWITCH_NO_LEVELS_MODE]
-      this_level = adjust_level_for_base_stats_mode()
-    end
-
-    # Format stat multipliers due to nature
-    nature_mod = {}
-    GameData::Stat.each_main { |s| nature_mod[s.id] = 100 }
-    this_nature = self.nature_for_stats
-    if this_nature
-      this_nature.stat_changes.each { |change| nature_mod[change[0]] += change[1] }
-    end
-    #KurayX boost self-fusion
-    kuraystat = 0
-    if self.isSelfFusion?
-      GameData::Stat.each_main do |s|
-        kuraystat += base_stats[s.id]
-      end
-      # File.open('KurayLogV' + ".txt", 'a') { |f| f.write("Self Fusion: " + self.speciesName.to_s + " |Sum stats: " + kuraystat.to_s + "\r") } if File.exists?("Kurayami.krs")
-    end
-    kurayboost = 1.0
-    if kuraystat != 0
-      if kuraystat >= 800
-        kurayboost = 1.02
-      elsif kuraystat >= 700
-        kurayboost = 1.04
-      elsif kuraystat >= 600
-        kurayboost = 1.06
-      elsif kuraystat >= 500
-        kurayboost = 1.09
-      elsif kuraystat >= 400
-        kurayboost = 1.13
-      elsif kuraystat >= 300
-        kurayboost = 1.19
-      elsif kuraystat >= 200
-        kurayboost = 1.47
-      elsif kuraystat >= 100
-        kurayboost = 1.81
-      else
-        kurayboost = 2.8
-      end
-      # let's modify kurayboost depending on kuraystat sums here
-    end
-    # Calculate stats
-    stats = {}
-    GameData::Stat.each_main do |s|
-      if s.id == :HP
-        stats[s.id] = calcHP((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], @ev[s.id])
-      else
-        stats[s.id] = calcStat((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], @ev[s.id], nature_mod[s.id])
-      end
-    end
-    #End KurayX
-    hpDiff = @totalhp - @hp
-    #@totalhp = stats[:HP]
-    @totalhp = adjustHPForWonderGuard(stats)
-    calculated_hp = @totalhp - hpDiff
-    @hp = calculated_hp > 0 ? calculated_hp : 0
-    @attack = stats[:ATTACK]
-    @defense = stats[:DEFENSE]
-    @spatk = stats[:SPECIAL_ATTACK]
-    @spdef = stats[:SPECIAL_DEFENSE]
-    @speed = stats[:SPEED]
   end
 
   #=============================================================================
