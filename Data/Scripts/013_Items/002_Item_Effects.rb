@@ -785,7 +785,7 @@ ItemHandlers::UseOnPokemon.add(:SWIFTWING, proc { |item, pkmn, scene|
 })
 
 ItemHandlers::UseOnPokemon.add(:RARECANDY, proc { |item, pkmn, scene|
-  if pkmn.level >= GameData::GrowthRate.max_level || pkmn.shadowPokemon?
+  if pkmn.level >= GameData::GrowthRate.max_level || pkmn.shadowPokemon? || pkmn.level_simple >= getkuraylevelcap()
     scene.pbDisplay(_INTL("It won't have any effect."))
     next false
   end

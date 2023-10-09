@@ -191,12 +191,6 @@ class PokeBattle_Battle
     end
     curLevel = pkmn.level
     newLevel = growth_rate.level_from_exp(expFinal)
-    if $PokemonSystem.kuraylevelcap != 0
-      levelcap = getkuraylevelcap()
-      if curLevel >= levelcap
-        return
-      end
-    end
     # if newLevel < curLevel
     #   debugInfo = "Levels: #{curLevel}->#{newLevel} | Exp: #{pkmn.exp}->#{expFinal} | gain: #{expGained}"
     #   raise RuntimeError.new(
@@ -210,7 +204,6 @@ class PokeBattle_Battle
     end
     tempExp1 = pkmn.exp
     battler = pbFindBattler(idxParty)
-    levelwas = 0
     loop do
       # For each level gained in turn...
       # EXP Bar animation
@@ -227,22 +220,17 @@ class PokeBattle_Battle
         end
 
       end
-      @scene.pbEXPBar(battler, levelMinExp, levelMaxExp, tempExp1, tempExp2)
-      tempExp1 = tempExp2
-      if $PokemonSystem.kuraylevelcap != 0
-        levelcap = getkuraylevelcap()
-        if newLevel > levelcap
-          newLevel = levelcap
+      if $PokemonSystem.kuraylevelcap != 0 && pkmn.exp >= growth_rate.minimum_exp_for_level(getkuraylevelcap()+1)
+        if tempExp1 < levelMaxExp
+          @scene.pbEXPBar(battler, levelMinExp, levelMaxExp, tempExp1, levelMaxExp)  
+          @scene.pbRefreshOne(battler.index) if battler
         end
-        if curLevel < levelcap
-          curLevel += 1
-        end
-      else
-        curLevel += 1
-      end
-      if levelwas == curLevel
+        pkmn.exp = expFinal
         break
       end
+      @scene.pbEXPBar(battler, levelMinExp, levelMaxExp, tempExp1, tempExp2)
+      tempExp1 = tempExp2
+      curLevel += 1
       if curLevel > newLevel
         # Gained all the Exp now, end the animation
         pkmn.calc_stats
@@ -264,7 +252,6 @@ class PokeBattle_Battle
       pkmn.calc_stats
       battler.pbUpdate(false) if battler
       @scene.pbRefreshOne(battler.index) if battler
-      levelwas = curLevel
       pbDisplayPaused(_INTL("{1} grew to Lv. {2}!", pkmn.name, curLevel))
       if !$game_switches[SWITCH_NO_LEVELS_MODE]
         @scene.pbLevelUp(pkmn, battler, oldTotalHP, oldAttack, oldDefense,
