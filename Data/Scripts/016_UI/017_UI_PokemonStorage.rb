@@ -5257,23 +5257,23 @@ class PokemonStorageScreen
                 end
               end
 
-              # Use Dir.glob to get a list of JSON files in the folder
-              json_files = Dir.glob(File.join(directory_name, "*.json"))
-              if json_files.empty?
-                pbPlayBuzzerSE
-                pbDisplay(_INTL("No Players Battler to Import! Using Battlers instead."))
-                pokekuraysplayer = pokekurays.clone
-                playerfolder = false
-              else
-                pokekuraysplayer = json_files
-                if pokekuraysplayer.empty?
-                  pbDisplay(_INTL("No Player Team for Fighting! Using Battler instead."))
-                  pokekuraysplayer = pokekurays.clone
-                  playerfolder = false
-                end
-              end
             else
               directory_name = playerdire
+            end
+            # Use Dir.glob to get a list of JSON files in the folder
+            json_files = Dir.glob(File.join(directory_name, "*.json"))
+            if json_files.empty?
+              pbPlayBuzzerSE
+              pbDisplay(_INTL("No Players Battler to Import! Using Battlers instead."))
+              pokekuraysplayer = pokekurays.clone
+              playerfolder = false
+            else
+              pokekuraysplayer = json_files
+              if pokekuraysplayer.empty?
+                pbDisplay(_INTL("No Player Team for Fighting! Using Battler instead."))
+                pokekuraysplayer = pokekurays.clone
+                playerfolder = false
+              end
             end
           else
             pokekuraysplayer = pokekurays.clone
