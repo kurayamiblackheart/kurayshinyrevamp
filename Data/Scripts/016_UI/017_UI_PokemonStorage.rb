@@ -2347,7 +2347,8 @@ class PokemonStorageScene
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
     addincra = 0
-    importname = directory_name + "/" + pokemon.speciesName + "-" + pokemon.name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
+    cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
+    importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
     classyname = importname
     while File.exists?(importname + ".json")
       importname = classyname + "(" + addincra.to_s + ")"
@@ -2356,7 +2357,7 @@ class PokemonStorageScene
         break
       end
     end
-    # importname = directory_name + "/" + pokemon.speciesName + "-" + pokemon.name + "-" + pokemon.gender + "-" + pokemon.shiny? + "-" + pokemon.totalhp + "-" + pokemon.level + ".pkm"
+    # importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.gender + "-" + pokemon.shiny? + "-" + pokemon.totalhp + "-" + pokemon.level + ".pkm"
     
     # Marshal not working anymore !
     # File.open(importname + ".pkm", 'wb') { |f| f.write(Marshal.dump(pokemon)) }
@@ -2392,7 +2393,8 @@ class PokemonStorageScene
       if @storage[box, k]
         pokemon = @storage[box, k]
         addincra = 0
-        importname = directory_name + "/" + pokemon.speciesName + "-" + pokemon.name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
+        cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
+        importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
         classyname = importname
         while File.exists?(importname + ".json")
           importname = classyname + "(" + addincra.to_s + ")"
@@ -2428,7 +2430,8 @@ class PokemonStorageScene
         if @storage[j, k]
           pokemon = @storage[j, k]
           addincra = 0
-          importname = directory_name + "/" + pokemon.speciesName + "-" + pokemon.name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
+          cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
+          importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
           classyname = importname
           while File.exists?(importname + ".json")
             importname = classyname + "(" + addincra.to_s + ")"
@@ -2448,7 +2451,8 @@ class PokemonStorageScene
       if @storage.party[j]
         pokemon = @storage.party[j]
         addincra = 0
-        importname = directory_name + "/" + pokemon.speciesName + "-" + pokemon.name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
+        cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
+        importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
         classyname = importname
         while File.exists?(importname + ".json")
           importname = classyname + "(" + addincra.to_s + ")"
@@ -4024,7 +4028,8 @@ class PokemonStorageScreen
         pokemon = @storage[box, index]
       end
       addincra = 0
-      importname = directory_name + "/" + pokemon.speciesName + "-" + pokemon.name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
+      cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
+      importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
       classyname = importname
       while File.exists?(importname + ".json")
         importname = classyname + "(" + addincra.to_s + ")"
