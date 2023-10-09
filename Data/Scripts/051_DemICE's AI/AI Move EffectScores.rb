@@ -1264,7 +1264,7 @@ class PokeBattle_AI
 			#---------------------------------------------------------------------------
 		when "032"  # Nasty Plot
 			if move.statusMove?
-				if user.statStageAtMax?(:SPECIAL_ATTACKv) || user.hasActiveAbility?(:CONTRARY)
+				if user.statStageAtMax?(:SPECIAL_ATTACK) || user.hasActiveAbility?(:CONTRARY)
 					score -= 200
 				else
 					target=user.pbDirectOpposing(true)
