@@ -5243,8 +5243,8 @@ class PokemonStorageScreen
               directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
             end
             Dir.mkdir(directory_name) unless File.exists?(directory_name)
-            playerdire = directory_name
             if firsttime
+              playerdire = directory_name
               #subdirectory support
               # Use Dir.glob to get a list of directories in the folder
               directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
