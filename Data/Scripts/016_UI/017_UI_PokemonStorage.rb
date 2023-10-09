@@ -2330,6 +2330,12 @@ class PokemonStorageScene
 
   #KurayX
   def pbExport(selected, heldpoke, dodelete=0)
+    deletepkm = false
+    if $PokemonSystem.exportdelete
+      if $PokemonSystem.exportdelete == 1
+        deletepkm = true
+      end
+    end
     directory_name = "ExportedPokemons"
     Dir.mkdir(directory_name) unless File.exists?(directory_name)
     pokemon = heldpoke
@@ -2357,7 +2363,7 @@ class PokemonStorageScene
     File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
     # File.open(importname + ".json3", 'w') { |f| f.write(pokemon.to_s) }
     # File.open(importname + ".json2", 'w') { |f| f.write(pokemon.self) }
-    if dodelete == 1
+    if dodelete == 1 || deletepkm
       if heldpoke
         @heldpkmn = nil
       else
@@ -2369,6 +2375,12 @@ class PokemonStorageScene
   end
 
   def pbExportBox(box)
+    deletepkm = false
+    if $PokemonSystem.exportdelete
+      if $PokemonSystem.exportdelete == 1
+        deletepkm = true
+      end
+    end
     directory_name = "ExportedPokemons"
     Dir.mkdir(directory_name) unless File.exists?(directory_name)
     if @storage[box].empty?
@@ -2390,6 +2402,9 @@ class PokemonStorageScene
           end
         end
         File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+        if deletepkm
+          @storage.pbDelete(box, k)
+        end
       end
     end
     pbDisplay(_INTL("Pokemon(s) Exported!"))
@@ -2397,6 +2412,12 @@ class PokemonStorageScene
 
   #KurayX
   def pbExportAll()
+    deletepkm = false
+    if $PokemonSystem.exportdelete
+      if $PokemonSystem.exportdelete == 1
+        deletepkm = true
+      end
+    end
     directory_name = "ExportedPokemons"
     Dir.mkdir(directory_name) unless File.exists?(directory_name)
     for j in 0...@storage.maxBoxes
@@ -2417,6 +2438,9 @@ class PokemonStorageScene
             end
           end
           File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+          if deletepkm
+            @storage.pbDelete(box, k)
+          end
         end
       end
     end
@@ -2434,6 +2458,9 @@ class PokemonStorageScene
           end
         end
         File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+        if deletepkm
+          @storage.pbDelete(box, k)
+        end
       end
     end
     pbDisplay(_INTL("All Pokemons Exported!"))
@@ -5270,6 +5297,31 @@ class PokemonStorageScreen
         #Import (all)
         directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
         Dir.mkdir(directory_name) unless File.exists?(directory_name)
+
+        #subdirectory support
+        # Use Dir.glob to get a list of directories in the folder
+        directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
+
+        # Extract just the directory names without the full path
+        directory_names = directories.map { |entry| File.basename(entry) }
+
+        if !directory_names.empty?
+          dir_cmd = 0
+          directory_names.unshift("Default Folder (no subdir)")
+          #prompt to choose a directory
+          dir_cmd = pbShowCommands(_INTL("Choose Import Sub-Directory."), directory_names, dir_cmd)
+          if dir_cmd > 0
+            directory_name = "ExportedPokemons/Import/" + directory_names[dir_cmd].to_s
+          end
+        end
+
+        deletejson = true
+        if $PokemonSystem.importnodelete
+          if $PokemonSystem.importnodelete == 1
+            deletejson = false
+          end
+        end
+
         # Use Dir.glob to get a list of JSON files in the folder
         json_files = Dir.glob(File.join(directory_name, "*.json"))
         x = @storage.currentBox
@@ -5333,7 +5385,7 @@ class PokemonStorageScreen
             unless @storage[x, y]
               if outofspace == 0
                 @storage.pbImportKuray(x, y, pokemon)
-                File.delete(json_file)
+                File.delete(json_file) if deletejson
               end
             end
             #redo it for the next slot for the next import
@@ -5371,6 +5423,30 @@ class PokemonStorageScreen
         #Import 1 random
         directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
         Dir.mkdir(directory_name) unless File.exists?(directory_name)
+
+        #subdirectory support
+        # Use Dir.glob to get a list of directories in the folder
+        directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
+
+        # Extract just the directory names without the full path
+        directory_names = directories.map { |entry| File.basename(entry) }
+
+        if !directory_names.empty?
+          dir_cmd = 0
+          directory_names.unshift("Default Folder (no subdir)")
+          #prompt to choose a directory
+          dir_cmd = pbShowCommands(_INTL("Choose Import Sub-Directory."), directory_names, dir_cmd)
+          if dir_cmd > 0
+            directory_name = "ExportedPokemons/Import/" + directory_names[dir_cmd].to_s
+          end
+        end
+        
+        deletejson = true
+        if $PokemonSystem.importnodelete
+          if $PokemonSystem.importnodelete == 1
+            deletejson = false
+          end
+        end
         # Use Dir.glob to get a list of JSON files in the folder
         json_files = Dir.glob(File.join(directory_name, "*.json"))
         x = @storage.currentBox
@@ -5434,7 +5510,7 @@ class PokemonStorageScreen
           unless @storage[x, y]
             if outofspace == 0
               @storage.pbImportKuray(x, y, pokemon)
-              File.delete(random_json_file)
+              File.delete(random_json_file) if deletejson
             end
           end
           if outofspace == 1

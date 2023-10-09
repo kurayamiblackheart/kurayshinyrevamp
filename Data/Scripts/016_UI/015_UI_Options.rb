@@ -75,6 +75,9 @@ class PokemonSystem
 
   attr_accessor :is_in_battle
 
+  attr_accessor :importnodelete
+  attr_accessor :exportdelete
+
   attr_accessor :importlvl
   attr_accessor :importdevolve
 
@@ -141,6 +144,8 @@ class PokemonSystem
     @sb_level = 0
     @debugfeature = 0
     @debug = 0
+    @importnodelete = 0
+    @exportdelete = 0
     @is_in_battle = false
     if Settings::SHINY_POKEMON_CHANCE
       @shinyodds = Settings::SHINY_POKEMON_CHANCE
@@ -216,6 +221,8 @@ class PokemonSystem
     @unfusetraded = saved.unfusetraded if saved.unfusetraded
     @importlvl = saved.importlvl if saved.importlvl
     @importdevolve = saved.importdevolve if saved.importdevolve
+    @importnodelete = saved.importnodelete if saved.importnodelete
+    @exportdelete = saved.exportdelete if saved.exportdelete
   end
 end
 
@@ -1551,6 +1558,18 @@ class KurayOptSc_4 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.importdevolve = value },
                       ["Imported Pokemons remain intact.",
                       "Imported Pokemons are de-evolved into babies."]
+    )
+    options << EnumOption.new(_INTL("Import Without Deletion"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.importnodelete },
+                      proc { |value| $PokemonSystem.importnodelete = value },
+                      ["Imported Pokemons will have their .json deleted.",
+                      "Imported Pokemons will remain as .json in Import folder."]
+    )
+    options << EnumOption.new(_INTL("Delete on Export"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.exportdelete },
+                      proc { |value| $PokemonSystem.exportdelete = value },
+                      ["Exported Pokemons will not be deleted.",
+                      "Exported Pokemons will be deleted."]
     )
     return options
   end
