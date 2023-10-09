@@ -5448,7 +5448,7 @@ class PokemonStorageScreen
               if y > 29
                 y = 0
                 if x == @storage.currentBox && x != 0 && !triedcurrent
-                  x = 0
+                  x = -1
                   triedcurrent = true
                 end
                 x += 1
@@ -5470,7 +5470,7 @@ class PokemonStorageScreen
             if y > 29
               y = 0
               if x == @storage.currentBox && x != 0 && !triedcurrent
-                x = 0
+                x = -1
                 triedcurrent = true
               end
               x += 1
@@ -5583,7 +5583,7 @@ class PokemonStorageScreen
             if y > 29
               y = 0
               if x == @storage.currentBox && x != 0 && !triedcurrent
-                x = 0
+                x = -1
                 triedcurrent = true
               end
               x += 1
