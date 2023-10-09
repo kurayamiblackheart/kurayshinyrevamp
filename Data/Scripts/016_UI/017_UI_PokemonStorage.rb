@@ -3731,6 +3731,7 @@ class PokemonStorageScreen
         playernum = $PokemonSystem.sb_randomizesize+1
       end
       if playerfolder && randteam
+        krplayer = []
         # we randomize the player team
         # load from playerfolder!
         checksavefolder = false
