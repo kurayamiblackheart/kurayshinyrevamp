@@ -306,7 +306,7 @@ class PokeBattle_AI
 		end
 		# Don't prefer moves that are ineffective because of abilities or effects
 		return 0 if pbCheckMoveImmunity(score, move, user, target, skill)
-		score = score.to_i
+		# score = score.to_i
 		score = 0 if score < 0
 		return score
 	end
