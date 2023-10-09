@@ -3701,6 +3701,7 @@ class PokemonStorageScreen
   def pbBattleSelected(box, frommulti=true, defaultteam=nil)
     playerteamok = true
     tempclone = ""
+    alreadycloned = false
     clone = true
     # if $PokemonSystem.sb_soullinked
     #   if $PokemonSystem.sb_soullinked == 1
@@ -3782,6 +3783,7 @@ class PokemonStorageScreen
         end
         if playerfolder && randteam || playernum != $Trainer.party.length
           defaultteam = $Trainer.party.clone
+          alreadycloned = true
         end
         if playerfolder && randteam
           if pokekuraysplayer.length < playernum
@@ -3799,7 +3801,7 @@ class PokemonStorageScreen
             # Remove the chosen file from the list
             pokekuraysplayer.delete(randomkuray)
           end
-          $Trainer.party = krplayer.clone
+          # $Trainer.party = krplayer.clone
           # finaleparty = $Trainer.party.clone
           # for i in 0...finaleparty.length
           #   # player level setup
@@ -3834,29 +3836,8 @@ class PokemonStorageScreen
         battlebr(defaultteam)
         return
       end
-      defaultteam = $Trainer.party.clone
-      finaleparty = $Trainer.party.clone
-      for i in 0...finaleparty.length
-        # player level setup
-        $Trainer.party[i] = finaleparty[i].clone
-        if i >= playernum
-          break
-        end
-        if $PokemonSystem.sb_level
-          if $PokemonSystem.sb_level == 1
-            $Trainer.party[i].level = 1
-          elsif $PokemonSystem.sb_level == 2
-            $Trainer.party[i].level = 5
-          elsif $PokemonSystem.sb_level == 3
-            $Trainer.party[i].level = 10
-          elsif $PokemonSystem.sb_level == 4
-            $Trainer.party[i].level = 50
-          elsif $PokemonSystem.sb_level == 5
-            $Trainer.party[i].level = 70
-          elsif $PokemonSystem.sb_level == 6
-            $Trainer.party[i].level = 100
-          end
-        end
+      unless alreadycloned
+        defaultteam = $Trainer.party.clone
       end
     else
       selected = box
@@ -3926,6 +3907,32 @@ class PokemonStorageScreen
     if buildparty.length == 0  # Ensure there's at least one Pokémon to battle
       battlebr(defaultteam)
       return
+    end
+    if playerfolder && randteam
+      $Trainer.party = krplayer.clone
+    end
+    finaleparty = $Trainer.party.clone
+    for i in 0...finaleparty.length
+      # player level setup
+      $Trainer.party[i] = finaleparty[i].clone
+      if i >= playernum
+        break
+      end
+      if $PokemonSystem.sb_level
+        if $PokemonSystem.sb_level == 1
+          $Trainer.party[i].level = 1
+        elsif $PokemonSystem.sb_level == 2
+          $Trainer.party[i].level = 5
+        elsif $PokemonSystem.sb_level == 3
+          $Trainer.party[i].level = 10
+        elsif $PokemonSystem.sb_level == 4
+          $Trainer.party[i].level = 50
+        elsif $PokemonSystem.sb_level == 5
+          $Trainer.party[i].level = 70
+        elsif $PokemonSystem.sb_level == 6
+          $Trainer.party[i].level = 100
+        end
+      end
     end
     $Trainer.heal_party # healing player
     # choicelimit = buildparty.length
