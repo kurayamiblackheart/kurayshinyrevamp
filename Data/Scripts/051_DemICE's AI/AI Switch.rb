@@ -37,8 +37,8 @@ class PokeBattle_AI
 			ospeed = pbRoughStat(b,:SPEED,100)
 			maxspeed = ospeed if ospeed>maxspeed
 			for j in battler.moves
-				if (j.function=="006" && b.pbCanPoison?(battler,false)) ||# Toxic
-					(j.name=="Will-O-Wisp" && b.pbCanBurn?(battler,false)) ||# Willo
+				if (j.function=="006" && b.pbCanPoison?(battler,false,j)) ||# Toxic
+					(j.name=="Will-O-Wisp" && b.pbCanBurn?(battler,false,j)) ||# Willo
 					(j.function=="0DC" && !b.pbHasType?(:GRASS) && b.effects[PBEffects::Substitute]<=0) # Leech Seed
 					tickdamage=true
 				end	
@@ -51,7 +51,7 @@ class PokeBattle_AI
 					tickdamage=true if j.function=="068"
 					tickdamage=true if j.function=="10E"
 					tickdamage=true if j.function=="061"
-					tickdamage=true if j.function=="10F" && battler.pbHasMoveFunction?("003","004") && b.pbCanSleep?(battler,false)
+					tickdamage=true if j.function=="10F" && battler.pbHasMoveFunction?("003","004") && b.pbCanSleep?(battler,false,j)
 				end	
 				tempdam = pbRoughDamage(j,battler,b,skill,j.baseDamage)
 				tempdam = 0 if pbCheckMoveImmunity(1,j,battler,b,100)
@@ -284,6 +284,21 @@ class PokeBattle_AI
 			roomturn=1 if sack
 			pokmon.eachOpposing do |newenemy|
 				ospeed = pbRoughStat(newenemy,:SPEED,100)
+				if pokmon.hasActiveAbility?(:DRIZZLE) && @battle.pbWeather != :Rain
+					ospeed *= 2 if newenemy.hasActiveAbility?(:SWIFTSWIM)
+				end
+				if pokmon.hasActiveAbility?([:DROUGHT,:ORICHALCUMPULSE]) && @battle.pbWeather != :Sun
+					ospeed *= 2 if newenemy.hasActiveAbility?([:CHLOROPHYLL,:PROTOSYNTHESIS])
+				end
+				if pokmon.hasActiveAbility?(:SANDSTORM) && @battle.pbWeather != :Sandstorm 
+					ospeed *= 2 if newenemy.hasActiveAbility?(:SANDRUSH)
+				end
+				if pokmon.hasActiveAbility?(:SNOWWARNING) && @battle.pbWeather != :Hail 
+					ospeed *= 2 if newenemy.hasActiveAbility?(:SLUSHRUSH)
+				end
+				if pokmon.hasActiveAbility?([:ELECTRICSURGE,:HADRONENGINE]) && @battle.field.terrain != :Electric
+					ospeed *= 2 if newenemy.hasActiveAbility?(:SURGESURFER)
+				end
 				for j in newenemy.moves
 					mold_broken=moldbroken(newenemy,pokmon,j.function)
 					if newenemy.effects[PBEffects::ChoiceBand] &&
@@ -292,8 +307,8 @@ class PokeBattle_AI
 							next if j.id!=newenemy.lastMoveUsed
 						end
 					end	
-					if (j.function=="006" && pokmon.pbCanPoison?(newenemy,false)) ||# Toxic
-						(j.name=="Will-O-Wisp" && pokmon.pbCanBurn?(newenemy,false)) ||# Willo
+					if (j.function=="006" && pokmon.pbCanPoison?(newenemy,false,j)) ||# Toxic
+						(j.name=="Will-O-Wisp" && pokmon.pbCanBurn?(newenemy,false,j)) ||# Willo
 						(j.function=="0DC" && !pokmon.pbHasType?(:GRASS) && pokmon.effects[PBEffects::Substitute]<=0) # Leech Seed
 						death=true	
 					end	
@@ -309,8 +324,67 @@ class PokeBattle_AI
 								tempdam=1
 							end
 						end	
-						if j.priority>0
-							hasprio=j.priority
+						if pokmon.hasActiveAbility?(:DRIZZLE) && @battle.pbWeather != :Rain 
+							tempdam*=1.5 if j.type == :WATER
+							tempdam*=0.5 if j.type == :FIRE
+						end
+						if pokmon.hasActiveAbility?([:DROUGHT,:ORICHALCUMPULSE]) && @battle.pbWeather != :Sun
+							tempdam*=1.5 if j.type == :FIRE
+							tempdam*=0.5 if j.type == :WATER
+							tempdam*=1.33 if newenemy.hasActiveAbility?(:ORICHALCUMPULSE) && j.physicalMove?
+							tempdam*=1.5 if newenemy.hasActiveAbility?(:SOLARPOWER) && j.specialMove?
+						end
+						if pokmon.hasActiveAbility?(:SANDSTREAM) && @battle.pbWeather != :Sandstorm 
+							tempdam*=0.67 if pokmon.type == :ROCK && j.specialMove?
+							tempdam*=1.3 if [:GROUND,:ROCK,:STEEL].include?(j.type) && newenemy.hasActiveAbility?(:SANDFORCE)
+						end
+						if pokmon.hasActiveAbility?([:ELECTRICSURGE,:HADRONENGINE]) && @battle.field.terrain != :Electric
+							if j.type == :ELECTRIC && newenemy.affectedByTerrain?
+								tempdam*=1.5 
+								tempdam*=1.33 if newenemy.hasActiveAbility?(:HADRONENGINE) && j.specialMove?
+							end
+							tempdam*=1.6 if j.function=="DoublePowerInElectricTerrain"
+							tempdam*=0.67 if pokmon.hasActiveItem?(:ELECTRICSEED) && j.physicalMove?
+						end
+						if pokmon.hasActiveAbility?(:GRASSYSURGE) && @battle.field.terrain != :Grassy
+							if j.type == :GRASS && newenemy.affectedByTerrain?
+								tempdam*=1.5 
+							end
+							if ["076","095","044"].include?(j.function)
+								tempdam*=0.5
+							end
+							tempdam*=0.67 if pokmon.hasActiveItem?(:GRASSYSEED) && j.physicalMove?
+						end
+						if pokmon.hasActiveAbility?(:PSYCHICSURGE) && @battle.field.terrain != :Psychic
+							if j.type == :PSYCHIC && newenemy.affectedByTerrain?
+								tempdam*=1.5 
+							end
+							tempdam*=1.3 if j.function=="HitsAllFoesAndPowersUpInPsychicTerrain"
+							tempdam*=0.67 if pokmon.hasActiveItem?(:PSYCHICSEED) && j.specialMove?
+						end
+						if pokmon.hasActiveAbility?(:MISTYSURGE) && @battle.field.terrain != :Misty
+							if j.type == :DRAGON && pokmon.affectedByTerrain?
+								tempdam*=0.5 
+							end
+							tempdam*=0.67 if pokmon.hasActiveItem?(:MISTYSEED) && j.specialMove?
+						end
+						if pokmon.hasActiveAbility?(:INTIMIDATE) && 
+							newenemy.pbCanLowerAttackStatStageIntimidateAI(pokmon)
+							if j.physicalMove?
+								if newenemy.hasActiveAbility?([:DEFIANT,:CONTRARY])
+									tempdam*=1.5
+								else
+									tempdam*=0.67 
+								end
+							end
+							if j.specialMove? && newenemy.hasActiveAbility?(:COMPETITIVE)
+								tempdam*=2
+							end
+						end
+						thisprio = priorityAI(newenemy,j)
+						if thisprio>0 
+							tempdam=0 if pokmon.hasActiveAbility?(:PSYCHICSURGE) && pokmon.affectedByTerrain?
+							hasprio=thisprio
 							priodamage=tempdam if tempdam>priodamage
 						end		
 						maxdam=tempdam if tempdam>maxdam
@@ -337,8 +411,8 @@ class PokeBattle_AI
 			pokmon.moves.each do |m|
 				pokmon.eachOpposing do |b|
 					mold_broken=moldbroken(pokmon,b,m.function)
-					if (m.function=="006" && b.pbCanPoison?(pokmon,false)) ||# Toxic
-						(m.name=="Will-O-Wisp" && b.pbCanBurn?(pokmon,false)) ||# Willo
+					if (m.function=="006" && b.pbCanPoison?(pokmon,false,m)) ||# Toxic
+						(m.name=="Will-O-Wisp" && b.pbCanBurn?(pokmon,false,m)) ||# Willo
 						(m.function=="0DC" && !b.pbHasType?(:GRASS) && b.effects[PBEffects::Substitute]<=0) # Leech Seed
 						tickdamage=true
 						sum+=150
@@ -361,7 +435,7 @@ class PokeBattle_AI
 						end	
 					end
 					#  Sleep
-					# if m.function=="003" && b.pbCanSleep?(pokmon,false) && !(m.powderMove? && b.pbHasType?(:GRASS)) && i!=party.length-1
+					# if m.function=="003" && b.pbCanSleep?(pokmon,false,m) && !(m.powderMove? && b.pbHasType?(:GRASS)) && i!=party.length-1
 					# 	willwakeup=false
 					# 	willwakeup=true if  (b.hasActiveItem?(:LUMBERRY) && b.hasActiveItem?(:CHESTOBERRY))
 					# 	if ((aspeed>maxspeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>roomturn))
@@ -380,8 +454,55 @@ class PokeBattle_AI
 					# end
 					#next if m.baseDamage == 0
 					tempdam = pbRoughDamage(m,pokmon,b,100)
-					maxprio=m.priority if tempdam>=b.hp && m.priority>0
+					thisprio = priorityAI(pokmon,m,true)
+					tempdam = 0 if thisprio>0 && pokmon.hasActiveAbility?(:PSYCHICSURGE) && b.affectedByTerrain?
+					maxprio=thisprio if tempdam>=b.hp && thisprio>0
 					tempdam = 0 if pbCheckMoveImmunity(1,m,pokmon,b,100)
+					if pokmon.hasActiveAbility?(:DRIZZLE) && @battle.pbWeather != :Rain 
+						tempdam*=1.5 if m.type == :WATER
+						tempdam*=0.5 if m.type == :FIRE
+					end
+					if pokmon.hasActiveAbility?([:DROUGHT,:ORICHALCUMPULSE]) && @battle.pbWeather != :Sun 
+						tempdam*=1.5 if m.type == :FIRE
+						tempdam*=0.5 if m.type == :WATER
+						tempdam*=1.33 if pokmon.hasActiveAbility?(:ORICHALCUMPULSE) && m.physicalMove?
+						tempdam*=1.5 if pokmon.hasActiveAbility?(:SOLARPOWER) && m.specialMove?
+					end
+					if pokmon.hasActiveAbility?(:SANDSTREAM) && @battle.pbWeather != :Sandstorm 
+						tempdam*=0.67 if b.type == :ROCK && m.specialMove?
+						tempdam*=1.3 if [:GROUND,:ROCK,:STEEL].include?(m.type) && pokmon.hasActiveAbility?(:SANDFORCE)
+					end
+					if pokmon.hasActiveAbility?([:ELECTRICSURGE,:HADRONENGINE]) && @battle.field.terrain != :Electric
+						if m.type == :ELECTRIC && pokmon.affectedByTerrain?
+							tempdam*=1.5 
+							tempdam*=1.33 if newenemy.hasActiveAbility?(:HADRONENGINE) && m.specialMove?
+						end
+						tempdam*=1.6 if m.function=="DoublePowerInElectricTerrain"
+						tempdam*=0.67 if b.hasActiveItem?(:ELECTRICSEED) && m.physicalMove?
+					end
+					if pokmon.hasActiveAbility?(:GRASSYSURGE) && @battle.field.terrain != :Grassy
+						if m.type == :GRASS && pokmon.affectedByTerrain?
+							tempdam*=1.5 
+						end
+						if ["076","095","044"].include?(m.function)
+							tempdam*=0.5
+						end
+						tempdam*=0.67 if b.hasActiveItem?(:GRASSYSEED) && m.physicalMove?
+						tempdam*=0.67 if b.hasActiveAbility?(:GRASSPELT) && m.physicalMove?
+					end
+					if pokmon.hasActiveAbility?(:PSYCHICSURGE) && @battle.field.terrain != :Psychic
+						if m.type == :PSYCHIC && pokmon.affectedByTerrain?
+							tempdam*=1.5 
+						end
+						tempdam*=1.3 if m.function=="HitsAllFoesAndPowersUpInPsychicTerrain"
+						tempdam*=0.67 if b.hasActiveItem?(:PSYCHICSEED) && m.specialMove?
+					end
+					if pokmon.hasActiveAbility?(:MISTYSURGE) && @battle.field.terrain != :Misty
+						if m.type == :DRAGON && newenemy.affectedByTerrain?
+							tempdam*=0.5 
+						end
+						tempdam*=0.67 if b.hasActiveItem?(:MISTYSEED) && m.specialMove?
+					end
 					if !mold_broken && b.hasActiveAbility?(:DISGUISE) && b.turnCount==0	
 						if ["0C0", "0BD", "175", "0BF"].include?(m.function)
 							tempdam*=2.2

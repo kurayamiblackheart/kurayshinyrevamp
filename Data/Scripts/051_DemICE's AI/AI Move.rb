@@ -245,7 +245,7 @@ class PokeBattle_AI
 				(target.semiInvulnerable? || target.effects[PBEffects::SkyDrop]>=0)
 				miss = true
 				miss = false if user.hasActiveAbility?(:NOGUARD) || target.hasActiveAbility?(:NOGUARD)
-				miss = false if ((aspeed<=ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && move.priority<1
+				miss = false if ((aspeed<=ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && priorityAI(user,move)<1
 				if miss
 					# Knows what can get past semi-invulnerability
 					if target.effects[PBEffects::SkyDrop]>=0
@@ -873,8 +873,12 @@ class PokeBattle_AI
 			!move.ignoresSubstitute?(user) && user.index!=target.index
 			return true if Settings::MECHANICS_GENERATION >= 7 && user.hasActiveAbility?(:PRANKSTER) &&
 			target.pbHasType?(:DARK) && target.opposes?(user)
-			return true if move.priority>0 && @battle.field.terrain == :Psychic &&
-			target.affectedByTerrain? && target.opposes?(user)
+			if priorityAI(user,move) > 0
+				@battle.allSameSideBattlers(target.index).each do |b|
+					return true if b.hasActiveAbility?([:DAZZLING, :QUEENLYMAJESTY, :ARMORTAIL],false,mold_broken) 
+				end
+				return true if @battle.field.terrain == :Psychic && target.affectedByTerrain? && target.opposes?(user)
+			end
 		end
 		return false
 	end
@@ -1339,7 +1343,7 @@ class PokeBattle_AI
 							priodam=0
 							priomove=nil
 							for j in user.moves
-								next if j.priority<1
+								next if priorityAI(user,j)<1
 								if user.effects[PBEffects::ChoiceBand] &&
 									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
@@ -1388,7 +1392,7 @@ class PokeBattle_AI
 							priodam=0
 							priomove=nil
 							for j in user.moves
-								next if j.priority<1
+								next if priorityAI(user,j)<1
 								if user.effects[PBEffects::ChoiceBand] &&
 									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
@@ -1439,7 +1443,7 @@ class PokeBattle_AI
 							priodam=0
 							priomove=nil
 							for j in user.moves
-								next if j.priority<1
+								next if priorityAI(user,j)<1
 								if user.effects[PBEffects::ChoiceBand] &&
 									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
@@ -1617,7 +1621,7 @@ class PokeBattle_AI
 							priodam=0
 							priomove=nil
 							for j in user.moves
-								next if j.priority<1
+								next if priorityAI(user,j)<1
 								if user.effects[PBEffects::ChoiceBand] &&
 									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
@@ -1672,7 +1676,7 @@ class PokeBattle_AI
 							priodam=0
 							priomove=nil
 							for j in user.moves
-								next if j.priority<1
+								next if priorityAI(user,j)<1
 								if user.effects[PBEffects::ChoiceBand] &&
 									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
@@ -1728,7 +1732,7 @@ class PokeBattle_AI
 							priodam=0
 							priomove=nil
 							for j in user.moves
-								next if j.priority<1
+								next if priorityAI(user,j)<1
 								if user.effects[PBEffects::ChoiceBand] &&
 									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
@@ -1921,284 +1925,289 @@ class PokeBattle_AI
 		if usableXItems.length>0
 			usableXItems.sort! { |a,b| (a[1]==b[1]) ? a[2]<=>b[2] : a[1]<=>b[1] }
 			usableXItems.each do |i|
-				xitemscore=100
-				case i[0]
-				when :XATTACK, :XATTACK2, :XATTACK3, :XATTACK6
-					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
-					maxmove=bestmove[1]
-					maxprio=bestmove[2]
-					priodam=0
-					priomove=nil
-					for j in user.moves
-						next if j.priority<1
-						if user.effects[PBEffects::ChoiceBand] &&
-							user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
-							if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
-								next if j.id!=user.lastMoveUsed
-							end
-						end		
-						tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
-						tempdam = 0 if pbCheckMoveImmunity(1,j,target,user,100)
-						if tempdam>priodam
-							priodam=tempdam 
-							priomove=j
-						end	
-					end 
-					halfhealth=(user.totalhp/2)
-					thirdhealth=(user.totalhp/3)
-					aspeed = pbRoughStat(user,:SPEED,skill)
-					ospeed = pbRoughStat(target,:SPEED,skill)
-					if targetSurvivesMove(maxmove,target,user,maxprio) || (target.status == :SLEEP && target.statusCount>1)
-						xitemscore += 40
-						xitemscore+= 60 if (target.status == :SLEEP && target.statusCount>1)
-						xitemscore += 60 if user.hasActiveAbility?(:SPEEDBOOST)
-						if skill>=PBTrainerAI.highSkill
-							aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
-							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-							if canSleepTarget(user,target,true) && 
-								((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-								xitemscore-=90
+				xitemscore=90
+				if user.hasActiveAbility?(:CONTRARY)
+					xitemscore=0
+				else
+					case i[0]
+					when :XATTACK, :XATTACK2, :XATTACK3, :XATTACK6
+						bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+						maxdam=bestmove[0] 
+						maxmove=bestmove[1]
+						maxprio=bestmove[2]
+						priodam=0
+						priomove=nil
+						for j in user.moves
+							next if priorityAI(user,j)<1
+							if user.effects[PBEffects::ChoiceBand] &&
+								user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+								if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
+									next if j.id!=user.lastMoveUsed
+								end
+							end		
+							tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
+							tempdam = 0 if pbCheckMoveImmunity(1,j,target,user,100)
+							if tempdam>priodam
+								priodam=tempdam 
+								priomove=j
 							end	
-							if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && maxdam>halfhealth
-								if priomove
-									if targetSurvivesMove(priomove,user,target) && !targetSurvivesMove(priomove,user,target,0,2)
-										xitemscore+=80
-									else	
+						end 
+						halfhealth=(user.totalhp/2)
+						thirdhealth=(user.totalhp/3)
+						aspeed = pbRoughStat(user,:SPEED,skill)
+						ospeed = pbRoughStat(target,:SPEED,skill)
+						if targetSurvivesMove(maxmove,target,user,maxprio) || (target.status == :SLEEP && target.statusCount>1)
+							xitemscore += 40
+							xitemscore+= 60 if (target.status == :SLEEP && target.statusCount>1)
+							xitemscore += 60 if user.hasActiveAbility?(:SPEEDBOOST)
+							if skill>=PBTrainerAI.highSkill
+								aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
+								ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
+								if canSleepTarget(user,target,true) && 
+									((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+									xitemscore-=90
+								end	
+								if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && maxdam>halfhealth
+									if priomove
+										if targetSurvivesMove(priomove,user,target) && !targetSurvivesMove(priomove,user,target,0,2)
+											xitemscore+=80
+										else	
+											xitemscore -= 90 
+										end
+									else
 										xitemscore -= 90 
 									end
 								else
-									xitemscore -= 90 
+									xitemscore+=80
 								end
+							end
+							xitemscore += 20 if halfhealth>maxdam
+							xitemscore += 40 if thirdhealth>maxdam
+						end 
+						xitemscore -= user.stages[:ATTACK]*20
+						if skill>=PBTrainerAI.mediumSkill
+							hasPhysicalAttack = false
+							user.eachMove do |m|
+								next if !m.physicalMove?(m.type)
+								hasPhysicalAttack = true
+								break
+							end
+							if hasPhysicalAttack
+								xitemscore += 20
 							else
-								xitemscore+=80
+								xitemscore -= 200
 							end
 						end
-						xitemscore += 20 if halfhealth>maxdam
-						xitemscore += 40 if thirdhealth>maxdam
-					end 
-					xitemscore -= user.stages[:ATTACK]*20
-					if skill>=PBTrainerAI.mediumSkill
-						hasPhysicalAttack = false
-						user.eachMove do |m|
-							next if !m.physicalMove?(m.type)
-							hasPhysicalAttack = true
-							break
+					when :XDEFENSE, :XDEFENSE2, :XDEFENSE3, :XDEFENSE6, :XDEFEND2, :XDEFEND3, :XDEFEND6
+						bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+						maxdam=bestmove[0] 
+						maxmove=bestmove[1]
+						maxprio=bestmove[2]
+						maxphys=(bestmove[3]=="physical") 
+						halfhealth=(user.totalhp/2)
+						thirdhealth=(user.totalhp/3)
+						aspeed = pbRoughStat(user,:SPEED,skill)
+						ospeed = pbRoughStat(target,:SPEED,skill)
+						if canSleepTarget(user,target,true) && 
+							((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+							xitemscore-=90
+						end	
+						if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
+							if maxphys
+								xitemscore += 30
+								xitemscore += 20 if halfhealth>maxdam
+							end
+							xitemscore += 40 if thirdhealth>maxdam
+							if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+								xitemscore += 40
+							end
+							if skill>=PBTrainerAI.highSkill
+								aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
+								ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
+							end
+						end 
+						if user.statStageAtMax?(:DEFENSE)
+							xitemscore -= 90
+						else
+							xitemscore -= user.stages[:DEFENSE] * 20
 						end
-						if hasPhysicalAttack
+					when :XSPATK, :XSPATK2, :XSPATK3, :XSPATK6, :XSPECIAL, :XSPECIAL2, :XSPECIAL3, :XSPECIAL6
+						bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+						maxdam=bestmove[0] 
+						maxmove=bestmove[1]
+						maxprio=bestmove[2]
+						halfhealth=(user.totalhp/2)
+						thirdhealth=(user.totalhp/3)
+						aspeed = pbRoughStat(user,:SPEED,skill)
+						ospeed = pbRoughStat(target,:SPEED,skill)
+						if canSleepTarget(user,target,true) && 
+							((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+							xitemscore-=90
+						end	
+						if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
+							xitemscore += 40
+							xitemscore+= 60 if (target.status == :SLEEP && target.statusCount>1)
+							xitemscore += 60 if user.hasActiveAbility?(:SPEEDBOOST)
+							if skill>=PBTrainerAI.highSkill
+								aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
+								ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
+								xitemscore -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && maxdam>halfhealth
+							end
+							xitemscore += 20 if halfhealth>maxdam
+							xitemscore += 40 if thirdhealth>maxdam
+						end 
+						xitemscore -= user.stages[:SPECIAL_ATTACK]*20
+						if skill>=PBTrainerAI.mediumSkill
+							hasSpecialAttack = false
+							user.eachMove do |m|
+								next if !m.specialMove?(m.type)
+								hasSpecialAttack = true
+								break
+							end
+							if hasSpecialAttack
+								xitemscore += 20
+							else
+								xitemscore -= 200
+							end
+						end
+					when :XSPDEF, :XSPDEF2, :XSPDEF3, :XSPDEF6
+						bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+						maxdam=bestmove[0] 
+						maxmove=bestmove[1]
+						maxprio=bestmove[2]
+						maxspec=(bestmove[3]=="special") 
+						halfhealth=(user.totalhp/2)
+						thirdhealth=(user.totalhp/3)
+						aspeed = pbRoughStat(user,:SPEED,skill)
+						ospeed = pbRoughStat(target,:SPEED,skill)
+						if canSleepTarget(user,target,true) && 
+							((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+							xitemscore-=90
+						end	
+						if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
+							if maxspec
+								xitemscore += 30
+								xitemscore += 20 if halfhealth>maxdam
+							end
+							xitemscore += 60 if thirdhealth>maxdam
+							if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+								xitemscore += 40
+							end
+							if skill>=PBTrainerAI.highSkill
+								aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
+								ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
+							end
+						end 
+						if user.statStageAtMax?(:SPECIAL_DEFENSE)
+							xitemscore -= 90
+						else
+							xitemscore -= user.stages[:SPECIAL_DEFENSE] * 20
+						end
+					when :XSPEED, :XSPEED2, :XSPEED3, :XSPEED6
+						bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+						maxdam=bestmove[0] 
+						maxmove=bestmove[1]
+						maxprio=bestmove[2]
+						halfhealth=(user.totalhp/2)
+						thirdhealth=(user.totalhp/3)
+						aspeed = pbRoughStat(user,:SPEED,skill)
+						ospeed = pbRoughStat(target,:SPEED,skill)
+						if canSleepTarget(user,target,true) && 
+							((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+							xitemscore-=90
+						end	
+						if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
+							#xitemscore += 40
+							if skill>=PBTrainerAI.highSkill
+								aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
+								ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
+								if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
+									xitemscore += 100 
+									if attacker.pbHasMoveFunction?("175") && attacker.hasActiveAbility?(:SERENEGRACE) && 
+										((!target.hasActiveAbility?(:INNERFOCUS) && !target.hasActiveAbility?(:SHIELDDUST)) || mold_broken) &&
+										target.effects[PBEffects::Substitute]==0
+										xitemscore +=140 
+									end
+								end
+							end
+							xitemscore += 40 if thirdhealth>maxdam
+						end
+						if user.statStageAtMax?(:SPEED)
+							xitemscore -= 90
+						else
+							xitemscore -= user.stages[:SPEED] * 10
+						end
+					when :DIREHIT
+						bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+						maxdam=bestmove[0] 
+						maxmove=bestmove[1]
+						maxprio=bestmove[2]
+						priodam=0
+						priomove=nil
+						for j in user.moves
+							next if priorityAI(user,j)<1
+							if user.effects[PBEffects::ChoiceBand] &&
+								user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+								if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
+									next if j.id!=user.lastMoveUsed
+								end
+							end		
+							tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
+							tempdam = 0 if pbCheckMoveImmunity(1,j,target,user,100)
+							if tempdam>priodam
+								priodam=tempdam 
+								priomove=j
+							end	
+						end 
+						halfhealth=(user.totalhp/2)
+						thirdhealth=(user.totalhp/3)
+						aspeed = pbRoughStat(user,:SPEED,skill)
+						ospeed = pbRoughStat(target,:SPEED,skill)
+						hascrit = 0
+						if user.hasActiveAbility?(:SUPERLUCK) || user.hasActiveAbility?(:SNIPER) || user.hasActiveItem?(:SCOPELENS)
+							hascrit=2
+						end
+						user.eachMove do |m|
+							next if !m.highCriticalRate?
+							hascrit +=1
+							break if hascrit>=2
+						end
+						if hascrit==2
 							xitemscore += 20
 						else
 							xitemscore -= 200
 						end
-					end
-				when :XDEFENSE, :XDEFENSE2, :XDEFENSE3, :XDEFENSE6, :XDEFEND2, :XDEFEND3, :XDEFEND6
-					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
-					maxmove=bestmove[1]
-					maxprio=bestmove[2]
-					maxphys=(bestmove[3]=="physical") 
-					halfhealth=(user.totalhp/2)
-					thirdhealth=(user.totalhp/3)
-					aspeed = pbRoughStat(user,:SPEED,skill)
-					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
-						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-						xitemscore-=90
-					end	
-					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
-						if maxphys
-							xitemscore += 30
-							xitemscore += 20 if halfhealth>maxdam
-						end
-						xitemscore += 40 if thirdhealth>maxdam
-						if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+						if (targetSurvivesMove(maxmove,target,user,maxprio) || (target.status == :SLEEP && target.statusCount>1)) && hascrit==2
 							xitemscore += 40
-						end
-						if skill>=PBTrainerAI.highSkill
-							aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
-							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-						end
-					end 
-					if user.statStageAtMax?(:DEFENSE)
-						xitemscore -= 90
-					else
-						xitemscore -= user.stages[:DEFENSE] * 20
-					end
-				when :XSPATK, :XSPATK2, :XSPATK3, :XSPATK6, :XSPECIAL, :XSPECIAL2, :XSPECIAL3, :XSPECIAL6
-					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
-					maxmove=bestmove[1]
-					maxprio=bestmove[2]
-					halfhealth=(user.totalhp/2)
-					thirdhealth=(user.totalhp/3)
-					aspeed = pbRoughStat(user,:SPEED,skill)
-					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
-						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-						xitemscore-=90
-					end	
-					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
-						xitemscore += 40
-						xitemscore+= 60 if (target.status == :SLEEP && target.statusCount>1)
-						xitemscore += 60 if user.hasActiveAbility?(:SPEEDBOOST)
-						if skill>=PBTrainerAI.highSkill
-							aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
-							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-							xitemscore -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && maxdam>halfhealth
-						end
-						xitemscore += 20 if halfhealth>maxdam
-						xitemscore += 40 if thirdhealth>maxdam
-					end 
-					xitemscore -= user.stages[:SPECIAL_ATTACK]*20
-					if skill>=PBTrainerAI.mediumSkill
-						hasSpecialAttack = false
-						user.eachMove do |m|
-							next if !m.specialMove?(m.type)
-							hasSpecialAttack = true
-							break
-						end
-						if hasSpecialAttack
-							xitemscore += 20
-						else
-							xitemscore -= 200
-						end
-					end
-				when :XSPDEF, :XSPDEF2, :XSPDEF3, :XSPDEF6
-					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
-					maxmove=bestmove[1]
-					maxprio=bestmove[2]
-					maxspec=(bestmove[3]=="special") 
-					halfhealth=(user.totalhp/2)
-					thirdhealth=(user.totalhp/3)
-					aspeed = pbRoughStat(user,:SPEED,skill)
-					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
-						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-						xitemscore-=90
-					end	
-					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
-						if maxspec
-							xitemscore += 30
-							xitemscore += 20 if halfhealth>maxdam
-						end
-						xitemscore += 60 if thirdhealth>maxdam
-						if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
-							xitemscore += 40
-						end
-						if skill>=PBTrainerAI.highSkill
-							aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
-							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-						end
-					end 
-					if user.statStageAtMax?(:SPECIAL_DEFENSE)
-						xitemscore -= 90
-					else
-						xitemscore -= user.stages[:SPECIAL_DEFENSE] * 20
-					end
-				when :XSPEED, :XSPEED2, :XSPEED3, :XSPEED6
-					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
-					maxmove=bestmove[1]
-					maxprio=bestmove[2]
-					halfhealth=(user.totalhp/2)
-					thirdhealth=(user.totalhp/3)
-					aspeed = pbRoughStat(user,:SPEED,skill)
-					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
-						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-						xitemscore-=90
-					end	
-					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
-						#xitemscore += 40
-						if skill>=PBTrainerAI.highSkill
-							aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
-							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-							if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
-								xitemscore += 100 
-								if attacker.pbHasMoveFunction?("175") && attacker.hasActiveAbility?(:SERENEGRACE) && 
-									((!target.hasActiveAbility?(:INNERFOCUS) && !target.hasActiveAbility?(:SHIELDDUST)) || mold_broken) &&
-									target.effects[PBEffects::Substitute]==0
-									xitemscore +=140 
-								end
-							end
-						end
-						xitemscore += 40 if thirdhealth>maxdam
-					end
-					if user.statStageAtMax?(:SPEED)
-						xitemscore -= 90
-					else
-						xitemscore -= user.stages[:SPEED] * 10
-					end
-				when :DIREHIT
-					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
-					maxmove=bestmove[1]
-					maxprio=bestmove[2]
-					priodam=0
-					priomove=nil
-					for j in user.moves
-						next if j.priority<1
-						if user.effects[PBEffects::ChoiceBand] &&
-							user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
-							if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
-								next if j.id!=user.lastMoveUsed
-							end
-						end		
-						tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
-						tempdam = 0 if pbCheckMoveImmunity(1,j,target,user,100)
-						if tempdam>priodam
-							priodam=tempdam 
-							priomove=j
-						end	
-					end 
-					halfhealth=(user.totalhp/2)
-					thirdhealth=(user.totalhp/3)
-					aspeed = pbRoughStat(user,:SPEED,skill)
-					ospeed = pbRoughStat(target,:SPEED,skill)
-					hascrit = 0
-					if user.hasActiveAbility?(:SUPERLUCK) || user.hasActiveAbility?(:SNIPER) || user.hasActiveItem?(:SCOPELENS)
-						hascrit=2
-					end
-					user.eachMove do |m|
-						next if !m.highCriticalRate?
-						hascrit +=1
-						break if hascrit>=2
-					end
-					if hascrit==2
-						xitemscore += 20
-					else
-						xitemscore -= 200
-					end
-					if (targetSurvivesMove(maxmove,target,user,maxprio) || (target.status == :SLEEP && target.statusCount>1)) && hascrit==2
-						xitemscore += 40
-						xitemscore+= 60 if (target.status == :SLEEP && target.statusCount>1)
-						xitemscore += 60 if user.hasActiveAbility?(:SPEEDBOOST)
-						if skill>=PBTrainerAI.highSkill
-							aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
-							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-							if canSleepTarget(user,target,true) && 
-								((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-								xitemscore-=90
-							end	
-							if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && maxdam>halfhealth
-								if priomove
-									if targetSurvivesMove(priomove,user,target) && !targetSurvivesMove(priomove,user,target,0,2)
-										xitemscore+=80
-									else	
+							xitemscore+= 60 if (target.status == :SLEEP && target.statusCount>1)
+							xitemscore += 60 if user.hasActiveAbility?(:SPEEDBOOST)
+							if skill>=PBTrainerAI.highSkill
+								aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
+								ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
+								if canSleepTarget(user,target,true) && 
+									((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+									xitemscore-=90
+								end	
+								if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && maxdam>halfhealth
+									if priomove
+										if targetSurvivesMove(priomove,user,target) && !targetSurvivesMove(priomove,user,target,0,2)
+											xitemscore+=80
+										else	
+											xitemscore -= 90 
+										end
+									else
 										xitemscore -= 90 
 									end
 								else
-									xitemscore -= 90 
+									xitemscore+=80
 								end
-							else
-								xitemscore+=80
 							end
-						end
-						xitemscore += 20 if halfhealth>maxdam
-						xitemscore += 40 if thirdhealth>maxdam
-					end 
-					
+							xitemscore += 20 if halfhealth>maxdam
+							xitemscore += 40 if thirdhealth>maxdam
+						end 
+						
+					end
+
 				end
 				
 				if xitemscore>maxscore
