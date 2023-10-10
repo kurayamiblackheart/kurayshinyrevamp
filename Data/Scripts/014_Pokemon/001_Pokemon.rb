@@ -1729,7 +1729,7 @@ class Pokemon
   end
 
   #KurayX
-  def load_json(jsonparse, jsonfile=nil)
+  def load_json(jsonparse, jsonfile=nil, forcereadonly=false)
     @imported = true
     @species = jsonparse['species']
     @form = jsonparse['form']
@@ -1807,7 +1807,8 @@ class Pokemon
         noimport = $PokemonSystem.nopngimport
       end
       if File.file?(jsonfile[0..-6] + ".png")
-      if noimport == 0
+        if noimport == 0 && !forcereadonly
+          Dir.mkdir('Graphics/Imported') unless File.exists?('Graphics/Imported')
           # import and copy .png
           addincra = 0
           nextfilename = File.basename(jsonfile)
@@ -1826,7 +1827,7 @@ class Pokemon
           rescue => e
             @kuraycustomfile = jsonfile[0..-6] + ".png"
           end
-        elsif noimport == 1
+        elsif noimport == 1 || forcereadonly
           # only import .png to kuraycustomfile
           @kuraycustomfile = jsonfile[0..-6] + ".png"
         end

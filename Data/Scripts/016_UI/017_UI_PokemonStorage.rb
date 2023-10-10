@@ -3844,7 +3844,7 @@ class PokemonStorageScreen
             randomkuray = pokekuraysplayer.sample
             pokemon = Pokemon.new(:BULBASAUR, 1)
             json_data = File.read(randomkuray)
-            pokemon.load_json(eval(json_data), randomkuray)
+            pokemon.load_json(eval(json_data), randomkuray, true)
             playerteamok = true if !pokemon.egg?
             krplayer.push(pokemon)
             # Remove the chosen file from the list
@@ -5366,7 +5366,7 @@ class PokemonStorageScreen
               if isjson
                 pokemon = Pokemon.new(:BULBASAUR, 1)
                 json_data = File.read(randomkuray)
-                pokemon.load_json(eval(json_data), randomkuray)
+                pokemon.load_json(eval(json_data), randomkuray, true)
                 enemyteamok = true if !pokemon.egg?
                 krbattlers.push(pokemon)
               else
@@ -5384,7 +5384,7 @@ class PokemonStorageScreen
               if isjson || playerfolder
                 pokemon = Pokemon.new(:BULBASAUR, 1)
                 json_data = File.read(randomkuray)
-                pokemon.load_json(eval(json_data), randomkuray)
+                pokemon.load_json(eval(json_data), randomkuray, true)
                 playerteamok = true if !pokemon.egg?
                 krplayer.push(pokemon)
               else
