@@ -56,6 +56,7 @@ class Pokemon
   #KurayX - Custom Filenames
   attr_accessor :kuraycustomfile
   attr_accessor :oldkuraycustomfile
+  attr_accessor :veryunique
 
 
   
@@ -239,6 +240,10 @@ class Pokemon
     @shinyValue=value
   end
 
+  def veryunique=(value)
+    @veryunique=value
+  end
+
   #KurayX - Custom Filenames
   def kuraycustomfile=(value)
     @kuraycustomfile=value
@@ -303,6 +308,15 @@ class Pokemon
     end
   end
   
+  def veryunique?
+    if @veryunique
+      return @veryunique
+    else
+      @veryunique = createVeryUnique()
+      return @veryunique
+    end
+  end
+
   #KurayX - Custom Filenames
   def kuraycustomfile?
     if @kuraycustomfile
@@ -479,6 +493,11 @@ class Pokemon
   def kuraycustomfile
     return nil if @kuraycustomfile == "none"
     return @kuraycustomfile
+  end
+
+  def veryunique
+    return nil if !@veryunique
+    return @veryunique
   end
 
   #KurayX - Custom Filenames
@@ -1662,6 +1681,7 @@ class Pokemon
       "shiny" => @shiny,
       "kuraygender" => @kuraygender,
       "shinyValue" => @shinyValue,
+      "veryunique" => @veryunique,
       "kuraycustomfile" => @kuraycustomfile,
       "oldkuraycustomfile" => @oldkuraycustomfile,
       "shinyR" => @shinyR,
@@ -1743,6 +1763,7 @@ class Pokemon
     @shiny = jsonparse['shiny']
     @kuraygender = jsonparse['kuraygender']
     @shinyValue = jsonparse['shinyValue']
+    @veryunique = jsonparse['veryunique']
     @kuraycustomfile = jsonparse['kuraycustomfile']
     @oldkuraycustomfile = jsonparse['oldkuraycustomfile']
     @shinyR = jsonparse['shinyR']
@@ -1810,20 +1831,27 @@ class Pokemon
         if noimport == 0 && !forcereadonly
           Dir.mkdir('Graphics/Imported') unless File.exists?('Graphics/Imported')
           # import and copy .png
-          addincra = 0
-          nextfilename = File.basename(jsonfile)
-          nextfilename = 'Graphics/Imported/' + nextfilename[0..-6]
-          finalname = nextfilename
-          while File.file?(finalname + ".png")
-            finalname = nextfilename + "(" + addincra.to_s + ")"
-            addincra += 1
-            if addincra > 9999
-              break
-            end
+          # addincra = 0
+          # nextfilename = File.basename(jsonfile)
+          # nextfilename = 'Graphics/Imported/' + nextfilename[0..-6]
+          # finalname = nextfilename
+          # while File.file?(finalname + ".png")
+          #   finalname = nextfilename + "(" + addincra.to_s + ")"
+          #   addincra += 1
+          #   if addincra > 9999
+          #     break
+          #   end
+          # end
+          # nextfilename = File.basename(jsonfile)
+          # nextfilename = 'Graphics/Imported/' + nextfilename[0..-6]
+          filewant = 'Graphics/Imported/' + veryunique?.to_s + "_" + @personalID.to_s + "_" + @owner.id.to_s + "_" + speciesName.to_s + ".png"
+          if File.exist?(filewant)
+            # If it exists, delete it to replace it with the source file
+            File.delete(filewant)
           end
           begin
-            File.copy(jsonfile[0..-6] + ".png", finalname + ".png")
-            @kuraycustomfile = finalname + ".png"
+            File.copy(jsonfile[0..-6] + ".png", filewant)
+            @kuraycustomfile = filewant
           rescue => e
             @kuraycustomfile = jsonfile[0..-6] + ".png"
           end
@@ -1841,6 +1869,16 @@ class Pokemon
     mail # Resets mail, if the held item was mail
     @poke_ball = :POKEBALL if GameData::Item.get(@poke_ball).modded?
     return self
+  end
+
+  def createVeryUnique()
+    # Define the characters to choose from
+    characters = ('0'..'9').to_a
+  
+    # Generate a random ID of the specified length
+    random_id = (1..24).map { characters.sample }.join
+  
+    return random_id
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
@@ -1867,6 +1905,7 @@ class Pokemon
     @kuraygender = rand(65536)
     #KurayX - Custom Filenames
     @kuraycustomfile = kurayGetCustomSprite(species_data.id_number)
+    @veryunique = createVeryUnique()
     @oldkuraycustomfile = nil
     @shinyR = kurayRNGforChannels
     @shinyG = kurayRNGforChannels
