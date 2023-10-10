@@ -1878,8 +1878,8 @@ class PokemonStorageScene
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG || canExportImport
     commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
     commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
-    commands[cmdCarpFill = commands.length] = _INTL("CarpFill") if $DEBUG && File.exists?("Kurayami.krs")
-    commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny") if $DEBUG && File.exists?("Kurayami.krs")
+    commands[cmdCarpFill = commands.length] = _INTL("CarpFill") if $DEBUG && File.file?("Kurayami.krs")
+    commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny") if $DEBUG && File.file?("Kurayami.krs")
     commands[cmdCancel = commands.length] = _INTL("Cancel")
     command = pbShowCommands(helptext, commands)
     if cmdEvoLock >= 0 && command == cmdEvoLock # EvoLock
@@ -2088,7 +2088,7 @@ class PokemonStorageScene
       pbPlayBuzzerSE
       pbDisplay(_INTL("No Custom Sprite!"))
     else
-      if File.exists?("Shiny Finder.exe")
+      if File.file?("Shiny Finder.exe")
         exe_path = 'Shiny Finder.exe'
         arguments = ' --pxd="' + pokemon.kuraycustomfile.to_s + '" --red=' + pokemon.shinyR.to_s + ' --green=' + pokemon.shinyG.to_s + ' --blue=' + pokemon.shinyB.to_s + ' --hue=' + (pokemon.shinyValue).to_s
         system('start "ini" "' + exe_path.to_s + '" ' + arguments.to_s)
@@ -2350,7 +2350,7 @@ class PokemonStorageScene
     cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
     importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
     classyname = importname
-    while File.exists?(importname + ".json")
+    while File.file?(importname + ".json") || File.file?(importname + ".png")
       importname = classyname + "(" + addincra.to_s + ")"
       addincra += 1
       if addincra > 9999
@@ -2362,6 +2362,7 @@ class PokemonStorageScene
     # Marshal not working anymore !
     # File.open(importname + ".pkm", 'wb') { |f| f.write(Marshal.dump(pokemon)) }
     File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+    logic_png(pokemon, importname)
     # File.open(importname + ".json3", 'w') { |f| f.write(pokemon.to_s) }
     # File.open(importname + ".json2", 'w') { |f| f.write(pokemon.self) }
     if dodelete == 1 || deletepkm
@@ -2373,6 +2374,38 @@ class PokemonStorageScene
       pbHardRefresh
     end
     pbDisplay(_INTL("Pokemon Exported!"))
+  end
+
+  def logic_png(pokemon, importname)
+    if $PokemonSystem.nopngexport
+      if $PokemonSystem.nopngexport == 1
+        return
+      end
+    end
+    # logic for png exporting here
+    defaultuse = false
+    if pokemon.kuraycustomfile? == nil || ($PokemonSystem.kurayindividcustomsprite && $PokemonSystem.kurayindividcustomsprite == 1)
+      # search default
+      defaultuse = true
+    else
+      if !File.file?(pokemon.kuraycustomfile?)
+        defaultuse = true
+      end
+    end
+    if defaultuse
+      # blabla
+      getnum = pokemon.species
+      getnum = GameData::Species.get(getnum).id_number
+      copyfile = GameData::Species.sprite_filename(getnum)
+    else
+      copyfile = pokemon.kuraycustomfile?
+    end
+    begin
+      File.copy(copyfile, importname + ".png")
+    rescue => e
+      return
+    end
+    return
   end
 
   def pbExportBox(box)
@@ -2396,7 +2429,7 @@ class PokemonStorageScene
         cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
         importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
         classyname = importname
-        while File.exists?(importname + ".json")
+        while File.file?(importname + ".json") || File.file?(importname + ".png")
           importname = classyname + "(" + addincra.to_s + ")"
           addincra += 1
           if addincra > 9999
@@ -2404,6 +2437,7 @@ class PokemonStorageScene
           end
         end
         File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+        logic_png(pokemon, importname)
         if deletepkm
           @storage.pbDelete(box, k)
         end
@@ -2433,7 +2467,7 @@ class PokemonStorageScene
           cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
           importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
           classyname = importname
-          while File.exists?(importname + ".json")
+          while File.file?(importname + ".json") || File.file?(importname + ".png")
             importname = classyname + "(" + addincra.to_s + ")"
             addincra += 1
             if addincra > 9999
@@ -2441,6 +2475,7 @@ class PokemonStorageScene
             end
           end
           File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+          logic_png(pokemon, importname)
           if deletepkm
             @storage.pbDelete(box, k)
           end
@@ -2454,7 +2489,7 @@ class PokemonStorageScene
         cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
         importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
         classyname = importname
-        while File.exists?(importname + ".json")
+        while File.file?(importname + ".json") || File.file?(importname + ".png")
           importname = classyname + "(" + addincra.to_s + ")"
           addincra += 1
           if addincra > 9999
@@ -2462,6 +2497,7 @@ class PokemonStorageScene
           end
         end
         File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+        logic_png(pokemon, importname)
         if deletepkm
           @storage.pbDelete(box, k)
         end
@@ -2517,7 +2553,7 @@ class PokemonStorageScene
       end
       pokemon = Pokemon.new(:BULBASAUR, 1)
       importdata = File.read(importname)
-      pokemon.load_json(eval(importdata))
+      pokemon.load_json(eval(importdata), importname)
       if importunevo
         pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
       end
@@ -2597,12 +2633,12 @@ class PokemonStorageScene
       if selected[0] == -1
         pokemon = @storage.party[selected[1]]
         importdata = File.read(importname)
-        pokemon.load_json(eval(importdata))
+        pokemon.load_json(eval(importdata), importname)
       else
         # pokemon = @storage.boxes[selected[0]][selected[1]]
         pokemon = Pokemon.new(:BULBASAUR, 1)
         importdata = File.read(importname)
-        pokemon.load_json(eval(importdata))
+        pokemon.load_json(eval(importdata), importname)
       end
       if importunevo
         pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
@@ -3808,7 +3844,7 @@ class PokemonStorageScreen
             randomkuray = pokekuraysplayer.sample
             pokemon = Pokemon.new(:BULBASAUR, 1)
             json_data = File.read(randomkuray)
-            pokemon.load_json(eval(json_data))
+            pokemon.load_json(eval(json_data), randomkuray)
             playerteamok = true if !pokemon.egg?
             krplayer.push(pokemon)
             # Remove the chosen file from the list
@@ -4031,7 +4067,7 @@ class PokemonStorageScreen
       cleaned_name = pokemon.name.gsub(/[^a-zA-Z0-9]/, '_')
       importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.personalID.to_s + "-" + pokemon.gender.to_s + "-" + pokemon.level.to_s
       classyname = importname
-      while File.exists?(importname + ".json")
+      while File.file?(importname + ".json") || File.file?(importname + ".png")
         importname = classyname + "(" + addincra.to_s + ")"
         addincra += 1
         if addincra > 9999
@@ -4039,6 +4075,7 @@ class PokemonStorageScreen
         end
       end
       File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+      logic_png(pokemon, importname)
     end
     pbDisplay(_INTL("Pokemon(s) Exported!"))
   end
@@ -4078,6 +4115,10 @@ class PokemonStorageScreen
       @scene.pbRefresh
     end
     return
+  end
+
+  def logic_png(pokemon, importname)
+    @scene.logic_png(pokemon, importname)
   end
 
   def pbChooseMove(pkmn, helptext, index = 0)
@@ -5325,7 +5366,7 @@ class PokemonStorageScreen
               if isjson
                 pokemon = Pokemon.new(:BULBASAUR, 1)
                 json_data = File.read(randomkuray)
-                pokemon.load_json(eval(json_data))
+                pokemon.load_json(eval(json_data), randomkuray)
                 enemyteamok = true if !pokemon.egg?
                 krbattlers.push(pokemon)
               else
@@ -5343,7 +5384,7 @@ class PokemonStorageScreen
               if isjson || playerfolder
                 pokemon = Pokemon.new(:BULBASAUR, 1)
                 json_data = File.read(randomkuray)
-                pokemon.load_json(eval(json_data))
+                pokemon.load_json(eval(json_data), randomkuray)
                 playerteamok = true if !pokemon.egg?
                 krplayer.push(pokemon)
               else
@@ -5479,7 +5520,7 @@ class PokemonStorageScreen
             # Load and process the JSON data
             pokemon = Pokemon.new(:BULBASAUR, 1)
             json_data = File.read(json_file)
-            pokemon.load_json(eval(json_data))
+            pokemon.load_json(eval(json_data), json_file)
             if importunevo
               pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
             end
@@ -5614,7 +5655,7 @@ class PokemonStorageScreen
           # Load and process the JSON data
           pokemon = Pokemon.new(:BULBASAUR, 1)
           json_data = File.read(random_json_file)
-          pokemon.load_json(eval(json_data))
+          pokemon.load_json(eval(json_data), random_json_file)
           if importunevo
             pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
           end

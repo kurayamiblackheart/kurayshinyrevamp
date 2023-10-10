@@ -86,6 +86,9 @@ class PokemonSystem
   attr_accessor :importlvl
   attr_accessor :importdevolve
 
+  attr_accessor :nopngexport
+  attr_accessor :nopngimport
+
   attr_accessor :raiser
   attr_accessor :raiserb
 
@@ -234,6 +237,8 @@ class PokemonSystem
     @importnodelete = saved.importnodelete if saved.importnodelete
     @exportdelete = saved.exportdelete if saved.exportdelete
     @savefolder = saved.savefolder if saved.savefolder
+    @nopngexport = saved.nopngexport if saved.nopngexport
+    @nopngimport = saved.nopngimport if saved.nopngimport
   end
 end
 
@@ -1691,6 +1696,19 @@ class KurayOptSc_5 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.exportdelete = value },
                       ["Exported Pokemons will not be deleted.",
                       "Exported Pokemons will be deleted."]
+    )
+    options << EnumOption.new(_INTL("Export Sprite on Export"), [_INTL("On"), _INTL("Off")],
+                      proc { $PokemonSystem.nopngexport },
+                      proc { |value| $PokemonSystem.nopngexport = value },
+                      ["The .png of the Pokemon will also be exported.",
+                      "The .png (appearence) of the Pokemon will not be exported."]
+    )
+    options << EnumOption.new(_INTL("Import Sprite on Import"), [_INTL("On"), _INTL("Read-Only"), _INTL("Off")],
+                      proc { $PokemonSystem.nopngimport },
+                      proc { |value| $PokemonSystem.nopngimport = value },
+                      ["The .png of the Pokemon will also be imported.",
+                      "The .png of the Pokemon will be read from the folder but not imported.",
+                      "The .png (appearence) of the Pokemon will not be imported."]
     )
     options << EnumOption.new(_INTL("Use 'Saves' folder"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.savefolder },

@@ -1729,7 +1729,7 @@ class Pokemon
   end
 
   #KurayX
-  def load_json(jsonparse)
+  def load_json(jsonparse, jsonfile=nil)
     @imported = true
     @species = jsonparse['species']
     @form = jsonparse['form']
@@ -1801,6 +1801,37 @@ class Pokemon
     @moves = []
     jsonparse['moves'].each_with_index { |m, i| @moves.push(Pokemon::Move.new(m['id'])) }
     jsonparse['moves'].each_with_index { |m, i| @moves[i].load_json(m) }
+    noimport = 0
+    if jsonfile && jsonfile != nil
+      if $PokemonSystem.nopngimport
+        noimport = $PokemonSystem.nopngimport
+      end
+      if File.file?(jsonfile[0..-6] + ".png")
+      if noimport == 0
+          # import and copy .png
+          addincra = 0
+          nextfilename = File.basename(jsonfile)
+          nextfilename = 'Graphics/Imported/' + nextfilename[0..-6]
+          finalname = nextfilename
+          while File.file?(finalname + ".png")
+            finalname = nextfilename + "(" + addincra.to_s + ")"
+            addincra += 1
+            if addincra > 9999
+              break
+            end
+          end
+          begin
+            File.copy(jsonfile[0..-6] + ".png", finalname + ".png")
+            @kuraycustomfile = finalname + ".png"
+          rescue => e
+            @kuraycustomfile = jsonfile[0..-6] + ".png"
+          end
+        elsif noimport == 1
+          # only import .png to kuraycustomfile
+          @kuraycustomfile = jsonfile[0..-6] + ".png"
+        end
+      end
+    end
   end
 
   #Sylvi Items
