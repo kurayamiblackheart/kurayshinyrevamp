@@ -6,7 +6,7 @@ Kuray Infinite Fusion (KIF) is community-based and community-focused, it's made 
 
 -----------------------------------------------
 
-Join the mod's Discord! https://discord.gg/UFxQkUZeyE
+Join our Discord! https://discord.gg/UFxQkUZeyE
 
 Google Docs of the game: https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE/edit
 
