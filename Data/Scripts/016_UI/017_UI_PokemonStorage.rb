@@ -3857,6 +3857,7 @@ class PokemonStorageScreen
           pbDisplay(_INTL("No sub-folders to randomize from!"))
         else
           recursed_dir = []
+          directory_names = directory_name
           build_tree(directory_name, recursed_dir)
           directory_name = recursed_dir.sample.to_s
           # directory_name = directory_name.to_s + "/" + directory_names.sample.to_s
@@ -5381,9 +5382,9 @@ class PokemonStorageScreen
             krbattlers = []
             krplayer = []
             if battler_randomized
-              directorybattler_name = directorybattler_name.sub(/[^\/]+$/, '').chop
+              # directorybattler_name = directorybattler_name.sub(/[^\/]+$/, '').chop
               recursed_dir = []
-              build_tree(directorybattler_name, recursed_dir)
+              build_tree(directorybattler_array, recursed_dir)
               directorybattler_name = recursed_dir.sample.to_s
               # directorybattler_name = directorybattler_name.to_s + "/" + directorybattler_array.sample.to_s
               enemyjson = Dir.glob(File.join(directorybattler_name, "*.json"))
@@ -5392,9 +5393,9 @@ class PokemonStorageScreen
               while enemyjson.empty?
                 pbPlayBuzzerSE
                 # re-randomize until match
-                directorybattler_name = directorybattler_name.sub(/[^\/]+$/, '').chop
+                # directorybattler_name = directorybattler_name.sub(/[^\/]+$/, '').chop
                 recursed_dir = []
-                build_tree(directorybattler_name, recursed_dir)
+                build_tree(directorybattler_array, recursed_dir)
                 directorybattler_name = recursed_dir.sample.to_s
                 # directorybattler_name = directorybattler_name.to_s + "/" + directorybattler_array.sample.to_s
                 enemyjson = Dir.glob(File.join(directorybattler_name, "*.json"))
@@ -5415,9 +5416,9 @@ class PokemonStorageScreen
             if firsttime
               directoryplayer_name, directoryplayer_array, cancelled, player_randomized, havingjsons = navigationSystem("ExportedPokemons", "Choose Player Sub-Directory.")
               if !battleshare && player_randomized && (directoryplayer_name == directorybattler_name)
-                directoryplayer_name = directoryplayer_name.sub(/[^\/]+$/, '').chop
+                # directoryplayer_name = directoryplayer_name.sub(/[^\/]+$/, '').chop
                 recursed_dir = []
-                build_tree(directoryplayer_name, recursed_dir)
+                build_tree(directoryplayer_array, recursed_dir)
                 recursed_dir.delete(directorybattler_name) unless recursed_dir.length <= 1
                 directoryplayer_name = recursed_dir.sample.to_s
               end
@@ -5446,9 +5447,9 @@ class PokemonStorageScreen
             else
               # we do player and enemy if enemy was randomized
               if player_randomized
-                directoryplayer_name = directoryplayer_name.sub(/[^\/]+$/, '').chop
+                # directoryplayer_name = directoryplayer_name.sub(/[^\/]+$/, '').chop
                 recursed_dir = []
-                build_tree(directoryplayer_name, recursed_dir)
+                build_tree(directoryplayer_array, recursed_dir)
                 unless battleshare
                   recursed_dir.delete(directorybattler_name) unless recursed_dir.length <= 1
                 end
@@ -5460,9 +5461,9 @@ class PokemonStorageScreen
                 while playerjson.empty?
                   pbPlayBuzzerSE
                   # re-randomize until match
-                  directoryplayer_name = directoryplayer_name.sub(/[^\/]+$/, '').chop
+                  # directoryplayer_name = directoryplayer_name.sub(/[^\/]+$/, '').chop
                   recursed_dir = []
-                  build_tree(directoryplayer_name, recursed_dir)
+                  build_tree(directoryplayer_array, recursed_dir)
                   unless battleshare
                     recursed_dir.delete(directorybattler_name) unless recursed_dir.length <= 1
                   end
