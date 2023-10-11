@@ -5342,12 +5342,12 @@ class PokemonStorageScreen
         when 4 # battler folder
           directoryplayer_name = nil
           directorybattler_name = nil
-          directorybattler_name, directorybattler_array, cancelled, battler_randomized, hvenemyjsons = navigationSystem("ExportedPokemons", "Choose Battler Sub-Directory.")
+          directorybattler_name, directorybattler_array, cancelled, battler_randomized, havingjsons = navigationSystem("ExportedPokemons", "Choose Battler Sub-Directory.")
           if cancelled
             return
           end
 
-          if hvenemyjsons.length < 1
+          if havingjsons.length < 1
             # Use Dir.glob to get a list of JSON files in the folder
             json_files = Dir.glob(File.join(directorybattler_name, "*.json"))
             if json_files.empty?
@@ -5356,7 +5356,7 @@ class PokemonStorageScreen
               return
             end
           else
-            json_files = hvenemyjsons.clone
+            json_files = havingjsons.clone
           end
           pokekurays = json_files
           isjson = true
@@ -5408,19 +5408,6 @@ class PokemonStorageScreen
               end
               if gaveup
                 return
-              end
-              pokekurays = enemyjson
-            else
-              if hvenemyjsons.length < 1
-                # Use Dir.glob to get a list of JSON files in the folder
-                enemyjson = Dir.glob(File.join(directorybattler_name, "*.json"))
-                if enemyjson.empty?
-                  pbPlayBuzzerSE
-                  pbDisplay(_INTL("No Enemies Battler to Import!"))
-                  return
-                end
-              else
-                enemyjson = hvenemyjsons.clone
               end
               pokekurays = enemyjson
             end
