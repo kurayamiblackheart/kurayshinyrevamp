@@ -387,13 +387,21 @@ class PokeBattle_AI
 			# Prefer damaging attack if level difference is significantly high
 			#damagePercentage *= 1.2 if user.level - 10 > target.level
 			# Adjust score
+			damagePercentage = 110 if move.function == "070" && user.effects[PBEffects::LockOn]>0 # DemICE use ohko move if target is locked on
 			if damagePercentage > 100   # Treat all lethal moves the same   # DemICE
 				damagePercentage = 110 
 				damagePercentage+=50 if move.function == "150"  # DemICE: Fell Stinger should be preferred among other moves that KO
 				if ["0DD","14F"].include?(move.function) || (move.function=="0DE" && target.asleep?)
 					missinghp = (user.totalhp-user.hp) *100.0 / user.totalhp
 					damagePercentage += missinghp*0.5
-				end  
+				end   
+				if move.function == "070"
+					if user.effects[PBEffects::LockOn]>0
+						damagePercentage = 280
+					else
+						damagePercentage -=10
+					end
+				end
 			end
 		end  
 		damagePercentage -= 1 if accuracy < 100  # DemICE

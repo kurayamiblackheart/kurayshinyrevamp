@@ -2567,6 +2567,26 @@ class PokeBattle_AI
 				score-=200
 			end
 			#---------------------------------------------------------------------------
+		when "0A6" # Lock-On / Mind Reader
+			if user.effects[PBEffects::LockOn]>0 || target.effects[PBEffects::Substitute]>0
+				score -=200
+			else
+				found=false
+				for m in user.moves
+					found=true if m.function=="070" && !pbCheckMoveImmunity(1,m,user,target,100)
+				end
+				score +=90 if found
+			end
+			#---------------------------------------------------------------------------
+		when "0DE" # Dream Eater
+			if !target.asleep?
+				score -= 2000
+			elsif skill>=PBTrainerAI.highSkill && target.hasActiveAbility?(:LIQUIDOOZE)
+				score -= 70
+			else
+				score += 20 if user.hp<=user.totalhp/2
+			end
+			#---------------------------------------------------------------------------
 		when "150" # Fell Stinger
 			# Yes, this is my change. To override the one in AI_Move_Effectscores_1 that treats the move like fucking Swords Dance >.>
 			# This is now handled in pbGetMoveScoreDamage.
