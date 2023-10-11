@@ -126,11 +126,23 @@ class CommandMenuDisplay < BattleMenuBase
     if USE_GRAPHICS
       # Create background graphic
       background = IconSprite.new(self.x,self.y,viewport)
-      background.setBitmap("Graphics/Pictures/Battle/overlay_command")
-      addSprite("background",background)
+
+      # Trapstarr - Dark Mode
+      if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
+        background.setBitmap("Graphics/Pictures/Battle/overlay_command_darkmode")
+      else
+        background.setBitmap("Graphics/Pictures/Battle/overlay_command")
+      end
+      addSprite("background", background)
+
       # Create bitmaps
-      @buttonBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/cursor_command"))
-      # Create action buttons
+      buttonPath = "Graphics/Pictures/Battle/cursor_command"
+      if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
+        buttonPath += "_darkmode"
+      end
+      @buttonBitmap = AnimatedBitmap.new(_INTL(buttonPath))
+	  
+	  # Create action buttons
       @buttons = Array.new(4) do |i|   # 4 command options, therefore 4 buttons
         button = SpriteWrapper.new(viewport)
         button.bitmap = @buttonBitmap.bitmap

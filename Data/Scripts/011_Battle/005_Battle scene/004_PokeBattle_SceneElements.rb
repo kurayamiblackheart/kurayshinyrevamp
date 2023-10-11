@@ -67,8 +67,11 @@ class PokemonDataBox < SpriteWrapper
       case $PokemonSystem.battlegui
       when 1
         bgFilename = bgFilename.gsub("Battle", "BattleGUI") + "_M"
-      else
-        bgFilename = bgFilename
+
+        # Adjust for darkmode
+        if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
+          bgFilename += "_darkmode"
+        end
       end
     end
 

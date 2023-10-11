@@ -27,15 +27,32 @@ class PokeBattle_Scene
     # The background image and each side's base graphic
     pbCreateBackdropSprites
     # Create message box graphic
-    messageBox = pbAddSprite("messageBox",0,Graphics.height-96,
-       "Graphics/Pictures/Battle/overlay_message",@viewport)
+	
+    # Trapstarrs dark mode
+    if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
+      # If darkmode is enabled, use "overlay_message_darkmode"
+      messageGraphic = "Graphics/Pictures/Battle/overlay_message_darkmode"
+    else
+      # If darkmode is not enabled or not equal to 1, use the default "overlay_message"
+      messageGraphic = "Graphics/Pictures/Battle/overlay_message"
+    end
+
+    # Create message box graphic
+    messageBox = pbAddSprite("messageBox", 0, Graphics.height - 96, messageGraphic, @viewport)
     messageBox.z = 195
+
     # Create message window (displays the message)
     msgWindow = Window_AdvancedTextPokemon.newWithSize("",
-       16,Graphics.height-96+2,Graphics.width-32,96,@viewport)
+      16, Graphics.height - 96 + 2, Graphics.width - 32, 96, @viewport)
     msgWindow.z              = 200
     msgWindow.opacity        = 0
-    msgWindow.baseColor      = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
+
+    if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
+      msgWindow.baseColor    = PokeBattle_SceneConstants::DARKMODE_MESSAGE_BASE_COLOR
+    else
+      msgWindow.baseColor    = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
+    end
+
     msgWindow.shadowColor    = PokeBattle_SceneConstants::MESSAGE_SHADOW_COLOR
     msgWindow.letterbyletter = true
     @sprites["messageWindow"] = msgWindow
@@ -157,6 +174,17 @@ class PokeBattle_Scene
         base.ox = base.bitmap.width/2
         base.oy = (side==0) ? base.bitmap.height : base.bitmap.height/2
       end
+    end
+    if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
+      messageFilename = "default_message_darkmode"
+    else
+      messageFilename = "default_message"
+    end
+
+    messageBG  = "Graphics/Battlebacks/" + messageFilename
+
+    if !pbResolveBitmap(messageBG)
+      messageBG = "Graphics/Battlebacks/default_message"
     end
     cmdBarBG = pbAddSprite("cmdBar_bg",0,Graphics.height-96,messageBG,@viewport)
     cmdBarBG.z = 180

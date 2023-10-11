@@ -33,9 +33,19 @@ class PokeBattle_Scene
       # Create or update the text object
       if @win_display_text.nil?
         @win_display_text = Sprite.new(@viewport)
-        @win_display_text.bitmap = Bitmap.new(Graphics.width, 24)  # Adjust dimensions as necessary
-        @win_display_text.z = 9999  # Make sure it's rendered on top
-        @win_display_text.y = Graphics.height - 93  # Or wherever you want it vertically
+        @win_display_text.bitmap = Bitmap.new(Graphics.width, 24)
+        @win_display_text.z = 9999
+        @win_display_text.y = Graphics.height - 93
+      end
+
+      # Clear previous text
+      @win_display_text.bitmap.clear
+
+      # Set the font color based on dark mode setting
+      if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
+        @win_display_text.bitmap.font.color.set(225, 225, 225)  # Set to a lighter gray color for dark mode
+      else
+        @win_display_text.bitmap.font.color.set(60, 60, 60)  # Default to a black color
       end
 
       # Update the text
@@ -43,8 +53,7 @@ class PokeBattle_Scene
       @win_display_text.bitmap.clear
       rect = @win_display_text.bitmap.rect
       @win_display_text.bitmap.draw_text(rect.x, rect.y, rect.width, rect.height, text, 1)
-      @win_display_text.bitmap.font.color.set(60, 60, 60)  # Set to a black color
-	else
+    else
       # Dispose of the text object if it exists and the condition isn't met
       unless @win_display_text.nil?
         @win_display_text.dispose
@@ -83,7 +92,7 @@ class PokeBattle_Scene
 
   def pbInputUpdate
     Input.update
-    if Input.trigger?(Input::BACK) && (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0)) && !@aborted
+    if Input.trigger?(Input::BACK) && @abortable && !@aborted
       @aborted = true
       @battle.pbAbort
     end
@@ -179,7 +188,7 @@ class PokeBattle_Scene
         end
         i += 1
       end
-      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
+      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || @abortable
         if cw.busy?
           pbPlayDecisionSE if cw.pausing? && !@abortable
           cw.skipAhead
@@ -221,7 +230,7 @@ class PokeBattle_Scene
           i += 1
         end
       end
-      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
+      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || @abortable
         if cw.busy?
           pbPlayDecisionSE if cw.pausing? && !@abortable
           cw.skipAhead
