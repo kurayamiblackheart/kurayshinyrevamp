@@ -34,6 +34,7 @@ class PokemonSystem
   attr_accessor :kurayindividcustomsprite
   attr_accessor :typedisplay
   attr_accessor :battlegui
+  attr_accessor :darkmode
   attr_accessor :globalvalues # allows to disable the per-save file functionnality
   attr_accessor :quicksave
   # Per-save file
@@ -126,6 +127,7 @@ class PokemonSystem
     @kurayindividcustomsprite = 0
     @typedisplay = 0
     @battlegui = 0
+    @darkmode = 0
     # Modded Per-save file
     @force_double_wild = 0
     @improved_pokedex = 0
@@ -198,6 +200,7 @@ class PokemonSystem
     @kurayindividcustomsprite = saved.kurayindividcustomsprite if saved.kurayindividcustomsprite
     @typedisplay = saved.typedisplay if saved.typedisplay
     @battlegui = saved.battlegui if saved.battlegui
+    @darkmode = saved.darkmode if saved.darkmode
     @debugfeature = saved.debugfeature if saved.debugfeature
     @debug = saved.debug if saved.debug
     if saved.globalvalues
@@ -1383,6 +1386,13 @@ class KurayOptSc_3 < PokemonOption_Scene
                       ["Pokémon will use their small box sprites for icons",
                       "Pokémon icons will use their full-size battle sprites (except in boxes)",
                       "Pokémon icons will use their full-size battle sprites"]
+    )
+	
+    options << EnumOption.new(_INTL("Dark Mode"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.darkmode },
+                      proc { |value| $PokemonSystem.darkmode = value },
+                      ["Default UI",
+                      "Swaps the message graphics during battle"]
     )
 
     options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
