@@ -1688,6 +1688,12 @@ class KurayOptSc_5 < PokemonOption_Scene
     #                   ["Pokemons are all individual/indepedent copies",
     #                   "The same Pokemons between your team are linked"]
     # )
+    options << EnumOption.new(_INTL("Win/Loss Tracker"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.sb_win_display },
+    proc { |value| $PokemonSystem.sb_win_display = value },
+    ["No Win/Loss tracker for Self-battle/Auto-battle",
+    "Shows a Win/Loss tracker for Self-battle/Auto-battle"]
+    )
     options << EnumOption.new(_INTL("Import Level"), [_INTL("Default"), _INTL("1"), _INTL("5"), _INTL("50"), _INTL("100")],
                       proc { $PokemonSystem.importlvl },
                       proc { |value| $PokemonSystem.importlvl = value },
@@ -1728,18 +1734,12 @@ class KurayOptSc_5 < PokemonOption_Scene
                       "The .png of the Pokemon will be read from the folder but not imported.",
                       "The .png (appearence) of the Pokemon will not be imported."]
     )
-    options << EnumOption.new(_INTL("Use 'Saves' folder"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.savefolder },
-                      proc { |value| $PokemonSystem.savefolder = value },
-                      ["Battlers/Players/Import use their respective folders.",
-                      "Battlers/Players/Import etc all use the 'Saves' folder."]
-    )
-    options << EnumOption.new(_INTL("SB Loop Win Tracker"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.sb_win_display },
-                      proc { |value| $PokemonSystem.sb_win_display = value },
-                      ["Does not display the Win Tracker",
-                      "Display the Win Tracker during A.B. + S.B. loop"]
-    )
+    # options << EnumOption.new(_INTL("Use 'Saves' folder"), [_INTL("Off"), _INTL("On")],
+    #                   proc { $PokemonSystem.savefolder },
+    #                   proc { |value| $PokemonSystem.savefolder = value },
+    #                   ["Battlers/Players/Import use their respective folders.",
+    #                   "Battlers/Players/Import etc all use the 'Saves' folder."]
+    # )
     return options
   end
 end

@@ -3747,6 +3747,58 @@ class PokemonStorageScreen
     return
   end
 
+  def navigationSystem(directory_name, messagechoice)
+    # directory_name = "ExportedPokemons"  # Replace with the actual path to your folder
+    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    cancelled = false
+    randomized = false
+    #subdirectory support
+    # Use Dir.glob to get a list of directories in the folder
+    directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
+    # Extract just the directory names without the full path
+    directory_names = directories.map { |entry| File.basename(entry) }
+
+    while true
+      dir_cmd = 0
+      director_actions = directory_names.clone
+      director_actions.unshift("<...>") if directory_name != directory_name#0
+      director_actions.unshift("<This Folder>")#0 or 1
+      director_actions.unshift("<Random Sub-Folder>")#1 or 2
+      cancelcmd = director_actions.length
+      director_actions.push("<Cancel>") # always last
+      #prompt to choose a directory
+      dir_cmd = pbShowCommands(_INTL(messagechoice), director_actions, dir_cmd)
+      if (dir_cmd == 0 && directory_name == directory_name) || (dir_cmd == 1 && directory_name != directory_name)
+        # this folder
+        break
+      elsif dir_cmd == 0 && directory_name != directory_name
+        # move up
+        directory_name = directory_name.sub(/[^\/]+$/, '')
+        directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
+        directory_names = directories.map { |entry| File.basename(entry) }
+      elsif (dir_cmd == 1 && directory_name == directory_name) || (dir_cmd == 2 && directory_name != directory_name)
+        # randomize
+        if directory_names.empty?
+          pbPlayBuzzerSE
+          pbDisplay(_INTL("No sub-folders to randomize from!"))
+        else
+          directory_name = directory_name.to_s + "/" + directory_names.sample.to_s
+          randomized = true
+          break
+        end
+      elsif (dir_cmd == cancelcmd)
+        cancelled = true
+        break
+      else
+        # choosing a folder
+        directory_name = directory_name.to_s + "/" + director_actions[dir_cmd].to_s
+        directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
+        directory_names = directories.map { |entry| File.basename(entry) }
+      end
+    end
+    return directory_name, directory_names, cancelled, randomized
+  end
+
   def pbBattleSelected(box, frommulti=true, defaultteam=nil)
     playerteamok = true
     tempclone = ""
@@ -3783,35 +3835,11 @@ class PokemonStorageScreen
       if playerfolder && randteam
         krplayer = []
         # we randomize the player team
-        # load from playerfolder!
-        checksavefolder = false
-        if $PokemonSystem.savefolder
-          if $PokemonSystem.savefolder == 1
-            checksavefolder = true
-          end
-        end
-        if checksavefolder
-          directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
-        else
-          directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
-        end
-        Dir.mkdir(directory_name) unless File.exists?(directory_name)
 
-        #subdirectory support
-        # Use Dir.glob to get a list of directories in the folder
-        directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
-
-        # Extract just the directory names without the full path
-        directory_names = directories.map { |entry| File.basename(entry) }
-
-        if !directory_names.empty?
-          dir_cmd = 0
-          directory_names.unshift("Default Folder (no subdir)")
-          #prompt to choose a directory
-          dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directory_names, dir_cmd)
-          if dir_cmd > 0
-            directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
-          end
+        directory_name, directory_array, cancelled, randomized = navigationSystem("ExportedPokemons", "Choose Player Sub-Directory.")
+        if cancelled
+          battlebr(defaultteam)
+          return
         end
 
         # Use Dir.glob to get a list of JSON files in the folder
@@ -4131,6 +4159,10 @@ class PokemonStorageScreen
 
   def logic_png(pokemon, importname)
     @scene.logic_png(pokemon, importname)
+  end
+
+  def navigationSystem(directory_name, messagechoice)
+    @scene.navigationSystem(directory_name, messagechoice)
   end
 
   def pbChooseMove(pkmn, helptext, index = 0)
@@ -5222,38 +5254,13 @@ class PokemonStorageScreen
             end
           end
         when 4 # battler folder
-          checksavefolder = false
-          if $PokemonSystem.savefolder
-            if $PokemonSystem.savefolder == 1
-              checksavefolder = true
-            end
-          end
-          if checksavefolder
-            directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
-          else
-            directory_name = "ExportedPokemons/Battlers"  # Replace with the actual path to your folder
-          end
-          Dir.mkdir(directory_name) unless File.exists?(directory_name)
-
-          #subdirectory support
-          # Use Dir.glob to get a list of directories in the folder
-          directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
-
-          # Extract just the directory names without the full path
-          directory_names = directories.map { |entry| File.basename(entry) }
-
-          if !directory_names.empty?
-            dir_cmd = 0
-            directory_names.unshift("Default Folder (no subdir)")
-            #prompt to choose a directory
-            dir_cmd = pbShowCommands(_INTL("Choose Battler Sub-Directory."), directory_names, dir_cmd)
-            if dir_cmd > 0
-              directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
-            end
+          directorybattler_name, directorybattler_array, cancelled, battler_randomized = navigationSystem("ExportedPokemons", "Choose Battler Sub-Directory.")
+          if cancelled
+            return
           end
 
           # Use Dir.glob to get a list of JSON files in the folder
-          json_files = Dir.glob(File.join(directory_name, "*.json"))
+          json_files = Dir.glob(File.join(directorybattler_name, "*.json"))
           if json_files.empty?
             pbPlayBuzzerSE
             pbDisplay(_INTL("No Enemies Battler to Import!"))
@@ -5278,60 +5285,81 @@ class PokemonStorageScreen
             enemyteamok = false
           end
           unless firsttime
+            # not first time!
             pokekurays = defaultenemy.clone
             krbattlers = []
             krplayer = []
-          end
-          if playerfolder
-            # load from playerfolder!
-            checksavefolder = false
-            if $PokemonSystem.savefolder
-              if $PokemonSystem.savefolder == 1
-                checksavefolder = true
-              end
-            end
-            if checksavefolder
-              directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
-            else
-              directory_name = "ExportedPokemons/Players"  # Replace with the actual path to your folder
-            end
-            Dir.mkdir(directory_name) unless File.exists?(directory_name)
-            if firsttime
-              playerdire = directory_name
-              #subdirectory support
-              # Use Dir.glob to get a list of directories in the folder
-              directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
-
-              # Extract just the directory names without the full path
-              directory_names = directories.map { |entry| File.basename(entry) }
-
-              if !directory_names.empty?
-                dir_cmd = 0
-                directory_names.unshift("Default Folder (no subdir)")
-                #prompt to choose a directory
-                dir_cmd = pbShowCommands(_INTL("Choose Player Sub-Directory."), directory_names, dir_cmd)
-                if dir_cmd > 0
-                  directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
-                  playerdire = directory_name
+            if battler_randomized
+              directorybattler_name = directorybattler_name.sub(/[^\/]+$/, '')
+              directorybattler_name = directorybattler_name.to_s + "/" + directorybattler_array.sample.to_s
+              enemyjson = Dir.glob(File.join(directorybattler_name, "*.json"))
+              maxtries = 50
+              gaveup = false
+              while enemyjson.empty?
+                pbPlayBuzzerSE
+                # re-randomize until match
+                directorybattler_name = directorybattler_name.sub(/[^\/]+$/, '')
+                directorybattler_name = directorybattler_name.to_s + "/" + directorybattler_array.sample.to_s
+                enemyjson = Dir.glob(File.join(directorybattler_name, "*.json"))
+                maxtries -= 1
+                if maxtries == 0
+                  gaveup = true
+                  pbDisplay(_INTL("Gave up after 50 tries on Battler folder!"))
+                  break
                 end
               end
-
-            else
-              directory_name = playerdire
+              if gaveup
+                return
+              end
+              pokekurays = enemyjson
             end
-            # Use Dir.glob to get a list of JSON files in the folder
-            json_files = Dir.glob(File.join(directory_name, "*.json"))
-            if json_files.empty?
-              pbPlayBuzzerSE
-              pbDisplay(_INTL("No Players Battler to Import! Using Battlers instead."))
-              pokekuraysplayer = pokekurays.clone
-              playerfolder = false
-            else
-              pokekuraysplayer = json_files
-              if pokekuraysplayer.empty?
-                pbDisplay(_INTL("No Player Team for Fighting! Using Battler instead."))
+          end
+          if playerfolder
+            if firsttime
+              directoryplayer_name, directoryplayer_array, cancelled, player_randomized = navigationSystem("ExportedPokemons", "Choose Player Sub-Directory.")
+              if cancelled
+                return
+              end
+              # Use Dir.glob to get a list of JSON files in the folder
+              json_files = Dir.glob(File.join(directoryplayer_name, "*.json"))
+              if json_files.empty?
+                pbPlayBuzzerSE
+                pbDisplay(_INTL("No Players Battler to Import! Using Battlers instead."))
                 pokekuraysplayer = pokekurays.clone
                 playerfolder = false
+              else
+                pokekuraysplayer = json_files
+                if pokekuraysplayer.empty?
+                  pbDisplay(_INTL("No Player Team for Fighting! Using Battler instead."))
+                  pokekuraysplayer = pokekurays.clone
+                  playerfolder = false
+                end
+              end
+            else
+              # we do player and enemy if enemy was randomized
+              if player_randomized
+                directoryplayer_name = directoryplayer_name.sub(/[^\/]+$/, '')
+                directoryplayer_name = directoryplayer_name.to_s + "/" + directoryplayer_array.sample.to_s
+                playerjson = Dir.glob(File.join(directoryplayer_name, "*.json"))
+                maxtries = 50
+                gaveup = false
+                while playerjson.empty?
+                  pbPlayBuzzerSE
+                  # re-randomize until match
+                  directoryplayer_name = directoryplayer_name.sub(/[^\/]+$/, '')
+                  directoryplayer_name = directoryplayer_name.to_s + "/" + directoryplayer_array.sample.to_s
+                  playerjson = Dir.glob(File.join(directoryplayer_name, "*.json"))
+                  maxtries -= 1
+                  if maxtries == 0
+                    gaveup = true
+                    pbDisplay(_INTL("Gave up after 50 tries on Player folder!"))
+                    break
+                  end
+                end
+                if gaveup
+                  return
+                end
+                pokekuraysplayer = playerjson
               end
             end
           else
@@ -5459,34 +5487,9 @@ class PokemonStorageScreen
         pbDisplay(_INTL("DEBUG needed!"))
       else
         #Import (all)
-        checksavefolder = false
-        if $PokemonSystem.savefolder
-          if $PokemonSystem.savefolder == 1
-            checksavefolder = true
-          end
-        end
-        if checksavefolder
-          directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
-        else
-          directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
-        end
-        Dir.mkdir(directory_name) unless File.exists?(directory_name)
-
-        #subdirectory support
-        # Use Dir.glob to get a list of directories in the folder
-        directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
-
-        # Extract just the directory names without the full path
-        directory_names = directories.map { |entry| File.basename(entry) }
-
-        if !directory_names.empty?
-          dir_cmd = 0
-          directory_names.unshift("Default Folder (no subdir)")
-          #prompt to choose a directory
-          dir_cmd = pbShowCommands(_INTL("Choose Import Sub-Directory."), directory_names, dir_cmd)
-          if dir_cmd > 0
-            directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
-          end
+        directory_name, directory_array, cancelled, randomized = navigationSystem("ExportedPokemons", "Choose Import Sub-Directory.")
+        if cancelled
+          return
         end
 
         deletejson = true
@@ -5595,34 +5598,9 @@ class PokemonStorageScreen
         pbDisplay(_INTL("DEBUG needed!"))
       else
         #Import 1 random
-        checksavefolder = false
-        if $PokemonSystem.savefolder
-          if $PokemonSystem.savefolder == 1
-            checksavefolder = true
-          end
-        end
-        if checksavefolder
-          directory_name = "ExportedPokemons/Saves"  # Replace with the actual path to your folder
-        else
-          directory_name = "ExportedPokemons/Import"  # Replace with the actual path to your folder
-        end
-        Dir.mkdir(directory_name) unless File.exists?(directory_name)
-
-        #subdirectory support
-        # Use Dir.glob to get a list of directories in the folder
-        directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
-
-        # Extract just the directory names without the full path
-        directory_names = directories.map { |entry| File.basename(entry) }
-
-        if !directory_names.empty?
-          dir_cmd = 0
-          directory_names.unshift("Default Folder (no subdir)")
-          #prompt to choose a directory
-          dir_cmd = pbShowCommands(_INTL("Choose Import Sub-Directory."), directory_names, dir_cmd)
-          if dir_cmd > 0
-            directory_name = directory_name.to_s + "/" + directory_names[dir_cmd].to_s
-          end
+        directory_name, directory_array, cancelled, randomized = navigationSystem("ExportedPokemons", "Choose Import Sub-Directory.")
+        if cancelled
+          return
         end
         
         deletejson = true
