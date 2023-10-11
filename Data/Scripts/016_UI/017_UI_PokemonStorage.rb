@@ -3768,15 +3768,14 @@ class PokemonStorageScreen
       cancelcmd = director_actions.length
       director_actions.push("<Cancel>") # always last
       #prompt to choose a directory
-      pbDisplay(_INTL(directory_name))
+      # pbDisplay(_INTL(directory_name))
       dir_cmd = pbShowCommands(_INTL(messagechoice), director_actions, dir_cmd)
       if (dir_cmd == 0 && directory_name == base_name) || (dir_cmd == 1 && directory_name != base_name)
         # this folder
         break
       elsif dir_cmd == 0 && directory_name != base_name
         # move up
-        # directory_name = directory_name.sub(/[^\/]+$/, '')
-        directory_name = directory_name.sub(/[^\/]+\/?$/, '')
+        directory_name = directory_name.sub(/[^\/]+$/, '').chop
         directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
         directory_names = directories.map { |entry| File.basename(entry) }
       elsif (dir_cmd == 1 && directory_name == base_name) || (dir_cmd == 2 && directory_name != base_name)
