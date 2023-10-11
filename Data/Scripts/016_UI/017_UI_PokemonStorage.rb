@@ -4161,9 +4161,9 @@ class PokemonStorageScreen
     @scene.logic_png(pokemon, importname)
   end
 
-  def navigationSystem(directory_name, messagechoice)
-    @scene.navigationSystem(directory_name, messagechoice)
-  end
+  # def navigationSystem(directory_name, messagechoice)
+  #   @scene.navigationSystem(directory_name, messagechoice)
+  # end
 
   def pbChooseMove(pkmn, helptext, index = 0)
     movenames = []
