@@ -3762,9 +3762,9 @@ class PokemonStorageScreen
     while true
       dir_cmd = 0
       director_actions = directory_names.clone
-      director_actions.unshift("<...>") if directory_name != base_name#0
-      director_actions.unshift("<This Folder>")#0 or 1
       director_actions.unshift("<Random Sub-Folder>")#1 or 2
+      director_actions.unshift("<This Folder>")#0 or 1
+      director_actions.unshift("<...>") if directory_name != base_name#0
       cancelcmd = director_actions.length
       director_actions.push("<Cancel>") # always last
       #prompt to choose a directory
