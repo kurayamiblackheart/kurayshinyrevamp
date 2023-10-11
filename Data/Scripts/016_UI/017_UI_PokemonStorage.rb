@@ -5360,6 +5360,8 @@ class PokemonStorageScreen
           end
           pokekurays = json_files
           isjson = true
+        when 5 # cancel
+          return
         end
         firsttime = true
         defaultenemy = pokekurays.clone
