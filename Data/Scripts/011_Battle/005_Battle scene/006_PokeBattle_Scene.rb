@@ -181,9 +181,9 @@ class PokeBattle_Scene
       end
       if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
         if cw.busy?
-          pbPlayDecisionSE if cw.pausing? && !(@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
+          pbPlayDecisionSE if cw.pausing? && !@abortable
           cw.skipAhead
-        elsif !(@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
+        elsif !@abortable
           cw.text = ""
           cw.visible = false
           break
@@ -223,9 +223,9 @@ class PokeBattle_Scene
       end
       if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
         if cw.busy?
-          pbPlayDecisionSE if cw.pausing? && !(@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
+          pbPlayDecisionSE if cw.pausing? && !@abortable
           cw.skipAhead
-        elsif !(@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
+        elsif !@abortable
           cw.text = ""
           pbPlayDecisionSE
           break
