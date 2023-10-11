@@ -3785,11 +3785,31 @@ class PokemonStorageScreen
     end
   end
 
+  def build_jsons(base_directory, json_files)
+    # Get a list of all entries (files and directories) in the base_directory
+    entries = Dir.entries(base_directory)
+    # Iterate through the entries
+    entries.each do |entry|
+      next if entry == '.' || entry == '..'  # Skip "." and ".."
+      entry_path = File.join(base_directory, entry)
+  
+      # Check if the entry is a directory
+      if File.directory?(entry_path)
+        # Recursively call the method for subdirectories
+        build_jsons(entry_path, json_files)
+      elsif entry.end_with?('.json')
+        # If the entry is a .json file, add it to the json_files array
+        json_files << entry_path
+      end
+    end
+  end
+  
   def navigationSystem(base_name, messagechoice)
     directory_name = base_name
     # directory_name = "ExportedPokemons"  # Replace with the actual path to your folder
     Dir.mkdir(directory_name) unless File.exists?(directory_name)
     cancelled = false
+    havingjsons = []
     randomized = false
     #subdirectory support
     # Use Dir.glob to get a list of directories in the folder
@@ -3800,9 +3820,14 @@ class PokemonStorageScreen
     # build_tree(directory_name, recursed_dir)
 
     while true
+      # recursed_json = []
+      # build_jsons(directory_name, recursed_json)
+      # havingjsons = recursed_json
+      # puts havingjsons
       dir_cmd = 0
       director_actions = directory_names.clone
-      director_actions.unshift("<Random Sub-Folder>")#1 or 2
+      director_actions.unshift("<Random Sub-Folder>")#2 or 3 // (was 1 or 2)
+      director_actions.unshift("<This Folder+Sub-Folders>")#1 or 2
       director_actions.unshift("<This Folder>")#0 or 1
       director_actions.unshift("<...>") if directory_name != base_name#0
       cancelcmd = director_actions.length
@@ -3811,15 +3836,22 @@ class PokemonStorageScreen
       # pbDisplay(_INTL(directory_name))
       dir_cmd = pbShowCommands(_INTL(messagechoice), director_actions, dir_cmd)
       if (dir_cmd == 0 && directory_name == base_name) || (dir_cmd == 1 && directory_name != base_name)
-        # this folder
+        # this folder (SELECTING <THIS FOLDER>)
         break
       elsif dir_cmd == 0 && directory_name != base_name
-        # move up
+        # move up (SELECTING <...>)
         directory_name = directory_name.sub(/[^\/]+$/, '').chop
         directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
         directory_names = directories.map { |entry| File.basename(entry) }
       elsif (dir_cmd == 1 && directory_name == base_name) || (dir_cmd == 2 && directory_name != base_name)
-        # randomize
+        # json gather (SELECTING <THIS FOLDER+SUB-FOLDERS>)
+        recursed_json = []
+        build_jsons(directory_name, recursed_json)
+        havingjsons = recursed_json
+        directory_name = "[Every .jsons]"
+        break
+      elsif (dir_cmd == 2 && directory_name == base_name) || (dir_cmd == 3 && directory_name != base_name)
+        # randomize (SELECTING <RANDOM SUB-FOLDER>)
         if directory_names.empty?
           pbPlayBuzzerSE
           pbDisplay(_INTL("No sub-folders to randomize from!"))
@@ -3832,10 +3864,11 @@ class PokemonStorageScreen
           break
         end
       elsif (dir_cmd == cancelcmd)
+        # (SELECTING <CANCEL>)
         cancelled = true
         break
-      elsif dir_cmd > 1#cannot be below anyway
-        # choosing a folder
+      elsif dir_cmd > 2#cannot be below anyway
+        # choosing a folder (SELECTING A FOLDER)
         directory_name = directory_name.to_s + "/" + director_actions[dir_cmd].to_s
         directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
         directory_names = directories.map { |entry| File.basename(entry) }
@@ -3844,7 +3877,7 @@ class PokemonStorageScreen
         break
       end
     end
-    return directory_name, directory_names, cancelled, randomized
+    return directory_name, directory_names, cancelled, randomized, havingjsons
   end
 
   def pbBattleSelected(box, frommulti=true, defaultteam=nil, enemydirsupp=nil, playerdirsupp=nil)
@@ -3884,19 +3917,22 @@ class PokemonStorageScreen
         krplayer = []
         # we randomize the player team
 
-        directory_name, directory_array, cancelled, randomized = navigationSystem("ExportedPokemons", "Choose Player Sub-Directory.")
+        directory_name, directory_array, cancelled, randomized, havingjsons = navigationSystem("ExportedPokemons", "Choose Player Sub-Directory.")
         if cancelled
           battlebr(defaultteam)
           return
         end
-
-        # Use Dir.glob to get a list of JSON files in the folder
-        json_files = Dir.glob(File.join(directory_name, "*.json"))
-        if json_files.empty?
-          pbPlayBuzzerSE
-          pbDisplay(_INTL("No Players Battler to Import!"))
-          battlebr(defaultteam)
-          return
+        if havingjsons.length < 1
+          # Use Dir.glob to get a list of JSON files in the folder
+          json_files = Dir.glob(File.join(directory_name, "*.json"))
+          if json_files.empty?
+            pbPlayBuzzerSE
+            pbDisplay(_INTL("No Players Battler to Import!"))
+            battlebr(defaultteam)
+            return
+          end
+        else
+          json_files = havingjsons.clone
         end
         pokekuraysplayer = json_files
         if pokekuraysplayer.empty?
@@ -4213,10 +4249,6 @@ class PokemonStorageScreen
   def logic_png(pokemon, importname)
     @scene.logic_png(pokemon, importname)
   end
-
-  # def navigationSystem(directory_name, messagechoice)
-  #   @scene.navigationSystem(directory_name, messagechoice)
-  # end
 
   def pbChooseMove(pkmn, helptext, index = 0)
     movenames = []
@@ -5309,17 +5341,21 @@ class PokemonStorageScreen
         when 4 # battler folder
           directoryplayer_name = nil
           directorybattler_name = nil
-          directorybattler_name, directorybattler_array, cancelled, battler_randomized = navigationSystem("ExportedPokemons", "Choose Battler Sub-Directory.")
+          directorybattler_name, directorybattler_array, cancelled, battler_randomized, havingjsons = navigationSystem("ExportedPokemons", "Choose Battler Sub-Directory.")
           if cancelled
             return
           end
 
-          # Use Dir.glob to get a list of JSON files in the folder
-          json_files = Dir.glob(File.join(directorybattler_name, "*.json"))
-          if json_files.empty?
-            pbPlayBuzzerSE
-            pbDisplay(_INTL("No Enemies Battler to Import!"))
-            return
+          if havingjsons.length < 1
+            # Use Dir.glob to get a list of JSON files in the folder
+            json_files = Dir.glob(File.join(directorybattler_name, "*.json"))
+            if json_files.empty?
+              pbPlayBuzzerSE
+              pbDisplay(_INTL("No Enemies Battler to Import!"))
+              return
+            end
+          else
+            json_files = havingjsons.clone
           end
           pokekurays = json_files
           isjson = true
@@ -5377,31 +5413,35 @@ class PokemonStorageScreen
           end
           if playerfolder
             if firsttime
-              directoryplayer_name, directoryplayer_array, cancelled, player_randomized = navigationSystem("ExportedPokemons", "Choose Player Sub-Directory.")
+              directoryplayer_name, directoryplayer_array, cancelled, player_randomized, havingjsons = navigationSystem("ExportedPokemons", "Choose Player Sub-Directory.")
               if !battleshare && player_randomized && (directoryplayer_name == directorybattler_name)
                 directoryplayer_name = directoryplayer_name.sub(/[^\/]+$/, '').chop
                 recursed_dir = []
                 build_tree(directoryplayer_name, recursed_dir)
-                recursed_dir.delete(directorybattler_name)
+                recursed_dir.delete(directorybattler_name) unless recursed_dir.length <= 1
                 directoryplayer_name = recursed_dir.sample.to_s
               end
               if cancelled
                 return
               end
-              # Use Dir.glob to get a list of JSON files in the folder
-              json_files = Dir.glob(File.join(directoryplayer_name, "*.json"))
-              if json_files.empty?
-                pbPlayBuzzerSE
-                pbDisplay(_INTL("No Players Battler to Import! Using Battlers instead."))
-                pokekuraysplayer = pokekurays.clone
-                playerfolder = false
-              else
-                pokekuraysplayer = json_files
-                if pokekuraysplayer.empty?
-                  pbDisplay(_INTL("No Player Team for Fighting! Using Battler instead."))
+              if havingjsons.length < 1
+                # Use Dir.glob to get a list of JSON files in the folder
+                json_files = Dir.glob(File.join(directoryplayer_name, "*.json"))
+                if json_files.empty?
+                  pbPlayBuzzerSE
+                  pbDisplay(_INTL("No Players Battler to Import! Using Battlers instead."))
                   pokekuraysplayer = pokekurays.clone
                   playerfolder = false
+                else
+                  pokekuraysplayer = json_files
+                  if pokekuraysplayer.empty?
+                    pbDisplay(_INTL("No Player Team for Fighting! Using Battler instead."))
+                    pokekuraysplayer = pokekurays.clone
+                    playerfolder = false
+                  end
                 end
+              else
+                pokekuraysplayer = havingjsons.clone
               end
             else
               # we do player and enemy if enemy was randomized
@@ -5410,7 +5450,7 @@ class PokemonStorageScreen
                 recursed_dir = []
                 build_tree(directoryplayer_name, recursed_dir)
                 unless battleshare
-                  recursed_dir.delete(directorybattler_name)
+                  recursed_dir.delete(directorybattler_name) unless recursed_dir.length <= 1
                 end
                 directoryplayer_name = recursed_dir.sample.to_s
                 # directoryplayer_name = directoryplayer_name.to_s + "/" + directoryplayer_array.sample.to_s
@@ -5424,7 +5464,7 @@ class PokemonStorageScreen
                   recursed_dir = []
                   build_tree(directoryplayer_name, recursed_dir)
                   unless battleshare
-                    recursed_dir.delete(directorybattler_name)
+                    recursed_dir.delete(directorybattler_name) unless recursed_dir.length <= 1
                   end
                   directoryplayer_name = recursed_dir.sample.to_s
                   # directoryplayer_name = directoryplayer_name.to_s + "/" + directoryplayer_array.sample.to_s
@@ -5571,7 +5611,7 @@ class PokemonStorageScreen
         pbDisplay(_INTL("DEBUG needed!"))
       else
         #Import (all)
-        directory_name, directory_array, cancelled, randomized = navigationSystem("ExportedPokemons", "Choose Import Sub-Directory.")
+        directory_name, directory_array, cancelled, randomized, havingjsons = navigationSystem("ExportedPokemons", "Choose Import Sub-Directory.")
         if cancelled
           return
         end
@@ -5583,8 +5623,12 @@ class PokemonStorageScreen
           end
         end
 
-        # Use Dir.glob to get a list of JSON files in the folder
-        json_files = Dir.glob(File.join(directory_name, "*.json"))
+        if havingjsons.length < 1
+          # Use Dir.glob to get a list of JSON files in the folder
+          json_files = Dir.glob(File.join(directory_name, "*.json"))
+        else
+          json_files = havingjsons.clone
+        end
         x = @storage.currentBox
         y = 0
         triedcurrent = false
@@ -5682,7 +5726,7 @@ class PokemonStorageScreen
         pbDisplay(_INTL("DEBUG needed!"))
       else
         #Import 1 random
-        directory_name, directory_array, cancelled, randomized = navigationSystem("ExportedPokemons", "Choose Import Sub-Directory.")
+        directory_name, directory_array, cancelled, randomized, havingjsons = navigationSystem("ExportedPokemons", "Choose Import Sub-Directory.")
         if cancelled
           return
         end
@@ -5693,8 +5737,14 @@ class PokemonStorageScreen
             deletejson = false
           end
         end
-        # Use Dir.glob to get a list of JSON files in the folder
-        json_files = Dir.glob(File.join(directory_name, "*.json"))
+        
+        if havingjsons.length < 1
+          # Use Dir.glob to get a list of JSON files in the folder
+          json_files = Dir.glob(File.join(directory_name, "*.json"))
+        else
+          json_files = havingjsons.clone
+        end
+
         x = @storage.currentBox
         y = 0
         triedcurrent = false
