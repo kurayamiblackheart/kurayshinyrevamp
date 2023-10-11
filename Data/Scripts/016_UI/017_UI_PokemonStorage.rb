@@ -5196,7 +5196,7 @@ class PokemonStorageScreen
           _INTL("Battle Randomly this Box + Team"),
           _INTL("Battle Randomly entire Storage"),
           _INTL("Battle Randomly entire Storage + Team"),
-          _INTL("Battle Randomly from Battlers folder"),
+          _INTL("Battle Randomly from ExportedPokemons folder"),
           _INTL("Nevermind"),
         ]
         kuraychoice = pbShowCommands(
