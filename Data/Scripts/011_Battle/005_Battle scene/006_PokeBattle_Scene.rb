@@ -83,7 +83,7 @@ class PokeBattle_Scene
 
   def pbInputUpdate
     Input.update
-    if Input.trigger?(Input::BACK) && @abortable && !@aborted
+    if Input.trigger?(Input::BACK) && (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0)) && !@aborted
       @aborted = true
       @battle.pbAbort
     end
@@ -179,11 +179,11 @@ class PokeBattle_Scene
         end
         i += 1
       end
-      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || @abortable
+      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
         if cw.busy?
-          pbPlayDecisionSE if cw.pausing? && !@abortable
+          pbPlayDecisionSE if cw.pausing? && !(@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
           cw.skipAhead
-        elsif !@abortable
+        elsif !(@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
           cw.text = ""
           cw.visible = false
           break
@@ -221,11 +221,11 @@ class PokeBattle_Scene
           i += 1
         end
       end
-      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || @abortable
+      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
         if cw.busy?
-          pbPlayDecisionSE if cw.pausing? && !@abortable
+          pbPlayDecisionSE if cw.pausing? && !(@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
           cw.skipAhead
-        elsif !@abortable
+        elsif !(@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
           cw.text = ""
           pbPlayDecisionSE
           break
