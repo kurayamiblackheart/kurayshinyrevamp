@@ -3790,11 +3790,14 @@ class PokemonStorageScreen
       elsif (dir_cmd == cancelcmd)
         cancelled = true
         break
-      else
+      elsif dir_cmd > 1#cannot be below anyway
         # choosing a folder
         directory_name = directory_name.to_s + "/" + director_actions[dir_cmd].to_s
         directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
         directory_names = directories.map { |entry| File.basename(entry) }
+      else
+        cancelled = true
+        break
       end
     end
     return directory_name, directory_names, cancelled, randomized
