@@ -3747,7 +3747,8 @@ class PokemonStorageScreen
     return
   end
 
-  def navigationSystem(directory_name, messagechoice)
+  def navigationSystem(base_name, messagechoice)
+    directory_name = base_name
     # directory_name = "ExportedPokemons"  # Replace with the actual path to your folder
     Dir.mkdir(directory_name) unless File.exists?(directory_name)
     cancelled = false
@@ -3761,22 +3762,22 @@ class PokemonStorageScreen
     while true
       dir_cmd = 0
       director_actions = directory_names.clone
-      director_actions.unshift("<...>") if directory_name != directory_name#0
+      director_actions.unshift("<...>") if directory_name != base_name#0
       director_actions.unshift("<This Folder>")#0 or 1
       director_actions.unshift("<Random Sub-Folder>")#1 or 2
       cancelcmd = director_actions.length
       director_actions.push("<Cancel>") # always last
       #prompt to choose a directory
       dir_cmd = pbShowCommands(_INTL(messagechoice), director_actions, dir_cmd)
-      if (dir_cmd == 0 && directory_name == directory_name) || (dir_cmd == 1 && directory_name != directory_name)
+      if (dir_cmd == 0 && directory_name == base_name) || (dir_cmd == 1 && directory_name != base_name)
         # this folder
         break
-      elsif dir_cmd == 0 && directory_name != directory_name
+      elsif dir_cmd == 0 && directory_name != base_name
         # move up
         directory_name = directory_name.sub(/[^\/]+$/, '')
         directories = Dir.glob(File.join(directory_name, "*")).select { |entry| File.directory?(entry) }
         directory_names = directories.map { |entry| File.basename(entry) }
-      elsif (dir_cmd == 1 && directory_name == directory_name) || (dir_cmd == 2 && directory_name != directory_name)
+      elsif (dir_cmd == 1 && directory_name == base_name) || (dir_cmd == 2 && directory_name != base_name)
         # randomize
         if directory_names.empty?
           pbPlayBuzzerSE
