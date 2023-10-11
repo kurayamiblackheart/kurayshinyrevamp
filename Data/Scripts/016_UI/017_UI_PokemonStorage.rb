@@ -3734,7 +3734,7 @@ class PokemonStorageScreen
     Events.onTrainerPartyLoad.trigger(nil, trainer)
     decision = pbTrainerBattleCore(trainer)
     # Return true if the player won the battle, false otherwise
-    return decision == 1
+    return decision
   end
 
   def battlebr(defaultteam)
@@ -4043,7 +4043,19 @@ class PokemonStorageScreen
       if $PokemonSystem.sb_loopinput == 0
         $PokemonSystem.sb_loopbreaker = 1
       end
-    end
+        # Trapstarr - Track the result if wintracker is on
+      if $PokemonSystem.sb_win_display != nil && $PokemonSystem.sb_win_display == 1
+        if result == 1
+          $PokemonSystem.player_wins += 1
+        elsif result == 2
+          $PokemonSystem.enemy_wins += 1
+        end
+	  if $PokemonSystem.sb_loopbreaker == 1
+        $PokemonSystem.player_wins = 0
+        $PokemonSystem.enemy_wins = 0
+        end
+	  end
+	end
     return
   end
 

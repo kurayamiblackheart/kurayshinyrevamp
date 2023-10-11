@@ -75,6 +75,10 @@ class PokemonSystem
   attr_accessor :debug
 
   attr_accessor :is_in_battle
+  
+  attr_accessor :sb_win_display
+  attr_accessor :player_wins
+  attr_accessor :enemy_wins
 
   attr_accessor :sb_loopinput
   attr_accessor :sb_loopbreaker
@@ -154,6 +158,9 @@ class PokemonSystem
     @debugfeature = 0
     @debug = 0
     @importnodelete = 0
+	@sb_win_display = 0
+	@player_wins = 0
+    @enemy_wins = 0
     @sb_loopinput = 0
     @sb_loopbreaker = 0
     @savefolder = 0
@@ -231,6 +238,7 @@ class PokemonSystem
     @sb_select = saved.sb_select if saved.sb_select
     @sb_playerfolder = saved.sb_playerfolder if saved.sb_playerfolder
     @sb_level = saved.sb_level if saved.sb_level
+    @sb_win_display = saved.sb_win_display if saved.sb_win_display
     @unfusetraded = saved.unfusetraded if saved.unfusetraded
     @importlvl = saved.importlvl if saved.importlvl
     @importdevolve = saved.importdevolve if saved.importdevolve
@@ -1715,6 +1723,12 @@ class KurayOptSc_5 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.savefolder = value },
                       ["Battlers/Players/Import use their respective folders.",
                       "Battlers/Players/Import etc all use the 'Saves' folder."]
+    )
+    options << EnumOption.new(_INTL("SB Loop Win Tracker"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.sb_win_display },
+                      proc { |value| $PokemonSystem.sb_win_display = value },
+                      ["Does not display the Win Tracker",
+                      "Display the Win Tracker during A.B. + S.B. loop"]
     )
     return options
   end

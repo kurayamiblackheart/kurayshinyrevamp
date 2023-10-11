@@ -15,6 +15,44 @@ class PokeBattle_Scene
   #=============================================================================
   # Updating and refreshing
   #=============================================================================
+  
+  #Trapstarr win tracker
+  def initialize
+    @win_display_text = nil
+  end
+  
+  # This method creates/updates the win display text
+  def update_win_display
+    # Check if the autobattle loop condition is met
+    if $PokemonSystem.sb_loopinput == 1 &&
+       $PokemonSystem.sb_win_display &&
+       $PokemonSystem.autobattler && 
+       $PokemonSystem.autobattler != 0 &&
+       $PokemonSystem.sb_win_display == 1
+
+      # Create or update the text object
+      if @win_display_text.nil?
+        @win_display_text = Sprite.new(@viewport)
+        @win_display_text.bitmap = Bitmap.new(Graphics.width, 24)  # Adjust dimensions as necessary
+        @win_display_text.z = 9999  # Make sure it's rendered on top
+        @win_display_text.y = Graphics.height - 93  # Or wherever you want it vertically
+      end
+
+      # Update the text
+      text = "Player: #{$PokemonSystem.player_wins} | Enemy: #{$PokemonSystem.enemy_wins}"
+      @win_display_text.bitmap.clear
+      rect = @win_display_text.bitmap.rect
+      @win_display_text.bitmap.draw_text(rect.x, rect.y, rect.width, rect.height, text, 1)
+      @win_display_text.bitmap.font.color.set(60, 60, 60)  # Set to a black color
+	else
+      # Dispose of the text object if it exists and the condition isn't met
+      unless @win_display_text.nil?
+        @win_display_text.dispose
+        @win_display_text = nil
+      end
+    end
+  end
+  
   def pbUpdate(cw=nil)
     pbGraphicsUpdate
     pbInputUpdate
@@ -40,6 +78,7 @@ class PokeBattle_Scene
     Graphics.update
     @frameCounter += 1
     @frameCounter = @frameCounter%(Graphics.frame_rate*12/20)
+	update_win_display
   end
 
   def pbInputUpdate
@@ -260,6 +299,7 @@ class PokeBattle_Scene
 
   def pbDisposeSprites
     pbDisposeSpriteHash(@sprites)
+	@win_display_text.dispose unless @win_display_text.nil?
   end
 
   # Used by Ally Switch.
