@@ -127,7 +127,7 @@ class PokemonSystem
     @kurayindividcustomsprite = 0
     @typedisplay = 0
     @battlegui = 0
-    @darkmode = 0
+    @darkmode = 1
     # Modded Per-save file
     @force_double_wild = 0
     @improved_pokedex = 0
@@ -1388,11 +1388,11 @@ class KurayOptSc_3 < PokemonOption_Scene
                       "Pokémon icons will use their full-size battle sprites"]
     )
 	
-    options << EnumOption.new(_INTL("Dark Mode"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.darkmode },
-                      proc { |value| $PokemonSystem.darkmode = value },
-                      ["Default UI",
-                      "Swaps the message graphics during battle"]
+    options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.kurayfusepreview },
+                      proc { |value| $PokemonSystem.kurayfusepreview = value },
+                      ["Don't preview what unknown fusions look like",
+                      "Preview what unknown fusions look like"]
     )
 
     options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
@@ -1411,13 +1411,13 @@ class KurayOptSc_3 < PokemonOption_Scene
                       ["This feature is a work in progress, more to come soon",
                       "Draws the custom battleGUI (WIP) created by Mirasein"]
     )
-    
-    options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.kurayfusepreview },
-                      proc { |value| $PokemonSystem.kurayfusepreview = value },
-                      ["Don't preview what unknown fusions look like",
-                      "Preview what unknown fusions look like"]
+    options << EnumOption.new(_INTL("Dark Mode"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.darkmode },
+                      proc { |value| $PokemonSystem.darkmode = value },
+                      ["Default UI",
+                      "Swaps the message graphics during battle"]
     )
+    
     options << EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
                       proc { $PokemonSystem.kurayfonts },
                       proc { |value|
