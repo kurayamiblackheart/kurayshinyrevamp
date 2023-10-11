@@ -5342,12 +5342,12 @@ class PokemonStorageScreen
         when 4 # battler folder
           directoryplayer_name = nil
           directorybattler_name = nil
-          directorybattler_name, directorybattler_array, cancelled, battler_randomized, havingjsons = navigationSystem("ExportedPokemons", "Choose Battler Sub-Directory.")
+          directorybattler_name, directorybattler_array, cancelled, battler_randomized, hvenemyjsons = navigationSystem("ExportedPokemons", "Choose Battler Sub-Directory.")
           if cancelled
             return
           end
 
-          if havingjsons.length < 1
+          if hvenemyjsons.length < 1
             # Use Dir.glob to get a list of JSON files in the folder
             json_files = Dir.glob(File.join(directorybattler_name, "*.json"))
             if json_files.empty?
@@ -5356,7 +5356,7 @@ class PokemonStorageScreen
               return
             end
           else
-            json_files = havingjsons.clone
+            json_files = hvenemyjsons.clone
           end
           pokekurays = json_files
           isjson = true
@@ -5408,6 +5408,19 @@ class PokemonStorageScreen
               end
               if gaveup
                 return
+              end
+              pokekurays = enemyjson
+            else
+              if hvenemyjsons.length < 1
+                # Use Dir.glob to get a list of JSON files in the folder
+                enemyjson = Dir.glob(File.join(directorybattler_name, "*.json"))
+                if enemyjson.empty?
+                  pbPlayBuzzerSE
+                  pbDisplay(_INTL("No Enemies Battler to Import!"))
+                  return
+                end
+              else
+                enemyjson = hvenemyjsons.clone
               end
               pokekurays = enemyjson
             end
@@ -5482,20 +5495,24 @@ class PokemonStorageScreen
                 end
                 pokekuraysplayer = playerjson
               else
-                # Use Dir.glob to get a list of JSON files in the folder
-                json_files = Dir.glob(File.join(directoryplayer_name, "*.json"))
-                if json_files.empty?
-                  pbPlayBuzzerSE
-                  pbDisplay(_INTL("No Players Battler to Import! Using Battlers instead."))
-                  pokekuraysplayer = pokekurays.clone
-                  playerfolder = false
-                else
-                  pokekuraysplayer = json_files
-                  if pokekuraysplayer.empty?
-                    pbDisplay(_INTL("No Player Team for Fighting! Using Battler instead."))
+                if havingjsons.length < 1
+                  # Use Dir.glob to get a list of JSON files in the folder
+                  json_files = Dir.glob(File.join(directoryplayer_name, "*.json"))
+                  if json_files.empty?
+                    pbPlayBuzzerSE
+                    pbDisplay(_INTL("No Players Battler to Import! Using Battlers instead."))
                     pokekuraysplayer = pokekurays.clone
                     playerfolder = false
+                  else
+                    pokekuraysplayer = json_files
+                    if pokekuraysplayer.empty?
+                      pbDisplay(_INTL("No Player Team for Fighting! Using Battler instead."))
+                      pokekuraysplayer = pokekurays.clone
+                      playerfolder = false
+                    end
                   end
+                else
+                  pokekuraysplayer = havingjsons.clone
                 end
               end
             end
