@@ -348,7 +348,7 @@ class PokeBattle_AI
 				   end
 				else
 					if @battle.choices[indexopp][1]
-						if pbAIRandom(100) < 101 && ( # Try play "mind games" instead of just getting baited every time.
+						if pbAIRandom(100) < 50 && ( # Try play "mind games" instead of just getting baited every time.
 							!@battle.choices[indexopp][2].damagingMove? ||
 							(priorityAI(target,@battle.choices[indexopp][2])==1 && ((aspeed<=ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))) ||
 							priorityAI(target,@battle.choices[indexopp][2])>1
