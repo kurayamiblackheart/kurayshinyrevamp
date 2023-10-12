@@ -2550,6 +2550,7 @@ class PokeBattle_AI
 			sack=false
 			sack=true if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 			stagemult=1
+			swapper=attacker.pokemonIndex
 			switchin=pbHardSwitchChooseNewEnemy(attacker.index,party,sack,true)
 			if switchin
 				if switchin.is_a?(Array)
