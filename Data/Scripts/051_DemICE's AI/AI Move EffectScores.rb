@@ -714,7 +714,7 @@ class PokeBattle_AI
 			#---------------------------------------------------------------------------
 		when "137"  # Magnetic Flux
 			geared=false
-			@battle.allSameSideBattlers(1).each do |b|
+			@battle.allSameSideBattlers(user.index).each do |b|
 				next if !b.hasActiveAbility?(:PLUS) && !b.hasActiveAbility?(:MINUS)
 				geared=true
 			end
@@ -960,7 +960,7 @@ class PokeBattle_AI
 			#---------------------------------------------------------------------------
 		when "15C"  # Gear Up
 			geared=false
-			@battle.allSameSideBattlers(1).each do |b|
+			@battle.allSameSideBattlers(user.index).each do |b|
 				next if !b.hasActiveAbility?(:PLUS) && !b.hasActiveAbility?(:MINUS)
 				geared=true
 			end
@@ -1604,7 +1604,7 @@ class PokeBattle_AI
 				counterdam=target.hp if counterdam>target.hp
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if maxspec && targetSurvivesMove(maxmove,target,attacker)
+				if targetSurvivesMove(maxmove,target,attacker)
 					damagePercentage = counterdam * 100.0 / target.hp
 					damagePercentage=110 if damagePercentage>target.hp
 					score+=damagePercentage
@@ -1620,7 +1620,40 @@ class PokeBattle_AI
 				end  
 				score=5 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				score-=200 if pbAIRandom(100) < 50
-			end    
+			end   
+			#---------------------------------------------------------------------------
+		when "073"  # Bide
+			target=user.pbDirectOpposing(true)
+			if target.effects[PBEffects::HyperBeam] > 0
+				score -= 90
+			else
+				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+				maxdam=bestmove[0] 
+				maxmove=bestmove[1]
+				maxowndam=0
+				for j in target.moves
+					tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
+					tempdam = 0 if pbCheckMoveImmunity(1,j,user,target,100)
+					maxowndam=tempdam if tempdam>maxowndam
+				end 
+				maxowndam=target.hp if maxowndam>target.hp
+				counterdam=0
+				counterdam=maxdam*2
+				counterdam=target.hp if counterdam>target.hp
+				aspeed = pbRoughStat(user,:SPEED,skill)
+				ospeed = pbRoughStat(target,:SPEED,skill)
+				if targetSurvivesMove(maxmove,target,attacker,0,2)
+					damagePercentage = counterdam * 100.0 / target.hp
+					damagePercentage=110 if damagePercentage>target.hp
+					score+=damagePercentage
+				end
+				if maxowndam>=counterdam
+					score-=90
+				else
+					score += 30 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+				end   
+				score-=200 if pbAIRandom(100) < 50
+			end     
 			#---------------------------------------------------------------------------
 		when "0B4"   # Sleep Talk
 			if (user.asleep? && user.statusCount>1) || (user.hasActiveAbility?(:COMATOSE) && user.pbHasMoveFunction?("125"))
@@ -1657,7 +1690,7 @@ class PokeBattle_AI
 				score += 50 if target.pbOwnSide.effects[PBEffects::Spikes]>0
 				score += 50 if target.pbOwnSide.effects[PBEffects::ToxicSpikes]>0
 				score += 50 if target.pbOwnSide.effects[PBEffects::StealthRock]
-				@battle.allOtherSideBattlers(1).each do |b|
+				@battle.allOtherSideBattlers(user.index).each do |b|
 					if b.hasActiveAbility?(:WONDERGUARD) &&
 							(user.pbOpposingSide.effects[PBEffects::StealthRock] ||
 							user.pbOpposingSide.effects[PBEffects::ToxicSpikes] >0
@@ -1700,7 +1733,7 @@ class PokeBattle_AI
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
 			maxdam=bestmove[0] 
 			denier=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				if b.effects[PBEffects::MagicCoat] || b.hasActiveAbility?(:MAGICBOUNCE) ||
 					(b.pbHasMoveFunction?("110") && !user.pbHasType?(:GHOST)) ||
 					b.pbHasMoveFunction?("049") 
@@ -1712,8 +1745,8 @@ class PokeBattle_AI
 			elsif user.allOpposing.none? { |b| @battle.pbCanChooseNonActive?(b.index) }
 				score -= 90   # Opponent can't switch in any Pokemon
 			else
-				party = @battle.pbParty(0)
-				inBattleIndices = @battle.allSameSideBattlers(0).map { |b| b.pokemonIndex }
+				party = @battle.pbParty(target.index)
+				inBattleIndices = @battle.allSameSideBattlers(target.index).map { |b| b.pokemonIndex }
 				count = 0
 				party.each_with_index do |pkmn, idxParty|
 					next if !pkmn || !pkmn.able?
@@ -1727,8 +1760,9 @@ class PokeBattle_AI
 			end
 			#---------------------------------------------------------------------------
 		when "104" # Toxic Spikes
+			target=user.pbDirectOpposing(true)
 			denier=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				if b.effects[PBEffects::MagicCoat] || b.hasActiveAbility?(:MAGICBOUNCE) ||
 					(b.pbHasMoveFunction?("110") && !user.pbHasType?(:GHOST)) ||
 					b.pbHasMoveFunction?("049") 
@@ -1740,8 +1774,8 @@ class PokeBattle_AI
 			elsif user.allOpposing.none? { |b| @battle.pbCanChooseNonActive?(b.index) }
 				score -= 90  # Opponent can't switch in any Pokemon
 			else
-				party = @battle.pbParty(0)
-				inBattleIndices = @battle.allSameSideBattlers(0).map { |b| b.pokemonIndex }
+				party = @battle.pbParty(target.index)
+				inBattleIndices = @battle.allSameSideBattlers(target.index).map { |b| b.pokemonIndex }
 				count = 0
 				party.each_with_index do |pkmn, idxParty|
 					next if !pkmn || !pkmn.able?
@@ -1761,8 +1795,9 @@ class PokeBattle_AI
 			end
 			#---------------------------------------------------------------------------
 		when "105" # Stealth Rock
+			target=user.pbDirectOpposing(true)
 			denier=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				if b.effects[PBEffects::MagicCoat] || b.hasActiveAbility?(:MAGICBOUNCE) ||
 					(b.pbHasMoveFunction?("110") && !user.pbHasType?(:GHOST)) ||
 					b.pbHasMoveFunction?("049") 
@@ -1774,8 +1809,8 @@ class PokeBattle_AI
 			elsif user.allOpposing.none? { |b| @battle.pbCanChooseNonActive?(b.index) }
 				score -= 200   # Opponent can't switch in any Pokemon
 			else
-				party = @battle.pbParty(0)
-				inBattleIndices = @battle.allSameSideBattlers(0).map { |b| b.pokemonIndex }
+				party = @battle.pbParty(target.index)
+				inBattleIndices = @battle.allSameSideBattlers(target.index).map { |b| b.pokemonIndex }
 				count = 0
 				party.each_with_index do |pkmn, idxParty|
 					next if !pkmn || !pkmn.able?
@@ -1789,14 +1824,15 @@ class PokeBattle_AI
 					count +=3 if pkmn.ability == :WONDERGUARD
 				end
 				score += 15 * count
-				@battle.allOtherSideBattlers(1).each do |b|
+				@battle.allOtherSideBattlers(user.index).each do |b|
 					score+=80 if b.hasActiveAbility?(:WONDERGUARD)
 				end	
 			end
 			#---------------------------------------------------------------------------
 		when "153" # Sticky Web
+			target=user.pbDirectOpposing(true)
 			denier=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				if b.effects[PBEffects::MagicCoat] || b.hasActiveAbility?(:MAGICBOUNCE) ||
 					(b.pbHasMoveFunction?("110") && !user.pbHasType?(:GHOST)) ||
 					b.pbHasMoveFunction?("049") 
@@ -1809,12 +1845,12 @@ class PokeBattle_AI
 				score -= 95   # Opponent can't switch in any Pokemon
 			else
 				maxownspeed=0
-				ownparty = @battle.pbParty(1)
+				ownparty = @battle.pbParty(user.index)
 				ownparty.each_with_index do |pkmn, idxParty|
 					maxownspeed = pkmn.speed if pkmn.speed>maxownspeed
 				end
-				party = @battle.pbParty(0)
-				inBattleIndices = @battle.allSameSideBattlers(0).map { |b| b.pokemonIndex }
+				party = @battle.pbParty(target.index)
+				inBattleIndices = @battle.allSameSideBattlers(target.index).map { |b| b.pokemonIndex }
 				count = 0
 				party.each_with_index do |pkmn, idxParty|
 					next if !pkmn || !pkmn.able?
@@ -1911,7 +1947,7 @@ class PokeBattle_AI
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			maxdam=0
 			water=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
 					if b.effects[PBEffects::ChoiceBand] &&
 						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
@@ -1950,8 +1986,8 @@ class PokeBattle_AI
 			end    
 			score+=20 if user.hasActiveAbility?(:FLOWERGIFT) || user.hasActiveAbility?(:SOLARPOWER) || user.hasActiveAbility?(:PROTOSYNTHESIS)
 			score-=50 if user.hasActiveAbility?(:DRYSKIN)
-			ownparty = @battle.pbParty(1)
-			inBattleIndices = @battle.allSameSideBattlers(1).map { |b| b.pokemonIndex }
+			ownparty = @battle.pbParty(user.index)
+			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
 			ownparty.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				next if inBattleIndices.include?(idxParty)
@@ -1964,7 +2000,7 @@ class PokeBattle_AI
 				score+=10 if pkmn.pbHasMoveFunction?("0D8", "028")
 				score+=20 if pkmn.pbHasMoveFunction?("0C4") 
 			end
-			party = @battle.pbParty(0)
+			party = @battle.pbParty(target.index)
 			party.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				if pkmn.ability == :SWIFTSWIM && @battle.pbWeather == :Rain
@@ -1991,7 +2027,7 @@ class PokeBattle_AI
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			maxdam=0
 			fire=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
 					if b.effects[PBEffects::ChoiceBand] &&
 						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
@@ -2029,8 +2065,8 @@ class PokeBattle_AI
 				score+=40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
 			end    
 			score+=20 if user.hasActiveAbility?(:RAINDISH) || user.hasActiveAbility?(:DRYSKIN) || user.hasActiveAbility?(:HYDRATION)
-			ownparty = @battle.pbParty(1)
-			inBattleIndices = @battle.allSameSideBattlers(1).map { |b| b.pokemonIndex }
+			ownparty = @battle.pbParty(user.index)
+			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
 			ownparty.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				next if inBattleIndices.include?(idxParty)
@@ -2043,7 +2079,7 @@ class PokeBattle_AI
 				score-=10 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.pbWeather == :Sun
 				score+=10 if pkmn.pbHasMoveFunction?("008") 
 			end
-			party = @battle.pbParty(0)
+			party = @battle.pbParty(target.index)
 			party.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				if pkmn.ability == :CHLOROPHYLL && @battle.pbWeather == :Sun
@@ -2070,7 +2106,7 @@ class PokeBattle_AI
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			maxdam=0
 			maxspec=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
 					if b.effects[PBEffects::ChoiceBand] &&
 						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
@@ -2109,8 +2145,8 @@ class PokeBattle_AI
 				score+=40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
 			end    
 			score+=20 if user.hasActiveAbility?(:SANDVEIL) || user.hasActiveAbility?(:SANDFORCE)
-			ownparty = @battle.pbParty(1)
-			inBattleIndices = @battle.allSameSideBattlers(1).map { |b| b.pokemonIndex }
+			ownparty = @battle.pbParty(user.index)
+			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
 			ownparty.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				next if inBattleIndices.include?(idxParty)
@@ -2120,7 +2156,7 @@ class PokeBattle_AI
 				score-=10 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.pbWeather == :Sun
 				score+=20 if pkmn.pbHasMoveFunction?("16D") 
 			end
-			party = @battle.pbParty(0)
+			party = @battle.pbParty(target.index)
 			party.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				if (pkmn.ability == :CHLOROPHYLL && @battle.pbWeather == :Sun) || (pkmn.ability == :SWIFTSWIM && @battle.pbWeather == :Rain)
@@ -2130,7 +2166,7 @@ class PokeBattle_AI
 					score+=20
 				end 
 			end
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				score+=80 if b.hasActiveAbility?(:WONDERGUARD) && !b.pbHasType?(:ROCK) && !b.pbHasType?(:GROUND) && !b.pbHasType?(:STEEL)
 			end	
 			if @battle.pbCheckGlobalAbility(:AIRLOCK) ||
@@ -2146,7 +2182,7 @@ class PokeBattle_AI
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			maxdam=0
 			maxphys=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
 					if b.effects[PBEffects::ChoiceBand] &&
 						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
@@ -2186,8 +2222,8 @@ class PokeBattle_AI
 				score+=40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
 			end    
 			score+=20 if user.hasActiveAbility?(:SNOWCLOAK) || user.hasActiveAbility?(:ICEBODY)
-			ownparty = @battle.pbParty(1)
-			inBattleIndices = @battle.allSameSideBattlers(1).map { |b| b.pokemonIndex }
+			ownparty = @battle.pbParty(user.index)
+			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
 			ownparty.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				next if inBattleIndices.include?(idxParty)
@@ -2198,7 +2234,7 @@ class PokeBattle_AI
 				score+=20 if pkmn.pbHasMoveFunction?("00D") 
 				score+=20 if pkmn.pbHasMoveFunction?("167") 
 			end
-			party = @battle.pbParty(0)
+			party = @battle.pbParty(target.index)
 			party.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				if (pkmn.ability == :CHLOROPHYLL && @battle.pbWeather == :Sun) || (pkmn.ability == :SWIFTSWIM && @battle.pbWeather == :Rain)
@@ -2208,7 +2244,7 @@ class PokeBattle_AI
 					score+=20
 				end 
 			end
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				score+=80 if b.hasActiveAbility?(:WONDERGUARD) && !b.pbHasType?(:ICE)
 			end	
 			if @battle.pbCheckGlobalAbility(:AIRLOCK) ||
@@ -2225,7 +2261,7 @@ class PokeBattle_AI
 			maxdam=0
 			maxphys=false
 			maxspec=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
 					if b.effects[PBEffects::ChoiceBand] &&
 						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
@@ -2262,8 +2298,8 @@ class PokeBattle_AI
 				score+=40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
 			end    
 			score+=20 if user.hasActiveAbility?(:QUARKDRIVE)
-			ownparty = @battle.pbParty(1)
-			inBattleIndices = @battle.allSameSideBattlers(1).map { |b| b.pokemonIndex }
+			ownparty = @battle.pbParty(user.index)
+			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
 			ownparty.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				next if inBattleIndices.include?(idxParty)
@@ -2273,7 +2309,6 @@ class PokeBattle_AI
 				# score+=20 if pkmn.pbHasMoveFunction?("TypeAndPowerDependOnTerrain", "BPRaiseWhileElectricTerrain")
 				# score+=30 if pkmn.pbHasMoveFunction?("DoublePowerInElectricTerrain") 
 			end
-			party = @battle.pbParty(0)
 			if @battle.field.terrain == :Electric
 				score -=200
 			end   
@@ -2286,7 +2321,7 @@ class PokeBattle_AI
 			maxmove="none"
 			maxphys=false
 			maxspec=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
 					if b.effects[PBEffects::ChoiceBand] &&
 						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
@@ -2323,8 +2358,8 @@ class PokeBattle_AI
 				score+=20
 				score+=20 if maxphys && ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 			end    
-			ownparty = @battle.pbParty(1)
-			inBattleIndices = @battle.allSameSideBattlers(1).map { |b| b.pokemonIndex }
+			ownparty = @battle.pbParty(user.index)
+			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
 			ownparty.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				next if inBattleIndices.include?(idxParty)
@@ -2334,7 +2369,6 @@ class PokeBattle_AI
 				score+=20 if pkmn.pbHasMoveFunction?("16E")
 				#score+=40 if pkmn.pbHasMoveFunction?("HigherPriorityInGrassyTerrain") 
 			end
-			party = @battle.pbParty(0)
 			if @battle.field.terrain == :Grassy
 				score -=200
 			end   
@@ -2347,7 +2381,7 @@ class PokeBattle_AI
 			dragon=false
 			maxphys=false
 			maxspec=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
 					if b.effects[PBEffects::ChoiceBand] &&
 						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
@@ -2381,8 +2415,8 @@ class PokeBattle_AI
 			end
 			# score+=20 if user.pbHasMoveFunction?("TypeAndPowerDependOnTerrain")
 			# score+=30 if user.pbHasMoveFunction?("UserFaintsPowersUpInMistyTerrainExplosive")
-			ownparty = @battle.pbParty(1)
-			inBattleIndices = @battle.allSameSideBattlers(1).map { |b| b.pokemonIndex }
+			ownparty = @battle.pbParty(user.index)
+			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
 			ownparty.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				next if inBattleIndices.include?(idxParty)
@@ -2395,7 +2429,6 @@ class PokeBattle_AI
 				# score+=20 if pkmn.pbHasMoveFunction?("TypeAndPowerDependOnTerrain")
 				# score+=30 if pkmn.pbHasMoveFunction?("UserFaintsPowersUpInMistyTerrainExplosive") 
 			end
-			party = @battle.pbParty(0)
 			if @battle.field.terrain == :Misty
 				score -=200
 			end   
@@ -2408,7 +2441,7 @@ class PokeBattle_AI
 			prio=false
 			maxphys=false
 			maxspec=false
-			@battle.allOtherSideBattlers(1).each do |b|
+			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
 					if b.effects[PBEffects::ChoiceBand] &&
 						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
@@ -2443,8 +2476,8 @@ class PokeBattle_AI
 			end
 			# score+=20 if user.pbHasMoveFunction?("TypeAndPowerDependOnTerrain")
 			# score+=30 if user.pbHasMoveFunction?("HitsAllFoesAndPowersUpInPsychicTerrain")
-			ownparty = @battle.pbParty(1)
-			inBattleIndices = @battle.allSameSideBattlers(1).map { |b| b.pokemonIndex }
+			ownparty = @battle.pbParty(user.index)
+			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
 			ownparty.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				next if inBattleIndices.include?(idxParty)
@@ -2456,7 +2489,6 @@ class PokeBattle_AI
 				# score+=20 if pkmn.pbHasMoveFunction?("TypeAndPowerDependOnTerrain")
 				# score+=30 if pkmn.pbHasMoveFunction?("HitsAllFoesAndPowersUpInPsychicTerrain") 
 			end
-			party = @battle.pbParty(0)
 			if @battle.field.terrain == :Psychic
 				score -=200
 			end 
@@ -2519,7 +2551,14 @@ class PokeBattle_AI
 			sack=true if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 			stagemult=1
 			switchin=pbHardSwitchChooseNewEnemy(attacker.index,party,sack,true)
-			if @battle.pbCanChooseNonActive?(attacker.index) && switchin[0]!=attacker.pokemonIndex
+			if switchin
+				if switchin.is_a?(Array)
+					swapper=switchin[0]
+				else
+					swapper=switchin
+				end
+			end
+			if @battle.pbCanChooseNonActive?(attacker.index) && swapper!=attacker.pokemonIndex
 				if targetSurvivesMove(maxmove,attacker,opponent)
 					stagemult+=1
 					if sack
@@ -2562,7 +2601,7 @@ class PokeBattle_AI
 				if attacker.turnCount<1
 					score-=30
 				end
-				score-=20 if @battle.pbSideSize(1)>1
+				score-=20 if @battle.pbSideSize(attacker.index)>1
 			else
 				score-=200
 			end
@@ -2602,13 +2641,13 @@ class PokeBattle_AI
 				espeed=0
 				if skill>=PBTrainerAI.highSkill
 					minspeed=0
-					@battle.allSameSideBattlers(1).each do |b|
+					@battle.allSameSideBattlers(user.index).each do |b|
 						pspeed = pbRoughStat(b,:SPEED,skill)
 						pspeed*=1.5 if b.hasActiveAbility?(:SPEEDBOOST)
 						minspeed=pspeed if pspeed<minspeed
 					end
 					maxspeed=0
-					@battle.allSameSideBattlers(0).each do |b|
+					@battle.allSameSideBattlers(target.index).each do |b|
 						espeed = pbRoughStat(b,:SPEED,skill)
 						espeed*=1.5 if b.hasActiveAbility?(:SPEEDBOOST)
 						maxspeed=espeed if espeed>maxspeed
@@ -2637,13 +2676,13 @@ class PokeBattle_AI
 				espeed=0
 				if skill>=PBTrainerAI.highSkill
 					minspeed=0
-					@battle.allSameSideBattlers(1).each do |b|
+					@battle.allSameSideBattlers(user.index).each do |b|
 						pspeed = pbRoughStat(b,:SPEED,skill)
 						pspeed*=1.5 if b.hasActiveAbility?(:SPEEDBOOST)
 						minspeed=pspeed if pspeed<minspeed
 					end
 					maxspeed=0
-					@battle.allSameSideBattlers(0).each do |b|
+					@battle.allSameSideBattlers(target.index).each do |b|
 						espeed = pbRoughStat(b,:SPEED,skill)
 						espeed*=1.5 if b.hasActiveAbility?(:SPEEDBOOST)
 						maxspeed=espeed if espeed>maxspeed

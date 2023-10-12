@@ -335,17 +335,24 @@ class PokeBattle_AI
 		# Prefer flinching external effects (note that move effects which cause
 		# flinching are dealt with in the function code part of score calculation)
 		mold_broken=moldbroken(user,target,move.function)
+		aspeed = pbRoughStat(user,:SPEED,skill)
+		ospeed = pbRoughStat(target,:SPEED,skill)
 		if skill>=PBTrainerAI.mediumSkill
-			if move.function == "116" # Sucker Punch
-				if @battle.choices[0][0]!=:UseMove
+			indexopp=target.index
+			if move.function == "116" && user.index>indexopp # Sucker Punch
+				if @battle.choices[indexopp][0]!=:UseMove
 				   if pbAIRandom(100) < 50	# Try play "mind games" instead of just getting baited every time.
 						echo("\n'Predicting' that opponent will not attack and sucker will fail")
 						score=1
 						realDamage=0 
 				   end
 				else
-					if @battle.choices[0][1]
-						if !@battle.choices[0][2].damagingMove? && pbAIRandom(100) < 50	# Try play "mind games" instead of just getting baited every time.
+					if @battle.choices[indexopp][1]
+						if pbAIRandom(100) < 101 && ( # Try play "mind games" instead of just getting baited every time.
+							!@battle.choices[indexopp][2].damagingMove? ||
+							(priorityAI(target,@battle.choices[indexopp][2])==1 && ((aspeed<=ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))) ||
+							priorityAI(target,@battle.choices[indexopp][2])>1
+							)
 							 echo("\n'Predicting' that opponent will not attack and sucker will fail")
 							 score=1
 							 realDamage=0 
@@ -353,8 +360,6 @@ class PokeBattle_AI
 					end
 				end
 			end
-			aspeed = pbRoughStat(user,:SPEED,skill)
-			ospeed = pbRoughStat(target,:SPEED,skill)
 			if ((!target.hasActiveAbility?(:INNERFOCUS) && !target.hasActiveAbility?(:SHIELDDUST)) || mold_broken) &&
 				target.effects[PBEffects::Substitute]==0 &&
 				((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))

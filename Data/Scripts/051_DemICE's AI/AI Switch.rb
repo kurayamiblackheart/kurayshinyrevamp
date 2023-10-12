@@ -181,6 +181,9 @@ class PokeBattle_AI
 		else
 			shouldSwitch=false 	
 		end
+		if $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0 && shouldSwitch && @battle.turnCount>0
+			shouldSwitch=false if battler.turnCount == 0
+		end
 		if shouldSwitch
 			incoming=swapper
 			# idxPartyStart, idxPartyEnd = @battle.pbTeamIndexRangeFromBattlerIndex(idxBattler)
@@ -559,7 +562,8 @@ class PokeBattle_AI
 				
 				sum*=(100.1-damagetakenPercent)*0.01
 				if pokmon.hasActiveItem?(:AIRBALLOON) && willtakedamage
-					playerparty = @battle.pbParty(0)
+					othersideindex=pokmon.pbDirectOpposing(true).index
+					playerparty = @battle.pbParty(othersideindex)
 					groundvar=false
 					playerparty.each_with_index do |pkmn, idxParty|
 						next if !pkmn ||!pkmn.able?
@@ -653,7 +657,7 @@ class PokeBattle_AI
 					#sum+=5 if pkmn.pbHasMoveFunction?("TypeAndPowerDependOnTerrain", "UserFaintsPowersUpInMistyTerrainExplosive")
 				end
 				if pokmon.ability==:PSYCHICSURGE
-					sum+=5 if pkmn.item == :PSSYCHICSEED
+					sum+=5 if pkmn.item == :PSYCHICSEED
 					sum-=5 if pkmn.ability == :PRANKSTER
 					pkmn.eachMove do |m|
 						next if m.base_damage==0 || m.type != :PSYCHIC
