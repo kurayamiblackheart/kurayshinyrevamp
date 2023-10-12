@@ -183,6 +183,7 @@ class PokeBattle_AI
 		end
 		if $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0 && shouldSwitch && @battle.turnCount>0
 			shouldSwitch=false if battler.turnCount == 0
+			echo("\nSwitch prevented due to the battler being on its first turn out, during auto-battling.\n")
 		end
 		if shouldSwitch
 			incoming=swapper
