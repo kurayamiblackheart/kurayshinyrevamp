@@ -188,7 +188,7 @@ class PokeBattle_Scene
         end
         i += 1
       end
-      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || @abortable
+      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
         if cw.busy?
           pbPlayDecisionSE if cw.pausing? && !@abortable
           cw.skipAhead
@@ -230,7 +230,7 @@ class PokeBattle_Scene
           i += 1
         end
       end
-      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || @abortable
+      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || (@abortable || ($PokemonSystem && $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0))
         if cw.busy?
           pbPlayDecisionSE if cw.pausing? && !@abortable
           cw.skipAhead
