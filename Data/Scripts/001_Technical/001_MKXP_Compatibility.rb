@@ -215,19 +215,20 @@ def kurayGetCustomNonFusion(dex_number, usedefault=0)
       # end
       checknumber = dexname.gsub(/[^\d]/, '')
       next if checknumber.to_i != dex_number
-      if $KURAY_COMMONLIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_common"].append(filefile)
-      elsif $KURAY_RARELIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_rare"].append(filefile)
-      elsif $KURAY_VERYRARELIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_veryrare"].append(filefile)
-      elsif $KURAY_LEGENDLIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_legend"].append(filefile)
-      elsif $KURAY_MYTHICLIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_mythic"].append(filefile)
-      else
-        $POTENTIALSPRITES[dex_number].append(filefile)
-      end
+      # if $KURAY_COMMONLIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_common"].append(filefile)
+      # elsif $KURAY_RARELIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_rare"].append(filefile)
+      # elsif $KURAY_VERYRARELIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_veryrare"].append(filefile)
+      # elsif $KURAY_LEGENDLIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_legend"].append(filefile)
+      # elsif $KURAY_MYTHICLIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_mythic"].append(filefile)
+      # else
+      #   $POTENTIALSPRITES[dex_number].append(filefile)
+      # end
+      $POTENTIALSPRITES[dex_number].append(filefile)
     end
     # Choose randomly from the array
     kuraycusfile = kurayRNGSprite(dex_number, usedefault)
@@ -279,19 +280,20 @@ def kurayGetCustomDoubleFusion(dex_number, head_id, body_id, usedefault=0)
       # end
       checknumber = dexname.gsub(/[^\d.]/, '')
       next if checknumber.to_s != head_id.to_s + "." + body_id.to_s
-      if $KURAY_COMMONLIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_common"].append(filefile)
-      elsif $KURAY_RARELIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_rare"].append(filefile)
-      elsif $KURAY_VERYRARELIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_veryrare"].append(filefile)
-      elsif $KURAY_LEGENDLIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_legend"].append(filefile)
-      elsif $KURAY_MYTHICLIST.include?(dexname)
-        $POTENTIALSPRITES[dex_number.to_s + "_mythic"].append(filefile)
-      else
-        $POTENTIALSPRITES[dex_number].append(filefile)
-      end
+      # if $KURAY_COMMONLIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_common"].append(filefile)
+      # elsif $KURAY_RARELIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_rare"].append(filefile)
+      # elsif $KURAY_VERYRARELIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_veryrare"].append(filefile)
+      # elsif $KURAY_LEGENDLIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_legend"].append(filefile)
+      # elsif $KURAY_MYTHICLIST.include?(dexname)
+      #   $POTENTIALSPRITES[dex_number.to_s + "_mythic"].append(filefile)
+      # else
+      #   $POTENTIALSPRITES[dex_number].append(filefile)
+      # end
+      $POTENTIALSPRITES[dex_number].append(filefile)
     end
     # Choose randomly from the array
     kuraycusfile = kurayRNGSprite(dex_number, usedefault)
