@@ -69,7 +69,8 @@ end
 def kurayPlayerBlackList(dex_number, filename)
   if dex_number <= Settings::NB_POKEMON
     #Check for non fusions
-    usinglocation = "Graphics/KuraySprites/"
+    # usinglocation = "Graphics/KuraySprites/"
+    usinglocation = "Graphics/BaseSprites/"
     filefile = File.basename(filename)
     Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
     File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
@@ -192,7 +193,7 @@ def kurayGetCustomNonFusion(dex_number, usedefault=0)
   $POTENTIALSPRITES[dex_number.to_s + "_legend"] = [] if !$POTENTIALSPRITES[dex_number.to_s + "_legend"]
   $POTENTIALSPRITES[dex_number.to_s + "_mythic"] = [] if !$POTENTIALSPRITES[dex_number.to_s + "_mythic"]
   # usinglocation = "Graphics/Base Sprites/"
-  usinglocation = "Graphics/KuraySprites/"
+  usinglocation = "Graphics/BaseSprites/"
   if $POTENTIALSPRITES[dex_number].empty?
     # Only keep files that correspond to the actual pokemon
     # Dir.foreach(Settings::CUSTOM_BASE_SPRITES_FOLDER + dex_number.to_s + "*") do |filename|
@@ -206,12 +207,12 @@ def kurayGetCustomNonFusion(dex_number, usedefault=0)
       if dexname.to_s == dex_number.to_s && !$DEFAULTSPRITES.has_key?(dex_number.to_s)
         $DEFAULTSPRITES[dex_number.to_s] = filefile
       end
-      if $KURAY_BLACKLIST.include?(dexname)
-        Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
-        File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
-        File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
-        next
-      end
+      # if $KURAY_BLACKLIST.include?(dexname)
+      #   Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
+      #   File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
+      #   File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
+      #   next
+      # end
       checknumber = dexname.gsub(/[^\d]/, '')
       next if checknumber.to_i != dex_number
       if $KURAY_COMMONLIST.include?(dexname)
@@ -270,12 +271,12 @@ def kurayGetCustomDoubleFusion(dex_number, head_id, body_id, usedefault=0)
       if dexname.to_s == head_id.to_s + "." + body_id.to_s && !$DEFAULTSPRITES.has_key?(dex_number.to_s)
         $DEFAULTSPRITES[dex_number.to_s] = filefile
       end
-      if $KURAY_BLACKLIST.include?(dexname)
-        Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
-        File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
-        File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
-        next
-      end
+      # if $KURAY_BLACKLIST.include?(dexname)
+      #   Dir.mkdir(usinglocation + "Disabled") unless File.exists?(usinglocation + "Disabled")
+      #   File.delete(usinglocation + "Disabled/" + filefile) if File.exists?(usinglocation + "Disabled/" + filefile)
+      #   File.rename(filename, usinglocation + "Disabled/" + filefile) if File.exists?(filename)
+      #   next
+      # end
       checknumber = dexname.gsub(/[^\d.]/, '')
       next if checknumber.to_s != head_id.to_s + "." + body_id.to_s
       if $KURAY_COMMONLIST.include?(dexname)
