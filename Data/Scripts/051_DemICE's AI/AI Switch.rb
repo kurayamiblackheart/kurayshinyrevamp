@@ -294,7 +294,7 @@ class PokeBattle_AI
 				if pokmon.hasActiveAbility?([:DROUGHT,:ORICHALCUMPULSE]) && @battle.pbWeather != :Sun
 					ospeed *= 2 if newenemy.hasActiveAbility?([:CHLOROPHYLL,:PROTOSYNTHESIS])
 				end
-				if pokmon.hasActiveAbility?(:SANDSTORM) && @battle.pbWeather != :Sandstorm 
+				if pokmon.hasActiveAbility?(:SANDSTREAM) && @battle.pbWeather != :Sandstorm 
 					ospeed *= 2 if newenemy.hasActiveAbility?(:SANDRUSH)
 				end
 				if pokmon.hasActiveAbility?(:SNOWWARNING) && @battle.pbWeather != :Hail 
