@@ -305,8 +305,7 @@ class PokeBattle_AI
 				end
 				for j in newenemy.moves
 					mold_broken=moldbroken(newenemy,pokmon,j.function)
-					if newenemy.effects[PBEffects::ChoiceBand] &&
-						newenemy.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+					if moveLocked(newenemy)
 						if newenemy.lastMoveUsed && newenemy.pbHasMove?(newenemy.lastMoveUsed)
 							next if j.id!=newenemy.lastMoveUsed
 						end
@@ -609,20 +608,20 @@ class PokeBattle_AI
 						next if m.base_damage==0 || m.type != :FIRE
 						sum -= 5
 					end   
-					sum-=5 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.field.weather == :Sun # Synthesis, Growth,Solarbeam
+					sum-=5 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.pbWeather  == :Sun # Synthesis, Growth,Solarbeam
 					sum+=5 if pkmn.pbHasMoveFunction?("008") # Thunder
 				end
 				if pokmon.ability==:SANDSTREAM
 					sum+=20 if pkmn.ability == :SANDRUSH
 					sum+=10 if pkmn.ability == :SANDVEIL || pkmn.ability == :SANDFORCE
 					sum+=10 if pkmn.hasType?(:ROCK)
-					sum-=5 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.field.weather == :Sun  # Synthesis, Growth,Solarbeam
+					sum-=5 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.pbWeather  == :Sun  # Synthesis, Growth,Solarbeam
 					sum+=5 if pkmn.pbHasMoveFunction?("16D") # Shore Up
 				end
 				if pokmon.ability==:SNOWWARNING
 					sum+=20 if pkmn.ability == :SLUSHRUSH
 					sum+=10 if pkmn.ability == :SNOWCLOAK || pkmn.ability == :ICEBODY
-					sum-=5 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.field.weather == :Sun  # Synthesis, Growth,Solarbeam
+					sum-=5 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.pbWeather  == :Sun  # Synthesis, Growth,Solarbeam
 					sum+=5 if pkmn.pbHasMoveFunction?("00D") # Blizzard
 					sum+=5 if pkmn.pbHasMoveFunction?("167") # Aurora Veil
 				end

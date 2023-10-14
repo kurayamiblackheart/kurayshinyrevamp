@@ -64,10 +64,11 @@ class PokeBattle_AI
 				if [1, 2, 3, 6, 7, 8].include?(useType)   # Use on Pokémon
 					idxTarget = @battle.battlers[idxTarget].pokemonIndex   # Party Pokémon
 				end
-				#echo(item[0].name+": "+item[1].to_s)
-				# if $consoleenabled
-				# 	echo(choices+[item[0],item[1]])
-				# end	
+				party = @battle.pbParty(idxBattler)
+				if user.pokemonIndex == 0 && party.length>1
+					item[1] *= 0.5 
+					echo(item[0].name+": "+item[1].to_s+" discourage item usage on lead.\n")
+				end
 				if item[1]>maxScore
 					# Register use of item
 					@battle.pbRegisterItem(idxBattler,item[0],idxTarget)
@@ -328,15 +329,29 @@ class PokeBattle_AI
 		accuracy*= 1.3 if $game_switches[850] # Endgame Challenge enabled
 		accuracy=100 if accuracy>100
 		#realDamage *= accuracy / 100.0 # DemICE
-		# Two-turn attacks waste 2 turns to deal one lot of damage
-		# if move.chargingTurnMove? || move.function == "0C2"   # Hyper Beam # DemICE this shit does more bad than good.
-		# realDamage *= 2 / 3   # Not halved because semi-invulnerable during use or hits first turn
-		# end
-		# Prefer flinching external effects (note that move effects which cause
-		# flinching are dealt with in the function code part of score calculation)
 		mold_broken=moldbroken(user,target,move.function)
 		aspeed = pbRoughStat(user,:SPEED,skill)
 		ospeed = pbRoughStat(target,:SPEED,skill)
+		# Two-turn attacks waste 2 turns to deal one lot of damage
+		if ((["0C7", "0C5", 
+			"0C6", "0C8", "0C3",  # v Meteor Beam placeholder
+			"111", "TwoTurnAttackChargeRaiseUserSpAtk1"].include?(move.function)  ||
+			(move.function=="0C4" && @battle.pbWeather != PBWeather::Sun)) && !user.hasActiveItem?(:POWERHERB))
+		  realDamage *= 2 / 3   # Not halved because semi-invulnerable during use or hits first turn
+		end
+		if move.function == "0C2" && !user.hasActiveItem?(:BATTERYPACK) # Ashen Frost exclusive
+			if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+				if targetSurvivesMove(maxoppmove,target,user,maxoppprio)
+					realDamage *= 0.5
+				end
+			else
+				if targetSurvivesMove(maxoppmove,target,user,0,2)
+					realDamage *= 0.5
+				end
+			end
+		end
+		# Prefer flinching external effects (note that move effects which cause
+		# flinching are dealt with in the function code part of score calculation)
 		if skill>=PBTrainerAI.mediumSkill
 			indexopp=target.index
 			if move.function == "116" && user.index>indexopp # Sucker Punch
@@ -359,6 +374,15 @@ class PokeBattle_AI
 						end
 					end
 				end
+			end
+			if move.function =="08B" # Eruption / Water Spout after expected damage
+				newhp = user.hp
+				if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+					newhp -= maxoppprio
+				else
+					newhp -= maxoppdam
+				end
+				realDamage = [realDamage * newhp / user.hp, 1].max
 			end
 			if ((!target.hasActiveAbility?(:INNERFOCUS) && !target.hasActiveAbility?(:SHIELDDUST)) || mold_broken) &&
 				target.effects[PBEffects::Substitute]==0 &&
@@ -396,7 +420,8 @@ class PokeBattle_AI
 			if damagePercentage > 100   # Treat all lethal moves the same   # DemICE
 				damagePercentage = 110 
 				damagePercentage+=50 if move.function == "150"  # DemICE: Fell Stinger should be preferred among other moves that KO
-				if ["0DD","14F"].include?(move.function) || (move.function=="0DE" && target.asleep?)
+				if (["0DD","14F"].include?(move.function) || (move.function=="0DE" && target.asleep?)) && 
+					!target.hasActiveAbility?(:LIQUIDOOZE) # Prefer draining move if on low HP.
 					missinghp = (user.totalhp-user.hp) *100.0 / user.totalhp
 					damagePercentage += missinghp*0.5
 				end   
@@ -820,6 +845,9 @@ class PokeBattle_AI
 				atk = @battle.pbParty(user.index)[i].baseStats[:ATTACK]
 				baseDmg+= 5+(atk/10)
 			end  
+		when "091"   # DemICE fury cutter needs to consider it will become effect +1 before move executino.
+			baseDmg = move.pbBaseDamage(baseDmg, user, target)
+			baseDmg += move.baseDamage
 			
 		else
 			baseDmg = stupidity_pbMoveBaseDamage(move,user,target,skill)
@@ -1357,8 +1385,7 @@ class PokeBattle_AI
 							priomove=nil
 							for j in user.moves
 								next if priorityAI(user,j)<1
-								if user.effects[PBEffects::ChoiceBand] &&
-									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+								if moveLocked(user)
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 										next if j.id!=user.lastMoveUsed
 									end
@@ -1406,8 +1433,7 @@ class PokeBattle_AI
 							priomove=nil
 							for j in user.moves
 								next if priorityAI(user,j)<1
-								if user.effects[PBEffects::ChoiceBand] &&
-									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+								if moveLocked(user)
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 										next if j.id!=user.lastMoveUsed
 									end
@@ -1457,8 +1483,7 @@ class PokeBattle_AI
 							priomove=nil
 							for j in user.moves
 								next if priorityAI(user,j)<1
-								if user.effects[PBEffects::ChoiceBand] &&
-									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+								if moveLocked(user)
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 										next if j.id!=user.lastMoveUsed
 									end
@@ -1635,8 +1660,7 @@ class PokeBattle_AI
 							priomove=nil
 							for j in user.moves
 								next if priorityAI(user,j)<1
-								if user.effects[PBEffects::ChoiceBand] &&
-									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+								if moveLocked(user)
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 										next if j.id!=user.lastMoveUsed
 									end
@@ -1690,8 +1714,7 @@ class PokeBattle_AI
 							priomove=nil
 							for j in user.moves
 								next if priorityAI(user,j)<1
-								if user.effects[PBEffects::ChoiceBand] &&
-									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+								if moveLocked(user)
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 										next if j.id!=user.lastMoveUsed
 									end
@@ -1746,8 +1769,7 @@ class PokeBattle_AI
 							priomove=nil
 							for j in user.moves
 								next if priorityAI(user,j)<1
-								if user.effects[PBEffects::ChoiceBand] &&
-									user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+								if moveLocked(user)
 									if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 										next if j.id!=user.lastMoveUsed
 									end
@@ -1952,8 +1974,7 @@ class PokeBattle_AI
 						priomove=nil
 						for j in user.moves
 							next if priorityAI(user,j)<1
-							if user.effects[PBEffects::ChoiceBand] &&
-								user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+							if moveLocked(user)
 								if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 									next if j.id!=user.lastMoveUsed
 								end
@@ -2159,8 +2180,7 @@ class PokeBattle_AI
 						priomove=nil
 						for j in user.moves
 							next if priorityAI(user,j)<1
-							if user.effects[PBEffects::ChoiceBand] &&
-								user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+							if moveLocked(user)
 								if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 									next if j.id!=user.lastMoveUsed
 								end

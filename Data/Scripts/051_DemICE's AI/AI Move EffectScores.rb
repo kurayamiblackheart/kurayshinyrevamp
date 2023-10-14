@@ -60,8 +60,7 @@ class PokeBattle_AI
 					if !targetSurvivesMove(maxmove,opponent,attacker)
 						score+=150
 						for j in opponent.moves
-							if opponent.effects[PBEffects::ChoiceBand] &&
-								opponent.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+							if moveLocked(opponent)
 								if opponent.lastMoveUsed && opponent.pbHasMove?(opponent.lastMoveUsed)
 									next if j.id!=opponent.lastMoveUsed
 								end
@@ -293,7 +292,7 @@ class PokeBattle_AI
 						score += 40
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-						if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+						if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 							score += 40
 						end
 						if skill>=PBTrainerAI.highSkill
@@ -331,7 +330,7 @@ class PokeBattle_AI
 					if targetSurvivesMove(maxmove,target,attacker,maxprio)|| (target.status == :SLEEP && target.statusCount>1)
 						score += 40
 						score+=20 if maxphys
-						if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+						if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 							score += 20
 						end
 						if skill>=PBTrainerAI.highSkill
@@ -384,7 +383,7 @@ class PokeBattle_AI
 				if targetSurvivesMove(maxmove,target,attacker,maxprio)|| (target.status == :SLEEP && target.statusCount>1)
 					score += 40
 					score+=20 if maxphys
-					if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+					if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 						score += 20
 					end
 					if skill>=PBTrainerAI.highSkill
@@ -438,7 +437,7 @@ class PokeBattle_AI
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 40
 					score+=20 if maxphys
-					if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+					if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 						score += 20
 					end
 					if skill>=PBTrainerAI.highSkill
@@ -592,7 +591,7 @@ class PokeBattle_AI
 					score+=20 if maxspec
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
-					if target.pbHasMoveFunction?("0D5", "0D6")   # Recovey
+					if user.pbHasMoveFunction?("0D5", "0D6")   # Recovey
 						score += 20
 					end
 					if skill>=PBTrainerAI.highSkill
@@ -644,7 +643,7 @@ class PokeBattle_AI
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 40
 					score+=20 if maxspec
-					if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+					if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 						score += 20
 					end
 					if skill>=PBTrainerAI.highSkill
@@ -697,7 +696,7 @@ class PokeBattle_AI
 					score += 30
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
-					if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+					if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 						score += 40
 					end
 					if skill>=PBTrainerAI.highSkill
@@ -710,7 +709,44 @@ class PokeBattle_AI
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:DEFENSE] * 4
 				score -= user.stages[:SPECIAL_DEFENSE] * 4
-			end			
+			end		
+			#---------------------------------------------------------------------------
+		when "112"  # Stockpile
+			target=user.pbDirectOpposing(true)
+			if (user.statStageAtMax?(:DEFENSE) &&
+				user.statStageAtMax?(:SPECIAL_DEFENSE)) || user.effects[PBEffects::Stockpile] >= 3 || user.hasActiveAbility?(:CONTRARY)
+				score -= 200
+			else
+				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+				maxdam=bestmove[0] 
+				maxmove=bestmove[1]
+				maxprio=bestmove[2]
+				halfhealth=(user.totalhp/2)
+				thirdhealth=(user.totalhp/3)
+				aspeed = pbRoughStat(user,:SPEED,skill)
+				ospeed = pbRoughStat(target,:SPEED,skill)
+				if canSleepTarget(user,target,true) && 
+					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+					score-=90
+				end	
+				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
+					score += 30
+					score += 20 if halfhealth>maxdam
+					score += 40 if thirdhealth>maxdam
+					if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+						score += 40
+					end
+					if skill>=PBTrainerAI.highSkill
+						aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
+						ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
+						score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
+					end
+				end 
+				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
+				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
+				score -= user.stages[:DEFENSE] * 10
+				score -= user.stages[:SPECIAL_DEFENSE] * 10
+			end	
 			#---------------------------------------------------------------------------
 		when "137"  # Magnetic Flux
 			geared=false
@@ -739,7 +775,7 @@ class PokeBattle_AI
 					score += 30
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
-					if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+					if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 						score += 40
 					end
 					if skill>=PBTrainerAI.highSkill
@@ -779,7 +815,7 @@ class PokeBattle_AI
 							score += 20 if halfhealth>maxdam
 						end
 						score += 40 if thirdhealth>maxdam
-						if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+						if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 							score += 40
 						end
 						if skill>=PBTrainerAI.highSkill
@@ -821,7 +857,7 @@ class PokeBattle_AI
 							score += 20 if halfhealth>maxdam
 						end
 						score += 60 if thirdhealth>maxdam
-						if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+						if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 							score += 40
 						end
 						if skill>=PBTrainerAI.highSkill
@@ -864,7 +900,7 @@ class PokeBattle_AI
 							score += 20 if halfhealth>maxdam
 						end
 						score += 60 if thirdhealth>maxdam
-						if target.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
+						if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 							score += 40
 						end
 						if skill>=PBTrainerAI.highSkill
@@ -1137,8 +1173,7 @@ class PokeBattle_AI
 					priomove=nil
 					for j in user.moves
 						next if j.priority<1
-						if user.effects[PBEffects::ChoiceBand] &&
-							user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+						if moveLocked(user)
 							if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 								next if j.id!=user.lastMoveUsed
 							end
@@ -1451,8 +1486,7 @@ class PokeBattle_AI
 					priomove=nil
 					for j in user.moves
 						next if j.priority<1
-						if user.effects[PBEffects::ChoiceBand] &&
-							user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+						if moveLocked(user)
 							if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 								next if j.id!=user.lastMoveUsed
 							end
@@ -1949,8 +1983,7 @@ class PokeBattle_AI
 			water=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
-					if b.effects[PBEffects::ChoiceBand] &&
-						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+					if moveLocked(b)
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
@@ -2029,8 +2062,7 @@ class PokeBattle_AI
 			fire=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
-					if b.effects[PBEffects::ChoiceBand] &&
-						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+					if moveLocked(b)
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
@@ -2108,8 +2140,7 @@ class PokeBattle_AI
 			maxspec=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
-					if b.effects[PBEffects::ChoiceBand] &&
-						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+					if moveLocked(b)
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
@@ -2184,8 +2215,7 @@ class PokeBattle_AI
 			maxphys=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
-					if b.effects[PBEffects::ChoiceBand] &&
-						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+					if moveLocked(b)
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
@@ -2263,8 +2293,7 @@ class PokeBattle_AI
 			maxspec=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
-					if b.effects[PBEffects::ChoiceBand] &&
-						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+					if moveLocked(b)
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
@@ -2323,8 +2352,7 @@ class PokeBattle_AI
 			maxspec=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
-					if b.effects[PBEffects::ChoiceBand] &&
-						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+					if moveLocked(b)
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
@@ -2383,8 +2411,7 @@ class PokeBattle_AI
 			maxspec=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
-					if b.effects[PBEffects::ChoiceBand] &&
-						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+					if moveLocked(b)
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
@@ -2443,8 +2470,7 @@ class PokeBattle_AI
 			maxspec=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				for j in b.moves
-					if b.effects[PBEffects::ChoiceBand] &&
-						b.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+					if moveLocked(b)
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
@@ -2533,8 +2559,7 @@ class PokeBattle_AI
 			maxoppdam=0
 			maxoppmove=nil
 			for j in opponent.moves
-				if opponent.effects[PBEffects::ChoiceBand] &&
-					opponent.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+				if moveLocked(opponent)
 					if opponent.lastMoveUsed && opponent.pbHasMove?(opponent.lastMoveUsed)
 						next if j.id!=opponent.lastMoveUsed
 					end
@@ -2626,6 +2651,20 @@ class PokeBattle_AI
 			else
 				score += 20 if user.hp<=user.totalhp/2
 			end
+			#---------------------------------------------------------------------------
+			when "0DD" # 50% drain ex. Giga Drain
+			  if skill >= PBTrainerAI.highSkill && target.hasActiveAbility?(:LIQUIDOOZE)
+				score -= 500
+			  elsif user.hp <= user.totalhp / 2
+				score += 20
+			  end
+			#---------------------------------------------------------------------------
+			when "14F" # 75% drain ex. Draining Kiss, Oblivion Wing
+			  if skill >= PBTrainerAI.highSkill && target.hasActiveAbility?(:LIQUIDOOZE)
+				score -= 750
+			  elsif user.hp <= user.totalhp / 2
+				score += 40
+			  end
 			#---------------------------------------------------------------------------
 		when "150" # Fell Stinger
 			# Yes, this is my change. To override the one in AI_Move_Effectscores_1 that treats the move like fucking Swords Dance >.>
@@ -2790,6 +2829,112 @@ class PokeBattle_AI
 				else
 					if maxdam>=halfhealth
 						if fasterhealing
+							score*=0.5
+						else
+							score*=0.1
+						end
+					else
+						score*=2
+					end
+				end
+			else
+				if maxdam*1.5>user.hp
+					score*=2
+				end
+				if !fastermon
+					if maxdam*2>user.hp
+						score*=2
+					end
+				end
+			end
+			hpchange=(EndofTurnHPChanges(user,target,false,false,true)) # what % of our hp will change after end of turn effects go through
+			opphpchange=(EndofTurnHPChanges(target,user,false,false,true)) # what % of our hp will change after end of turn effects go through
+			if opphpchange<1 ## we are going to be taking more chip damage than we are going to heal
+				oppchipdamage=((target.totalhp*(1-hpchange)))
+			end
+			thisdam=maxdam#*1.1
+			hplost=(user.totalhp-user.hp)
+			hplost+=maxdam if !fasterhealing
+			if user.effects[PBEffects::LeechSeed]>=0 && !fastermon && canSleepTarget(target,user)
+				score *= 0.3 
+			end	
+			if hpchange<1 ## we are going to be taking more chip damage than we are going to heal
+				chipdamage=((user.totalhp*(1-hpchange)))
+				thisdam+=chipdamage
+			elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for  
+				healing=((user.totalhp*(hpchange-1)))
+				thisdam-=healing if !(thisdam>user.hp)
+			elsif hpchange<=0 ## we are going to a huge overstack of end of turn effects. hence we should just not heal.
+				score*=0
+			end
+			if thisdam>hplost
+				score*=0.1
+			else
+				if @battle.pbAbleNonActiveCount(user.idxOwnSide) == 0 && hplost<=(halfhealth)
+					score*=0.01
+				end
+				if thisdam<=(halfhealth)
+					score*=2
+				else
+					if fastermon
+						if hpchange<1 && thisdam>=halfhealth && !(opphpchange<1)
+							score*=0.3
+						end
+					end
+				end
+			end
+			score*=0.7 if target.pbHasMoveFunction?("024","025","026","036",
+				"02B","02C","027", "028","01C",
+				"02E","029","032","039","035") # Setup
+			if ((user.hp.to_f)<=halfhealth)
+				score*=1.5
+			else
+				score*=0.5
+			end
+			score/=(user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]>0
+			score*=0.8 if maxdam>halfhealth
+			if target.hasActiveItem?(:METRONOME)
+				met=(1.0+target.effects[PBEffects::Metronome]*0.2) 
+				score/=met
+			end 
+			score*=1.1 if user.status==:PARALYSIS || user.effects[PBEffects::Confusion]>0
+			if target.status==:POISON || target.status==:BURN || target.effects[PBEffects::LeechSeed]>=0 || target.effects[PBEffects::Curse] || target.effects[PBEffects::Trapping]>0
+				score*=1.3
+				score*=1.3 if target.effects[PBEffects::Toxic]>0
+				score*=1.3 if user.item == :BINDINGBAND
+			end
+			score*=0.1 if ((user.hp.to_f)/user.totalhp)>0.8
+			score*=0.6 if ((user.hp.to_f)/user.totalhp)>0.6
+			score*=2 if ((user.hp.to_f)/user.totalhp)<0.25
+			score=0 if user.effects[PBEffects::Wish]>0	
+			
+			#---------------------------------------------------------------------------
+		when "160" # Strength Sap
+			target=user.pbDirectOpposing(true)
+			aspeed = pbRoughStat(user,:SPEED,skill)
+			ospeed = pbRoughStat(target,:SPEED,skill)
+			fastermon=((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+			fasterhealing=fastermon || user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE) 
+			healAmt=pbRoughStat(target,:ATTACK,skill)
+			halfhealth=(healAmt/2)
+			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+			maxdam=bestmove[0] 
+			maxmove=bestmove[1]
+			if maxmove.physicalMove?
+				if target.hasActiveAbility?(:CONTRARY)
+					maxdam *= 1.5 
+				else
+					maxdam *= 0.7 
+				end
+			end
+			maxdam=0 if (target.status == :SLEEP && target.statusCount>1)		
+			#if maxdam>user.hp
+			if !targetSurvivesMove(maxmove,target,user)
+				if maxdam>(user.hp+halfhealth)
+					score=0
+				else
+					if maxdam>=halfhealth
+						if fastermon
 							score*=0.5
 						else
 							score*=0.1
@@ -3083,8 +3228,7 @@ class PokeBattle_AI
 		maxprio=0
 		physorspec="none"
 		for j in user.moves
-			if user.effects[PBEffects::ChoiceBand] &&
-				user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+			if moveLocked(user)
 				if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 					next if j.id!=user.lastMoveUsed
 				end
@@ -3115,6 +3259,14 @@ class PokeBattle_AI
 		pri +=1 if move.function=="HigherPriorityInGrassyTerrain" && @battle.field.terrain==:Grassy && user.affectedByTerrain?
 		pri +=3 if move.healingMove? && user.hasActiveAbility?(:TRIAGE)
 		return pri
+	end
+	
+	def moveLocked(user)
+		return true if user.effects[PBEffects::ChoiceBand] && user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
+		return true if user.usingMultiTurnAttack?
+		return true if user.effects[PBEffects::Encore] > 0
+		return true if user.hasActiveAbility?(:GORILLATACTICS)
+		return false
 	end
 
 	# def statchangecounter(mon,initial,final,limiter=0)
