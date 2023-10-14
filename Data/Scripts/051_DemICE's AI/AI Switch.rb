@@ -42,6 +42,7 @@ class PokeBattle_AI
 		battler.eachOpposing do |b|
 			ospeed = pbRoughStat(b,:SPEED,100)
 			maxspeed = ospeed if ospeed>maxspeed
+			opphpchange=(EndofTurnHPChanges(b,battler,false,false,true)) # what % of our hp will change after end of turn effects go through
 			for j in battler.moves
 				if (j.function=="006" && b.pbCanPoison?(battler,false,j)) ||# Toxic
 					(j.name=="Will-O-Wisp" && b.pbCanBurn?(battler,false,j)) ||# Willo
@@ -61,11 +62,13 @@ class PokeBattle_AI
 				end	
 				tempdam = pbRoughDamage(j,battler,b,skill,j.baseDamage)
 				tempdam = 0 if pbCheckMoveImmunity(1,j,battler,b,100)
-				maxdam=tempdam if tempdam>maxdam
+				tickdamage=true if j.function=="0CF" && tempdam>0
+				maxdam=tempdam if tempdam>maxdam 
 			end 
-			opphpchange=(EndofTurnHPChanges(b,battler,false,false,true)) # what % of our hp will change after end of turn effects go through
-			tickdamage=true if opphpchange<1 || b.status == :POISON
+			tickdamage=true if opphpchange<1 || (b.status == :POISON && b.statusCount>0)
 			maxdampercent = maxdam *100.0 / b.hp
+			#if user.turnCount>10 && b.turnCount>10 && b.statusCount==0
+			# maybe i'll try this another time
 		end	
 		mindamage=10
 		if battler.effects[PBEffects::LeechSeed]>=0 && (battler.hp > battler.totalhp*0.66)
