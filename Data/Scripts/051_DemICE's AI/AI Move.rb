@@ -344,7 +344,7 @@ class PokeBattle_AI
 			(move.function=="0C4" && @battle.pbWeather != :Sun)) && !user.hasActiveItem?(:POWERHERB))
 		  realDamage *= 2 / 3   # Not halved because semi-invulnerable during use or hits first turn
 		end
-		if move.function == "0C2" && !user.hasActiveItem?(:BATTERYPACK) # Ashen Frost exclusive
+		if move.function == "0C2" # Use hyper beam as a last resort.
 			if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				if targetSurvivesMove(maxoppmove,target,user,maxoppprio)
 					realDamage *= 0.5
