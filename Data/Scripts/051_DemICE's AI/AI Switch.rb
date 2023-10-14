@@ -647,7 +647,7 @@ class PokeBattle_AI
 						next if m.base_damage==0 || m.type != :GRASS
 						sum += 5
 					end   
-					score-=5 if pkmn.pbHasMoveFunction?("076","095","044") # Earthquake, Magnitude, Bulldoze
+					sum-=5 if pkmn.pbHasMoveFunction?("076","095","044") # Earthquake, Magnitude, Bulldoze
 					sum+=5 if pkmn.pbHasMoveFunction?("16E")#,"TypeAndPowerDependOnTerrain") # Floral Healing
 					#sum+=5 if pkmn.pbHasMoveFunction?("HigherPriorityInGrassyTerrain") 
 				end
@@ -657,7 +657,7 @@ class PokeBattle_AI
 						next if m.base_damage==0 || m.type != :DRAGON
 						sum -= 5
 					end   
-					score-=5 if pkmn.pbHasMoveFunction?("003", "006") # Sleep, Toxic
+					sum-=5 if pkmn.pbHasMoveFunction?("003", "006") # Sleep, Toxic
 					#sum+=5 if pkmn.pbHasMoveFunction?("TypeAndPowerDependOnTerrain", "UserFaintsPowersUpInMistyTerrainExplosive")
 				end
 				if pokmon.ability==:PSYCHICSURGE
