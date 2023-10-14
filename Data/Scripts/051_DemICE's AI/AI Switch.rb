@@ -10,6 +10,12 @@ class PokeBattle_AI
 		moveType = nil
 		skill = 100#@battle.pbGetOwnerFromBattlerIndex(idxBattler).skill_level || 0
 		battler = @battle.battlers[idxBattler]
+		if $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0 && @battle.turnCount>0
+			if battler.turnCount == 0
+				echo("\nSwitch prevented due to the battler being on its first turn out, during auto-battling.\n")
+				return false 
+			end
+		end
 		# If Pokémon is within 6 levels of the foe, and foe's last move was
 		# super-effective and powerful
 		if !shouldSwitch && battler.turnCount > 0 && skill >= PBTrainerAI.highSkill
@@ -42,8 +48,6 @@ class PokeBattle_AI
 					(j.function=="0DC" && !b.pbHasType?(:GRASS) && b.effects[PBEffects::Substitute]<=0) # Leech Seed
 					tickdamage=true
 				end	
-				opphpchange=(EndofTurnHPChanges(b,battler,false,false,true)) # what % of our hp will change after end of turn effects go through
-				tickdamage=true if opphpchange<1 || b.status == :POISON
 				if b.hp==1
 					tickdamage=true if j.function=="102" && !b.pbHasType?(:ICE)
 					tickdamage=true if j.function=="101" && !b.pbHasType?(:ROCK) && !b.pbHasType?(:GROUND) && !b.pbHasType?(:STEEL)
@@ -59,6 +63,8 @@ class PokeBattle_AI
 				tempdam = 0 if pbCheckMoveImmunity(1,j,battler,b,100)
 				maxdam=tempdam if tempdam>maxdam
 			end 
+			opphpchange=(EndofTurnHPChanges(b,battler,false,false,true)) # what % of our hp will change after end of turn effects go through
+			tickdamage=true if opphpchange<1 || b.status == :POISON
 			maxdampercent = maxdam *100.0 / b.hp
 		end	
 		mindamage=10
@@ -182,10 +188,6 @@ class PokeBattle_AI
 			end
 		else
 			shouldSwitch=false 	
-		end
-		if $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0 && shouldSwitch && @battle.turnCount>0
-			shouldSwitch=false if battler.turnCount == 0
-			echo("\nSwitch prevented due to the battler being on its first turn out, during auto-battling.\n")
 		end
 		if shouldSwitch
 			incoming=swapper

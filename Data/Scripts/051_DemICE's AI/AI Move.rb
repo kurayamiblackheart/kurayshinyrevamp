@@ -131,9 +131,10 @@ class PokeBattle_AI
 				end
 				#badMoves = false if badMoves && pbAIRandom(100) < 10 # DemICE removing randomness
 			end
-			if badMoves && pbEnemyShouldWithdrawEx?(idxBattler, true)
+			if badMoves && pbEnemyShouldWithdrawEx?(idxBattler, false)
 				if $INTERNAL
-					PBDebug.log("[AI] #{user.pbThis} (#{user.index}) will switch due to terrible moves")
+					echo("\nWill switch due to terrible moves.\n")
+					#PBDebug.log("[AI] #{user.pbThis} (#{user.index}) will switch due to terrible moves")
 				end
 				return
 			end
