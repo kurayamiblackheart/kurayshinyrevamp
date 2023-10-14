@@ -2851,7 +2851,7 @@ class PokeBattle_AI
 					end
 				end
 				protectmove=false
-				protectmove = true if attacker.pbHasMoveFunction?("168", "0AA", "14C")
+				protectmove = true if attacker.pbHasMoveFunction?("0AA", "14C", "168" , "14B")
 				if protectmove
 					score+=20
 				end
@@ -2991,7 +2991,7 @@ class PokeBattle_AI
 				maxmove=bestmove[1]
 				maxdam=0 if (target.status == :SLEEP && target.statusCount>1)	
 				mult=2
-				mult=1 if user.pbHasMoveFunction?("0AA")	
+				mult=1 if user.pbHasMoveFunction?("0AA", "14C", "168" , "14B")	
 				#if maxdam>user.hp
 				if !targetSurvivesMove(maxmove,target,user,0,mult)
 					# if maxdam>(user.hp+halfhealth)
@@ -3077,7 +3077,7 @@ class PokeBattle_AI
 				# score*=0.1 if ((user.hp.to_f)/user.totalhp)>0.8
 				# score*=1.5 if ((user.hp.to_f)/user.totalhp)>0.6
 				# score*=2 if ((user.hp.to_f)/user.totalhp)<0.6
-				score*=1.5 if user.pbHasMoveFunction?("0AA")
+				score*=1.5 if user.pbHasMoveFunction?("0AA", "14C", "168" , "14B")
 			else
 				score=0 
 			end
