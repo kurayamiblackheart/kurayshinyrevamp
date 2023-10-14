@@ -340,7 +340,7 @@ class PokeBattle_AI
 		if ((["0C7", "0C5", 
 			"0C6", "0C8", "0C3",  # v Meteor Beam placeholder
 			"111", "TwoTurnAttackChargeRaiseUserSpAtk1"].include?(move.function)  ||
-			(move.function=="0C4" && @battle.pbWeather != PBWeather::Sun)) && !user.hasActiveItem?(:POWERHERB))
+			(move.function=="0C4" && @battle.pbWeather != :Sun)) && !user.hasActiveItem?(:POWERHERB))
 		  realDamage *= 2 / 3   # Not halved because semi-invulnerable during use or hits first turn
 		end
 		if move.function == "0C2" && !user.hasActiveItem?(:BATTERYPACK) # Ashen Frost exclusive
