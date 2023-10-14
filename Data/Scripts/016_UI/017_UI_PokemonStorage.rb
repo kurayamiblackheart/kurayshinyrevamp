@@ -4157,7 +4157,7 @@ class PokemonStorageScreen
         $PokemonSystem.sb_loopbreaker = 1
       end
         # Trapstarr - Track the result if wintracker is on
-      if $PokemonSystem.sb_win_display != nil && $PokemonSystem.sb_win_display == 1
+      if $PokemonSystem.sb_stat_tracker != nil && $PokemonSystem.sb_stat_tracker == 1
         if result == 1
           $PokemonSystem.player_wins += 1
         elsif result == 2

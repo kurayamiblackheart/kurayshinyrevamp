@@ -1,5 +1,27 @@
+# Trapstarr stack tracker module
+module WTStatTracker
+  def show_stat_tracker?
+    if ($PokemonSystem.sb_stat_tracker && $PokemonSystem.sb_stat_tracker == 1 &&
+    $PokemonSystem.sb_loopinput && $PokemonSystem.sb_loopinput == 1 &&
+    $PokemonSystem.autobattler && $PokemonSystem.autobattler != 0)
+    return true
+	end
+  end
+end
+
+#===============================================================================
+# Trapstarrs Stat Tracker Display
+#===============================================================================
+#
+# Going to use this space soon
+#
+#===============================================================================
+#
+#===============================================================================
+
 # Battle scene (the visuals of the battle)
 class PokeBattle_Scene
+  include WTStatTracker
   attr_accessor :abortable   # For non-interactive battles, can quit immediately
   attr_reader   :viewport
   attr_reader   :sprites
@@ -16,26 +38,17 @@ class PokeBattle_Scene
   # Updating and refreshing
   #=============================================================================
   
-  #Trapstarr win tracker
-  def initialize
-    @win_display_text = nil
-  end
-  
   # This method creates/updates the win display text
   def update_win_display
     # Check if the autobattle loop condition is met
-    if $PokemonSystem.sb_loopinput == 1 &&
-       $PokemonSystem.sb_win_display &&
-       $PokemonSystem.autobattler && 
-       $PokemonSystem.autobattler != 0 &&
-       $PokemonSystem.sb_win_display == 1
+    if show_stat_tracker?
 
       # Create or update the text object
       if @win_display_text.nil?
         @win_display_text = Sprite.new(@viewport)
         @win_display_text.bitmap = Bitmap.new(Graphics.width, 24)
         @win_display_text.z = 9999
-        @win_display_text.y = Graphics.height - 93
+        @win_display_text.y = Graphics.height - 96
       end
 
       # Clear previous text
@@ -49,7 +62,7 @@ class PokeBattle_Scene
       end
 
       # Update the text
-      text = "Player: #{$PokemonSystem.player_wins} | Enemy: #{$PokemonSystem.enemy_wins}"
+      text = "[ Player: #{$PokemonSystem.player_wins} | Enemy: #{$PokemonSystem.enemy_wins} ]"
       @win_display_text.bitmap.clear
       rect = @win_display_text.bitmap.rect
       @win_display_text.bitmap.draw_text(rect.x, rect.y, rect.width, rect.height, text, 1)
@@ -307,8 +320,8 @@ class PokeBattle_Scene
   end
 
   def pbDisposeSprites
-    pbDisposeSpriteHash(@sprites)
-	@win_display_text.dispose unless @win_display_text.nil?
+    pbDisposeSpriteHash(@sprites)  
+    @win_display_text.dispose if @win_display_text
   end
 
   # Used by Ally Switch.

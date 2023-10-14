@@ -119,7 +119,12 @@ class CommandMenuDisplay < BattleMenuBase
     # Create message box (shows "What will X do?")
     @msgBox = Window_UnformattedTextPokemon.newWithSize("",
        self.x+16,self.y+2,220,Graphics.height-self.y,viewport)
-    @msgBox.baseColor   = TEXT_BASE_COLOR
+    if $PokemonSystem && $PokemonSystem.darkmode == 1
+      @msgBox.baseColor = PokeBattle_SceneConstants::DARKMODE_MESSAGE_BASE_COLOR
+    else
+      @msgBox.baseColor = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
+    end
+
     @msgBox.shadowColor = TEXT_SHADOW_COLOR
     @msgBox.windowskin  = nil
     addSprite("msgBox",@msgBox)

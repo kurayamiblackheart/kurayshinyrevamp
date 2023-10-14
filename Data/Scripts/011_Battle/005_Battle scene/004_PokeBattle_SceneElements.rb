@@ -187,7 +187,7 @@ class PokemonDataBox < SpriteWrapper
     @hpBar.y     = value+40
     @expBar.y    = value+64
     @hpNumbers.y = value+52
-    @statusIcon.y = value+48
+    @statusIcon.y = value + (@battler.opposes? ? 49 : 52) # Foe / Player
   end
 
   def z=(value)
@@ -480,14 +480,24 @@ class PokemonDataBox < SpriteWrapper
   
   # Trapstarr's Status Icon Patch
   def refreshStatus
-    @statusIcon.bitmap.clear if @statusIcon.bitmap
+   scale = 1.0  # logic for future scaling to match text
+   @statusIcon.bitmap.clear if @statusIcon.bitmap
     return if !@battler || @battler.status == :NONE
     s = GameData::Status.get(@battler.status).id_number
     if s == :POISON && @battler.statusCount > 0   # Badly poisoned
       s = GameData::Status::DATA.keys.length / 2
     end
-    @statusIcon.bitmap = Bitmap.new("Graphics/Pictures/Battle/icon_statuses")
-    @statusIcon.src_rect.set(0, (s - 1) * STATUS_ICON_HEIGHT, @statusIcon.bitmap.width, STATUS_ICON_HEIGHT)
+    unscaled_bitmap = Bitmap.new("Graphics/Pictures/Battle/icon_statuses")
+    # Calculate scaled dimensions
+    scaled_width = (unscaled_bitmap.width * scale).to_i
+    scaled_height = (STATUS_ICON_HEIGHT * scale).to_i
+    # Create a new bitmap with scaled dimensions
+    @statusIcon.bitmap = Bitmap.new(scaled_width, scaled_height)
+    # Stretch the relevant portion of the unscaled bitmap to the scaled bitmap
+    @statusIcon.bitmap.stretch_blt(Rect.new(0, 0, scaled_width, scaled_height), 
+                                   unscaled_bitmap, 
+                                   Rect.new(0, (s - 1) * STATUS_ICON_HEIGHT, unscaled_bitmap.width, STATUS_ICON_HEIGHT))
+    @statusIcon.src_rect.set(0, 0, scaled_width, scaled_height)
   end
   
   # Trapstarr's Type Display

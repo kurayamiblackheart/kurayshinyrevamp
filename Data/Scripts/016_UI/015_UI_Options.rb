@@ -77,7 +77,7 @@ class PokemonSystem
 
   attr_accessor :is_in_battle
   
-  attr_accessor :sb_win_display
+  attr_accessor :sb_stat_tracker
   attr_accessor :player_wins
   attr_accessor :enemy_wins
 
@@ -160,7 +160,7 @@ class PokemonSystem
     @debugfeature = 0
     @debug = 0
     @importnodelete = 0
-	@sb_win_display = 0
+	@sb_stat_tracker = 0
 	@player_wins = 0
     @enemy_wins = 0
     @sb_loopinput = 0
@@ -241,7 +241,7 @@ class PokemonSystem
     @sb_select = saved.sb_select if saved.sb_select
     @sb_playerfolder = saved.sb_playerfolder if saved.sb_playerfolder
     @sb_level = saved.sb_level if saved.sb_level
-    @sb_win_display = saved.sb_win_display if saved.sb_win_display
+    @sb_stat_tracker = saved.sb_stat_tracker if saved.sb_stat_tracker
     @unfusetraded = saved.unfusetraded if saved.unfusetraded
     @importlvl = saved.importlvl if saved.importlvl
     @importdevolve = saved.importdevolve if saved.importdevolve
@@ -1688,11 +1688,11 @@ class KurayOptSc_5 < PokemonOption_Scene
     #                   ["Pokemons are all individual/indepedent copies",
     #                   "The same Pokemons between your team are linked"]
     # )
-    options << EnumOption.new(_INTL("Win/Loss Tracker"), [_INTL("Off"), _INTL("On")],
-    proc { $PokemonSystem.sb_win_display },
-    proc { |value| $PokemonSystem.sb_win_display = value },
-    ["No Win/Loss tracker for Self-battle/Auto-battle",
-    "Shows a Win/Loss tracker for Self-battle/Auto-battle"]
+    options << EnumOption.new(_INTL("Stat Tracker"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.sb_stat_tracker },
+    proc { |value| $PokemonSystem.sb_stat_tracker = value },
+    ["Does not display the stat tracker during AutoBattle + Battle Loop",
+    "Shows stats such as Win/Loss tracker for Self-battle/Auto-battle"]
     )
     options << EnumOption.new(_INTL("Import Level"), [_INTL("Default"), _INTL("1"), _INTL("5"), _INTL("50"), _INTL("100")],
                       proc { $PokemonSystem.importlvl },
