@@ -2740,7 +2740,7 @@ class PokeBattle_AI
 				end
 			end
 			#---------------------------------------------------------------------------
-			when "0AA" # Protect
+			when "0AA", "14C", "168" , "14B"  # Protect
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
 				maxdam=bestmove[0] 
