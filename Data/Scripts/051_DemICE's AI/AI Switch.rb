@@ -43,7 +43,7 @@ class PokeBattle_AI
 					tickdamage=true
 				end	
 				opphpchange=(EndofTurnHPChanges(b,battler,false,false,true)) # what % of our hp will change after end of turn effects go through
-				tickdamage=true if opphpchange<1
+				tickdamage=true if opphpchange<1 || b.status == :POISON
 				if b.hp==1
 					tickdamage=true if j.function=="102" && !b.pbHasType?(:ICE)
 					tickdamage=true if j.function=="101" && !b.pbHasType?(:ROCK) && !b.pbHasType?(:GROUND) && !b.pbHasType?(:STEEL)
