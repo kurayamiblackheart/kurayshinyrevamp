@@ -42,6 +42,8 @@ class PokeBattle_AI
 					(j.function=="0DC" && !b.pbHasType?(:GRASS) && b.effects[PBEffects::Substitute]<=0) # Leech Seed
 					tickdamage=true
 				end	
+				opphpchange=(EndofTurnHPChanges(target,user,false,false,true)) # what % of our hp will change after end of turn effects go through
+				tickdamage=true if opphpchange<1
 				if b.hp==1
 					tickdamage=true if j.function=="102" && !b.pbHasType?(:ICE)
 					tickdamage=true if j.function=="101" && !b.pbHasType?(:ROCK) && !b.pbHasType?(:GROUND) && !b.pbHasType?(:STEEL)

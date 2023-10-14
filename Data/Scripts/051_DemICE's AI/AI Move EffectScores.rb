@@ -2911,16 +2911,16 @@ class PokeBattle_AI
 			#---------------------------------------------------------------------------
 		when "160" # Strength Sap
 			target=user.pbDirectOpposing(true)
-			if !target.fainted?
-				aspeed = pbRoughStat(user,:SPEED,skill)
-				ospeed = pbRoughStat(target,:SPEED,skill)
-				fastermon=((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-				fasterhealing=fastermon || user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE) 
-				healAmt=pbRoughStat(target,:ATTACK,skill)
-				halfhealth=(healAmt/2)
-				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
-				maxmove=bestmove[1]
+			aspeed = pbRoughStat(user,:SPEED,skill)
+			ospeed = pbRoughStat(target,:SPEED,skill)
+			fastermon=((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+			fasterhealing=fastermon || user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE) 
+			healAmt=pbRoughStat(target,:ATTACK,skill)
+			halfhealth=(healAmt/2)
+			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+			maxdam=bestmove[0] 
+			maxmove=bestmove[1]
+			if !maxmove.nil?
 				if maxmove.physicalMove?
 					if target.hasActiveAbility?(:CONTRARY)
 						maxdam *= 1.5 
@@ -3173,7 +3173,7 @@ class PokeBattle_AI
 			if user.status!=:NONE && !rest
 				statuschip = 0
 				statuschip += 0.0625 if user.status==:BURN 
-				statuschip += 0.125 if ((user.status==:POISON &&  (user.hasWorkingAbility(:POISONHEAL) || !(user.hasWorkingAbility(:POISONHEAL))) && (user.effects[PBEffects::Toxic]==0))) || (user.status == :SLEEP && target.hasWorkingAbility(:BADDREAMS)) 
+				statuschip += 0.125 if ((user.status==:POISON &&  !user.hasWorkingAbility(:POISONHEAL) && user.effects[PBEffects::Toxic]==0)) || (user.status == :SLEEP && target.hasWorkingAbility(:BADDREAMS)) 
 				statuschip += (0.0625*user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]!=0 && !(user.hasWorkingAbility(:POISONHEAL)) 
 				chip+=statuschip
 			end
