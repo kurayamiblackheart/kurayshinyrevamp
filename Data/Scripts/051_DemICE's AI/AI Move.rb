@@ -332,6 +332,10 @@ class PokeBattle_AI
 		mold_broken=moldbroken(user,target,move.function)
 		aspeed = pbRoughStat(user,:SPEED,skill)
 		ospeed = pbRoughStat(target,:SPEED,skill)
+		bestoppmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+		maxoppdam=bestoppmove[0] 
+		maxoppmove=bestoppmove[1]
+		maxoppprio=bestoppmove[2]
 		# Two-turn attacks waste 2 turns to deal one lot of damage
 		if ((["0C7", "0C5", 
 			"0C6", "0C8", "0C3",  # v Meteor Beam placeholder
