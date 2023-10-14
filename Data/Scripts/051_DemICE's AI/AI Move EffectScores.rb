@@ -2911,108 +2911,110 @@ class PokeBattle_AI
 			#---------------------------------------------------------------------------
 		when "160" # Strength Sap
 			target=user.pbDirectOpposing(true)
-			aspeed = pbRoughStat(user,:SPEED,skill)
-			ospeed = pbRoughStat(target,:SPEED,skill)
-			fastermon=((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-			fasterhealing=fastermon || user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE) 
-			healAmt=pbRoughStat(target,:ATTACK,skill)
-			halfhealth=(healAmt/2)
-			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
-			maxmove=bestmove[1]
-			if maxmove.physicalMove?
-				if target.hasActiveAbility?(:CONTRARY)
-					maxdam *= 1.5 
-				else
-					maxdam *= 0.7 
-				end
-			end
-			maxdam=0 if (target.status == :SLEEP && target.statusCount>1)		
-			#if maxdam>user.hp
-			if !targetSurvivesMove(maxmove,target,user)
-				if maxdam>(user.hp+halfhealth)
-					score=0
-				else
-					if maxdam>=halfhealth
-						if fastermon
-							score*=0.5
-						else
-							score*=0.1
-						end
+			if !target.fainted?
+				aspeed = pbRoughStat(user,:SPEED,skill)
+				ospeed = pbRoughStat(target,:SPEED,skill)
+				fastermon=((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
+				fasterhealing=fastermon || user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE) 
+				healAmt=pbRoughStat(target,:ATTACK,skill)
+				halfhealth=(healAmt/2)
+				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
+				maxdam=bestmove[0] 
+				maxmove=bestmove[1]
+				if maxmove.physicalMove?
+					if target.hasActiveAbility?(:CONTRARY)
+						maxdam *= 1.5 
 					else
-						score*=2
+						maxdam *= 0.7 
 					end
 				end
-			else
-				if maxdam*1.5>user.hp
-					score*=2
-				end
-				if !fastermon
-					if maxdam*2>user.hp
-						score*=2
+				maxdam=0 if (target.status == :SLEEP && target.statusCount>1)		
+				#if maxdam>user.hp
+				if !targetSurvivesMove(maxmove,target,user)
+					if maxdam>(user.hp+halfhealth)
+						score=0
+					else
+						if maxdam>=halfhealth
+							if fastermon
+								score*=0.5
+							else
+								score*=0.1
+							end
+						else
+							score*=2
+						end
 					end
-				end
-			end
-			hpchange=(EndofTurnHPChanges(user,target,false,false,true)) # what % of our hp will change after end of turn effects go through
-			opphpchange=(EndofTurnHPChanges(target,user,false,false,true)) # what % of our hp will change after end of turn effects go through
-			if opphpchange<1 ## we are going to be taking more chip damage than we are going to heal
-				oppchipdamage=((target.totalhp*(1-hpchange)))
-			end
-			thisdam=maxdam#*1.1
-			hplost=(user.totalhp-user.hp)
-			hplost+=maxdam if !fasterhealing
-			if user.effects[PBEffects::LeechSeed]>=0 && !fastermon && canSleepTarget(target,user)
-				score *= 0.3 
-			end	
-			if hpchange<1 ## we are going to be taking more chip damage than we are going to heal
-				chipdamage=((user.totalhp*(1-hpchange)))
-				thisdam+=chipdamage
-			elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for  
-				healing=((user.totalhp*(hpchange-1)))
-				thisdam-=healing if !(thisdam>user.hp)
-			elsif hpchange<=0 ## we are going to a huge overstack of end of turn effects. hence we should just not heal.
-				score*=0
-			end
-			if thisdam>hplost
-				score*=0.1
-			else
-				if @battle.pbAbleNonActiveCount(user.idxOwnSide) == 0 && hplost<=(halfhealth)
-					score*=0.01
-				end
-				if thisdam<=(halfhealth)
-					score*=2
 				else
-					if fastermon
-						if hpchange<1 && thisdam>=halfhealth && !(opphpchange<1)
-							score*=0.3
+					if maxdam*1.5>user.hp
+						score*=2
+					end
+					if !fastermon
+						if maxdam*2>user.hp
+							score*=2
 						end
 					end
 				end
+				hpchange=(EndofTurnHPChanges(user,target,false,false,true)) # what % of our hp will change after end of turn effects go through
+				opphpchange=(EndofTurnHPChanges(target,user,false,false,true)) # what % of our hp will change after end of turn effects go through
+				if opphpchange<1 ## we are going to be taking more chip damage than we are going to heal
+					oppchipdamage=((target.totalhp*(1-hpchange)))
+				end
+				thisdam=maxdam#*1.1
+				hplost=(user.totalhp-user.hp)
+				hplost+=maxdam if !fasterhealing
+				if user.effects[PBEffects::LeechSeed]>=0 && !fastermon && canSleepTarget(target,user)
+					score *= 0.3 
+				end	
+				if hpchange<1 ## we are going to be taking more chip damage than we are going to heal
+					chipdamage=((user.totalhp*(1-hpchange)))
+					thisdam+=chipdamage
+				elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for  
+					healing=((user.totalhp*(hpchange-1)))
+					thisdam-=healing if !(thisdam>user.hp)
+				elsif hpchange<=0 ## we are going to a huge overstack of end of turn effects. hence we should just not heal.
+					score*=0
+				end
+				if thisdam>hplost
+					score*=0.1
+				else
+					if @battle.pbAbleNonActiveCount(user.idxOwnSide) == 0 && hplost<=(halfhealth)
+						score*=0.01
+					end
+					if thisdam<=(halfhealth)
+						score*=2
+					else
+						if fastermon
+							if hpchange<1 && thisdam>=halfhealth && !(opphpchange<1)
+								score*=0.3
+							end
+						end
+					end
+				end
+				score*=0.7 if target.pbHasMoveFunction?("024","025","026","036",
+					"02B","02C","027", "028","01C",
+					"02E","029","032","039","035") # Setup
+				if ((user.hp.to_f)<=halfhealth)
+					score*=1.5
+				else
+					score*=0.5
+				end
+				score/=(user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]>0
+				score*=0.8 if maxdam>halfhealth
+				if target.hasActiveItem?(:METRONOME)
+					met=(1.0+target.effects[PBEffects::Metronome]*0.2) 
+					score/=met
+				end 
+				score*=1.1 if user.status==:PARALYSIS || user.effects[PBEffects::Confusion]>0
+				if target.status==:POISON || target.status==:BURN || target.effects[PBEffects::LeechSeed]>=0 || target.effects[PBEffects::Curse] || target.effects[PBEffects::Trapping]>0
+					score*=1.3
+					score*=1.3 if target.effects[PBEffects::Toxic]>0
+					score*=1.3 if user.item == :BINDINGBAND
+				end
+				score*=0.1 if ((user.hp.to_f)/user.totalhp)>0.8
+				score*=0.6 if ((user.hp.to_f)/user.totalhp)>0.6
+				score*=2 if ((user.hp.to_f)/user.totalhp)<0.25
+				score=0 if user.effects[PBEffects::Wish]>0	
 			end
-			score*=0.7 if target.pbHasMoveFunction?("024","025","026","036",
-				"02B","02C","027", "028","01C",
-				"02E","029","032","039","035") # Setup
-			if ((user.hp.to_f)<=halfhealth)
-				score*=1.5
-			else
-				score*=0.5
-			end
-			score/=(user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]>0
-			score*=0.8 if maxdam>halfhealth
-			if target.hasActiveItem?(:METRONOME)
-				met=(1.0+target.effects[PBEffects::Metronome]*0.2) 
-				score/=met
-			end 
-			score*=1.1 if user.status==:PARALYSIS || user.effects[PBEffects::Confusion]>0
-			if target.status==:POISON || target.status==:BURN || target.effects[PBEffects::LeechSeed]>=0 || target.effects[PBEffects::Curse] || target.effects[PBEffects::Trapping]>0
-				score*=1.3
-				score*=1.3 if target.effects[PBEffects::Toxic]>0
-				score*=1.3 if user.item == :BINDINGBAND
-			end
-			score*=0.1 if ((user.hp.to_f)/user.totalhp)>0.8
-			score*=0.6 if ((user.hp.to_f)/user.totalhp)>0.6
-			score*=2 if ((user.hp.to_f)/user.totalhp)<0.25
-			score=0 if user.effects[PBEffects::Wish]>0	
 			
 			#---------------------------------------------------------------------------
 		when "0D9" # Rest
