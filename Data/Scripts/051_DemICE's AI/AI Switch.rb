@@ -485,7 +485,7 @@ class PokeBattle_AI
 					if pokmon.hasActiveAbility?([:ELECTRICSURGE,:HADRONENGINE]) && @battle.field.terrain != :Electric
 						if m.type == :ELECTRIC && pokmon.affectedByTerrain?
 							tempdam*=1.5 
-							tempdam*=1.33 if newenemy.hasActiveAbility?(:HADRONENGINE) && m.specialMove?
+							tempdam*=1.33 if pokmon.hasActiveAbility?(:HADRONENGINE) && m.specialMove?
 						end
 						tempdam*=1.6 if m.function=="DoublePowerInElectricTerrain"
 						tempdam*=0.67 if b.hasActiveItem?(:ELECTRICSEED) && m.physicalMove?
