@@ -171,12 +171,18 @@ class PokeBattle_AI
 		target_data = move.pbTarget(user)
 		if target_data.num_targets > 1
 		# If move affects multiple battlers and you don't choose a particular one
-		totalScore = 0
+		totalScore = 100
+		count=0
+		theresone=false
 		@battle.eachBattler do |b|
 			next if !@battle.pbMoveCanTarget?(user.index,b.index,target_data)
 			score = pbGetMoveScore(move,user,b,skill)
+			theresone=true if score>200 && user.opposes?(b)
+			score-=100
 			totalScore += ((user.opposes?(b)) ? score : -score)
+			count+=1
 		end
+		totalScore+=100 if theresone && count>1
 		choices.push([idxMove,totalScore,-1,move.name]) if totalScore>0
 		elsif target_data.num_targets == 0
 		# If move has no targets, affects the user, a side or the whole field
