@@ -1736,7 +1736,7 @@ class PokeBattle_AI
 			#---------------------------------------------------------------------------
 			when "061" # Soak
 				if target.effects[PBEffects::Substitute]>0 || !target.canChangeType?
-					core -= 90
+					score -= 90
 				elsif !target.pbHasOtherType?(:WATER)
 					score -= 90
 				end
