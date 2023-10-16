@@ -1,7 +1,7 @@
 module PokeBattle_SceneConstants
   USE_ABILITY_SPLASH = true
   # Text colors
-  MESSAGE_BASE_COLOR   = Color.new(80, 80, 88)
+  MESSAGE_BASE_COLOR   = Color.new(60, 60, 68) # (80, 80, 88) # Trapstarr
   MESSAGE_SHADOW_COLOR = Color.new(160, 160, 168)
   # Trapstarr dark mode
   DARKMODE_MESSAGE_BASE_COLOR = Color.new(200,200,200) # Bright white or any desired color for dark mode

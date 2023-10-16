@@ -24,18 +24,18 @@ class PokeBattle_Scene
 
   def pbInitSprites
     @sprites = {}
-    # The background image and each side's base graphic
     pbCreateBackdropSprites
+
     # Create message box graphic
-	
-    # Trapstarrs dark mode
-    if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
-      # If darkmode is enabled, use "overlay_message_darkmode"
-      messageGraphic = "Graphics/Pictures/Battle/overlay_message_darkmode"
-    else
-      # If darkmode is not enabled or not equal to 1, use the default "overlay_message"
-      messageGraphic = "Graphics/Pictures/Battle/overlay_message"
+    messageGraphic = "Graphics/Pictures/Battle/overlay_message"
+
+    if $PokemonSystem.battlegui == 1 && $PokemonSystem.darkmode == 0
+      messageGraphic += "_M2"
+    elsif $PokemonSystem.battlegui == 2 && $PokemonSystem.darkmode == 0
+      messageGraphic += "_M2"
     end
+
+    messageGraphic += "_darkmode" if $PokemonSystem.darkmode == 1
 
     # Create message box graphic
     messageBox = pbAddSprite("messageBox", 0, Graphics.height - 96, messageGraphic, @viewport)
@@ -49,10 +49,12 @@ class PokeBattle_Scene
 
     if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
       msgWindow.baseColor    = PokeBattle_SceneConstants::DARKMODE_MESSAGE_BASE_COLOR
+    elsif $PokemonSystem.battlegui && $PokemonSystem.battlegui == 2
+      msgWindow.baseColor    = Color.new(40, 40, 44)
     else
       msgWindow.baseColor    = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
     end
-
+	
     msgWindow.shadowColor    = PokeBattle_SceneConstants::MESSAGE_SHADOW_COLOR
     msgWindow.letterbyletter = true
     @sprites["messageWindow"] = msgWindow
@@ -175,13 +177,17 @@ class PokeBattle_Scene
         base.oy = (side==0) ? base.bitmap.height : base.bitmap.height/2
       end
     end
+	# Trapstarr All over this bit
     if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
       messageFilename = "default_message_darkmode"
+    elsif $PokemonSystem.battlegui == 1 || $PokemonSystem.battlegui == 2
+      messageFilename = "default_message_M2"
     else
       messageFilename = "default_message"
     end
 
     messageBG  = "Graphics/Battlebacks/" + messageFilename
+
 
     if !pbResolveBitmap(messageBG)
       messageBG = "Graphics/Battlebacks/default_message"

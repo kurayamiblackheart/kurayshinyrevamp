@@ -119,7 +119,8 @@ class CommandMenuDisplay < BattleMenuBase
     # Create message box (shows "What will X do?")
     @msgBox = Window_UnformattedTextPokemon.newWithSize("",
        self.x+16,self.y+2,220,Graphics.height-self.y,viewport)
-    if $PokemonSystem && $PokemonSystem.darkmode == 1
+    # Trapstarr Dark Mode text color swap
+    if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
       @msgBox.baseColor = PokeBattle_SceneConstants::DARKMODE_MESSAGE_BASE_COLOR
     else
       @msgBox.baseColor = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
@@ -130,22 +131,34 @@ class CommandMenuDisplay < BattleMenuBase
     addSprite("msgBox",@msgBox)
     if USE_GRAPHICS
       # Create background graphic
-      background = IconSprite.new(self.x,self.y,viewport)
+      background = IconSprite.new(self.x, self.y, viewport)
 
-      # Trapstarr - Dark Mode
+      # Trapstarr - Dark Mode, button swaps
       if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
         background.setBitmap("Graphics/Pictures/Battle/overlay_command_darkmode")
+      elsif $PokemonSystem.battlegui && $PokemonSystem.battlegui == 1 && (!$PokemonSystem.darkmode || $PokemonSystem.darkmode == 0)
+        background.setBitmap("Graphics/Pictures/Battle/overlay_command_M2")
+      elsif $PokemonSystem.battlegui && $PokemonSystem.battlegui == 2
+        background.setBitmap("Graphics/Pictures/Battle/overlay_command_M2")
       else
         background.setBitmap("Graphics/Pictures/Battle/overlay_command")
       end
       addSprite("background", background)
-
       # Create bitmaps
       buttonPath = "Graphics/Pictures/Battle/cursor_command"
-      if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
+
+      # Trapstarr BattleGUI swaps
+      if $PokemonSystem.battlegui && $PokemonSystem.battlegui == 2
+        buttonPath += "_M2"
+      elsif $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
         buttonPath += "_darkmode"
+      elsif $PokemonSystem.battlegui == 1
+        buttonPath += "_darkmode" 
       end
+
       @buttonBitmap = AnimatedBitmap.new(_INTL(buttonPath))
+
+
 	  
 	  # Create action buttons
       @buttons = Array.new(4) do |i|   # 4 command options, therefore 4 buttons

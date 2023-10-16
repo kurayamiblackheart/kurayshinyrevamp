@@ -1405,12 +1405,14 @@ class KurayOptSc_3 < PokemonOption_Scene
                       "Draws the text type display in battle"]
     )
 
-    options << EnumOption.new(_INTL("Battle GUI"), [_INTL("Off"), _INTL("Hp Bar")],
+    options << EnumOption.new(_INTL("Swap BattleGUI"), [_INTL("Off"), _INTL("Type 1"), _INTL("Type 2")],
                       proc { $PokemonSystem.battlegui },
                       proc { |value| $PokemonSystem.battlegui = value },
                       ["This feature is a work in progress, more to come soon",
-                      "Draws the custom battleGUI (WIP) created by Mirasein"]
-    )
+                      "Swaps the HP/Exp bar to v1 | created by Mirasein",
+                      "Swaps the HP/Exp bar to v2 | created by Mirasein"]
+   )
+   
     options << EnumOption.new(_INTL("Dark Mode"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.darkmode },
                       proc { |value| $PokemonSystem.darkmode = value },

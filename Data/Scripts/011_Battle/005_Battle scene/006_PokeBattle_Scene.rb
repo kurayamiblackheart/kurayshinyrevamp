@@ -38,11 +38,9 @@ class PokeBattle_Scene
   # Updating and refreshing
   #=============================================================================
   
-  # This method creates/updates the win display text
+  # Trapstarr Stat Tracker - Win Display
   def update_win_display
-    # Check if the autobattle loop condition is met
     if show_stat_tracker?
-
       # Create or update the text object
       if @win_display_text.nil?
         @win_display_text = Sprite.new(@viewport)
@@ -50,15 +48,13 @@ class PokeBattle_Scene
         @win_display_text.z = 9999
         @win_display_text.y = Graphics.height - 96
       end
-
-      # Clear previous text
       @win_display_text.bitmap.clear
 
       # Set the font color based on dark mode setting
       if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
         @win_display_text.bitmap.font.color.set(225, 225, 225)  # Set to a lighter gray color for dark mode
       else
-        @win_display_text.bitmap.font.color.set(60, 60, 60)  # Default to a black color
+        @win_display_text.bitmap.font.color.set(50, 50, 54)  # Default to a black color
       end
 
       # Update the text
@@ -100,7 +96,7 @@ class PokeBattle_Scene
     Graphics.update
     @frameCounter += 1
     @frameCounter = @frameCounter%(Graphics.frame_rate*12/20)
-	update_win_display
+	update_win_display # Trapstarr Win Tracker
   end
 
   def pbInputUpdate

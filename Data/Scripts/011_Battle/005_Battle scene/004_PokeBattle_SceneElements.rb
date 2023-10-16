@@ -30,6 +30,7 @@ class PokemonDataBox < SpriteWrapper
   def initialize(battler,sideSize,viewport=nil)
     super(viewport)
     @battler      = battler
+	@sideSize     = sideSize # Trapstarr BattleGUI
     @sprites      = {}
     @spriteX      = 0
     @spriteY      = 0
@@ -49,7 +50,6 @@ class PokemonDataBox < SpriteWrapper
   def initializeDataBoxGraphic(sideSize)
     onPlayerSide = ((@battler.index%2)==0)
     # Get the data box graphic and set whether the HP numbers/Exp bar are shown
-
     if sideSize == 1   # One Pokémon on side, use the regular data box BG
       bgFilename = ["Graphics/Pictures/Battle/databox_normal",
                         "Graphics/Pictures/Battle/databox_normal_foe"][@battler.index % 2]
@@ -67,11 +67,13 @@ class PokemonDataBox < SpriteWrapper
       case $PokemonSystem.battlegui
       when 1
         bgFilename = bgFilename.gsub("Battle", "BattleGUI") + "_M"
-
         # Adjust for darkmode
         if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
           bgFilename += "_darkmode"
         end
+      when 2
+        bgFilename = bgFilename.gsub("Battle", "BattleGUI") + "_M2"
+        # You can also add dark mode adjustment here if needed
       end
     end
 
@@ -97,11 +99,6 @@ class PokemonDataBox < SpriteWrapper
   end
 
   def initializeOtherGraphics(viewport)
-    # Create other bitmaps
-    @numbersBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/icon_numbers"))
-    @hpBarBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp"))
-    @expBarBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_exp"))
-
     # Use hardcoded paths to perform gsub
     hpPath = "Graphics/Pictures/Battle/overlay_hp"
     expPath = "Graphics/Pictures/Battle/overlay_exp"
@@ -112,11 +109,17 @@ class PokemonDataBox < SpriteWrapper
       when 1
         hpPath = hpPath.gsub("Battle", "BattleGUI") + "_M"
         expPath = expPath.gsub("Battle", "BattleGUI") + "_M"
-    
-        @hpBarBitmap = AnimatedBitmap.new(hpPath)
-        @expBarBitmap = AnimatedBitmap.new(expPath)
+      when 2
+        hpPath = hpPath.gsub("Battle", "BattleGUI") + "_M2"
+        expPath = expPath.gsub("Battle", "BattleGUI") + "_M2"    
       end
     end
+
+    # Create other bitmaps with the modified paths
+    @numbersBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/icon_numbers"))
+    @hpBarBitmap = AnimatedBitmap.new(hpPath)
+    @expBarBitmap = AnimatedBitmap.new(expPath)
+	
 	# Trapstarr's Type Display
    if $PokemonSystem.typedisplay != 0  && $PokemonSystem.typedisplay != nil
       case $PokemonSystem.typedisplay
@@ -149,6 +152,7 @@ class PokemonDataBox < SpriteWrapper
       @typeDisplay = SpriteWrapper.new(viewport)  
       @typeDisplay.bitmap = typeDisplayBitmap  
       @sprites["typeDisplay"] = @typeDisplay
+	  @sprites["typeDisplay"].z = 10000 # Applying Z Layer
     end	
     # Trapstarr's Status Icon Fix (Seperating status icon, appling z+1)	
     @statusIcon = SpriteWrapper.new(viewport)	
@@ -174,20 +178,46 @@ class PokemonDataBox < SpriteWrapper
     super
   end
 
-  def x=(value)
+ def x=(value)
     super
-    @hpBar.x     = value+@spriteBaseX+12#102
-    @expBar.x    = value+@spriteBaseX+24
-    @hpNumbers.x = value+@spriteBaseX+80
-    @statusIcon.x = value + @spriteBaseX+24  
+	# Trapstarr BattleGUI swapping
+    if $PokemonSystem.battlegui && $PokemonSystem.battlegui == 2
+      case @sideSize
+      when 2,3
+        @hpBar.x = value + @spriteBaseX + (@battler.opposes? ? 31 : 31) # Foe/Player
+      else
+        @hpBar.x = value + @spriteBaseX + (@battler.opposes? ? 31 : 12) # Foe/Player
+      end
+      @expBar.x    = value + @spriteBaseX - 25
+      @hpNumbers.x = value + @spriteBaseX + 80
+      @statusIcon.x = value + @spriteBaseX + 24
+    else
+      @hpBar.x     = value + @spriteBaseX + 12
+      @expBar.x    = value + @spriteBaseX + 24
+      @hpNumbers.x = value + @spriteBaseX + 80
+      @statusIcon.x = value + @spriteBaseX + 24
+    end
   end
 
+  # Trapstarr - BattleGUI swapping
   def y=(value)
     super
-    @hpBar.y     = value+40
-    @expBar.y    = value+64
-    @hpNumbers.y = value+52
-    @statusIcon.y = value + (@battler.opposes? ? 49 : 52) # Foe / Player
+    if $PokemonSystem.battlegui && $PokemonSystem.battlegui == 2
+      case @sideSize
+      when 2,3
+        @hpBar.y = value + (@battler.opposes? ? 37 : 37) # Foe/Player
+      else
+        @hpBar.y = value + (@battler.opposes? ? 38 : 38) # Foe/Player
+      end
+      @expBar.y    = value + 60
+      @hpNumbers.y = value + 52
+      @statusIcon.y = value + (@battler.opposes? ? 49 : 52) # Foe/Player
+    else
+      @hpBar.y     = value + 40
+      @expBar.y    = value + 64
+      @hpNumbers.y = value + 52
+      @statusIcon.y = value + (@battler.opposes? ? 49 : 52) # Foe/Player
+    end
   end
 
   def z=(value)
@@ -463,20 +493,36 @@ class PokemonDataBox < SpriteWrapper
   #   @expBar.src_rect.width = w
   # end
 	
-  # Trapstarr's exp bar patch (prevents instances of dividing by zero)	
+  # Trapstarr's exp bar patch & BattleGUI swapping
   def refreshExp
     return if !@showExp
     return if @battler.level >= GameData::GrowthRate.max_level
+    # Set the default scaling factor
+    default_scaling_factor = 1.0 # Change this to your default scaling factor
+    case $PokemonSystem.battlegui
+    when nil, 0, 1
+      # Use the default scaling factor
+      scaling_factor = default_scaling_factor
+    when 2
+      # Use your custom scaling factor
+      scaling_factor = 1.5 # Change this to your custom scaling factor
+    else
+      # Handle other cases if needed
+      scaling_factor = default_scaling_factor
+    end
     if exp_fraction != 0 && @expBarBitmap.width != 0
-      w = exp_fraction * @expBarBitmap.width
+      width = exp_fraction * @expBarBitmap.width
+      # Apply scaling by multiplying 'width' by the scaling factor
+      width *= scaling_factor
       # NOTE: The line below snaps the bar's width to the nearest 2 pixels, to
-      #       fit in with the rest of the graphics which are doubled in size.
-      w = ((w / 2).round) * 2
-      @expBar.src_rect.width = w
+      # fit in with the rest of the graphics which are doubled in size.
+      width = ((width / 2).round) * 2
+      @expBar.src_rect.width = width
     else
       @expBar.src_rect.width = 0
     end
   end
+
   
   # Trapstarr's Status Icon Patch
   def refreshStatus
@@ -588,7 +634,7 @@ class PokemonDataBox < SpriteWrapper
     updateHPAnimation
     # Animate Exp bar
     updateExpAnimation
-    # Update Type Display
+    # Trapstarr - Update Type Display
     if $PokemonSystem.typedisplay != 0 && $PokemonSystem.typedisplay != nil	
       updatetypeDisplay	
     end
