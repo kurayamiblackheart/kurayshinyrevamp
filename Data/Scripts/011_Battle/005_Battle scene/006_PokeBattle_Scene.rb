@@ -54,7 +54,7 @@ class PokeBattle_Scene
       if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
         @win_display_text.bitmap.font.color.set(225, 225, 225)  # Set to a lighter gray color for dark mode
       else
-        @win_display_text.bitmap.font.color.set(50, 50, 54)  # Default to a black color
+        @win_display_text.bitmap.font.color.set(40, 40, 44)  # Default to a black color
       end
 
       # Update the text
