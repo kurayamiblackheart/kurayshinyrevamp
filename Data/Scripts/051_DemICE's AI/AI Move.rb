@@ -179,6 +179,7 @@ class PokeBattle_AI
 			score = pbGetMoveScore(move,user,b,skill)
 			theresone=true if score>200 && user.opposes?(b)
 			score-=100
+			score=0 if score <0 && !user.opposes?(b)
 			totalScore += ((user.opposes?(b)) ? score : -score)
 			count+=1
 		end
@@ -227,7 +228,7 @@ class PokeBattle_AI
 			accuracy=100 if accuracy>100
 		if move.damagingMove?
 			score = pbGetMoveScoreDamage(score, move, user, target, skill)
-			score -= 100-accuracy*1.33 if accuracy < 100  # DemICE
+			score -= (100-accuracy)*0.3 if accuracy < 100  # DemICE
 		else   # Status moves
 			# Don't prefer attacks which don't deal damage
 			score -= 10
