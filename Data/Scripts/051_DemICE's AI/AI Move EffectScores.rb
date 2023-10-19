@@ -696,13 +696,23 @@ class PokeBattle_AI
 					score += 30
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
+					hpchange=EndofTurnHPChanges(user,target,false,false,true)
+					score += (hpchange -1) * 200
 					if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 						score += 40
 					end
 					if skill>=PBTrainerAI.highSkill
 						aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
 						ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-						score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
+						if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) 
+							#healorchip=user.totalhp*(1-hpchange)
+							actualhp = thirdhealth + (user.totalhp * hpchange)
+							if maxdam>actualhp
+								score -= 90 
+							else
+								score += 60 if hpchange >= 1.1
+							end
+						end
 					end
 				end 
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
@@ -733,13 +743,23 @@ class PokeBattle_AI
 					score += 30
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
+					hpchange=EndofTurnHPChanges(user,target,false,false,true)
+					score += (hpchange -1) * 200
 					if user.pbHasMoveFunction?("0D5", "0D6")   #  Recovery
 						score += 40
 					end
 					if skill>=PBTrainerAI.highSkill
 						aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
 						ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-						score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
+						if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) 
+							#healorchip=user.totalhp*(1-hpchange)
+							actualhp = thirdhealth + (user.totalhp * hpchange)
+							if maxdam>actualhp
+								score -= 90 
+							else
+								score += 60 if hpchange >= 1.1
+							end
+						end
 					end
 				end 
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
@@ -1549,6 +1569,15 @@ class PokeBattle_AI
 						end
 					end
 				end
+				#---------------------------------------------------------------------------
+			when "04F" # Acid Spray
+				bestmove=bestMoveVsTarget(user,target,skill) # [maxdam,maxmove,maxprio,physorspec]
+				maxdam=bestmove[0] 
+				maxmove=bestmove[1]
+				maxprio=bestmove[2]
+				maxspec=(bestmove[3]=="special") 
+				thirdhealth=(target.totalhp/3)
+				score +=40 if maxspec && maxdam <= thirdhealth && !target.hasActiveAbility?(:CONTRARY) && !target.statStageAtMin?(:SPECIAL_DEFENSE)
 			#---------------------------------------------------------------------------
 		when "071"  # Counter
 			target=user.pbDirectOpposing(true)

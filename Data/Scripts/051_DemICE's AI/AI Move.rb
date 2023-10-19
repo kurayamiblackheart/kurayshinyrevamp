@@ -362,7 +362,6 @@ class PokeBattle_AI
 				end
 			end
 		end
-		# Prefer flinching external effects (note that move effects which cause
 		# flinching are dealt with in the function code part of score calculation)
 		if skill>=PBTrainerAI.mediumSkill
 			indexopp=target.index
@@ -396,6 +395,7 @@ class PokeBattle_AI
 				end
 				realDamage = [realDamage * newhp / user.hp, 1].max
 			end
+			# Prefer flinching external effects (note that move effects which cause
 			if ((!target.hasActiveAbility?(:INNERFOCUS) && !target.hasActiveAbility?(:SHIELDDUST)) || mold_broken) &&
 				target.effects[PBEffects::Substitute]==0 &&
 				((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
