@@ -184,9 +184,9 @@ class PokemonDataBox < SpriteWrapper
     if $PokemonSystem.battlegui && $PokemonSystem.battlegui == 2
       case @sideSize
       when 2,3
-        @hpBar.x = value + @spriteBaseX + (@battler.opposes? ? 31 : 31) # Foe/Player
+        @hpBar.x = value + @spriteBaseX + (@battler.opposes?(0) ? 31 : 31) # Foe/Player
       else
-        @hpBar.x = value + @spriteBaseX + (@battler.opposes? ? 31 : 12) # Foe/Player
+        @hpBar.x = value + @spriteBaseX + (@battler.opposes?(0) ? 31 : 12) # Foe/Player
       end
       @expBar.x    = value + @spriteBaseX - 25
       @hpNumbers.x = value + @spriteBaseX + 80
@@ -205,18 +205,18 @@ class PokemonDataBox < SpriteWrapper
     if $PokemonSystem.battlegui && $PokemonSystem.battlegui == 2
       case @sideSize
       when 2,3
-        @hpBar.y = value + (@battler.opposes? ? 37 : 37) # Foe/Player
+        @hpBar.y = value + (@battler.opposes?(0) ? 37 : 37) # Foe/Player
       else
-        @hpBar.y = value + (@battler.opposes? ? 38 : 38) # Foe/Player
+        @hpBar.y = value + (@battler.opposes?(0) ? 38 : 38) # Foe/Player
       end
       @expBar.y    = value + 60
       @hpNumbers.y = value + 52
-      @statusIcon.y = value + (@battler.opposes? ? 49 : 52) # Foe/Player
+      @statusIcon.y = value + (@battler.opposes?(0) ? 49 : 52) # Foe/Player
     else
       @hpBar.y     = value + 40
       @expBar.y    = value + 64
       @hpNumbers.y = value + 52
-      @statusIcon.y = value + (@battler.opposes? ? 49 : 52) # Foe/Player
+      @statusIcon.y = value + (@battler.opposes?(0) ? 49 : 52) # Foe/Player
     end
   end
 
