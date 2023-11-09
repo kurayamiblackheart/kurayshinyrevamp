@@ -784,6 +784,7 @@ class PokeBattle_AI
 			if c>=0 && user.abilityActive?
 				c = BattleHandlers.triggerCriticalCalcUserAbility(user.ability,user,target,c)
 			end
+			c = 3 if move.function == "0A0" # Frost Breath
 			if skill>=PBTrainerAI.bestSkill
 				if c>=0 && !moldBreaker && target.abilityActive?
 					c = BattleHandlers.triggerCriticalCalcTargetAbility(target.ability,user,target,c)
@@ -860,6 +861,7 @@ class PokeBattle_AI
 		when "091"   # DemICE fury cutter needs to consider it will become effect +1 before move executino.
 			baseDmg = move.pbBaseDamage(baseDmg, user, target)
 			baseDmg += move.baseDamage
+		when "0A0" # Frost Breath, so stupid base essentials AI doesnt calculate the wrong damage.
 			
 		else
 			baseDmg = stupidity_pbMoveBaseDamage(move,user,target,skill)
@@ -895,6 +897,13 @@ class PokeBattle_AI
 				return true
 			end 
 		end  
+		# DemICE same as last resort above, but for Burn Up
+		return true if move.function == "162" && !user.pbHasType?(:FIRE)
+		# OHKO Moves
+		if move.function == "070" 
+			return true if move.name=="Sheer Cold" && target.pbHasType?(:ICE)
+			return true if target.hasActiveAbility?(:STURDY,false,mold_broken)
+		end
 		# Immunity due to ability/item/other effects
 		if skill>=PBTrainerAI.mediumSkill
 			case type

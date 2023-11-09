@@ -164,6 +164,7 @@ class PokeBattle_AI
 				if skill >= PBTrainerAI.mediumSkill
 					score -=300 if target.effects[PBEffects::Yawn] > 0 && move.function == "004"
 				end
+				score -=200 if target.hasActiveAbility?(:HYDRATION) && @battle.pbWeather == :Rain
 				if skill >= PBTrainerAI.highSkill
 					score -= 30 if target.hasActiveAbility?(:MARVELSCALE)
 				end
@@ -201,6 +202,7 @@ class PokeBattle_AI
 						score -= 40
 					end
 				end
+				score -=200 if target.hasActiveAbility?(:HYDRATION) && @battle.pbWeather == :Rain
 				if skill >= PBTrainerAI.highSkill
 					score -= 40 if target.hasActiveAbility?([:GUTS, :MARVELSCALE, :QUICKFEET])
 				end
@@ -232,6 +234,7 @@ class PokeBattle_AI
 					aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
 					score -= 40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>halfhealth
 				end
+				score -=200 if target.hasActiveAbility?(:HYDRATION) && @battle.pbWeather == :Rain
 				if skill >= PBTrainerAI.highSkill
 					score -= 40 if target.hasActiveAbility?([:GUTS, :MARVELSCALE, :QUICKFEET, :FLAREBOOST])
 				end
@@ -248,6 +251,7 @@ class PokeBattle_AI
 				score += 50 if target.hp<=target.totalhp/8
 				score -= 40 if target.effects[PBEffects::Yawn]>0
 			end
+			score -=200 if target.hasActiveAbility?(:HYDRATION) && @battle.pbWeather == :Rain
 			if skill>=PBTrainerAI.highSkill
 				score += 10 if pbRoughStat(target,:DEFENSE,skill)>100
 				score += 10 if pbRoughStat(target,:SPECIAL_DEFENSE,skill)>100
