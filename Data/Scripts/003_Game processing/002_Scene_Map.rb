@@ -55,6 +55,7 @@ class Scene_Map
   def autofade(mapid)
     playingBGM = $game_system.playing_bgm
     playingBGS = $game_system.playing_bgs
+    return if playingBGM && playingBGM.name == "ultra_metropolis" && darknessEffectOnMap(mapid)
     return if !playingBGM && !playingBGS
     map = load_data(sprintf("Data/Map%03d.rxdata", mapid))
     if playingBGM && map.autoplay_bgm

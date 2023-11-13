@@ -328,7 +328,9 @@ module Compiler
         enumer = GameData.const_get(enumer.to_sym)
         begin
           if nil_or_empty?(ret) || !enumer.exists?(ret.to_sym)
-            raise _INTL("Undefined value {1} in {2}\r\n{3}", ret, enumer.name, FileLineData.linereport)
+            if enumer != GameData::Species
+              raise _INTL("Undefined value {1} in {2}\r\n{3}", ret, enumer.name, FileLineData.linereport)
+            end
           end
         rescue NameError
           raise _INTL("Incorrect value {1} in {2}\r\n{3}", ret, enumer.name, FileLineData.linereport)

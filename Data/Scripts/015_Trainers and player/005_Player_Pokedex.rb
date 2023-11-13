@@ -67,6 +67,34 @@ class Player < Trainer
       return head_array
     end
 
+    def resync_pokedex
+      @seen_standard = resync_standard_pokedex_array(@seen_standard)
+      @owned_standard = resync_standard_pokedex_array(@owned_standard)
+
+      @seen_fusion = resync_fused_pokedex_array(@seen_fusion)
+      @owned_fusion = resync_fused_pokedex_array(@owned_fusion)
+    end
+
+    def resync_fused_pokedex_array(original_dex_array)
+      new_dex = initFusionDexArray()
+      (0..NB_POKEMON).each do |head_id|
+        (0..NB_POKEMON).each do |body_id|
+          if original_dex_array[head_id]
+            new_dex[head_id][body_id] = original_dex_array[head_id][body_id] if original_dex_array[head_id][body_id]
+          end
+        end
+      end
+      return new_dex
+    end
+
+    def resync_standard_pokedex_array(original_dex_array)
+      new_dex = initStandardDexArray()
+      (0..NB_POKEMON).each do |pokemon_id|
+        new_dex[pokemon_id] = original_dex_array[pokemon_id] if original_dex_array[pokemon_id]
+      end
+      return new_dex
+    end
+
     def isTripleFusion(num)
       return isTripleFusion?(num)
     end
@@ -77,6 +105,18 @@ class Player < Trainer
 
     def isFusion(num)
       return num > Settings::NB_POKEMON && !isTripleFusion(num)
+    end
+
+    def resyncPokedexIfNumberOfPokemonChanged()
+      if @seen_standard.length < NB_POKEMON || @seen_fusion.length < NB_POKEMON
+        resync_pokedex()
+      end
+    end
+
+    def verify_dex_is_correct_length(current_dex)
+
+      expected_length = 509 + 2
+      return current_dex.length == expected_length
     end
 
     def set_seen_fusion(species)
@@ -138,6 +178,7 @@ class Player < Trainer
 
     def seen?(species)
       return false if !species
+      try_resync_pokedex()
       num = getDexNumberForSpecies(species)
       if isTripleFusion(num)
         return seen_triple?(species)
@@ -161,9 +202,10 @@ class Player < Trainer
     # in that region.
     # @param dex [Integer] region ID
     def seen_count(dex = -1)
-      if dex_sync_needed?()
-        resync_pokedex()
-      end
+      try_resync_pokedex()
+      # if dex_sync_needed?()
+        # resync_pokedex()
+      # end
       return count_dex(@seen_standard, @seen_fusion) + @owned_triple.size
     end
 
@@ -202,6 +244,7 @@ class Player < Trainer
     # @param species [Symbol, GameData::Species] species to set as owned
     # @param should_refresh_dexes [Boolean] whether Dex accessibility should be recalculated
     def set_owned_fusion(species)
+      try_resync_pokedex()
       bodyId = getBodyID(species)
       headId = getHeadID(species, bodyId)
       @owned_fusion[headId][bodyId] = true
@@ -214,6 +257,7 @@ class Player < Trainer
     end
 
     def set_owned_normalDex(species)
+      try_resync_pokedex()
       @owned_standard[getDexNumberForSpecies(species)] = true
     end
 
@@ -240,6 +284,13 @@ class Player < Trainer
     def owned_fusion?(species)
       bodyId = getBodyID(species)
       headId = getHeadID(species, bodyId)
+      # p headId
+      # p @owned_fusion[headId]
+      # if !@owned_fusion[headId]
+      #   print "syncing"
+      #   @seen_fusion = initFusionDexArray(true)
+      # end
+      # p @owned_fusion[headId]
       return @owned_fusion[headId][bodyId] == true
     end
 
@@ -250,6 +301,7 @@ class Player < Trainer
     end
 
     def owned?(species)
+      try_resync_pokedex()
       num = getDexNumberForSpecies(species)
       if isTripleFusion(num)
         return owned_triple?(species)
@@ -275,9 +327,9 @@ class Player < Trainer
     # in that region.
     # @param region [Integer] region ID
     def owned_count(dex = -1)
-      if dex_sync_needed?()
-        resync_pokedex()
-      end
+      # if dex_sync_needed?()
+      #   resync_pokedex()
+      # end
       return count_dex(@owned_standard, @owned_fusion) + @owned_triple.size
     end
 
@@ -303,26 +355,35 @@ class Player < Trainer
     end
 
     def dex_sync_needed?()
-      return @owned_standard == nil || @owned_fusion == nil || @owned_triple == nil
+      # p NB_POKEMON
+      # p @owned_standard.length
+
+      return @owned_standard == nil || @owned_fusion == nil || @owned_triple == nil ||
+        !verify_dex_is_correct_length(@owned_standard) || !verify_dex_is_correct_length(@seen_fusion)
+
     end
 
     #todo:
     # loop on @owned and @seen and add the pokemon in @owned_standard/fusion @seen_standard/fusion
     # then clear @owned and @seen
-    def resync_pokedex()
-      init_new_pokedex_if_needed()
-      @seen.each { |pokemon|
-        set_seen(pokemon[0])
-      }
-      @owned.each { |pokemon|
-        set_owned(pokemon[0])
-      }
-      self.refresh_accessible_dexes
-      @seen = {} #deprecated
-      @owned = {} #deprecated
+    def try_resync_pokedex()
+      resyncPokedexIfNumberOfPokemonChanged
+      #
+      # if dex_sync_needed?()
+      #   print "syncing"
+      #   init_new_pokedex_if_needed()
+      #   @seen.each { |pokemon|
+      #     set_seen(pokemon[0])
+      #   }
+      #   @owned.each { |pokemon|
+      #     set_owned(pokemon[0])
+      #   }
+      #   self.refresh_accessible_dexes
+      #   @seen = {} #deprecated
+      #   @owned = {} #deprecated
+      # end
       #self.clear
     end
-
 
     def resync_boxes_to_pokedex
       $PokemonStorage.boxes.each { |box|
@@ -338,12 +399,12 @@ class Player < Trainer
     end
 
     def init_new_pokedex_if_needed()
-      @seen_standard = initStandardDexArray() if @seen_standard == nil
-      @seen_fusion = initFusionDexArray() if @seen_fusion == nil
+      @seen_standard = initStandardDexArray() # if @seen_standard == nil
+      @seen_fusion = initFusionDexArray() # if @seen_fusion == nil
       @seen_triple = {} if @seen_triple == nil
 
-      @owned_standard = initStandardDexArray() if @owned_standard == nil
-      @owned_fusion = initFusionDexArray() if @owned_fusion == nil
+      @owned_standard = initStandardDexArray() # if @owned_standard == nil
+      @owned_fusion = initFusionDexArray() # if @owned_fusion == nil
       @owned_triple = {} if @owned_triple == nil
     end
 

@@ -146,18 +146,63 @@ def getDexNumberForSpecies(species)
   return dexNum
 end
 
-
+def getFusedPokemonIdFromDexNum(body_dex, head_dex)
+  return ("B" + body_dex.to_s + "H" + head_dex.to_s).to_sym
+end
 
 def getPokemon(dexNum)
-  return GameData::Species.get(dexNum)
+  if dexNum.is_a?(Integer)
+    if dexNum > NB_POKEMON
+      body_id = getBodyID(dexNum)
+      head_id = getHeadID(dexNum, body_id)
+      pokemon_id = getFusedPokemonIdFromDexNum(body_id, head_id)
+    else
+      pokemon_id = dexNum
+    end
+  else
+    pokemon_id = dexNum
+  end
+
+  return GameData::Species.get(pokemon_id)
 end
 
 def getSpecies(dexnum)
   return getPokemon(dexnum)
 end
 
-def getSpeciesIdForFusion(head_id, body_id)
-  return (body_id) * Settings::NB_POKEMON + head_id
+def getSpeciesIdForFusion(head_number, body_number)
+  return (body_number) * Settings::NB_POKEMON + head_number
+end
+
+
+def get_body_species_from_symbol(fused_id)
+  body_num = get_body_number_from_symbol(fused_id)
+  return GameData::Species.get(body_num).species
+end
+
+def get_head_species_from_symbol(fused_id)
+  head_num = get_head_number_from_symbol(fused_id)
+  return GameData::Species.get(head_num).species
+end
+
+def get_body_number_from_symbol(id)
+  dexNum = getDexNumberForSpecies(id)
+  return dexNum if !isFusion(dexNum)
+  id.to_s.match(/\d+/)[0]
+  return id.to_s.match(/\d+/)[0].to_i
+end
+
+def get_head_number_from_symbol(id)
+  dexNum = getDexNumberForSpecies(id)
+  return dexNum if !isFusion(dexNum)
+  return id.to_s.match(/(?<=H)\d+/)[0].to_i
+end
+
+def getFusionSpecies(body, head)
+  body_num = getDexNumberForSpecies(body)
+  head_num = getDexNumberForSpecies(head)
+  id = body_num * Settings::NB_POKEMON + head_num
+  return GameData::Species.get(id)
 end
 
 
@@ -168,6 +213,15 @@ end
 
 def isTripleFusion?(num)
   return num >= Settings::ZAPMOLCUNO_NB
+end
+
+def isFusion(num)
+  return num > Settings::NB_POKEMON && !isTripleFusion?(num)
+end
+
+def isSpeciesFusion(species)
+  num = getDexNumberForSpecies(species)
+  return isFusion(num)
 end
 
 def getRandomCustomFusionForIntro(returnRandomPokemonIfNoneFound = true, customPokeList = [], maxPoke = -1, recursionLimit = 3)
@@ -260,22 +314,31 @@ end
 
 
 def getBodyID(species)
-  dexNum = getDexNumberForSpecies(species)
-  if dexNum % NB_POKEMON ==0
-    return (dexNum/NB_POKEMON)-1
+  if species.is_a?(Integer)
+    dexNum = species
+  else
+    dexNum = getDexNumberForSpecies(species)
+  end
+  if dexNum % NB_POKEMON == 0
+    return (dexNum / NB_POKEMON) - 1
   end
   return (dexNum / NB_POKEMON).round
 end
 
 def getHeadID(species, bodyId = nil)
+  if species.is_a?(Integer)
+    fused_dexNum = species
+  else
+    fused_dexNum = getDexNumberForSpecies(species)
+  end
+
   if bodyId == nil
     bodyId = getBodyID(species)
   end
-  fused_dexNum = getDexNumberForSpecies(species)
   body_dexNum = getDexNumberForSpecies(bodyId)
 
   calculated_number = (fused_dexNum - (body_dexNum * NB_POKEMON)).round
-  return calculated_number == 0 ? 420 : calculated_number
+  return calculated_number == 0 ? NB_POKEMON : calculated_number
 end
 
 def getAllNonLegendaryPokemon()
@@ -328,9 +391,9 @@ def pbGetSelfSwitch(eventId, switch)
   return $game_self_switches[[@map_id, eventId, switch]]
 end
 
-def obtainBadgeMessage(badgeName)
-  Kernel.pbMessage(_INTL("\\me[Badge get]{1} obtained the {2}!", $Trainer.name, badgeName))
-end
+# def obtainBadgeMessage(badgeName)
+#   Kernel.pbMessage(_INTL("\\me[Badge get]{1} obtained the {2}!", $Trainer.name, badgeName))
+# end
 
 def getAllNonLegendaryPokemon()
   list = []
@@ -402,28 +465,28 @@ def pbBitmap(path)
   return bmp
 end
 
-def Kernel.setRocketPassword(variableNum)
-  abilityIndex = rand(233)
-  speciesIndex = rand(PBSpecies.maxValue - 1)
+# def Kernel.setRocketPassword(variableNum)
+#   abilityIndex = rand(233)
+#   speciesIndex = rand(PBSpecies.maxValue - 1)
 
-  word1 = PBSpecies.getName(speciesIndex)
-  word2 = GameData::Ability.get(abilityIndex).name
-  password = _INTL("{1}'s {2}", word1, word2)
-  pbSet(variableNum, password)
-end
+#   word1 = PBSpecies.getName(speciesIndex)
+#   word2 = GameData::Ability.get(abilityIndex).name
+#   password = _INTL("{1}'s {2}", word1, word2)
+#   pbSet(variableNum, password)
+# end
 
-def getGenericPokemonCryText(pokemonSpecies)
-  case pokemonSpecies
-  when 25
-    return "Pika!"
-  when 16, 17, 18, 21, 22, 144, 145, 146, 227, 417, 418, 372 #birds
-    return "Squawk!"
-  when 163, 164
-    return "Hoot!" #owl
-  else
-    return "Guaugh!"
-  end
-end
+# def getGenericPokemonCryText(pokemonSpecies)
+#   case pokemonSpecies
+#   when 25
+#     return "Pika!"
+#   when 16, 17, 18, 21, 22, 144, 145, 146, 227, 417, 418, 372 #birds
+#     return "Squawk!"
+#   when 163, 164
+#     return "Hoot!" #owl
+#   else
+#     return "Guaugh!"
+#   end
+# end
 
 def obtainPokemonSpritePath(id, includeCustoms = true)
   head = getBasePokemonID(param.to_i, false)
@@ -453,6 +516,25 @@ def getCustomSpritePath(body,head)
   return _INTL("Graphics/CustomBattlers/indexed/{1}/{1}.{2}.png", head, body)
 end
 
+def customSpriteExistsForm(species,form_id_head=nil, form_id_body=nil)
+  head = getBasePokemonID(species, false)
+  body = getBasePokemonID(species, true)
+
+  folder = head.to_s
+
+  folder += "_" + form_id_head.to_s if form_id_head
+
+  spritename = head.to_s
+  spritename += "_" + form_id_head.to_s if form_id_head
+  spritename += "." + body.to_s
+  spritename += "_" + form_id_body.to_s if form_id_body
+
+  pathCustom = _INTL("Graphics/CustomBattlers/indexed/{1}/{2}.png", folder, spritename)
+
+  return true if pbResolveBitmap(pathCustom) != nil
+  return download_custom_sprite(head, body,form_id_head,form_id_body) != nil
+end
+
 def customSpriteExists(species)
   head = getBasePokemonID(species, false)
   body = getBasePokemonID(species, true)
@@ -480,58 +562,58 @@ def customSpriteExistsBase(body,head)
   return download_custom_sprite(head, body) != nil
 end
 
-def getSpriteCredits(spriteName)
-  File.foreach(Settings::CREDITS_FILE_PATH) do |line|
-    row = line.split(';')
-    echo row[0]
-    if row[0] == spriteName
-      return row[1]
-    end
-  end
-  return nil
-end
+# def getSpriteCredits(spriteName)
+#   File.foreach(Settings::CREDITS_FILE_PATH) do |line|
+#     row = line.split(';')
+#     echo row[0]
+#     if row[0] == spriteName
+#       return row[1]
+#     end
+#   end
+#   return nil
+# end
 
-def getArceusPlateType(heldItem)
-  return :NORMAL if heldItem == nil
-  case heldItem
-  when :FISTPLATE
-    return :FIGHTING
-  when :SKYPLATE
-    return :FLYING
-  when :TOXICPLATE
-    return :POISON
-  when :EARTHPLATE
-    return :GROUND
-  when :STONEPLATE
-    return :ROCK
-  when :INSECTPLATE
-    return :BUG
-  when :SPOOKYPLATE
-    return :GHOST
-  when :IRONPLATE
-    return :STEEL
-  when :FLAMEPLATE
-    return :FIRE
-  when :SPLASHPLATE
-    return :WATER
-  when :MEADOWPLATE
-    return :GRASS
-  when :ZAPPLATE
-    return :ELECTRIC
-  when :MINDPLATE
-    return :PSYCHIC
-  when :ICICLEPLATE
-    return :ICE
-  when :DRACOPLATE
-    return :DRAGON
-  when :DREADPLATE
-    return :DARK
-  when :PIXIEPLATE
-    return :FAIRY
-  else
-    return :NORMAL
-  end
-end
+# def getArceusPlateType(heldItem)
+#   return :NORMAL if heldItem == nil
+#   case heldItem
+#   when :FISTPLATE
+#     return :FIGHTING
+#   when :SKYPLATE
+#     return :FLYING
+#   when :TOXICPLATE
+#     return :POISON
+#   when :EARTHPLATE
+#     return :GROUND
+#   when :STONEPLATE
+#     return :ROCK
+#   when :INSECTPLATE
+#     return :BUG
+#   when :SPOOKYPLATE
+#     return :GHOST
+#   when :IRONPLATE
+#     return :STEEL
+#   when :FLAMEPLATE
+#     return :FIRE
+#   when :SPLASHPLATE
+#     return :WATER
+#   when :MEADOWPLATE
+#     return :GRASS
+#   when :ZAPPLATE
+#     return :ELECTRIC
+#   when :MINDPLATE
+#     return :PSYCHIC
+#   when :ICICLEPLATE
+#     return :ICE
+#   when :DRACOPLATE
+#     return :DRAGON
+#   when :DREADPLATE
+#     return :DARK
+#   when :PIXIEPLATE
+#     return :FAIRY
+#   else
+#     return :NORMAL
+#   end
+# end
 
 def reverseFusionSpecies(species)
   dexId = getDexNumberForSpecies(species)
@@ -550,27 +632,27 @@ def Kernel.getRoamingMap(roamingArrayPos)
   return text
 end
 
-def Kernel.listPlatesInBag()
-  list = []
-  list << PBItems::FISTPLATE if $PokemonBag.pbQuantity(:FISTPLATE)>=1
-  list << PBItems::SKYPLATE if $PokemonBag.pbQuantity(:SKYPLATE)>=1
-  list << PBItems::TOXICPLATE if $PokemonBag.pbQuantity(:TOXICPLATE)>=1
-  list << PBItems::EARTHPLATE if $PokemonBag.pbQuantity(:EARTHPLATE)>=1
-  list << PBItems::STONEPLATE if $PokemonBag.pbQuantity(:STONEPLATE)>=1
-  list << PBItems::INSECTPLATE if $PokemonBag.pbQuantity(:INSECTPLATE)>=1
-  list << PBItems::SPOOKYPLATE if $PokemonBag.pbQuantity(:SPOOKYPLATE)>=1
-  list << PBItems::IRONPLATE if $PokemonBag.pbQuantity(:IRONPLATE)>=1
-  list << PBItems::FLAMEPLATE if $PokemonBag.pbQuantity(:FLAMEPLATE)>=1
-  list << PBItems::SPLASHPLATE if $PokemonBag.pbQuantity(:SPLASHPLATE)>=1
-  list << PBItems::MEADOWPLATE if $PokemonBag.pbQuantity(:MEADOWPLATE)>=1
-  list << PBItems::ZAPPLATE if $PokemonBag.pbQuantity(:ZAPPLATE)>=1
-  list << PBItems::MINDPLATE if $PokemonBag.pbQuantity(:MINDPLATE)>=1
-  list << PBItems::ICICLEPLATE if $PokemonBag.pbQuantity(:ICICLEPLATE)>=1
-  list << PBItems::DRACOPLATE if $PokemonBag.pbQuantity(:DRACOPLATE)>=1
-  list << PBItems::DREADPLATE if $PokemonBag.pbQuantity(:DREADPLATE)>=1
-  list << PBItems::PIXIEPLATE if $PokemonBag.pbQuantity(:PIXIEPLATE)>=1
-  return list
-end
+# def Kernel.listPlatesInBag()
+#   list = []
+#   list << PBItems::FISTPLATE if $PokemonBag.pbQuantity(:FISTPLATE)>=1
+#   list << PBItems::SKYPLATE if $PokemonBag.pbQuantity(:SKYPLATE)>=1
+#   list << PBItems::TOXICPLATE if $PokemonBag.pbQuantity(:TOXICPLATE)>=1
+#   list << PBItems::EARTHPLATE if $PokemonBag.pbQuantity(:EARTHPLATE)>=1
+#   list << PBItems::STONEPLATE if $PokemonBag.pbQuantity(:STONEPLATE)>=1
+#   list << PBItems::INSECTPLATE if $PokemonBag.pbQuantity(:INSECTPLATE)>=1
+#   list << PBItems::SPOOKYPLATE if $PokemonBag.pbQuantity(:SPOOKYPLATE)>=1
+#   list << PBItems::IRONPLATE if $PokemonBag.pbQuantity(:IRONPLATE)>=1
+#   list << PBItems::FLAMEPLATE if $PokemonBag.pbQuantity(:FLAMEPLATE)>=1
+#   list << PBItems::SPLASHPLATE if $PokemonBag.pbQuantity(:SPLASHPLATE)>=1
+#   list << PBItems::MEADOWPLATE if $PokemonBag.pbQuantity(:MEADOWPLATE)>=1
+#   list << PBItems::ZAPPLATE if $PokemonBag.pbQuantity(:ZAPPLATE)>=1
+#   list << PBItems::MINDPLATE if $PokemonBag.pbQuantity(:MINDPLATE)>=1
+#   list << PBItems::ICICLEPLATE if $PokemonBag.pbQuantity(:ICICLEPLATE)>=1
+#   list << PBItems::DRACOPLATE if $PokemonBag.pbQuantity(:DRACOPLATE)>=1
+#   list << PBItems::DREADPLATE if $PokemonBag.pbQuantity(:DREADPLATE)>=1
+#   list << PBItems::PIXIEPLATE if $PokemonBag.pbQuantity(:PIXIEPLATE)>=1
+#   return list
+# end
 
 def Kernel.getItemNamesAsString(list)
   strList = ""
@@ -585,7 +667,22 @@ def Kernel.getItemNamesAsString(list)
   return strList
 end
 
+def get_body_id_from_symbol(id)
+  split_id = id.to_s.match(/\d+/)
+  if !split_id #non-fusion
+    return GameData::Species.get(id).id_number
+  end
+  return split_id[0].to_i
+end
 
+def get_head_id_from_symbol(id)
+  split_id = id.to_s.match(/(?<=H)\d+/)
+  if !split_id #non-fusion
+    return GameData::Species.get(id).id_number
+  end
+
+  return split_id[0].to_i
+end
 
 def Kernel.getPlateType(item)
   return :FIGHTING if item == PBItems::FISTPLATE
@@ -623,7 +720,7 @@ def get_default_moves_at_level(species,level)
     #moves.push(Pokemon::Move.new(knowable_moves[i]))
     moves << knowable_moves[i]
   end
-  p moves
+  # p moves
   return moves
 end
 
@@ -663,52 +760,52 @@ def get_difficulty_text
   end
 end
 
-def change_game_difficulty(down_only=false)
-  message = "The game is currently on " + get_difficulty_text() + " difficulty."
-  pbMessage(message)
+# def change_game_difficulty(down_only=false)
+#   message = "The game is currently on " + get_difficulty_text() + " difficulty."
+#   pbMessage(message)
 
 
-  choice_easy = "Easy"
-  choice_normal = "Normal"
-  choice_hard = "Hard"
-  choice_cancel = "Cancel"
+#   choice_easy = "Easy"
+#   choice_normal = "Normal"
+#   choice_hard = "Hard"
+#   choice_cancel = "Cancel"
 
 
-  available_difficulties = []
-  currentDifficulty =get_current_game_difficulty
-  if down_only
-    if currentDifficulty == :HARD
-      available_difficulties << choice_hard
-      available_difficulties << choice_normal
-      available_difficulties << choice_easy
-    elsif currentDifficulty ==:NORMAL
-      available_difficulties << choice_normal
-      available_difficulties << choice_easy
-    elsif currentDifficulty ==:EASY
-      available_difficulties << choice_easy
-    end
-  else
-    available_difficulties << choice_easy
-    available_difficulties << choice_normal
-    available_difficulties << choice_hard
-  end
-  available_difficulties << choice_cancel
-  index = pbMessage("Select a new difficulty", available_difficulties, available_difficulties[-1])
-  choice = available_difficulties[index]
-  case choice
-  when choice_easy
-    $game_switches[SWITCH_GAME_DIFFICULTY_EASY]=true
-    $game_switches[SWITCH_GAME_DIFFICULTY_HARD] = false
-  when choice_normal
-    $game_switches[SWITCH_GAME_DIFFICULTY_EASY]=false
-    $game_switches[SWITCH_GAME_DIFFICULTY_HARD] = false
-  when choice_hard
-    $game_switches[SWITCH_GAME_DIFFICULTY_EASY]=false
-    $game_switches[SWITCH_GAME_DIFFICULTY_HARD] = true
-  when choice_cancel
-    return
-  end
+#   available_difficulties = []
+#   currentDifficulty =get_current_game_difficulty
+#   if down_only
+#     if currentDifficulty == :HARD
+#       available_difficulties << choice_hard
+#       available_difficulties << choice_normal
+#       available_difficulties << choice_easy
+#     elsif currentDifficulty ==:NORMAL
+#       available_difficulties << choice_normal
+#       available_difficulties << choice_easy
+#     elsif currentDifficulty ==:EASY
+#       available_difficulties << choice_easy
+#     end
+#   else
+#     available_difficulties << choice_easy
+#     available_difficulties << choice_normal
+#     available_difficulties << choice_hard
+#   end
+#   available_difficulties << choice_cancel
+#   index = pbMessage("Select a new difficulty", available_difficulties, available_difficulties[-1])
+#   choice = available_difficulties[index]
+#   case choice
+#   when choice_easy
+#     $game_switches[SWITCH_GAME_DIFFICULTY_EASY]=true
+#     $game_switches[SWITCH_GAME_DIFFICULTY_HARD] = false
+#   when choice_normal
+#     $game_switches[SWITCH_GAME_DIFFICULTY_EASY]=false
+#     $game_switches[SWITCH_GAME_DIFFICULTY_HARD] = false
+#   when choice_hard
+#     $game_switches[SWITCH_GAME_DIFFICULTY_EASY]=false
+#     $game_switches[SWITCH_GAME_DIFFICULTY_HARD] = true
+#   when choice_cancel
+#     return
+#   end
 
-  message = "The game is currently on " + get_difficulty_text() + " difficulty."
-  pbMessage(message)
-end
+#   message = "The game is currently on " + get_difficulty_text() + " difficulty."
+#   pbMessage(message)
+# end

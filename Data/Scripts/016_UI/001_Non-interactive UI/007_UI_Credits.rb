@@ -48,14 +48,14 @@ class Scene_Credits
   CREDIT = <<_END_
 
 Pokémon Infinite Fusion
-By Frogman
+By Chardub (Frogman)
 
 General graphics / Music / Intellectual property
 Nintendo
 GameFreak
 
 Programming / Eventing:
-Frogman
+Chardub
 
 Fused Pokemon Sprites  :
 Japeal - Pokefusion 2
@@ -66,27 +66,29 @@ rip the sprites and to the owners of Japeal
 for accepting to share their generated sprites.
 
 Maps:
-Frogman
+Chardub, Kiwikelly
 Some of the maps were based on work by:
 BenGames, Zeak6464
 
 Gameplay / Story:
-Frogman 
+Chardub 
 The story and dialogues were based 
 off Pokémon Red and Blue, as well as
 Pokémon Gold and Silver.
 Both games are made by Game Freak.
 
-Sprites pack manager
-Kiwi
+Sprites pack managers
+Kiwikelly, Payapon, Thornsoflight
 
 Sprite Managers
 avianAnnihilator<s>Blaquaza
-BéBoutton<s>Howls
-Ignus<s>Kiwi
-Maelmc<s>Milchik the Miltank
-rezza<s>Skel'n
-Thorns<s>TM
+BéBoutton<s>CaBiNE
+CoramSun<s>hero.drawing
+Howls<s>Ignus
+Kiwi<s>Maelmc
+Milchik the Miltank<s>Payapon
+Pix<s>Rosemagwin
+Thornsoflight
 
 
 All of the custom fused Pokémon sprites 
@@ -98,11 +100,12 @@ Including massive contributions from these users:
 {SPRITER_CREDITS}
 
 
-
 Other custom graphics:
-calicorn, Doctor Miawoo, Frogman, Kiwi,
-Knuckles, magnuzone, ,mammuth89, Miawoo, 
-Milchik, Rick1234, Universez, UnworthyPie,
+Kiwikelly
+Knuckles
+UnworthyPie
+Doctor Miawoo
+Chardub
 
 The following free ressources were also used 
 with their respective authors' consent:

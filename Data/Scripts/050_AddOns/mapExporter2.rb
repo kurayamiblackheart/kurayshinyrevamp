@@ -2,9 +2,19 @@
 EXPORT_EXCEPT_MAP_IDS= [768,722,723,724,720]
 
 def exportAllMaps
-  for id in 1..798
+  for id in 1..815
     begin
       MapExporter.export(id, [:Events]) if !EXPORT_EXCEPT_MAP_IDS.include?(id)
+    rescue
+      echo "error in " +(id.to_s) +"\n"
+    end
+  end
+end
+
+def exportSpecificMaps(maps_to_export)
+  for id in maps_to_export
+    begin
+      MapExporter.export(id, [:Events])
     rescue
       echo "error in " +(id.to_s) +"\n"
     end

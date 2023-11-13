@@ -89,6 +89,7 @@ class PokeBattle_Battle
     end
   end
 
+  
   def pbGainExpOne(idxParty, defeatedBattler, numPartic, expShare, expAll, showMessages = true)
     pkmn = pbParty(0)[idxParty] # The Pokémon gaining EVs from defeatedBattler
     growth_rate = pkmn.growth_rate

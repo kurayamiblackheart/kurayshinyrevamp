@@ -222,12 +222,12 @@ def getFusionSpeciesSymbol(body, head)
   return GameData::Species.get(id).species
 end
 
-def getFusionSpecies(body, head)
-  body_num = dexNum(body)
-  head_num = dexNum(head)
-  id = body_num * Settings::NB_POKEMON + head_num
-  return GameData::Species.get(id)
-end
+# def getFusionSpecies(body, head)
+#   body_num = dexNum(body)
+#   head_num = dexNum(head)
+#   id = body_num * Settings::NB_POKEMON + head_num
+#   return GameData::Species.get(id)
+# end
 
 #
 def evolveHead(species)

@@ -6,7 +6,7 @@
 module Settings
   # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
   GAME_VERSION = '5.0.0'
-  GAME_VERSION_NUMBER = "0.9.12"
+  GAME_VERSION_NUMBER = "0.10.0"
 
   POKERADAR_LIGHT_ANIMATION_RED_ID = 17
   POKERADAR_LIGHT_ANIMATION_GREEN_ID = 18
@@ -20,7 +20,7 @@ module Settings
   FUSION_ICON_SPRITE_OFFSET = 10
 
   #Infinite fusion settings
-  NB_POKEMON = 420
+  NB_POKEMON = 465
   CUSTOM_BASE_SPRITES_FOLDER = "Graphics/CustomBattlers/customBaseSprites/"
   CUSTOM_BATTLERS_FOLDER = "Graphics/CustomBattlers/"
   CUSTOM_BATTLERS_FOLDER_INDEXED = "Graphics/CustomBattlers/indexed/"
@@ -35,9 +35,11 @@ module Settings
   HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/Scripts/RemoteUrls.rb"
 
   HTTP_CONFIGS_FILE_PATH = "Data/Scripts/RemoteUrls.rb"
+  # MIGHT_NOT_NEED84x
+  # LEVEL_CAPS=[12,22,26,35,38,45,51,54,58,62,63,64,64,65,67,68]
 
   FRONTSPRITE_POSITION_OFFSET = 20
-  FRONTSPRITE_SCALE = 0.6666666666
+  FRONTSPRITE_SCALE = 0.6666666666666666
   BACKRPSPRITE_SCALE = 1
   EGGSPRITE_SCALE = 1
   BACKSPRITE_POSITION_OFFSET = 20
@@ -57,12 +59,13 @@ module Settings
   OVERRIDE_BATTLE_LEVEL_VALUE_VAR = 240
   HARD_MODE_LEVEL_MODIFIER = 1.1
 
-  ZAPMOLCUNO_NB = 176821
+  ZAPMOLCUNO_NB = 999999#176821
   MAPS_WITHOUT_SURF_MUSIC = [762]
 
   WONDERTRADE_BASE_URL = "http://localhost:8080"
   WONDERTRADE_PUBLIC_KEY = "http://localhost:8080"
 
+  MAX_NB_OUTFITS=99
   # The generation that the battle system follows. Used throughout the battle
   # scripts, and also by some other settings which are used in and out of battle
   # (you can of course change those settings to suit your game).
@@ -218,7 +221,7 @@ module Settings
   end
 
   # The number of boxes in Pokémon storage.
-  NUM_STORAGE_BOXES = 30
+  NUM_STORAGE_BOXES = 40
 
   #=============================================================================
 

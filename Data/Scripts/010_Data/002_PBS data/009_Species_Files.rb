@@ -1,16 +1,16 @@
 module GameData
   class Species
-    def self.check_graphic_file(path, species, form = 0, gender = 0, shiny = false, shadow = false, subfolder = "")
+    def self.check_graphic_file(path, species, form = "", gender = 0, shiny = false, shadow = false, subfolder = "")
       try_subfolder = sprintf("%s/", subfolder)
       try_species = species
-      try_form = (form > 0) ? sprintf("_%d", form) : ""
+      try_form = form ? sprintf("_%s", form) : ""
       try_gender = (gender == 1) ? "_female" : ""
       try_shadow = (shadow) ? "_shadow" : ""
       factors = []
       factors.push([4, sprintf("%s shiny/", subfolder), try_subfolder]) if shiny
       factors.push([3, try_shadow, ""]) if shadow
       factors.push([2, try_gender, ""]) if gender == 1
-      factors.push([1, try_form, ""]) if form > 0
+      factors.push([1, try_form, ""]) if form
       factors.push([0, try_species, "000"])
       # Go through each combination of parameters in turn to find an existing sprite
       for i in 0...2 ** factors.length
@@ -146,23 +146,25 @@ module GameData
       return (ret) ? ret : pbResolveBitmap("Graphics/Pokemon/Eggs/000_icon")
     end
 
-    def self.icon_filename(species, form = 0, gender = 0, shiny = false, shadow = false, egg = false)
-      return self.egg_icon_filename(species, form) if egg
+    def self.icon_filename(species, spriteform = nil, gender = nil, shiny = false, shadow = false, egg = false)
+      return self.egg_icon_filename(species, 0) if egg
       #KurayX trying to patch triple fusion icons
       dexNum = getDexNumberForSpecies(species)
       if dexNum && dexNum >= Settings::ZAPMOLCUNO_NB
         return pbResolveBitmap(sprintf("Graphics/Icons/icon" + dexNum.to_s)) if pbResolveBitmap(sprintf("Graphics/Icons/icon" + dexNum.to_s))
       end
       #End of KurayX patch attempt
-      return self.check_graphic_file("Graphics/Pokemon/", species, form, gender, shiny, shadow, "Icons")
+      return self.check_graphic_file("Graphics/Pokemon/", species, spriteform, gender, shiny, shadow, "Icons")
     end
 
     def self.icon_filename_from_pokemon(pkmn)
+      return pbResolveBitmap(sprintf("Graphics/Icons/iconEgg")) if pkmn.egg?
       if pkmn.isFusion?
         return  pbResolveBitmap(sprintf("Graphics/Icons/iconDNA"))
       end
 
-      return self.icon_filename(pkmn.species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.egg?)
+      # return self.icon_filename(pkmn.species, pkmn.form, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.egg?)
+      return self.icon_filename(pkmn.species, pkmn.spriteform_head, pkmn.gender, pkmn.shiny?, pkmn.shadowPokemon?, pkmn.egg?)
     end
 
     def self.icon_filename_from_species(species)
@@ -239,10 +241,10 @@ module GameData
         species_data = GameData::Species.get(getHeadID(species_data))
       end
 
-      if form > 0
-        ret = sprintf("Cries/%s_%d", species_data.species, form)
-        return ret if pbResolveAudioSE(ret)
-      end
+      # if form > 0
+      #   ret = sprintf("Cries/%s_%d", species_data.species, form)
+      #   return ret if pbResolveAudioSE(ret)
+      # end
       ret = sprintf("Cries/%s", species_data.species)
       return (pbResolveAudioSE(ret)) ? ret : nil
     end

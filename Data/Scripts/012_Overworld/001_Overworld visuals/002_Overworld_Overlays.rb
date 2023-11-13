@@ -104,6 +104,11 @@ class LightEffect
     @disposed = false
   end
 
+  def opacity=(value)
+    @light.opacity=value
+    update
+  end
+
   def disposed?
     return @disposed
   end
@@ -161,6 +166,30 @@ class LightEffect_Basic < LightEffect
   end
 end
 
+class LightEffect_GlowPlant < LightEffect
+  def update
+    return if !darknessEffectOnCurrentMap()
+    mt_moon_direction = getMtMoonDirection()
+    #return if $game_player.direction != mt_moon_direction
+    return if !@light || !@event
+    super
+    @light.opacity = $game_player.direction == mt_moon_direction ? 100 : 0
+    @light.opacity = 150 if isInMtMoon()
+    @light.ox      = 32
+    @light.oy      = 48
+    if (Object.const_defined?(:ScreenPosHelper) rescue false)
+      @light.x      = ScreenPosHelper.pbScreenX(@event)
+      @light.y      = ScreenPosHelper.pbScreenY(@event)
+      @light.zoom_x = ScreenPosHelper.pbScreenZoomX(@event)
+    else
+      @light.x      = @event.screen_x
+      @light.y      = @event.screen_y
+      @light.zoom_x = 1.0
+    end
+    @light.zoom_y = @light.zoom_x
+    @light.tone   = $game_screen.tone
+  end
+end
 
 
 class LightEffect_DayNight < LightEffect

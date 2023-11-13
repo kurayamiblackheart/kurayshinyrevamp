@@ -193,15 +193,15 @@ class PokemonBoxIcon < IconSprite
 
   #KurayX - KURAYX_ABOUT_SHINIES
   #KuraIcon
-  def createFusionIcon(pokemon)
+  def createFusionIcon(species,spriteform_head=nil,spriteform_body=nil)
     bodyPoke_number = getBodyID(pokemon.species)
     headPoke_number = getHeadID(pokemon.species, bodyPoke_number)
 
     bodyPoke = GameData::Species.get(bodyPoke_number).species
     headPoke = GameData::Species.get(headPoke_number).species
 
-    icon1 = AnimatedBitmap.new(GameData::Species.icon_filename(headPoke))
-    icon2 = AnimatedBitmap.new(GameData::Species.icon_filename(bodyPoke))
+    icon1 = AnimatedBitmap.new(GameData::Species.icon_filename(headPoke,spriteform_head))
+    icon2 = AnimatedBitmap.new(GameData::Species.icon_filename(bodyPoke,spriteform_body))
 
     #KurayX Github
     directory_name = "Graphics/Pokemon/FusionIcons"
@@ -216,7 +216,7 @@ class PokemonBoxIcon < IconSprite
       result_icon = AnimatedBitmap.new(customiconname)
     else
       bitmapFileName = sprintf("Graphics/Pokemon/FusionIcons/icon%03d", dexNum)
-      headPokeFileName = GameData::Species.icon_filename(headPoke)
+      headPokeFileName = GameData::Species.icon_filename(headPoke,spriteform_head)
       bitmapPath = sprintf("%s.png", bitmapFileName)
       IO.copy_stream(headPokeFileName, bitmapPath)
       result_icon = AnimatedBitmap.new(bitmapPath)
@@ -302,7 +302,7 @@ class PokemonBoxIcon < IconSprite
         ## self.setBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon), GameData::Species.calculateShinyHueOffset(@pokemon.dexNum, @pokemon.bodyShiny?, @pokemon.headShiny?, @pokemon.shinyValue?))
       ## end
     else
-      self.setBitmapDirectly(createFusionIcon(@pokemon))
+      self.setBitmapDirectly(createFusionIcon(@pokemon.species,@pokemon.spriteform_head, @pokemon.spriteform_body))
       if fusion_enabled
         self.visible = true
       else

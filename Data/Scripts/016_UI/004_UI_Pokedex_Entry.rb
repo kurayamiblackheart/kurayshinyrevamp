@@ -2,23 +2,23 @@
 #
 #===============================================================================
 class PokemonPokedexInfo_Scene
-  def pbStartScene(dexlist,index,region)
-    @endscene=false
-    @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
+  def pbStartScene(dexlist, index, region)
+    @endscene = false
+    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     @viewport.z = 99999
     @dexlist = dexlist
-    @index   = index
-    @region  = region
+    @index = index
+    @region = region
     @page = 1
     @typebitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Pokedex/icon_types"))
     @sprites = {}
-    @sprites["background"] = IconSprite.new(0,0,@viewport)
+    @sprites["background"] = IconSprite.new(0, 0, @viewport)
     @sprites["infosprite"] = PokemonSprite.new(@viewport)
     @sprites["infosprite"].setOffset(PictureOrigin::Center)
     @sprites["infosprite"].x = 104
     @sprites["infosprite"].y = 136
-    @sprites["infosprite"].zoom_x =  Settings::FRONTSPRITE_SCALE
-    @sprites["infosprite"].zoom_y =  Settings::FRONTSPRITE_SCALE
+    @sprites["infosprite"].zoom_x = Settings::FRONTSPRITE_SCALE
+    @sprites["infosprite"].zoom_y = Settings::FRONTSPRITE_SCALE
 
     # @mapdata = pbLoadTownMapData
     # map_metadata = GameData::MapMetadata.try_get($game_map.map_id)
@@ -51,27 +51,15 @@ class PokemonPokedexInfo_Scene
 
     @sprites["formback"] = PokemonSprite.new(@viewport)
     @sprites["formback"].setOffset(PictureOrigin::Bottom)
-    @sprites["formback"].x = 382   # y is set below as it depends on metrics
+    @sprites["formback"].x = 382 # y is set below as it depends on metrics
     @sprites["formicon"] = PokemonSpeciesIconSprite.new(nil, @viewport)
     @sprites["formicon"].setOffset(PictureOrigin::Center)
     @sprites["formicon"].x = 82
     @sprites["formicon"].y = 328
-    @sprites["formicon"].visible=false
+    @sprites["formicon"].visible = false
+    initializeSpritesPageGraphics
 
-    @sprites["uparrow"] = AnimatedSprite.new("Graphics/Pictures/leftarrow",8,40,28,2,@viewport)
-    @sprites["uparrow"].x = 20
-    @sprites["uparrow"].y = 250#268
-    @sprites["uparrow"].play
-    @sprites["uparrow"].visible = false
-    @sprites["downarrow"] = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
-    @sprites["downarrow"].x = 440
-    @sprites["downarrow"].y = 250
-    @sprites["downarrow"].play
-    @sprites["downarrow"].visible = false
-    @sprites["overlay"] = BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
-
-
-
+    @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
 
     pbSetSystemFont(@sprites["overlay"].bitmap)
     pbUpdateDummyPokemon
@@ -81,56 +69,107 @@ class PokemonPokedexInfo_Scene
     pbFadeInAndShow(@sprites) { pbUpdate }
   end
 
-  def pbStartSceneBrief(species)  # For standalone access, shows first page only
-    @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
+  def initializeSpritesPageGraphics()
+    @sprites["leftarrow"] = AnimatedSprite.new("Graphics/Pictures/leftarrow", 8, 40, 28, 2, @viewport)
+    @sprites["leftarrow"].x = 20
+    @sprites["leftarrow"].y = 250 #268
+    @sprites["leftarrow"].play
+    @sprites["leftarrow"].visible = false
+    @sprites["rightarrow"] = AnimatedSprite.new("Graphics/Pictures/rightarrow", 8, 40, 28, 2, @viewport)
+    @sprites["rightarrow"].x = 440
+    @sprites["rightarrow"].y = 250
+    @sprites["rightarrow"].play
+    @sprites["rightarrow"].visible = false
+
+    @sprites["uparrow"] = AnimatedSprite.new("Graphics/Pictures/uparrow", 8, 28, 40, 2, @viewport)
+    @sprites["uparrow"].x = 250
+    @sprites["uparrow"].y = 50 #268
+    @sprites["uparrow"].play
+    @sprites["uparrow"].visible = false
+    @sprites["downarrow"] = AnimatedSprite.new("Graphics/Pictures/downarrow", 8, 28, 40, 2, @viewport)
+    @sprites["downarrow"].x = 250
+    @sprites["downarrow"].y = 350
+    @sprites["downarrow"].play
+    @sprites["downarrow"].visible = false
+  end
+
+  def pbStartSpritesSelectSceneBrief(species,alts_list)
+    @available = alts_list
+    @species = species
+    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport.z = 99999
+    @index = 0
+    @page = 3
+    @brief = true
+    @sprites = {}
+    @sprites["background"] = IconSprite.new(0, 0, @viewport)
+    @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
+    @sprites["infosprite"] = PokemonSprite.new(@viewport)
+
+    @page = 3
+    initializeSpritesPageGraphics
+    initializeSpritesPage(@available)
+    drawPage(@page)
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbStartSceneBrief(species)
+    # For standalone access, shows first page only
+    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     @viewport.z = 99999
     dexnum = 0
     dexnumshift = false
-    if $Trainer.pokedex.unlocked?(-1)   # National Dex is unlocked
+    if $Trainer.pokedex.unlocked?(-1) # National Dex is unlocked
       species_data = GameData::Species.try_get(species)
       dexnum = species_data.id_number if species_data
       dexnumshift = true if Settings::DEXES_WITH_OFFSETS.include?(-1)
     else
       dexnum = 0
-      for i in 0...$Trainer.pokedex.dexes_count - 1   # Regional Dexes
+      for i in 0...$Trainer.pokedex.dexes_count - 1 # Regional Dexes
         next if !$Trainer.pokedex.unlocked?(i)
-        num = pbGetRegionalNumber(i,species)
+        num = pbGetRegionalNumber(i, species)
         next if num <= 0
         dexnum = num
         dexnumshift = true if Settings::DEXES_WITH_OFFSETS.include?(i)
         break
       end
     end
-    @dexlist = [[species,"",0,0,dexnum,dexnumshift]]
-    @index   = 0
+    @dexlist = [[species, "", 0, 0, dexnum, dexnumshift]]
+    @index = 0
     @page = 1
     @brief = true
     @typebitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Pokedex/icon_types"))
     @sprites = {}
-    @sprites["background"] = IconSprite.new(0,0,@viewport)
+    @sprites["background"] = IconSprite.new(0, 0, @viewport)
     @sprites["infosprite"] = PokemonSprite.new(@viewport)
     @sprites["infosprite"].setOffset(PictureOrigin::Center)
     @sprites["infosprite"].x = 104
     @sprites["infosprite"].y = 136
-    @sprites["overlay"] = BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
+
     pbSetSystemFont(@sprites["overlay"].bitmap)
     pbUpdateDummyPokemon
+    @page = 1
     drawPage(@page)
-    sprite_bitmap= @sprites["infosprite"].getBitmap
+    sprite_bitmap = @sprites["infosprite"].getBitmap
+
     pbFadeInAndShow(@sprites) { pbUpdate }
   end
+
+  def pbStartSpritesPageBrief(species) end
 
   def pbEndScene
     pbFadeOutAndHide(@sprites) { pbUpdate }
     pbDisposeSpriteHash(@sprites)
-    @typebitmap.dispose
+    @typebitmap.dispose if @typebitmap
     @viewport.dispose
   end
 
   def pbUpdate
-    if @page==2
-      intensity = (Graphics.frame_count%40)*12
-      intensity = 480-intensity if intensity>240
+    if @page == 2
+      intensity = (Graphics.frame_count % 40) * 12
+      intensity = 480 - intensity if intensity > 240
       @sprites["areahighlight"].opacity = intensity
     end
     pbUpdateSpriteHash(@sprites)
@@ -140,19 +179,18 @@ class PokemonPokedexInfo_Scene
     @species = @dexlist[@index][0]
     @gender, @form = $Trainer.pokedex.last_form_seen(@species)
 
-
     if @sprites["selectedSprite"]
-      @sprites["selectedSprite"].visible=false
+      @sprites["selectedSprite"].visible = false
     end
     if @sprites["nextSprite"]
-      @sprites["nextSprite"].visible=false
+      @sprites["nextSprite"].visible = false
     end
     if @sprites["previousSprite"]
-      @sprites["previousSprite"].visible=false
+      @sprites["previousSprite"].visible = false
     end
     # species_data = pbGetSpeciesData(@species)
-     species_data = GameData::Species.get_species_form(@species, @form)
-    @sprites["infosprite"].setSpeciesBitmap(@species,@gender,@form)
+    species_data = GameData::Species.get_species_form(@species, @form)
+    @sprites["infosprite"].setSpeciesBitmap(@species, @gender, @form)
     # if @sprites["formfront"]
     #   @sprites["formfront"].setSpeciesBitmap(@species,@gender,@form)
     # end
@@ -166,76 +204,79 @@ class PokemonPokedexInfo_Scene
     # end
   end
 
-  def pbGetAvailableForms
-    ret = []
-    return ret
-    # multiple_forms = false
-    # # Find all genders/forms of @species that have been seen
-    # GameData::Species.each do |sp|
-    #   next if sp.species != @species
-    #   next if sp.form != 0 && (!sp.real_form_name || sp.real_form_name.empty?)
-    #   next if sp.pokedex_form != sp.form
-    #   multiple_forms = true if sp.form > 0
-    #   case sp.gender_ratio
-    #   when :AlwaysMale, :AlwaysFemale, :Genderless
-    #     real_gender = (sp.gender_ratio == :AlwaysFemale) ? 1 : 0
-    #     next if !$Trainer.pokedex.seen_form?(@species, real_gender, sp.form) && !Settings::DEX_SHOWS_ALL_FORMS
-    #     real_gender = 2 if sp.gender_ratio == :Genderless
-    #     ret.push([sp.form_name, real_gender, sp.form])
-    #   else   # Both male and female
-    #     for real_gender in 0...2
-    #       next if !$Trainer.pokedex.seen_form?(@species, real_gender, sp.form) && !Settings::DEX_SHOWS_ALL_FORMS
-    #       ret.push([sp.form_name, real_gender, sp.form])
-    #       break if sp.form_name && !sp.form_name.empty?   # Only show 1 entry for each non-0 form
-    #     end
-    #   end
-    # end
-    # # Sort all entries
-    # ret.sort! { |a, b| (a[2] == b[2]) ? a[1] <=> b[1] : a[2] <=> b[2] }
-    # # Create form names for entries if they don't already exist
-    # ret.each do |entry|
-    #   if !entry[0] || entry[0].empty?   # Necessarily applies only to form 0
-    #     case entry[1]
-    #     when 0 then entry[0] = _INTL("Male")
-    #     when 1 then entry[0] = _INTL("Female")
-    #     else
-    #       entry[0] = (multiple_forms) ? _INTL("One Form") : _INTL("Genderless")
-    #     end
-    #   end
-    #   entry[1] = 0 if entry[1] == 2   # Genderless entries are treated as male
-    # end
-    # return ret
-  end
+  # def pbGetAvailableForms
+  #   ret = []
+  #   return ret
+  #   # multiple_forms = false
+  #   # # Find all genders/forms of @species that have been seen
+  #   # GameData::Species.each do |sp|
+  #   #   next if sp.species != @species
+  #   #   next if sp.form != 0 && (!sp.real_form_name || sp.real_form_name.empty?)
+  #   #   next if sp.pokedex_form != sp.form
+  #   #   multiple_forms = true if sp.form > 0
+  #   #   case sp.gender_ratio
+  #   #   when :AlwaysMale, :AlwaysFemale, :Genderless
+  #   #     real_gender = (sp.gender_ratio == :AlwaysFemale) ? 1 : 0
+  #   #     next if !$Trainer.pokedex.seen_form?(@species, real_gender, sp.form) && !Settings::DEX_SHOWS_ALL_FORMS
+  #   #     real_gender = 2 if sp.gender_ratio == :Genderless
+  #   #     ret.push([sp.form_name, real_gender, sp.form])
+  #   #   else   # Both male and female
+  #   #     for real_gender in 0...2
+  #   #       next if !$Trainer.pokedex.seen_form?(@species, real_gender, sp.form) && !Settings::DEX_SHOWS_ALL_FORMS
+  #   #       ret.push([sp.form_name, real_gender, sp.form])
+  #   #       break if sp.form_name && !sp.form_name.empty?   # Only show 1 entry for each non-0 form
+  #   #     end
+  #   #   end
+  #   # end
+  #   # # Sort all entries
+  #   # ret.sort! { |a, b| (a[2] == b[2]) ? a[1] <=> b[1] : a[2] <=> b[2] }
+  #   # # Create form names for entries if they don't already exist
+  #   # ret.each do |entry|
+  #   #   if !entry[0] || entry[0].empty?   # Necessarily applies only to form 0
+  #   #     case entry[1]
+  #   #     when 0 then entry[0] = _INTL("Male")
+  #   #     when 1 then entry[0] = _INTL("Female")
+  #   #     else
+  #   #       entry[0] = (multiple_forms) ? _INTL("One Form") : _INTL("Genderless")
+  #   #     end
+  #   #   end
+  #   #   entry[1] = 0 if entry[1] == 2   # Genderless entries are treated as male
+  #   # end
+  #   # return ret
+  # end
 
   def drawPage(page)
     overlay = @sprites["overlay"].bitmap
     overlay.clear
     # Make certain sprites visible
-    @sprites["infosprite"].visible    = (@page==1)
-    @sprites["areamap"].visible       = (@page==2) if @sprites["areamap"]
-    @sprites["areahighlight"].visible = (@page==2) if @sprites["areahighlight"]
-    @sprites["areaoverlay"].visible   = (@page==2) if @sprites["areaoverlay"]
+    @sprites["infosprite"].visible = (@page == 1)
+    @sprites["areamap"].visible = (@page == 2) if @sprites["areamap"]
+    @sprites["areahighlight"].visible = (@page == 2) if @sprites["areahighlight"]
+    @sprites["areaoverlay"].visible = (@page == 2) if @sprites["areaoverlay"]
     # @sprites["formfront"].visible     = (@page==3) if @sprites["formfront"]
     #@sprites["formback"].visible      = (@page==3) if @sprites["formback"]
     #@sprites["formicon"].visible      = (@page==3) if @sprites["formicon"]
 
-    @sprites["previousSprite"].visible = (@page==3) if @sprites["previousSprite"]
-    @sprites["selectedSprite"].visible = (@page==3) if @sprites["selectedSprite"]
-    @sprites["nextSprite"].visible = (@page==3) if @sprites["nextSprite"]
+    @sprites["previousSprite"].visible = (@page == 3) if @sprites["previousSprite"]
+    @sprites["selectedSprite"].visible = (@page == 3) if @sprites["selectedSprite"]
+    @sprites["nextSprite"].visible = (@page == 3) if @sprites["nextSprite"]
 
     hide_all_selected_windows
     # Draw page-specific information
     case page
-    when 1 then drawPageInfo
-    when 2 then drawPageArea
-    when 3 then drawPageForms
+    when 1 then
+      drawPageInfo
+    when 2 then
+      drawPageArea
+    when 3 then
+      drawPageForms
     end
   end
 
   def drawPageInfo
     @sprites["background"].setBitmap(_INTL("Graphics/Pictures/Pokedex/bg_info"))
     overlay = @sprites["overlay"].bitmap
-    base   = Color.new(88, 88, 80)
+    base = Color.new(88, 88, 80)
     shadow = Color.new(168, 184, 184)
     imagepos = []
     if @brief
@@ -245,16 +286,16 @@ class PokemonPokedexInfo_Scene
     # Write various bits of text
     indexText = "???"
     #if @dexlist[@index][4] > 0
-      indexNumber = @dexlist[@index][4]
-      indexNumber -= 1 if @dexlist[@index][5]
+    indexNumber = @dexlist[@index][4]
+    indexNumber -= 1 if @dexlist[@index][5]
     indexNumber = GameData::Species.get(@species).id_number
-      indexText = sprintf("%03d", indexNumber)
+    indexText = sprintf("%03d", indexNumber)
     # end
     textpos = [
-       [_INTL("{1}{2} {3}", indexText, " ", species_data.name),
-          246, 36, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)],
-       [_INTL("Height"), 314, 152, 0, base, shadow],
-       [_INTL("Weight"), 314, 184, 0, base, shadow]
+      [_INTL("{1}{2} {3}", indexText, " ", species_data.name),
+       246, 36, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)],
+      [_INTL("Height"), 314, 152, 0, base, shadow],
+      [_INTL("Weight"), 314, 184, 0, base, shadow]
     ]
     if $Trainer.owned?(@species)
       # Write the category
@@ -262,7 +303,7 @@ class PokemonPokedexInfo_Scene
       # Write the height and weight
       height = species_data.height
       weight = species_data.weight
-      if System.user_language[3..4] == "US"   # If the user is in the United States
+      if System.user_language[3..4] == "US" # If the user is in the United States
         inches = (height / 0.254).round
         pounds = (weight / 0.45359).round
         textpos.push([_ISPRINTF("{1:d}'{2:02d}\"", inches / 12, inches % 12), 460, 152, 1, base, shadow])
@@ -272,12 +313,12 @@ class PokemonPokedexInfo_Scene
         textpos.push([_ISPRINTF("{1:.1f} kg", weight / 10.0), 482, 184, 1, base, shadow])
       end
       # Draw the Pokédex entry text
-      drawTextEx(overlay, 40, 244, Graphics.width - (40 * 2), 4,   # overlay, x, y, width, num lines
+      drawTextEx(overlay, 40, 244, Graphics.width - (40 * 2), 4, # overlay, x, y, width, num lines
                  species_data.pokedex_entry, base, shadow)
       # Draw the footprint
       footprintfile = GameData::Species.footprint_filename(@species, @form)
       if footprintfile
-        footprint = RPG::Cache.load_bitmap("",footprintfile)
+        footprint = RPG::Cache.load_bitmap("", footprintfile)
         overlay.blt(226, 138, footprint, footprint.rect)
         footprint.dispose
       end
@@ -296,7 +337,7 @@ class PokemonPokedexInfo_Scene
       # Write the category
       textpos.push([_INTL("????? Pokémon"), 246, 68, 0, base, shadow])
       # Write the height and weight
-      if System.user_language[3..4] == "US"   # If the user is in the United States
+      if System.user_language[3..4] == "US" # If the user is in the United States
         textpos.push([_INTL("???'??\""), 460, 152, 1, base, shadow])
         textpos.push([_INTL("????.? lbs."), 494, 184, 1, base, shadow])
       else
@@ -322,13 +363,13 @@ class PokemonPokedexInfo_Scene
   def drawPageArea
     @sprites["background"].setBitmap(_INTL("Graphics/Pictures/Pokedex/bg_area"))
     overlay = @sprites["overlay"].bitmap
-    base   = Color.new(88,88,80)
-    shadow = Color.new(168,184,184)
+    base = Color.new(88, 88, 80)
+    shadow = Color.new(168, 184, 184)
     @sprites["areahighlight"].bitmap.clear
     # Fill the array "points" with all squares of the region map in which the
     # species can be found
     points = []
-    mapwidth = 1+PokemonRegionMap_Scene::RIGHT-PokemonRegionMap_Scene::LEFT
+    mapwidth = 1 + PokemonRegionMap_Scene::RIGHT - PokemonRegionMap_Scene::LEFT
     GameData::Encounter.each_of_version($PokemonGlobal.encounter_version) do |enc_data|
       next if !pbFindEncounter(enc_data.types, @species)
       map_metadata = GameData::MapMetadata.try_get(enc_data.map)
@@ -336,88 +377,88 @@ class PokemonPokedexInfo_Scene
       next if !mappos || mappos[0] != @region
       showpoint = true
       for loc in @mapdata[@region][2]
-        showpoint = false if loc[0]==mappos[1] && loc[1]==mappos[2] &&
-                             loc[7] && !$game_switches[loc[7]]
+        showpoint = false if loc[0] == mappos[1] && loc[1] == mappos[2] &&
+          loc[7] && !$game_switches[loc[7]]
       end
       next if !showpoint
       mapsize = map_metadata.town_map_size
-      if mapsize && mapsize[0] && mapsize[0]>0
-        sqwidth  = mapsize[0]
-        sqheight = (mapsize[1].length*1.0/mapsize[0]).ceil
+      if mapsize && mapsize[0] && mapsize[0] > 0
+        sqwidth = mapsize[0]
+        sqheight = (mapsize[1].length * 1.0 / mapsize[0]).ceil
         for i in 0...sqwidth
           for j in 0...sqheight
-            if mapsize[1][i+j*sqwidth,1].to_i>0
-              points[mappos[1]+i+(mappos[2]+j)*mapwidth] = true
+            if mapsize[1][i + j * sqwidth, 1].to_i > 0
+              points[mappos[1] + i + (mappos[2] + j) * mapwidth] = true
             end
           end
         end
       else
-        points[mappos[1]+mappos[2]*mapwidth] = true
+        points[mappos[1] + mappos[2] * mapwidth] = true
       end
     end
     # Draw coloured squares on each square of the region map with a nest
-    pointcolor   = Color.new(0,248,248)
-    pointcolorhl = Color.new(192,248,248)
+    pointcolor = Color.new(0, 248, 248)
+    pointcolorhl = Color.new(192, 248, 248)
     sqwidth = PokemonRegionMap_Scene::SQUAREWIDTH
     sqheight = PokemonRegionMap_Scene::SQUAREHEIGHT
     for j in 0...points.length
       if points[j]
-        x = (j%mapwidth)*sqwidth
-        x += (Graphics.width-@sprites["areamap"].bitmap.width)/2
-        y = (j/mapwidth)*sqheight
-        y += (Graphics.height+32-@sprites["areamap"].bitmap.height)/2
-        @sprites["areahighlight"].bitmap.fill_rect(x,y,sqwidth,sqheight,pointcolor)
-        if j-mapwidth<0 || !points[j-mapwidth]
-          @sprites["areahighlight"].bitmap.fill_rect(x,y-2,sqwidth,2,pointcolorhl)
+        x = (j % mapwidth) * sqwidth
+        x += (Graphics.width - @sprites["areamap"].bitmap.width) / 2
+        y = (j / mapwidth) * sqheight
+        y += (Graphics.height + 32 - @sprites["areamap"].bitmap.height) / 2
+        @sprites["areahighlight"].bitmap.fill_rect(x, y, sqwidth, sqheight, pointcolor)
+        if j - mapwidth < 0 || !points[j - mapwidth]
+          @sprites["areahighlight"].bitmap.fill_rect(x, y - 2, sqwidth, 2, pointcolorhl)
         end
-        if j+mapwidth>=points.length || !points[j+mapwidth]
-          @sprites["areahighlight"].bitmap.fill_rect(x,y+sqheight,sqwidth,2,pointcolorhl)
+        if j + mapwidth >= points.length || !points[j + mapwidth]
+          @sprites["areahighlight"].bitmap.fill_rect(x, y + sqheight, sqwidth, 2, pointcolorhl)
         end
-        if j%mapwidth==0 || !points[j-1]
-          @sprites["areahighlight"].bitmap.fill_rect(x-2,y,2,sqheight,pointcolorhl)
+        if j % mapwidth == 0 || !points[j - 1]
+          @sprites["areahighlight"].bitmap.fill_rect(x - 2, y, 2, sqheight, pointcolorhl)
         end
-        if (j+1)%mapwidth==0 || !points[j+1]
-          @sprites["areahighlight"].bitmap.fill_rect(x+sqwidth,y,2,sqheight,pointcolorhl)
+        if (j + 1) % mapwidth == 0 || !points[j + 1]
+          @sprites["areahighlight"].bitmap.fill_rect(x + sqwidth, y, 2, sqheight, pointcolorhl)
         end
       end
     end
     # Set the text
     textpos = []
-    if points.length==0
-      pbDrawImagePositions(overlay,[
-         [sprintf("Graphics/Pictures/Pokedex/overlay_areanone"),108,188]
+    if points.length == 0
+      pbDrawImagePositions(overlay, [
+        [sprintf("Graphics/Pictures/Pokedex/overlay_areanone"), 108, 188]
       ])
-      textpos.push([_INTL("Area unknown"),Graphics.width/2,Graphics.height/2 - 6,2,base,shadow])
+      textpos.push([_INTL("Area unknown"), Graphics.width / 2, Graphics.height / 2 - 6, 2, base, shadow])
     end
-    textpos.push([pbGetMessage(MessageTypes::RegionNames,@region),414,38,2,base,shadow])
-    textpos.push([_INTL("{1}'s area",GameData::Species.get(@species).name),
-       Graphics.width/2,346,2,base,shadow])
-    pbDrawTextPositions(overlay,textpos)
+    textpos.push([pbGetMessage(MessageTypes::RegionNames, @region), 414, 38, 2, base, shadow])
+    textpos.push([_INTL("{1}'s area", GameData::Species.get(@species).name),
+                  Graphics.width / 2, 346, 2, base, shadow])
+    pbDrawTextPositions(overlay, textpos)
   end
 
   def drawPageForms
     @sprites["background"].setBitmap(_INTL("Graphics/Pictures/Pokedex/bg_forms"))
     overlay = @sprites["overlay"].bitmap
-    base   = Color.new(88,88,80)
-    shadow = Color.new(168,184,184)
+    base = Color.new(88, 88, 80)
+    shadow = Color.new(168, 184, 184)
     # Write species and form name
     formname = ""
     for i in @available
-      if i[1]==@gender && i[2]==@form
+      if i[1] == @gender && i[2] == @form
         formname = i[0]; break
       end
     end
     textpos = [
-       [GameData::Species.get(@species).name,Graphics.width/2,Graphics.height-94,2,base,shadow],
-       [formname,Graphics.width/2,Graphics.height-62,2,base,shadow],
+      [GameData::Species.get(@species).name, Graphics.width / 2, Graphics.height - 94, 2, base, shadow],
+      [formname, Graphics.width / 2, Graphics.height - 62, 2, base, shadow],
     ]
     # Draw all text
-    pbDrawTextPositions(overlay,textpos)
+    pbDrawTextPositions(overlay, textpos)
   end
 
   def pbGoToPrevious
     newindex = @index
-    while newindex>0
+    while newindex > 0
       newindex -= 1
       if $Trainer.seen?(@dexlist[newindex][0])
         @index = newindex
@@ -428,7 +469,7 @@ class PokemonPokedexInfo_Scene
 
   def pbGoToNext
     newindex = @index
-    while newindex<@dexlist.length-1
+    while newindex < @dexlist.length - 1
       newindex += 1
       if $Trainer.seen?(@dexlist[newindex][0])
         @index = newindex
@@ -437,22 +478,22 @@ class PokemonPokedexInfo_Scene
     end
   end
 
-  def pbChooseForm
+  def pbChooseAlt(brief=false)
     index = 0
     for i in 0...@available.length
-      if @available[i][1]==@gender && @available[i][2]==@form
+      if @available[i][1] == @gender && @available[i][2] == @form
         index = i
         break
       end
     end
     oldindex = -1
     loop do
-      if oldindex!=index
+      if oldindex != index
         $Trainer.pokedex.set_last_form_seen(@species, @available[index][1], @available[index][2])
         pbUpdateDummyPokemon
         drawPage(@page)
-        @sprites["uparrow"].visible   = (index>0)
-        @sprites["downarrow"].visible = (index<@available.length-1)
+        @sprites["uparrow"].visible = (index > 0)
+        @sprites["downarrow"].visible = (index < @available.length - 1)
         oldindex = index
       end
       Graphics.update
@@ -460,10 +501,10 @@ class PokemonPokedexInfo_Scene
       pbUpdate
       if Input.trigger?(Input::UP)
         pbPlayCursorSE
-        index = (index+@available.length-1)%@available.length
+        index = (index + @available.length - 1) % @available.length
       elsif Input.trigger?(Input::DOWN)
         pbPlayCursorSE
-        index = (index+1)%@available.length
+        index = (index + 1) % @available.length
       elsif Input.trigger?(Input::BACK)
         pbPlayCancelSE
         break
@@ -472,7 +513,7 @@ class PokemonPokedexInfo_Scene
         break
       end
     end
-    @sprites["uparrow"].visible   = false
+    @sprites["uparrow"].visible = false
     @sprites["downarrow"].visible = false
   end
 
@@ -493,11 +534,11 @@ class PokemonPokedexInfo_Scene
         if @page == 2 # Area
           #          dorefresh = true
         elsif @page == 3 # Forms
-          if @available.length > 1
-            pbPlayDecisionSE
-            pbChooseForm
-            dorefresh = true
-          end
+          #if @available.length > 1
+          pbPlayDecisionSE
+          pbChooseAlt
+          dorefresh = true
+          # end
         end
       elsif Input.trigger?(Input::UP)
         oldindex = @index
@@ -563,6 +604,23 @@ class PokemonPokedexInfo_Scene
       end
     end
   end
+
+  def pbSelectSpritesSceneBrief
+    pbChooseAlt(true)
+
+    # loop do
+    #   Graphics.update
+    #   Input.update
+    #   pbUpdate
+    #   if Input.trigger?(Input::ACTION)
+    #     pbPlayDecisionSE
+    #   elsif Input.trigger?(Input::BACK)
+    #     pbPlayCloseMenuSE
+    #     break
+    #   end
+    # end
+  end
+
 end
 
 #===============================================================================
@@ -573,30 +631,39 @@ class PokemonPokedexInfoScreen
     @scene = scene
   end
 
-  def pbStartScreen(dexlist,index,region)
-    @scene.pbStartScene(dexlist,index,region)
+  def pbStartScreen(dexlist, index, region)
+    @scene.pbStartScene(dexlist, index, region)
     ret = @scene.pbScene
     @scene.pbEndScene
-    return ret   # Index of last species viewed in dexlist
+    return ret # Index of last species viewed in dexlist
   end
 
-  def pbStartSceneSingle(species)   # For use from a Pokémon's summary screen
+  def pbStartSceneSingle(species)
+    # For use from a Pokémon's summary screen
     region = -1
     if Settings::USE_CURRENT_REGION_DEX
       region = pbGetCurrentRegion
       region = -1 if region >= $Trainer.pokedex.dexes_count - 1
     else
-      region = $PokemonGlobal.pokedexDex   # National Dex -1, regional Dexes 0, 1, etc.
+      region = $PokemonGlobal.pokedexDex # National Dex -1, regional Dexes 0, 1, etc.
     end
-    dexnum = GameData::Species.get(species).id_number#pbGetRegionalNumber(region,species)
+    dexnum = GameData::Species.get(species).id_number #pbGetRegionalNumber(region,species)
     dexnumshift = Settings::DEXES_WITH_OFFSETS.include?(region)
-    dexlist = [[species,GameData::Species.get(species).name,0,0,dexnum,dexnumshift]]
-    @scene.pbStartScene(dexlist,0,region)
+    dexlist = [[species, GameData::Species.get(species).name, 0, 0, dexnum, dexnumshift]]
+    @scene.pbStartScene(dexlist, 0, region)
     @scene.pbScene
     @scene.pbEndScene
   end
 
-  def pbDexEntry(species)   # For use when capturing a new species
+  def pbDexEntry(species)
+    # For use when capturing a new species
+    nb_sprites_for_alts_page = isSpeciesFusion(species) ? 2 : 1
+    alts_list = @scene.pbGetAvailableForms(species)
+    if alts_list.length > nb_sprites_for_alts_page
+      @scene.pbStartSpritesSelectSceneBrief(species,alts_list)
+      @scene.pbSelectSpritesSceneBrief
+      @scene.pbEndScene
+    end
     @scene.pbStartSceneBrief(species)
     @scene.pbSceneBrief
     @scene.pbEndScene

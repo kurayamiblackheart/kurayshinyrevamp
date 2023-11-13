@@ -316,6 +316,21 @@ class Game_Map
       return event.id if event.at_coordinate?(x, y)
     end
   end
+  
+  def event_at_position(x, y)
+    for event in self.events.values
+      return true if event.at_coordinate?(x, y)
+    end
+    return false
+  end
+
+  def get_event_at_position(x, y, excluding_IDs = [])
+    for event in self.events.values
+      next if excluding_IDs.include?(event.id)
+      return event if event.at_coordinate?(x, y)
+    end
+    return nil
+  end
 
   def display_x=(value)
     return if @display_x == value

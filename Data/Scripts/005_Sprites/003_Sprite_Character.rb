@@ -54,6 +54,10 @@ class BushBitmap
 end
 
 
+def event_is_trainer(event)
+  return $game_map.events[event.id] && event.name[/trainer\((\d+)\)/i]
+end
+
 
 class Sprite_Character < RPG::Sprite
   attr_accessor :character
@@ -61,6 +65,12 @@ class Sprite_Character < RPG::Sprite
   def initialize(viewport, character = nil)
     super(viewport)
     @character    = character
+
+    if darknessEffectOnCurrentMap()
+      if  @character.is_a?(Game_Event)
+        $game_map.events[@character.id].erase if event_is_trainer(@character)
+      end
+    end
     @oldbushdepth = 0
     @spriteoffset = false
     if !character || character == $game_player || (character.name[/reflection/i] rescue false)

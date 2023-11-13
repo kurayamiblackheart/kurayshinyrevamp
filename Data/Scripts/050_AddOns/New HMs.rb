@@ -41,7 +41,7 @@ def getRockSmashItemList(inclRareItems)
                :REVIVE,:NUGGET,:DIAMOND]
 
   fossilItems =    [:ROOTFOSSIL,:CLAWFOSSIL,:DOMEFOSSIL,:HELIXFOSSIL,
-                    :SKULLFOSSIL,:ARMORFOSSIL]
+                    :SKULLFOSSIL,:ARMORFOSSIL,:JAWFOSSIL,:SAILFOSSIL]
 
   #            Kernel.pbMessage(inclRareItems.to_s)
 

@@ -47,8 +47,12 @@ module Game
       for pokemon in box.pokemon
         if pokemon != nil
           if !pokemon.egg?
+            pokemon.exp_when_fused_head=nil
+            pokemon.exp_when_fused_body=nil
+            pokemon.exp_gained_since_fused=nil
             pokemon.level = 5
             pokemon.owner.id = $Trainer.id
+            pokemon.ot=$Trainer.name
             pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
             pokemon.kuraycustomfile = nil
             pokemon.reset_moves

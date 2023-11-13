@@ -802,28 +802,37 @@ DebugMenuCommands.register("dexlists", {
 
 DebugMenuCommands.register("setplayer", {
   "parent"      => "playermenu",
-  "name"        => _INTL("Set Player Character"),
-  "description" => _INTL("Edit the player's character, as defined in \"metadata.txt\"."),
+  "name"        => _INTL("Switch Player Character"),
+  "description" => _INTL("Switch the player character from male to female or vice-versa."),
   "effect"      => proc {
-    limit = 0
-    for i in 0...8
-      meta = GameData::Metadata.get_player(i)
-      next if meta
-      limit = i
-      break
-    end
-    if limit <= 1
-      pbMessage(_INTL("There is only one player defined."))
+    if pbGet(VAR_TRAINER_GENDER)==0
+      pbChangePlayer(1)
+      pbSet(VAR_TRAINER_GENDER,1)
     else
-      params = ChooseNumberParams.new
-      params.setRange(0, limit - 1)
-      params.setDefaultValue($Trainer.character_ID)
-      newid = pbMessageChooseNumber(_INTL("Choose the new player character."), params)
-      if newid != $Trainer.character_ID
-        pbChangePlayer(newid)
-        pbMessage(_INTL("The player character was changed."))
-      end
+      pbChangePlayer(0)
+      pbSet(VAR_TRAINER_GENDER,0)
     end
+    pbMessage(_INTL("The player character was changed."))
+
+    # limit = 0
+    # for i in 0...8
+    #   meta = GameData::Metadata.get_player(i)
+    #   next if meta
+    #   limit = i
+    #   break
+    # end
+    # if limit <= 1
+    #   pbMessage(_INTL("There is only one player defined."))
+    # else
+    #   params = ChooseNumberParams.new
+    #   params.setRange(0, limit - 1)
+    #   params.setDefaultValue($Trainer.character_ID)
+    #   newid = pbMessageChooseNumber(_INTL("Choose the new player character."), params)
+    #   if newid != $Trainer.character_ID
+    #     pbChangePlayer(newid)
+    #     pbMessage(_INTL("The player character was changed."))
+    #   end
+    # end
   }
 })
 
@@ -1094,6 +1103,21 @@ DebugMenuCommands.register("compiledata", {
   }
 })
 
+DebugMenuCommands.register("writedata", {
+  "parent"      => "othermenu",
+  "name"        => _INTL("Write Data"),
+  "description" => _INTL("Write all data to the PBS folder."),
+  "always_show" => true,
+  "effect"      => proc {
+    msgwindow = pbCreateMessageWindow
+    if !safeIsDirectory?("PBS")
+      Dir.mkdir("PBS") rescue nil
+    end
+    Compiler.write_all { |msg| pbMessageDisplay(msgwindow, msg, false); echoln(msg) }
+    pbMessageDisplay(msgwindow, _INTL("All game data was written."))
+    pbDisposeMessageWindow(msgwindow)
+  }
+})
 
 DebugMenuCommands.register("renamesprites", {
   "parent"      => "othermenu",

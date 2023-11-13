@@ -69,3 +69,12 @@ Events.onWildPokemonCreate += proc { |_sender, e|
 #    YOUR CODE HERE
 #  end
 #}
+
+#NECROZMA BATTLE
+Events.onWildPokemonCreate += proc { |_sender, e|
+  pokemon = e[0]
+  if $game_switches[SWITCH_KANTO_DARKNESS_STAGE_4] && pokemon.species == :NECROZMA
+    pokemon.item = :NECROZIUM
+  end
+}
+

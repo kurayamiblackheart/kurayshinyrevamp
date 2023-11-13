@@ -16,18 +16,18 @@ def pbAutoPositionAll
     Graphics.update if sp.id_number % 50 == 0
     bitmap1 = GameData::Species.sprite_bitmap(sp.species, sp.form, nil, nil, nil, true)
     bitmap2 = GameData::Species.sprite_bitmap(sp.species, sp.form)
-    if bitmap1 && bitmap1.bitmap   # Player's y
+    if bitmap1 && bitmap1.bitmap # Player's y
       sp.back_sprite_x = 0
       sp.back_sprite_y = (bitmap1.height - (findBottom(bitmap1.bitmap) + 1)) / 2
     end
-    if bitmap2 && bitmap2.bitmap   # Foe's y
+    if bitmap2 && bitmap2.bitmap # Foe's y
       sp.front_sprite_x = 0
       sp.front_sprite_y = (bitmap2.height - (findBottom(bitmap2.bitmap) + 1)) / 2
-      sp.front_sprite_y += 4   # Just because
+      sp.front_sprite_y += 4 # Just because
     end
-    sp.front_sprite_altitude = 0   # Shouldn't be used
-    sp.shadow_x              = 0
-    sp.shadow_size           = 2
+    sp.front_sprite_altitude = 0 # Shouldn't be used
+    sp.shadow_x = 0
+    sp.shadow_size = 2
     bitmap1.dispose if bitmap1
     bitmap2.dispose if bitmap2
   end
@@ -44,9 +44,9 @@ class SpritePositioner
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     @viewport.z = 99999
-    battlebg   = "Graphics/Battlebacks/indoor1_bg"
-    playerbase = "Graphics/Battlebacks/indoor1_base0"
-    enemybase  = "Graphics/Battlebacks/indoor1_base1"
+    battlebg = "Graphics/Battlebacks/battlebg/indoorc"
+    enemybase = "Graphics/Battlebacks/enemybase/indoorc"
+    playerbase = "Graphics/Battlebacks/playerbase/indoorc"
     @sprites["battle_bg"] = AnimatedPlane.new(@viewport)
     @sprites["battle_bg"].setBitmap(battlebg)
     @sprites["battle_bg"].z = 0
@@ -68,16 +68,24 @@ class SpritePositioner
     @sprites["shadow_1"] = IconSprite.new(0, 0, @viewport)
     @sprites["shadow_1"].z = 3
     @sprites["pokemon_0"] = PokemonSprite.new(@viewport)
+    @sprites["pokemon_0"].zoom_x = Settings::BACKRPSPRITE_SCALE
+    @sprites["pokemon_0"].zoom_y = Settings::BACKRPSPRITE_SCALE
+    @sprites["pokemon_0"].mirror = true
+
     @sprites["pokemon_0"].setOffset(PictureOrigin::Bottom)
-    @sprites["pokemon_0"].z = 4
+    @sprites["pokemon_0"].z = 1
     @sprites["pokemon_1"] = PokemonSprite.new(@viewport)
     @sprites["pokemon_1"].setOffset(PictureOrigin::Bottom)
     @sprites["pokemon_1"].z = 4
+    # @sprites["pokemon_1"] = PokemonSprite.new(@viewport)
+    @sprites["pokemon_1"].zoom_x = Settings::FRONTSPRITE_SCALE
+    @sprites["pokemon_1"].zoom_y = Settings::FRONTSPRITE_SCALE
+
     @sprites["info"] = Window_UnformattedTextPokemon.new("")
     @sprites["info"].viewport = @viewport
-    @sprites["info"].visible  = false
+    @sprites["info"].visible = false
     @oldSpeciesIndex = 0
-    @species = nil   # This can be a species_form
+    @species = nil # This can be a species_form
     @metricsChanged = false
     refresh
     @starting = true
@@ -88,7 +96,7 @@ class SpritePositioner
       pbSaveMetrics
       @metricsChanged = false
     else
-      GameData::Species.load   # Clear all changes to metrics
+      GameData::Species.load # Clear all changes to metrics
     end
     pbFadeOutAndHide(@sprites) { update }
     pbDisposeSpriteHash(@sprites)
@@ -119,32 +127,31 @@ class SpritePositioner
       @sprites["pokemon_#{i}"].y = pos[1]
       species_data.apply_metrics_to_sprite(@sprites["pokemon_#{i}"], i)
       @sprites["pokemon_#{i}"].visible = true
-      if i == 1
-        @sprites["shadow_1"].x = pos[0]
-        @sprites["shadow_1"].y = pos[1]
-        if @sprites["shadow_1"].bitmap
-          @sprites["shadow_1"].x -= @sprites["shadow_1"].bitmap.width / 2
-          @sprites["shadow_1"].y -= @sprites["shadow_1"].bitmap.height / 2
-        end
-        species_data.apply_metrics_to_sprite(@sprites["shadow_1"], i, true)
-        @sprites["shadow_1"].visible = true
+      next if i != 1
+      @sprites["shadow_1"].x = pos[0]
+      @sprites["shadow_1"].y = pos[1]
+      if @sprites["shadow_1"].bitmap
+        @sprites["shadow_1"].x -= @sprites["shadow_1"].bitmap.width / 2
+        @sprites["shadow_1"].y -= @sprites["shadow_1"].bitmap.height / 2
       end
+      species_data.apply_metrics_to_sprite(@sprites["shadow_1"], i, true)
+      @sprites["shadow_1"].visible = true
     end
   end
 
   def pbAutoPosition
     species_data = GameData::Species.get(@species)
-    old_back_y         = species_data.back_sprite_y
-    old_front_y        = species_data.front_sprite_y
+    old_back_y = species_data.back_sprite_y
+    old_front_y = species_data.front_sprite_y
     old_front_altitude = species_data.front_sprite_altitude
     bitmap1 = @sprites["pokemon_0"].bitmap
     bitmap2 = @sprites["pokemon_1"].bitmap
-    new_back_y  = (bitmap1.height - (findBottom(bitmap1) + 1)) / 2
+    new_back_y = (bitmap1.height - (findBottom(bitmap1) + 1)) / 2
     new_front_y = (bitmap2.height - (findBottom(bitmap2) + 1)) / 2
-    new_front_y += 4   # Just because
+    new_front_y += 4 # Just because
     if new_back_y != old_back_y || new_front_y != old_front_y || old_front_altitude != 0
-      species_data.back_sprite_y         = new_back_y
-      species_data.front_sprite_y        = new_front_y
+      species_data.back_sprite_y = new_back_y
+      species_data.front_sprite_y = new_front_y
       species_data.front_sprite_altitude = 0
       @metricsChanged = true
       refresh
@@ -157,8 +164,10 @@ class SpritePositioner
     return if !species_data
     spe = species_data.species
     frm = species_data.form
-    @sprites["pokemon_0"].setSpeciesBitmap(spe, 0, frm, false, false, true)
-    @sprites["pokemon_1"].setSpeciesBitmap(spe, 0, frm)
+    # @sprites["pokemon_0"].setSpeciesBitmap(spe, 0, frm, false, false, true)
+    # @sprites["pokemon_1"].setSpeciesBitmap(spe, 0, frm)
+    @sprites["pokemon_0"].setPokemonBitmapFromId(spe, true)
+    @sprites["pokemon_1"].setPokemonBitmapFromId(spe)
     @sprites["shadow_1"].setBitmap(GameData::Species.shadow_filename(spe, frm))
   end
 
@@ -167,7 +176,7 @@ class SpritePositioner
     refresh
     species_data = GameData::Species.get(@species)
     if pbResolveBitmap(sprintf("Graphics/Pokemon/Shadow/%s_%d", species_data.species, species_data.form)) ||
-       pbResolveBitmap(sprintf("Graphics/Pokemon/Shadow/%s", species_data.species))
+      pbResolveBitmap(sprintf("Graphics/Pokemon/Shadow/%s", species_data.species))
       pbMessage("This species has its own shadow sprite in Graphics/Pokemon/Shadow/. The shadow size metric cannot be edited.")
       return false
     end
@@ -185,7 +194,7 @@ class SpritePositioner
       defindex = cmdvals.length - 1 if oldval == i
     end
     cw = Window_CommandPokemon.new(commands)
-    cw.index    = defindex
+    cw.index = defindex
     cw.viewport = @viewport
     ret = false
     oldindex = cw.index
@@ -200,7 +209,7 @@ class SpritePositioner
         pbChangeSpecies(@species)
         refresh
       end
-      if Input.trigger?(Input::ACTION)   # Cycle to next option
+      if Input.trigger?(Input::ACTION) # Cycle to next option
         pbPlayDecisionSE
         @metricsChanged = true if species_data.shadow_size != oldval
         ret = true
@@ -211,6 +220,7 @@ class SpritePositioner
         break
       elsif Input.trigger?(Input::USE)
         pbPlayDecisionSE
+        @metricsChanged = true if species_data.shadow_size != oldval
         break
       end
     end
@@ -245,7 +255,7 @@ class SpritePositioner
     @sprites["info"].visible = true
     ret = false
     loop do
-      sprite.visible = (Graphics.frame_count % 16) < 12   # Flash the selected sprite
+      sprite.visible = (Graphics.frame_count % 16) < 12 # Flash the selected sprite
       Graphics.update
       Input.update
       self.update
@@ -257,7 +267,7 @@ class SpritePositioner
       if (Input.repeat?(Input::UP) || Input.repeat?(Input::DOWN)) && param != 3
         ypos += (Input.repeat?(Input::DOWN)) ? 1 : -1
         case param
-        when 0 then species_data.back_sprite_y  = ypos
+        when 0 then species_data.back_sprite_y = ypos
         when 1 then species_data.front_sprite_y = ypos
         end
         refresh
@@ -265,13 +275,13 @@ class SpritePositioner
       if Input.repeat?(Input::LEFT) || Input.repeat?(Input::RIGHT)
         xpos += (Input.repeat?(Input::RIGHT)) ? 1 : -1
         case param
-        when 0 then species_data.back_sprite_x  = xpos
+        when 0 then species_data.back_sprite_x = xpos
         when 1 then species_data.front_sprite_x = xpos
-        when 3 then species_data.shadow_x       = xpos
+        when 3 then species_data.shadow_x = xpos
         end
         refresh
       end
-      if Input.repeat?(Input::ACTION) && param != 3   # Cycle to next option
+      if Input.repeat?(Input::ACTION) && param != 3 # Cycle to next option
         @metricsChanged = true if xpos != oldxpos || ypos != oldypos
         ret = true
         pbPlayDecisionSE
@@ -301,18 +311,18 @@ class SpritePositioner
     return ret
   end
 
-  def pbMenu(species)
-    pbChangeSpecies(species)
+  def pbMenu
+    # pbChangeSpecies(species)
     refresh
     cw = Window_CommandPokemon.new([
-       _INTL("Set Ally Position"),
-       _INTL("Set Enemy Position"),
-       _INTL("Set Shadow Size"),
-       _INTL("Set Shadow Position"),
-       _INTL("Auto-Position Sprites")
-    ])
-    cw.x        = Graphics.width - cw.width
-    cw.y        = Graphics.height - cw.height
+                                     _INTL("Set Ally Position"),
+                                     _INTL("Set Enemy Position"),
+                                     _INTL("Set Shadow Size"),
+                                     _INTL("Set Shadow Position"),
+                                     _INTL("Auto-Position Sprites")
+                                   ])
+    cw.x = Graphics.width - cw.width
+    cw.y = Graphics.height - cw.height
     cw.viewport = @viewport
     ret = -1
     loop do
@@ -346,14 +356,16 @@ class SpritePositioner
     allspecies = []
     GameData::Species.each do |sp|
       name = (sp.form == 0) ? sp.name : _INTL("{1} (form {2})", sp.real_name, sp.form)
-      allspecies.push([sp.id, sp.species, name]) if name && !name.empty?
+      # allspecies.push([sp.id, sp.species, name]) if name && !name.empty?
+      allspecies.push([sp.id, sp.id_number, name]) if name && !name.empty? # Switched to descending order using the ID of the Pokemon
     end
-    allspecies.sort! { |a, b| a[2] <=> b[2] }
+    # allspecies.sort! { |a, b| a[2] <=> b[2] }
+    allspecies.sort! { |a, b| b[1] <=> a[1] } # Switched to descending order using the ID of the Pokemon
     commands = []
     allspecies.each { |sp| commands.push(sp[2]) }
     cw.commands = commands
-    cw.index    = @oldSpeciesIndex
-    ret = nil
+    cw.index = @oldSpeciesIndex
+    ret = false
     oldindex = -1
     loop do
       Graphics.update
@@ -371,7 +383,7 @@ class SpritePositioner
         break
       elsif Input.trigger?(Input::USE)
         pbChangeSpecies(allspecies[cw.index][0])
-        ret = allspecies[cw.index][0]
+        ret = true
         break
       end
     end
@@ -395,7 +407,7 @@ class SpritePositionerScreen
       species = @scene.pbChooseSpecies
       break if !species
       loop do
-        command = @scene.pbMenu(species)
+        command = @scene.pbMenu
         break if command < 0
         loop do
           par = @scene.pbSetParameter(command)

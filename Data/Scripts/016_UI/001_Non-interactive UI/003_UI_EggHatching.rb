@@ -122,6 +122,12 @@ class PokemonEggHatch_Scene
       $Trainer.party.compact!
       pbMessage(_INTL("{1} was sent to the PC.", @pokemon.name)) { update }
     end
+    if !$Trainer.pokedex.owned?(@pokemon.species)
+      $Trainer.pokedex.register(@pokemon)
+      $Trainer.pokedex.set_owned(@pokemon.species)
+      pbMessage(_INTL("{1}'s data was added to the Pokédex", @pokemon.name))
+      pbShowPokedex(@pokemon.species)
+    end
   end
 
   def pbEndScene
@@ -219,8 +225,6 @@ def pbHatch(pokemon, eggindex)
   end
 
 
-  $Trainer.pokedex.register(pokemon)
-  $Trainer.pokedex.set_owned(pokemon.species)
   pokemon.record_first_moves
   #KurayX sent hatched to PC asking
   if !pbHatchAnimation(pokemon, eggindex)

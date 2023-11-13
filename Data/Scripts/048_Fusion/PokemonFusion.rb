@@ -140,10 +140,13 @@ class SpriteMetafile
   end
 
   def bitmap=(value)
-    if value && !value.disposed?
-      @values[SRC_RECT].set(0, 0, value.width, value.height)
-      @metafile.push([SRC_RECT, @values[SRC_RECT].clone])
-    end
+    @values[BITMAP]= value
+    @metafile.push([BITMAP, value])
+
+    # if value && !value.disposed?
+    #   @values[SRC_RECT].set(0, 0, value.width, value.height)
+    #   @metafile.push([SRC_RECT, @values[SRC_RECT].clone])
+    # end
   end
 
   def src_rect
@@ -341,6 +344,9 @@ class SpriteMetafilePlayer
             sprite.color = value
           when SpriteMetafile::TONE
             sprite.tone = value
+          when SpriteMetafile::BITMAP
+            sprite.bitmap = value
+            echo "\n"
           end
         end
       end
@@ -411,7 +417,125 @@ end
 class PokemonFusionScene
   private
 
-  def pbGenerateMetafiles(s1x, s1y, s2x, s2y, s3x, s3y, sxx, s3xx)
+  def generateSplicerMetaFile(nb_seconds,x_pos,y_pos)
+    dna_splicer = SpriteMetafile.new
+     dna_splicer.opacity = 255
+    dna_splicer.x = x_pos
+    dna_splicer.y = y_pos
+
+    max_y = 160
+    min_y = 140
+
+    dna_splicer.z = 0
+    duration = Graphics.frame_rate * nb_seconds
+    direction = 1
+    dna_splicer.bitmap = pbBitmap("Graphics/Items/POTION")
+
+    for j in 0...Graphics.frame_rate * 50
+      if j % 2 ==0
+        dna_splicer.bitmap = pbBitmap("Graphics/Items/SUPERSPLICERS")
+      else
+        dna_splicer.bitmap = pbBitmap("Graphics/Items/DNASPLICERS")
+      end
+
+      if j % 5 == 0
+        dna_splicer.y += direction
+        direction = -1 if dna_splicer.y == max_y
+        direction = 1 if dna_splicer.y == min_y
+      end
+
+
+      dna_splicer.opacity=0 if j >= duration * 0.75
+      dna_splicer.update
+    end
+    @metafile4 = dna_splicer
+
+  end
+
+  #NEW FUSION ANIMATION (WIP)
+  # def pbGenerateMetafiles(nb_seconds,ellipse_center_x,ellipse_center_y,ellipse_major_axis_length,ellipse_minor_axis_length)
+  #   sprite_head = SpriteMetafile.new
+  #   sprite_body = SpriteMetafile.new
+  #   sprite_fused = SpriteMetafile.new
+  #
+  #   sprite_head.z = 10
+  #   sprite_body.z = 10
+  #
+  #   sprite_head.opacity = 0
+  #   sprite_body.opacity = 0
+  #   sprite_fused.opacity = 0
+  #
+  #   duration = Graphics.frame_rate * nb_seconds
+  #
+  #   sprite_head_angle = 0
+  #   sprite_body_angle = Math::PI
+  #
+  #   #Spinning
+  #   angle_incr = 0.1 #speed basically
+  #   acceleration = 2
+  #   sprite_head.opacity = 255
+  #   sprite_body.opacity = 255
+  #   for j in 0...duration
+  #     if j % 20 == 0
+  #       ellipse_major_axis_length -= 10 if ellipse_minor_axis_length > 100
+  #       ellipse_major_axis_length -= 18 if ellipse_minor_axis_length > 40
+  #       ellipse_minor_axis_length -= 5 if ellipse_minor_axis_length > 10
+  #       angle_incr += 0.02*acceleration
+  #       acceleration+=0.01
+  #     end
+  #
+  #     sprite_head.x = ellipse_center_x + ellipse_major_axis_length * Math.cos(sprite_head_angle)
+  #     sprite_head.y = ellipse_center_y + ellipse_minor_axis_length * Math.sin(sprite_head_angle)
+  #
+  #     sprite_body.x = ellipse_center_x + ellipse_major_axis_length * Math.cos(sprite_body_angle)
+  #     sprite_body.y = ellipse_center_y + ellipse_minor_axis_length * Math.sin(sprite_body_angle)
+  #
+  #     sprite_head_angle += angle_incr
+  #     sprite_body_angle += angle_incr
+  #
+  #
+  #     sprite_head.mirror= sprite_head.y <  ellipse_center_y
+  #     sprite_body.mirror= sprite_body.y <  ellipse_center_y
+  #
+  #     #sprite_body.mirror if sprite_body_angle == 0 || sprite_body_angle == Math::PI
+  #
+  #     sprite_head.update
+  #     sprite_fused.update
+  #     sprite_body.update
+  #   end
+  #   sprite_head.opacity = 0
+  #   sprite_body.opacity = 0
+  #   sprite_fused.opacity = 255
+  #
+  #   @metafile1 = sprite_head
+  #   @metafile2 = sprite_fused
+  #   @metafile3 = sprite_body
+  # end
+
+  # def pbGenerateMetafiles(nb_seconds,ellipse_center_x,ellipse_center_y,ellipse_major_axis_length,ellipse_minor_axis_length)
+
+  #def pbGenerateMetafiles(s1x, s1y, s2x, s2y, s3x, s3y, sxx, s3xx)
+  def pbGenerateMetafiles(nb_seconds,ellipse_center_x,ellipse_center_y,ellipse_major_axis_length,ellipse_minor_axis_length)
+
+    @sprites["rsprite1"].ox = @sprites["rsprite1"].bitmap.width / 2
+    @sprites["rsprite1"].oy = @sprites["rsprite1"].bitmap.height / 2
+
+    @sprites["rsprite3"].ox = @sprites["rsprite3"].bitmap.width / 2
+    @sprites["rsprite3"].oy = @sprites["rsprite3"].bitmap.height / 2
+
+    @sprites["rsprite2"].ox = @sprites["rsprite2"].bitmap.width / 2
+    @sprites["rsprite2"].oy = @sprites["rsprite2"].bitmap.height / 2
+
+    @sprites["rsprite2"].x = Graphics.width / 2
+    @sprites["rsprite1"].y = (Graphics.height - 96) / 2
+    @sprites["rsprite3"].y = (Graphics.height - 96) / 2
+
+    @sprites["rsprite1"].x = (Graphics.width / 2) - 100
+    @sprites["rsprite3"].x = (Graphics.width / 2) + 100
+    s1x, s1y, s2x, s2y, s3x, s3y, sxx, s3xx =@sprites["rsprite1"].ox, @sprites["rsprite1"].oy, @sprites["rsprite2"].ox, @sprites["rsprite2"].oy, @sprites["rsprite3"].ox, @sprites["rsprite3"].oy, @sprites["rsprite1"].x, @sprites["rsprite3"].x
+
+    second = Graphics.frame_rate * 1
+
     sprite = SpriteMetafile.new
     sprite3 = SpriteMetafile.new
     sprite2 = SpriteMetafile.new
@@ -517,7 +641,7 @@ class PokemonFusionScene
 
   # Starts the fusion screen
 
-  def pbStartScreen(pokemon1, pokemon2, newspecies)
+  def pbStartScreen(pokemon1, pokemon2, newspecies,splicerItem)
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     @viewport.z = 99999
@@ -534,6 +658,10 @@ class PokemonFusionScene
     @sprites["rsprite1"] = PokemonSprite.new(@viewport)
     @sprites["rsprite2"] = PokemonSprite.new(@viewport)
     @sprites["rsprite3"] = PokemonSprite.new(@viewport)
+    @sprites["dnasplicer"] = IconSprite.new(300, 150, @viewport)
+    @sprites["dnasplicer"].x=(Graphics.width/2)-30
+    @sprites["dnasplicer"].y=(Graphics.height/2)-50
+    @sprites["dnasplicer"].opacity=0
 
     #KurayX - KURAYX_ABOUT_SHINIES
     @sprites["rsprite1"].setPokemonBitmapFromId(poke1_number, false, pokemon1.shiny?, false, false, pokemon1.shinyValue?, pokemon1.shinyR?, pokemon1.shinyG?, pokemon1.shinyB?)
@@ -559,6 +687,9 @@ class PokemonFusionScene
     #KurayX - KURAYX_ABOUT_SHINIES
     @sprites["rsprite2"].setPokemonBitmapFromId(@newspecies, false, pokemon1.shiny? || pokemon2.shiny?, pokemon1.shiny?, pokemon2.shiny?, domepokehue, domepoker, domepokeg, domepokeb)
     # @sprites["rsprite2"].setPokemonBitmapFromId(@newspecies, false, pokemon1.shiny? || pokemon2.shiny?, pokemon1.shiny?, pokemon2.shiny?)
+
+    splicer_bitmap = _INTL("Graphics/Items/{1}",splicerItem)
+    @sprites["dnasplicer"].setBitmap(splicer_bitmap)
 
     @sprites["rsprite1"].ox = @sprites["rsprite1"].bitmap.width / 2
     @sprites["rsprite1"].oy = @sprites["rsprite1"].bitmap.height / 2
@@ -588,7 +719,21 @@ class PokemonFusionScene
     @sprites["rsprite3"].zoom_x = Settings::FRONTSPRITE_SCALE
     @sprites["rsprite3"].zoom_y = Settings::FRONTSPRITE_SCALE
 
-    pbGenerateMetafiles(@sprites["rsprite1"].ox, @sprites["rsprite1"].oy, @sprites["rsprite2"].ox, @sprites["rsprite2"].oy, @sprites["rsprite3"].ox, @sprites["rsprite3"].oy, @sprites["rsprite1"].x, @sprites["rsprite3"].x)
+    #pbGenerateMetafiles(@sprites["rsprite1"].ox, @sprites["rsprite1"].oy, @sprites["rsprite2"].ox, @sprites["rsprite2"].oy, @sprites["rsprite3"].ox, @sprites["rsprite3"].oy, @sprites["rsprite1"].x, @sprites["rsprite3"].x)
+
+    ellipse_center_x = (Graphics.width/2)
+    ellipse_center_y = (Graphics.height/2)-50
+    ellipse_major_axis_length = 250
+    ellipse_minor_axis_length = 100
+
+    @sprites["rsprite1"].x = ellipse_center_x + ellipse_major_axis_length * Math.cos(0)-75
+    @sprites["rsprite1"].y = ellipse_center_y + ellipse_minor_axis_length * Math.sin(0)
+
+    @sprites["rsprite3"].x = ellipse_center_x + ellipse_major_axis_length * Math.cos(Math::PI)+75
+    @sprites["rsprite3"].y = ellipse_center_y + ellipse_minor_axis_length * Math.sin(Math::PI)
+
+    pbGenerateMetafiles(7.2,ellipse_center_x,ellipse_center_y,ellipse_major_axis_length,ellipse_minor_axis_length)
+    generateSplicerMetaFile(7.2,@sprites["dnasplicer"].x,@sprites["dnasplicer"].y)
 
     @sprites["msgwindow"] = Kernel.pbCreateMessageWindow(@viewport)
     pbFadeInAndShow(@sprites)
@@ -657,10 +802,12 @@ class PokemonFusionScene
     metaplayer1 = SpriteMetafilePlayer.new(@metafile1, @sprites["rsprite1"])
     metaplayer2 = SpriteMetafilePlayer.new(@metafile2, @sprites["rsprite2"])
     metaplayer3 = SpriteMetafilePlayer.new(@metafile3, @sprites["rsprite3"])
+    metaplayer4 = SpriteMetafilePlayer.new(@metafile4, @sprites["dnasplicer"])
 
     metaplayer1.play
     metaplayer2.play
     metaplayer3.play
+    #metaplayer4.play
 
     pbBGMStop()
     pbPlayCry(@pokemon)
@@ -681,6 +828,7 @@ class PokemonFusionScene
       metaplayer1.update
       metaplayer2.update
       metaplayer3.update
+      metaplayer4.update
 
       Graphics.update
       Input.update
@@ -703,7 +851,7 @@ class PokemonFusionScene
       frames.times do
         Graphics.update
       end
-      pbMEPlay("Voltorb Flip Win")
+      # pbMEPlay("Voltorb Flip Win")
       newSpecies = GameData::Species.get(@newspecies)
       newspeciesname = newSpecies.real_name
       oldspeciesname = GameData::Species.get(@pokemon1.species).real_name
@@ -711,7 +859,8 @@ class PokemonFusionScene
       overlay = BitmapSprite.new(Graphics.width, Graphics.height, @viewport).bitmap
 
       sprite_bitmap = @sprites["rsprite2"].getBitmap
-      # drawSpriteCredits(sprite_bitmap.filename,sprite_bitmap.path, @viewport)
+      # drawSpriteCredits(sprite_bitmap.filename, sprite_bitmap.path, @viewport)
+      pbBGMPlay(pbGetWildVictoryME)
       Kernel.pbMessageDisplay(@sprites["msgwindow"],
                               _INTL("\\se[]Congratulations! Your Pokémon were fused into {2}!\\wt[80]", @pokemon1.name, newspeciesname))
 
@@ -823,28 +972,31 @@ class PokemonFusionScene
       @pokemon1.level = setPokemonLevel(@pokemon1.level, @pokemon2.level, superSplicer)
       @pokemon1.calc_stats
       @pokemon1.obtain_method = 0
-
+      pbBGMStop
+      pbBGMPlay($PokemonTemp.cueBGM)
     end
   end
 end
 
-def drawSpriteCredits(filename,path,overlay)
+def drawSpriteCredits(filename, path, viewport)
+  overlay = BitmapSprite.new(Graphics.width, Graphics.height, @viewport).bitmap
+
   return if path.start_with?(Settings::BATTLERS_FOLDER)
-  x= Graphics.width/2
-  y=240
-  spritename = File.basename(filename,'.*')
+  x = Graphics.width / 2
+  y = 240
+  spritename = File.basename(filename, '.*')
 
   discord_name = getSpriteCredits(spritename)
-  return  if !discord_name
+  return if !discord_name
 
-  author_name = File.basename(discord_name,'#*')
-  return  if author_name == nil
+  author_name = File.basename(discord_name, '#*')
+  return if author_name == nil
 
   label_base_color = Color.new(98, 231, 110)
   label_shadow_color = Color.new(27, 169, 40)
 
   #label_shadow_color = Color.new(33, 209, 50)
-  text = _INTL("Sprite by {1}",author_name)
+  text = _INTL("Sprite by {1}", author_name)
   textpos = [[text, x, y, 2, label_base_color, label_shadow_color]]
   pbDrawTextPositions(overlay, textpos)
 end

@@ -573,6 +573,8 @@ class PokeBattle_Battle
       next if !pkmn
       @peer.pbOnLeavingBattle(self,pkmn,@usedInBattle[0][i],true)   # Reset form
       pkmn.item = @initialItems[0][i]
+      pkmn.spriteform_head=nil
+      pkmn.spriteform_body=nil
     end
     return @decision
   end

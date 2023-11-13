@@ -59,7 +59,7 @@ class PokemonSprite < SpriteWrapper
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
-  def setPokemonBitmapFromId(id, back = false, shiny=false, bodyShiny=false, headShiny=false, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2)
+  def setPokemonBitmapFromId(id, back = false, shiny=false, bodyShiny=false, headShiny=false,spriteform_body=nil,spriteform_head=nil, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2)
     @_iconbitmap.dispose if @_iconbitmap
     @_iconbitmap = GameData::Species.sprite_bitmap_from_pokemon_id(id, back,shiny, bodyShiny,headShiny, pokeHue, pokeR, pokeG, pokeB)
     self.bitmap = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
@@ -228,6 +228,8 @@ class PokemonIconSprite < SpriteWrapper
         # @animBitmap.shiftColors(colorshifting)
         @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?)
       end
+    elsif useTripleFusionIcon(@pokemon.species)
+      @animBitmap = AnimatedBitmap.new(pbResolveBitmap(sprintf("Graphics/Icons/iconDNA")))
     else
       @animBitmap = createFusionIcon(@pokemon)
     end
@@ -353,6 +355,11 @@ class PokemonIconSprite < SpriteWrapper
     return false
   end
 
+  def useTripleFusionIcon(species)
+    dexNum = getDexNumberForSpecies(species)
+    return isTripleFusion?(dexNum)
+  end
+
   def useRegularIcon(species)
     dexNum = getDexNumberForSpecies(species)
     return true if dexNum <= Settings::NB_POKEMON
@@ -374,8 +381,8 @@ class PokemonIconSprite < SpriteWrapper
     bodyPoke = GameData::Species.get(bodyPoke_number).species
     headPoke = GameData::Species.get(headPoke_number).species
 
-    icon1 = AnimatedBitmap.new(GameData::Species.icon_filename(headPoke))
-    icon2 = AnimatedBitmap.new(GameData::Species.icon_filename(bodyPoke))
+    icon1 = AnimatedBitmap.new(GameData::Species.icon_filename(headPoke, @pokemon.spriteform_head))
+    icon2 = AnimatedBitmap.new(GameData::Species.icon_filename(bodyPoke, @pokemon.spriteform_body))
 
     #KurayX Github
     directory_name = "Graphics/Pokemon/FusionIcons"
@@ -390,7 +397,7 @@ class PokemonIconSprite < SpriteWrapper
       result_icon = AnimatedBitmap.new(customiconname)
     else
       bitmapFileName = sprintf("Graphics/Pokemon/FusionIcons/icon%03d", dexNum)
-      headPokeFileName = GameData::Species.icon_filename(headPoke)
+      headPokeFileName = GameData::Species.icon_filename(headPoke, @pokemon.spriteform_head)
       bitmapPath = sprintf("%s.png", bitmapFileName)
       IO.copy_stream(headPokeFileName, bitmapPath)
       result_icon = AnimatedBitmap.new(bitmapPath)

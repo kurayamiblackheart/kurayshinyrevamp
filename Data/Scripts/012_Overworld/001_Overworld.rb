@@ -204,8 +204,6 @@ def isFusedEncounter
   return (rand(chance) == 0)
 end
 
-
-
 def getEncounter(encounter_type)
   encounter = $PokemonEncounters.choose_wild_pokemon(encounter_type)
   if $game_switches[SWITCH_RANDOM_WILD]  #wild poke random activated
@@ -279,8 +277,6 @@ Events.onMapChanging += proc { |_sender, e|
   $game_screen.weather(:None, 0, 0)
 }
 
-
-
 # Set up various data related to the new map
 Events.onMapChange += proc { |_sender, e|
   old_map_ID = e[0] # previous map ID, is 0 if no map ID
@@ -324,7 +320,6 @@ Events.onMapChange += proc { |_sender, e|
   end
 }
 
-
 Events.onMapSceneChange += proc { |_sender, e|
   scene = e[0]
   mapChanged = e[1]
@@ -339,7 +334,7 @@ Events.onMapSceneChange += proc { |_sender, e|
   end
   # Display darkness circle on dark maps
   map_metadata = GameData::MapMetadata.try_get($game_map.map_id)
-  if map_metadata && map_metadata.dark_map
+  if map_metadata && map_metadata.dark_map || (darknessEffectOnCurrentMap())
     $PokemonTemp.darknessSprite = DarknessSprite.new
     scene.spriteset.addUserSprite($PokemonTemp.darknessSprite)
     if $PokemonGlobal.flashUsed
@@ -883,10 +878,6 @@ def pbReceiveItem(item, quantity = 1, item_name = "", music = nil, canRandom=tru
   end
   return false # Can't add the item
 end
-
-
-
-
 
 def randomizeGymTM(old_item)
   gym_index = pbGet(VAR_CURRENT_GYM_TYPE)

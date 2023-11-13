@@ -616,6 +616,9 @@ class PokemonEvolutionScene
     # Check for consumed item and check if Pokémon should be duplicated
     pbEvolutionMethodAfterEvolution if !reversing
 
+    # @pokemon
+    # @pokemon.ability
+
     oldAbility = @pokemon.ability.id
     newSpecies = GameData::Species.get(@newspecies)
 
@@ -630,8 +633,13 @@ class PokemonEvolutionScene
     @pokemon.calc_stats
     @pokemon.oldkuraycustomfile = nil
     # See and own evolved species
-    $Trainer.pokedex.register(@pokemon)
-    $Trainer.pokedex.set_owned(@newspecies)
+    if !$Trainer.pokedex.owned?(@newspecies)
+      $Trainer.pokedex.register(@pokemon)
+      $Trainer.pokedex.set_owned(@newspecies)
+      Kernel.pbMessageDisplay(@sprites["msgwindow"],
+                               _INTL("{1}'s data was added to the Pokédex", newspeciesname))
+      @scene.pbShowPokedex(@newspecies)
+    end
     
     # Add base Pokémon of fusions to the Pokédex during evolution
     if (@pokemon.species_data.id_number > NB_POKEMON) && $PokemonSystem.improved_pokedex == 1	

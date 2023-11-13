@@ -14,7 +14,8 @@
 #         PokemonFusion
 #
 
-NB_POKEMON = 420 #351  #aussi CONST_NB_POKE
+NB_POKEMON = Settings::NB_POKEMON#809#420 #351  #aussi CONST_NB_POKE
+CONST_NB_POKE = NB_POKEMON
 
 def pbPokemonBitmapFile(species)
   # Used by the Pokédex

@@ -456,14 +456,18 @@ end
 
 #input: ex: 10.10.png
 def getDexNumFromFilename(filename)
-  splitPoke = filename.split(".")
-  head = splitPoke[0].to_i
-  body = splitPoke[1].to_i
+  begin
+    splitPoke = filename.split(".")
+    head = splitPoke[0].to_i
+    body = splitPoke[1].to_i
 
-  return nil if (body * NB_POKEMON) + head > (NB_POKEMON * NB_POKEMON) + 420
-  return (body * NB_POKEMON) + head
+    return nil if (body * NB_POKEMON) + head > (NB_POKEMON * NB_POKEMON) + NB_POKEMON
+    return (body * NB_POKEMON) + head
+  rescue
+    return nil
+  end
+
 end
-
 
 
 # def getCustomSpeciesList()

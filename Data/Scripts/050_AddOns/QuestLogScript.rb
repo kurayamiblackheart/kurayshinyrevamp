@@ -70,6 +70,7 @@ def pbColor(color)
 end
 
 defaultQuestColor = :PURPLE
+specialQuestColor = :DARKRED
 questBranchHotels = "Hotel Quests"
 questBranchField = "Field Quests"
 
@@ -124,7 +125,7 @@ QUESTS = [
   Quest.new(30, "Diamonds and Pearls", "Find a Diamond Necklace to save the man's marriage.", questBranchHotels, "BW (71)", "Cinnabar Island", defaultQuestColor),
 
   #Goldenrod City
-  Quest.new(31, "Hoenn Pokémon", "A woman wants you to show her a Pokémon native to the Hoenn region.", questBranchHotels, "BW (37)", "Goldenrod City", defaultQuestColor),
+  Quest.new(31, "Hoenn Pokémon", "A woman wants you to show her a Pokémon native to the Hoenn region.", questBranchHotels, "BW (48)", "Goldenrod City", defaultQuestColor),
   Quest.new(32, "Safari Souvenir!", "Bring back a souvenir from the Fuchsia City Safari Zone", questBranchHotels, "BW (28)", "Goldenrod City", defaultQuestColor),
 
   #Violet City
@@ -149,6 +150,20 @@ QUESTS = [
   Quest.new(45, "First Contact (Part 2)", "Ask the sailor at Cinnabar Island's harbour to take you to the uncharted island where the spaceship might be located", questBranchHotels, "BW (92)", "Bond Bridge", defaultQuestColor),
   Quest.new(46, "The rarest fish", "A fisherman wants you to show him a Feebas. Apparently they can be fished around the Sevii Islands when it rains.", questBranchField, "BW056", "Kin Island", defaultQuestColor),
 
+  #Necrozma quest
+  Quest.new(47, "Mysterious prisms", "You found a pedestal with a mysterious prism on it. There seems to be room for more prisms.", questBranchField, "BW_Sabrina", "Pokémon Tower", specialQuestColor),
+
+  Quest.new(48, "The long night (Part 1)", "A mysterious darkness has shrouded some of the region. Meet Sabrina outside of Saffron City's western gate to investigate.", questBranchField, "BW_Sabrina", "Lavender Town", specialQuestColor),
+  Quest.new(49, "The long night (Part 2)", "The mysterious darkness has expended. Meet Sabrina on top of Celadon City's Dept. Store to figure out the source of the darkness.", questBranchField, "BW_Sabrina", "Route 7", specialQuestColor),
+  Quest.new(50, "The long night (Part 3)", "Fuchsia City appears to be unaffected by the darkness. Go investigate to see if you can find out more information.", questBranchField, "BW_Sabrina", "Celadon City", specialQuestColor),
+  Quest.new(51, "The long night (Part 4)", "The mysterious darkness has expended yet again and strange plants have appeared. Follow the plants to see where they lead.", questBranchField, "BW_koga", "Fuchsia City", specialQuestColor),
+  Quest.new(52, "The long night (Part 5)", "You found a strange fruit that appears to be related to the mysterious darkness. Go see professor Oak to have it analyzed.", questBranchField, "BW029", "Safari Zone", specialQuestColor),
+  Quest.new(53, "The long night (Part 6)", "The strange plant you found appears to glow in the mysterious darkness that now covers the entire region. Try to follow the glow to find out the source of the disturbance.", questBranchField, "BW-oak", "Pallet Town", specialQuestColor),
+
+  Quest.new(54, "Nectar garden", "An old man wants you to bring differently colored flowers for the city's garden.", questBranchField, "BW (039)", "Pewter City", defaultQuestColor),
+  Quest.new(55, "The Cursed Forest", "A child wants you to find a floating tree stump in Ilex Forest. What could she be talking about?", questBranchHotels, "BW109", "Goldenrod City", defaultQuestColor),
+  Quest.new(56, "Bitey Pokémon", "A fisherman wants to know what is the sharp-toothed Pokémon that bit him in the Safari Zone's lake.", questBranchHotels, "BW (71)", "Fuchsia City", defaultQuestColor),
+
   # attention: c'est un array et non un hash... l'id est en fait l'index, donc il est important de garder l'ordre
   #out of order quests
   #42 (cinnabar)
@@ -159,7 +174,7 @@ class PokeBattle_Trainer
   attr_accessor :quests
 end
 
-def pbAcceptNewQuest(id, bubblePosition = 20)
+def pbAcceptNewQuest(id, bubblePosition = 20, show_description=true)
   return if isQuestAlreadyAccepted?(id)
   $game_variables[96] += 1 #nb. quests accepted
   $game_variables[97] += 1 #nb. quests active
@@ -171,8 +186,10 @@ def pbAcceptNewQuest(id, bubblePosition = 20)
 
   pbCallBub(1, bubblePosition)
   Kernel.pbMessage("\\C[6]NEW QUEST: " + title)
-  pbCallBub(1, bubblePosition)
-  Kernel.pbMessage("\\C[1]" + description)
+  if show_description
+    pbCallBub(1, bubblePosition)
+    Kernel.pbMessage("\\C[1]" + description)
+  end
   pbAddQuest(id)
 end
 
@@ -185,6 +202,9 @@ def isQuestAlreadyAccepted?(id)
 end
 
 def finishQuest(id)
+  pbMEPlay("Register phone")
+  Kernel.pbMessage("\\C[6]Quest completed!")
+
   $game_variables[222] += 1 # karma
   $game_variables[97] -= 1 #nb. quests active
   $game_variables[98] += 1 #nb. quests completed
@@ -777,10 +797,8 @@ class Questlog
         @sprites["completed#{i}"].src_rect.height = (@sprites["completed#{i}"].bitmap.height / 2).round
         @sprites["completed#{i}"].src_rect.y = (@sprites["completed#{i}"].bitmap.height / 2).round if i == @sel_two
         @sprites["completed#{i}"].opacity = 0
-        pbDrawOutlineText(@main, 11,getCellYPosition(i), 512, 384, @completed[i].name, @completed[i].color, Color.new(0, 0, 0), 1)
+        pbDrawOutlineText(@main, 11, getCellYPosition(i), 512, 384, @completed[i].name, @completed[i].color, Color.new(0, 0, 0), 1)
       end
-
-
 
       pbDrawOutlineText(@main, 0, 175, 512, 384, "No completed quests", pbColor(:WHITE), pbColor(:BLACK), 1) if @completed.size == 0
       pbDrawOutlineText(@main, 0, 2, 512, 384, "Completed Quests", Color.new(255, 255, 255), Color.new(0, 0, 0), 1)
@@ -796,10 +814,10 @@ class Questlog
     end
   end
 
-
   def getCellYPosition(i)
     return 56 + (52 * i)
   end
+
   def pbEnd
     12.times do |i|
       Graphics.update
@@ -807,7 +825,7 @@ class Questlog
       @sprites["btn0"].opacity -= 32 if @sprites["btn0"]
       @sprites["btn1"].opacity -= 32 if @sprites["btn1"]
       @sprites["main"].opacity -= 32 if @sprites["main"]
-      @sprites["char"].opacity -= 40 if @sprites["char"]rescue nil
+      @sprites["char"].opacity -= 40 if @sprites["char"] rescue nil
       @sprites["char2"].opacity -= 40 if @sprites["char2"] rescue nil
     end
   end

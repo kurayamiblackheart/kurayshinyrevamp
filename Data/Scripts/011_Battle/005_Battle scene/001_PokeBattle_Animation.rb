@@ -90,6 +90,7 @@ module PokeBattle_BallAnimationMixin
     if !pbResolveBitmap(file_path)
       file_path = sprintf("Graphics/Battle animations/ball_%02d", pbGetBallType(poke_ball).id_number)
     end
+    echoln file_path
     ball = addNewSprite(ballX, ballY, file_path, PictureOrigin::Center)
     @ballSprite = @pictureSprites.last
     if @ballSprite.bitmap.width >= @ballSprite.bitmap.height

@@ -40,30 +40,35 @@ module PBDayNight
 
   # Returns true if it's day.
   def self.isDay?(time=nil)
+    return false if darknessEffectOnCurrentMap()
     time = pbGetTimeNow if !time
     return (time.hour>=5 && time.hour<20)
   end
 
   # Returns true if it's night.
   def self.isNight?(time=nil)
+    return true if darknessEffectOnCurrentMap()
     time = pbGetTimeNow if !time
     return (time.hour>=20 || time.hour<5)
   end
 
   # Returns true if it's morning.
   def self.isMorning?(time=nil)
+    return false if darknessEffectOnCurrentMap()
     time = pbGetTimeNow if !time
     return (time.hour>=5 && time.hour<10)
   end
 
   # Returns true if it's the afternoon.
   def self.isAfternoon?(time=nil)
+    return false if darknessEffectOnCurrentMap()
     time = pbGetTimeNow if !time
     return (time.hour>=14 && time.hour<17)
   end
 
   # Returns true if it's the evening.
   def self.isEvening?(time=nil)
+    return false if darknessEffectOnCurrentMap()
     time = pbGetTimeNow if !time
     return (time.hour>=17 && time.hour<20)
   end
@@ -89,6 +94,7 @@ module PBDayNight
   end
 
   def self.pbGetDayNightMinutes
+    return 0 if darknessEffectOnCurrentMap()  #midnight
     now = pbGetTimeNow   # Get the current in-game time
     return (now.hour*60)+now.min
   end
@@ -102,6 +108,13 @@ module PBDayNight
     minute = realMinutes%60
     tone         = PBDayNight::HourlyTones[hour]
     nexthourtone = PBDayNight::HourlyTones[(hour+1)%24]
+
+    darkness_tone =  Tone.new(-80, -100, 05, 55)
+    if $game_switches[SWITCH_KANTO_DARKNESS] || darknessEffectOnCurrentMap()
+      tone = darkness_tone
+      nexthourtone = darkness_tone
+    end
+
     # Calculate current tint according to current and next hour's tint and
     # depending on current minute
     @cachedTone.red   = ((nexthourtone.red-tone.red)*minute*@oneOverSixty)+tone.red

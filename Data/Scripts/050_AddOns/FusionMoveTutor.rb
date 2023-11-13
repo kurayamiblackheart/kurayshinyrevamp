@@ -81,6 +81,19 @@ class FusionTutorService
     @show_full_list = value
   end
 
+  #todo: these moves
+  # DRAGONHAMMER
+  # FIRELASH
+  # BEAKBLAST
+  # CHATTER
+  # SOLARBLADE
+  # LEAFAGE
+  # HEADCHARGE
+  # HYPERSPACEHOLE
+  # HOLDBACK
+  # CELEBRATE
+  # HEARTSWAP
+  
   def getCompatibleMoves(includeLegendaries = false)
     compatibleMoves = []
     #normal moves
@@ -117,7 +130,7 @@ class FusionTutorService
       compatibleMoves << :SPIKYSHIELD if is_fusion_of([:FERROSEED, :FERROTHORN]) || (is_fusion_of([:SANDSLASH, :JOLTEON, :CLOYSTER]) && hasType(:GRASS))
       compatibleMoves << :STRENGTHSAP if is_fusion_of([:ODDISH, :GLOOM, :VILEPLUME, :BELLOSSOM, :HOPPIP, :SKIPLOOM, :JUMPLUFF, :BELLSPROUT, :WEEPINBELL, :VICTREEBEL, :PARAS, :PARASECT, :DRIFBLIM, :BRELOOM])
       compatibleMoves << :SHOREUP if is_fusion_of([:GRIMER, :MUK]) && hasType(:GROUND)
-      compatibleMoves << :ICEHAMMER if (canLearnMove(:CRABHAMMER) || canLearnMove(:GRASSHAMMER)) && hasType(:ICE)
+      compatibleMoves << :ICEHAMMER if (canLearnMove(:CRABHAMMER) || canLearnMove(:GRASSHAMMER) || canLearnMove(:HAMMERARM)) && hasType(:ICE)
       compatibleMoves << :MULTIATTACK if is_fusion_of([:ARCEUS, :MEW, :GENESECT])
       compatibleMoves << :REVELATIONDANCE if is_fusion_of([:KECLEON, :BELLOSSOM, :CLEFAIRY, :CLEFABLE, :CLEFFA])
       compatibleMoves << :BANEFULBUNKER if is_fusion_of([:TENTACOOL, :TENTACRUEL, :NIDORINA, :NIDORINO, :NIDOQUEEN, :NIDOKING, :GRIMER, :MUK, :QWILFISH])

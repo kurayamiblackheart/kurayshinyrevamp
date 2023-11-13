@@ -21,6 +21,15 @@ module GameData
     attr_reader :must_walk
     attr_reader :ignore_passability
 
+    #oricorio
+    attr_reader :flowerRed
+    attr_reader :flowerPink
+    attr_reader :flowerYellow
+    attr_reader :flowerBlue
+    attr_reader :flower
+    attr_reader :trashcan
+    attr_reader :sharpedoObstacle
+
     DATA = {}
 
     extend ClassMethods
@@ -61,6 +70,15 @@ module GameData
       @shows_reflections = false #= hash[:shows_reflections]      || false
       @must_walk = hash[:must_walk] || false
       @ignore_passability = hash[:ignore_passability] || false
+
+      @flowerRed = hash[:flowerRed] || false
+      @flowerYellow = hash[:flowerYellow] || false
+      @flowerPink = hash[:flowerPink] || false
+      @flowerBlue = hash[:flowerBlue] || false
+      @flower = hash[:flower] || false
+      @trashcan = hash[:trashcan] || false
+      @sharpedoObstacle = hash[:sharpedoObstacle] || false
+
     end
 
     def can_surf_freely
@@ -202,5 +220,46 @@ GameData::TerrainTag.register({
                                 :id => :Puddle,
                                 :id_number => 16,
                                 :battle_environment => :Puddle,
-                                :shows_reflections => false
+                                :shows_reflections => true
+                              })
+
+GameData::TerrainTag.register({
+                                :id => :FlowerRed,
+                                :id_number => 17,
+                                :flowerRed => true,
+                                :flower => true
+                              })
+GameData::TerrainTag.register({
+                                :id => :FlowerYellow,
+                                :id_number => 18,
+                                :flowerYellow => true,
+                                :flower => true
+                              })
+GameData::TerrainTag.register({
+                                :id => :FlowerPink,
+                                :id_number => 19,
+                                :flowerPink => true,
+                                :flower => true
+                              })
+GameData::TerrainTag.register({
+                                :id => :FlowerBlue,
+                                :id_number => 20,
+                                :flowerBlue => true,
+                                :flower => true
+                              })
+GameData::TerrainTag.register({
+                                :id => :FlowerOther,
+                                :id_number => 21,
+                                :flower => true
+                              })
+GameData::TerrainTag.register({
+                                :id => :Trashcan,
+                                :id_number => 22,
+                                :trashcan => true
+                              })
+
+GameData::TerrainTag.register({
+                                :id => :SharpedoObstacle,
+                                :id_number => 23,
+                                :sharpedoObstacle => true
                               })

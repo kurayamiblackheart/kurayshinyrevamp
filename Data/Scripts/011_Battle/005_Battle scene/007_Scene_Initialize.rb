@@ -114,125 +114,118 @@ class PokeBattle_Scene
     end
   end
 
-  def pbCreateBackdropSprites
+  def getBackdropTimeSuffix()
+    @battle.time = 2 if darknessEffectOnCurrentMap()
     case @battle.time
-    when 1 then time = "eve"
-    when 2 then time = "night"
+    when 1 then
+      time = "eve"
+    when 2 then
+      time = "night"
     end
-    # Put everything together into backdrop, bases and message bar filenames
-    backdropFilename = @battle.backdrop.downcase
-    baseFilename = @battle.backdrop.downcase
-    baseFilename = sprintf("%s_%s",baseFilename,@battle.backdropBase).downcase if @battle.backdropBase
-    messageFilename = @battle.backdrop.downcase
-    if time
-      trialName = sprintf("%s_%s",backdropFilename,time).downcase
-      if pbResolveBitmap(sprintf("Graphics/Battlebacks/"+trialName+"_bg"))
-        backdropFilename = trialName
-      end
-      trialName = sprintf("%s_%s",baseFilename,time).downcase
-      if pbResolveBitmap(sprintf("Graphics/Battlebacks/"+trialName+"_base0"))
-        baseFilename = trialName
-      end
-      trialName = sprintf("%s_%s",messageFilename,time).downcase
-      if pbResolveBitmap(sprintf("Graphics/Battlebacks/"+trialName+"_message"))
-        messageFilename = trialName
-      end
-    end
-    if !pbResolveBitmap(sprintf("Graphics/Battlebacks/"+baseFilename+"_base0")) &&
-       @battle.backdropBase
-      baseFilename = @battle.backdropBase
-      if time
-        trialName = sprintf("%s_%s",baseFilename,time).downcase
-        if pbResolveBitmap(sprintf("Graphics/Battlebacks/"+trialName+"_base0"))
-          baseFilename = trialName
-        end
-      end
-    end
-    # Finalise filenames
-    # battleBG   = "Graphics/Battlebacks/"+backdropFilename+"_bg"
-    # playerBase = "Graphics/Battlebacks/"+baseFilename+"_base0"
-    # enemyBase  = "Graphics/Battlebacks/"+baseFilename+"_base1"
-    # messageBG  = "Graphics/Battlebacks/"+messageFilename+"_message"
+    return time
+  end
 
-    battleBG   = "Graphics/Battlebacks/battlebg/"+backdropFilename
-    playerBase = "Graphics/Battlebacks/playerbase/"+baseFilename
-    enemyBase  = "Graphics/Battlebacks/enemybase/"+baseFilename
-    messageBG  = "Graphics/Battlebacks/"+messageFilename+"_message"
-    if !pbResolveBitmap(messageBG)
-      messageBG = "Graphics/Battlebacks/default_message"
+  def getBackdropBasePath(type)
+    case type
+    when :BACKGROUND then
+      base_path = "Graphics/Battlebacks/battlebg/"
+    when :ENEMYBASE then
+      base_path = "Graphics/Battlebacks/enemybase/"
+    when :PLAYERBASE then
+      base_path = "Graphics/Battlebacks/playerbase/"
+    when :MESSAGE then
+      base_path = "Graphics/Battlebacks/"
     end
-    # Apply graphics
-    bg = pbAddSprite("battle_bg",0,0,battleBG,@viewport)
+    return base_path
+  end
+
+  def getBackdropSpriteFullPath(filename, backdrop_type)
+    time = getBackdropTimeSuffix()
+    base_path = getBackdropBasePath(backdrop_type)
+    default_name = base_path + filename
+    time_adjusted_name = _INTL("{1}{2}_{3}",base_path,filename,time)
+    if pbResolveBitmap(time_adjusted_name)
+      return time_adjusted_name
+    end
+    return default_name
+  end
+
+
+  def apply_backdrop_graphics(battleBG,playerBase,enemyBase,messageBG)
+    bg = pbAddSprite("battle_bg", 0, 0, battleBG, @viewport)
     bg.z = 0
-    bg = pbAddSprite("battle_bg2",-Graphics.width,0,battleBG,@viewport)
-    bg.z      = 0
+    bg = pbAddSprite("battle_bg2", -Graphics.width, 0, battleBG, @viewport)
+    bg.z = 0
     bg.mirror = true
     for side in 0...2
       baseX, baseY = PokeBattle_SceneConstants.pbBattlerPosition(side)
-      base = pbAddSprite("base_#{side}",baseX,baseY,
-         (side==0) ? playerBase : enemyBase,@viewport)
-      base.z    = 1
+      base = pbAddSprite("base_#{side}", baseX, baseY,
+                         (side == 0) ? playerBase : enemyBase, @viewport)
+      base.z = 1
       if base.bitmap
-        base.ox = base.bitmap.width/2
-        base.oy = (side==0) ? base.bitmap.height : base.bitmap.height/2
+        base.ox = base.bitmap.width / 2
+        base.oy = (side == 0) ? base.bitmap.height : base.bitmap.height / 2
       end
     end
-	# Trapstarr All over this bit
-    if $PokemonSystem.darkmode && $PokemonSystem.darkmode == 1
-      messageFilename = "default_message_darkmode"
-    elsif $PokemonSystem.battlegui == 1 || $PokemonSystem.battlegui == 2
-      messageFilename = "default_message_M2"
-    else
-      messageFilename = "default_message"
-    end
-
-    messageBG  = "Graphics/Battlebacks/" + messageFilename
-
-
-    if !pbResolveBitmap(messageBG)
-      messageBG = "Graphics/Battlebacks/default_message"
-    end
-    cmdBarBG = pbAddSprite("cmdBar_bg",0,Graphics.height-96,messageBG,@viewport)
+    cmdBarBG = pbAddSprite("cmdBar_bg", 0, Graphics.height - 96, messageBG, @viewport)
     cmdBarBG.z = 180
   end
 
-  def pbCreateTrainerBackSprite(idxTrainer,trainerType,numTrainers=1)
-    if idxTrainer==0   # Player's sprite
+  DEFAULT_BACKGROUND_NAME = "indoora"
+  DEFAULT_MESSAGE_NAME = "default_message"
+  def pbCreateBackdropSprites
+    background_name = @battle.backdrop ? @battle.backdrop.downcase : DEFAULT_BACKGROUND_NAME
+    battlebase_name = @battle.backdropBase ? @battle.backdropBase.downcase : background_name
+    message_name = background_name + "_message"
+
+    battleBG =getBackdropSpriteFullPath(background_name, :BACKGROUND)
+    playerBase =getBackdropSpriteFullPath(battlebase_name, :PLAYERBASE)
+    enemyBase =getBackdropSpriteFullPath(battlebase_name, :ENEMYBASE)
+    messageBG =getBackdropSpriteFullPath(message_name, :MESSAGE)
+    if !pbResolveBitmap(messageBG)
+      messageBG = "Graphics/Battlebacks/default_message"
+    end
+    apply_backdrop_graphics(battleBG,playerBase,enemyBase,messageBG)
+  end
+
+  def pbCreateTrainerBackSprite(idxTrainer, trainerType, numTrainers = 1)
+    if idxTrainer == 0 # Player's sprite
       trainerFile = GameData::TrainerType.player_back_sprite_filename(trainerType)
-    else   # Partner trainer's sprite
+    else
+      # Partner trainer's sprite
       trainerFile = GameData::TrainerType.back_sprite_filename(trainerType)
     end
-    spriteX, spriteY = PokeBattle_SceneConstants.pbTrainerPosition(0,idxTrainer,numTrainers)
-    trainer = pbAddSprite("player_#{idxTrainer+1}",spriteX,spriteY,trainerFile,@viewport)
+    spriteX, spriteY = PokeBattle_SceneConstants.pbTrainerPosition(0, idxTrainer, numTrainers)
+    trainer = pbAddSprite("player_#{idxTrainer + 1}", spriteX, spriteY, trainerFile, @viewport)
     return if !trainer.bitmap
     # Alter position of sprite
-    trainer.z  = 30+idxTrainer
-    if trainer.bitmap.width>trainer.bitmap.height*2
-      trainer.src_rect.x     = 0
-      trainer.src_rect.width = trainer.bitmap.width/5
+    trainer.z = 30 + idxTrainer
+    if trainer.bitmap.width > trainer.bitmap.height * 2
+      trainer.src_rect.x = 0
+      trainer.src_rect.width = trainer.bitmap.width / 5
     end
-    trainer.ox = trainer.src_rect.width/2
+    trainer.ox = trainer.src_rect.width / 2
     trainer.oy = trainer.bitmap.height
   end
 
-  def pbCreateTrainerFrontSprite(idxTrainer,trainerType,numTrainers=1,sprite_override=nil)
+  def pbCreateTrainerFrontSprite(idxTrainer, trainerType, numTrainers = 1, sprite_override = nil)
     trainerFile = GameData::TrainerType.front_sprite_filename(trainerType)
     trainerFile = sprite_override if sprite_override
 
-    spriteX, spriteY = PokeBattle_SceneConstants.pbTrainerPosition(1,idxTrainer,numTrainers)
-    trainer = pbAddSprite("trainer_#{idxTrainer+1}",spriteX,spriteY,trainerFile,@viewport)
+    spriteX, spriteY = PokeBattle_SceneConstants.pbTrainerPosition(1, idxTrainer, numTrainers)
+    trainer = pbAddSprite("trainer_#{idxTrainer + 1}", spriteX, spriteY, trainerFile, @viewport)
     return if !trainer.bitmap
     # Alter position of sprite
-    trainer.z  = 7+idxTrainer
-    trainer.ox = trainer.src_rect.width/2
+    trainer.z = 7 + idxTrainer
+    trainer.ox = trainer.src_rect.width / 2
     trainer.oy = trainer.bitmap.height
   end
 
   def pbCreatePokemonSprite(idxBattler)
     sideSize = @battle.pbSideSize(idxBattler)
-    batSprite = PokemonBattlerSprite.new(@viewport,sideSize,idxBattler,@animations)
+    batSprite = PokemonBattlerSprite.new(@viewport, sideSize, idxBattler, @animations)
     @sprites["pokemon_#{idxBattler}"] = batSprite
-    shaSprite = PokemonBattlerShadowSprite.new(@viewport,sideSize,idxBattler)
+    shaSprite = PokemonBattlerShadowSprite.new(@viewport, sideSize, idxBattler)
     shaSprite.visible = false
     @sprites["shadow_#{idxBattler}"] = shaSprite
   end
