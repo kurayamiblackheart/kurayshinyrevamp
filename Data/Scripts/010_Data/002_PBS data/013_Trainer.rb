@@ -198,6 +198,7 @@ module GameData
 
     def replace_species_to_randomized(species, trainerId, pokemonIndex)
       return species if $game_switches[SWITCH_FIRST_RIVAL_BATTLE]
+      return species if getDexNumberForSpecies(species) >= Settings::ZAPMOLCUNO_NB
       if isGymBattle() && $game_switches[SWITCH_RANDOMIZE_GYMS_SEPARATELY]
         return replace_species_to_randomized_gym(species, trainerId, pokemonIndex)
       end

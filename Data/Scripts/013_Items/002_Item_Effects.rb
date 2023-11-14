@@ -1083,10 +1083,10 @@ ItemHandlers::UseOnPokemon.add(:ABILITYCAPSULE, proc { |item, pkmn, scene|
   next false
 })
 
-ItemHandlers::UseInField.add(:REGITABLET, proc { |item|
-  pbCommonEvent(COMMON_EVENT_REGI_TABLET)
-  next true
-})
+# ItemHandlers::UseInField.add(:REGITABLET, proc { |item|
+#   pbCommonEvent(COMMON_EVENT_REGI_TABLET)
+#   next true
+# })
 
 ItemHandlers::UseFromBag.add(:POKERADAR, proc { |item|
   next (pbCanUsePokeRadar?) ? 2 : 0

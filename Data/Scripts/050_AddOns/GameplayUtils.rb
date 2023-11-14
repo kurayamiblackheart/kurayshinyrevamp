@@ -584,7 +584,13 @@ def getMtMoonDirection()
     143, #Route 23
     167, #Crimson city
   ]
-  maps_west = []
+  maps_west = [
+    106, #route 4
+    1, #cerulean
+    495, #route 9
+    351, #route 9
+    10 #cerulean cape
+  ]
   return 2 if maps_south.include?($game_map.map_id)
   return 4 if maps_west.include?($game_map.map_id)
   return 6 if maps_east.include?($game_map.map_id)
