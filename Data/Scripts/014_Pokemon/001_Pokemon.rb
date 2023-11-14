@@ -1724,7 +1724,7 @@ class Pokemon
   #KurayX
   def as_json(options={})
     {
-      "json_version" => "0.1",
+      "json_version" => "0.2",
       "species" => @species,
       "form" => @form,
       "forced_form" => @forced_form,
@@ -1791,7 +1791,9 @@ class Pokemon
       "head_shinyb" => @head_shinyb,
       "body_shinyb" => @body_shinyb,
       "kuray_no_evo" => @kuray_no_evo,
-      "ribbons" => @ribbons.clone
+      "ribbons" => @ribbons.clone,
+      "spriteform_body" => @spriteform_body,
+      "spriteform_head" => @spriteform_head
     }
   end
 
@@ -1807,6 +1809,16 @@ class Pokemon
   #KurayX
   def load_json(jsonparse, jsonfile=nil, forcereadonly=false)
     @imported = true
+    if jsonparse.key?('json_version')
+      json_version = jsonparse['json_version']
+      # Perform version-specific loading logic based on json_version value
+      case json_version
+      when '0.2'
+        # Load new variables from version 0.2
+        @spriteform_body = jsonparse['spriteform_body']
+        @spriteform_head = jsonparse['spriteform_head']
+      end
+    end
     @species = jsonparse['species']
     @form = jsonparse['form']
     @forced_form = jsonparse['forced_form']

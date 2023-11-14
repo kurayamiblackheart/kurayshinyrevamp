@@ -7,9 +7,9 @@ module GameData
       if back
         #KurayX - KURAYX_ABOUT_SHINIES
         if makeShiny
-          ret = self.back_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?,pkmn.kuraycustomfile?)
+          ret = self.back_sprite_bitmap(species, pkmn.spriteform_body, pkmn.spriteform_head, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?,pkmn.kuraycustomfile?)
         else
-          ret = self.back_sprite_bitmap(species, nil, nil, false, false, false)
+          ret = self.back_sprite_bitmap(species, pkmn.spriteform_body, pkmn.spriteform_head, false, false, false)
         end
       else
         #KurayX - KURAYX_ABOUT_SHINIES
@@ -85,18 +85,21 @@ module GameData
 
     #KurayX - KURAYX_ABOUT_SHINIES
     #KuraSprite
-    def self.front_sprite_bitmap(dex_number, a = 0, b = 0, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, cusFile=nil)
+    def self.front_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, cusFile=nil)
+      spriteform_body = nil if spriteform_body == 0
+      spriteform_head = nil if spriteform_head == 0
+
       #la méthode est utilisé ailleurs avec d'autres arguments (gender, form, etc.) mais on les veut pas
       if dex_number.is_a?(Symbol)
         dex_number = GameData::Species.get(dex_number).id_number
       end
       if cusFile == nil
-        filename = self.sprite_filename(dex_number)
+        filename = self.sprite_filename(dex_number, spriteform_body, spriteform_head)
       else
         if pbResolveBitmap(cusFile) && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
           filename = cusFile
         else
-          filename = self.sprite_filename(dex_number)
+          filename = self.sprite_filename(dex_number, spriteform_body, spriteform_head)
         end
       end
       sprite = (filename) ? AnimatedBitmap.new(filename) : nil
@@ -114,14 +117,14 @@ module GameData
 
     #KurayX - KURAYX_ABOUT_SHINIES
     #KuraSprite
-    def self.back_sprite_bitmap(dex_number, b = 0, form = 0, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, cusFile=nil)
+    def self.back_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, cusFile=nil)
       if cusFile == nil
-        filename = self.sprite_filename(dex_number)
+        filename = self.sprite_filename(dex_number, spriteform_body, spriteform_head)
       else
         if pbResolveBitmap(cusFile) && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
           filename = cusFile
         else
-          filename = self.sprite_filename(dex_number)
+          filename = self.sprite_filename(dex_number, spriteform_body, spriteform_head)
         end
       end
       sprite = (filename) ? AnimatedBitmap.new(filename) : nil
@@ -137,7 +140,7 @@ module GameData
       return sprite
     end
 
-    def self.egg_sprite_bitmap(dex_number, form = 0)
+    def self.egg_sprite_bitmap(dex_number, form = nil)
       filename = self.egg_sprite_filename(dex_number, form)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
@@ -145,7 +148,9 @@ module GameData
     def self.getSpecialSpriteName(dexNum)
       base_path = "Graphics/Battlers/special/"
       case dexNum
-      when Settings::ZAPMOLCUNO_NB..Settings::ZAPMOLCUNO_NB + 1
+      when Settings::ZAPMOLCUNO_NB
+        return sprintf(base_path + "144.145.146")
+      when Settings::ZAPMOLCUNO_NB + 1
         return sprintf(base_path + "144.145.146")
       when Settings::ZAPMOLCUNO_NB + 2
         return sprintf(base_path + "243.244.245")
@@ -197,15 +202,29 @@ module GameData
         return sprintf(base_path +"343.344.345")
       when Settings::ZAPMOLCUNO_NB + 25 #sinnohboss right
         return sprintf(base_path +"invisible")
+      when Settings::ZAPMOLCUNO_NB + 25 #cardboard
+        return sprintf(base_path +"invisible")
+      when Settings::ZAPMOLCUNO_NB + 26 #cardboard
+        return sprintf(base_path + "cardboard")
+      when Settings::ZAPMOLCUNO_NB + 27 #Triple regi
+        return sprintf(base_path + "447.448.449")
       else
         return sprintf(base_path + "000")
       end
     end
 
-    def self.sprite_filename(dex_number)
+    def self.sprite_filename(dex_number, spriteform_body = nil, spriteform_head = nil)
+      
+      #dex_number = GameData::NAT_DEX_MAPPING[dex_number] ? GameData::NAT_DEX_MAPPING[dex_number] : dex_number
+      if dex_number.is_a?(GameData::Species)
+        dex_number = dex_number.id_number
+      end
+      if dex_number.is_a?(Symbol)
+        dex_number = getDexNumberForSpecies(dex_number)
+      end
       return nil if dex_number == nil
       if dex_number <= Settings::NB_POKEMON
-        return get_unfused_sprite_path(dex_number)
+        return get_unfused_sprite_path(dex_number, spriteform_body)
       else
         if dex_number >= Settings::ZAPMOLCUNO_NB
           specialPath = getSpecialSpriteName(dex_number)
@@ -214,7 +233,7 @@ module GameData
         else
           body_id = getBodyID(dex_number)
           head_id = getHeadID(dex_number, body_id)
-          return get_fusion_sprite_path(head_id,body_id)
+          return get_fusion_sprite_path(head_id, body_id, spriteform_body, spriteform_head)
           # folder = head_id.to_s
           # filename = sprintf("%s.%s.png", head_id, body_id)
         end
@@ -234,47 +253,162 @@ module GameData
   end
 end
 
-def get_unfused_sprite_path(dex_number)
+
+def get_unfused_sprite_path(dex_number_id, spriteform = nil)
+  dex_number = dex_number_id.to_s
+  spriteform_letter = spriteform ? "_" + spriteform.to_s : ""
   folder = dex_number.to_s
-  filename = sprintf("%s.png", dex_number)
+  substitution_id = _INTL("{1}{2}", dex_number, spriteform_letter)
 
-  if alt_sprites_substitutions_available && $PokemonGlobal.alt_sprite_substitutions.keys.include?(dex_number)
-    return $PokemonGlobal.alt_sprite_substitutions[dex_number]
+  if alt_sprites_substitutions_available && $PokemonGlobal.alt_sprite_substitutions.keys.include?(substitution_id)
+    substitutionPath = $PokemonGlobal.alt_sprite_substitutions[substitution_id]
+    return substitutionPath if pbResolveBitmap(substitutionPath)
   end
+  random_alt = get_random_alt_letter_for_unfused(dex_number, true) #nil if no main
+  random_alt = "" if !random_alt
 
-  normal_path = Settings::BATTLERS_FOLDER + folder + "/" + filename
+
+  filename = _INTL("{1}{2}{3}.png", dex_number, spriteform_letter,random_alt)
+
+  normal_path = Settings::BATTLERS_FOLDER + folder + spriteform_letter + "/" + filename
   lightmode_path = Settings::BATTLERS_FOLDER + filename
-  return normal_path if pbResolveBitmap(normal_path)
-  return lightmode_path
+
+  path = random_alt == "" ? normal_path : lightmode_path
+
+  if pbResolveBitmap(path)
+    record_sprite_substitution(substitution_id,path)
+    return path
+  end
+  downloaded_path = download_unfused_main_sprite(dex_number, random_alt)
+  if pbResolveBitmap(downloaded_path)
+    record_sprite_substitution(substitution_id,downloaded_path)
+    return downloaded_path
+  end
+  return normal_path
 end
 
 def alt_sprites_substitutions_available
   return $PokemonGlobal && $PokemonGlobal.alt_sprite_substitutions
 end
 
-def get_fusion_sprite_path(head_id,body_id)
+def print_stack_trace
+  stack_trace = caller
+  stack_trace.each_with_index do |call, index|
+    echo("#{index + 1}: #{call}")
+  end
+end
+
+def record_sprite_substitution(substitution_id, sprite_name)
+  return if !$PokemonGlobal
+  return if !$PokemonGlobal.alt_sprite_substitutions
+  $PokemonGlobal.alt_sprite_substitutions[substitution_id] = sprite_name
+end
+
+def get_fusion_sprite_path(head_id, body_id, spriteform_body = nil, spriteform_head = nil)
+  #Todo: ça va chier si on fusionne une forme d'un pokemon avec une autre forme, mais pas un problème pour tout de suite
+  form_suffix = ""
+  form_suffix += "_" + spriteform_body.to_s if spriteform_body
+  form_suffix += "_" + spriteform_head.to_s if spriteform_head
+
   #Swap path if alt is selected for this pokemon
-  dex_num = getSpeciesIdForFusion(head_id,body_id)
-  if alt_sprites_substitutions_available && $PokemonGlobal.alt_sprite_substitutions.keys.include?(dex_num)
-    return $PokemonGlobal.alt_sprite_substitutions[dex_num]
+  dex_num = getSpeciesIdForFusion(head_id, body_id)
+  substitution_id = dex_num.to_s + form_suffix
+
+
+  if alt_sprites_substitutions_available && $PokemonGlobal.alt_sprite_substitutions.keys.include?(substitution_id)
+    substitutionPath= $PokemonGlobal.alt_sprite_substitutions[substitution_id]
+    return substitutionPath if pbResolveBitmap(substitutionPath)
   end
 
-  #Try local custom sprite
-  filename = sprintf("%s.%s.png", head_id, body_id)
-  local_custom_path = Settings::CUSTOM_BATTLERS_FOLDER_INDEXED + head_id.to_s + "/" +filename
-  return local_custom_path if pbResolveBitmap(local_custom_path)
+  random_alt = get_random_alt_letter_for_custom(head_id, body_id) #nil if no main
+  random_alt = "" if !random_alt
 
+  #Try local custom sprite
+  spriteform_body_letter = spriteform_body ? "_" + spriteform_body.to_s : ""
+  spriteform_head_letter = spriteform_head ? "_" + spriteform_head.to_s : ""
+
+  filename = _INTL("{1}{2}.{3}{4}{5}.png", head_id, spriteform_head_letter, body_id, spriteform_body_letter, random_alt)
+  local_custom_path = Settings::CUSTOM_BATTLERS_FOLDER_INDEXED + head_id.to_s + spriteform_head_letter + "/" + filename
+  if pbResolveBitmap(local_custom_path)
+    record_sprite_substitution(substitution_id, local_custom_path)
+    return local_custom_path
+  end
   #Try to download custom sprite if none found locally
-  downloaded_custom = download_custom_sprite(head_id,body_id)
-  return downloaded_custom if downloaded_custom
+  downloaded_custom = download_custom_sprite(head_id, body_id, spriteform_body_letter, spriteform_head_letter, random_alt)
+  if downloaded_custom
+    record_sprite_substitution(substitution_id, downloaded_custom)
+    return downloaded_custom
+  end
 
   #Try local generated sprite
-  local_generated_path = Settings::BATTLERS_FOLDER + head_id.to_s + "/" + filename
+  local_generated_path = Settings::BATTLERS_FOLDER + head_id.to_s + spriteform_head_letter + "/" + filename
   return local_generated_path if pbResolveBitmap(local_generated_path)
 
-  #Download generate sprite if nothing else found
-  autogen_path= download_autogen_sprite(head_id,body_id)
+  #Download generated sprite if nothing else found
+  autogen_path = download_autogen_sprite(head_id, body_id)
   return autogen_path if pbResolveBitmap(autogen_path)
 
   return Settings::DEFAULT_SPRITE_PATH
+end
+
+def get_random_alt_letter_for_custom(head_id, body_id, onlyMain = true)
+  spriteName = _INTL("{1}.{2}", head_id, body_id)
+  if onlyMain
+    return list_main_sprites_letters(spriteName).sample
+  else
+    return list_all_sprites_letters(spriteName).sample
+  end
+end
+
+def get_random_alt_letter_for_unfused(dex_num, onlyMain = true)
+  spriteName = _INTL("{1}", dex_num)
+  if onlyMain
+    letters_list= list_main_sprites_letters(spriteName)
+  else
+    letters_list= list_all_sprites_letters(spriteName)
+  end
+  letters_list << ""  #add main sprite
+  return letters_list.sample
+end
+
+def list_main_sprites_letters(spriteName)
+  all_sprites = map_alt_sprite_letters_for_pokemon(spriteName)
+  main_sprites = []
+  all_sprites.each do |key, value|
+    main_sprites << key if value == "main"
+  end
+  return main_sprites
+end
+
+def list_all_sprites_letters(spriteName)
+  all_sprites_map = map_alt_sprite_letters_for_pokemon(spriteName)
+  letters = []
+  all_sprites_map.each do |key, value|
+    letters << key
+  end
+  return letters
+end
+
+def list_alt_sprite_letters(spriteName)
+  all_sprites = map_alt_sprite_letters_for_pokemon(spriteName)
+  alt_sprites = []
+  all_sprites.each do |key, value|
+    alt_sprites << key if value == "alt"
+  end
+end
+
+def map_alt_sprite_letters_for_pokemon(spriteName)
+  alt_sprites = {}
+  File.foreach(Settings::CREDITS_FILE_PATH) do |line|
+    row = line.split(',')
+    sprite_name = row[0]
+    if sprite_name.start_with?(spriteName) && sprite_name.length > spriteName.length
+      letter = sprite_name[spriteName.length]
+      if letter.match?(/[a-zA-Z]/)
+        main_or_alt = row[2] ? row[2] : nil
+        alt_sprites[letter] = main_or_alt
+      end
+    end
+  end
+  return alt_sprites
 end
