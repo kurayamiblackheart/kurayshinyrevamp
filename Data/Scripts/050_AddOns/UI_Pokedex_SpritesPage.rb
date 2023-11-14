@@ -14,16 +14,15 @@ class PokemonPokedexInfo_Scene
   X_POSITION_BG_SELECTED = 145
   X_POSITION_BG_NEXT = 363
 
-  def drawPageForms
+  def drawPageForms()
     #@selected_index=0
-
     @sprites["background"].setBitmap(_INTL("Graphics/Pictures/Pokedex/bg_forms"))
     overlay = @sprites["overlay"].bitmap
     base = Color.new(88, 88, 80)
     shadow = Color.new(168, 184, 184)
 
     #alts_list= pbGetAvailableAlts
-    @selected_index = 0
+    @selected_index = 0 if !@selected_index
     update_displayed
   end
 
@@ -51,9 +50,16 @@ class PokemonPokedexInfo_Scene
   end
 
   def initializeSpritesPage(altsList)
+    @forms_list = list_pokemon_forms()
+    @formIndex = 0
+
     init_selected_bg
     @speciesData = getSpecies(@species)
+
     @selected_index = 0
+    set_displayed_to_current_alt(altsList)
+
+
     @sprites["selectedSprite"] = IconSprite.new(0, 0, @viewport)
     @sprites["selectedSprite"].x = X_POSITION_SELECTED
     @sprites["selectedSprite"].y = Y_POSITION_BIG
@@ -94,19 +100,36 @@ class PokemonPokedexInfo_Scene
 
   end
 
-  def pbGetAvailableForms
-    dex_num = getDexNumberForSpecies(@species)
+
+  def set_displayed_to_current_alt(altsList)
+    species_id = getDexNumberForSpecies(@species).to_s
+    return if !$PokemonGlobal.alt_sprite_substitutions[species_id]
+
+    current_sprite =$PokemonGlobal.alt_sprite_substitutions[species_id]
+    index = @selected_index
+    for alt in altsList
+      if alt == current_sprite
+        @selected_index = index
+        return
+      end
+      index +=1
+    end
+  end
+
+
+  def pbGetAvailableForms(species=nil)
+    chosen_species = species != nil ? species : @species
+    dex_num = getDexNumberForSpecies(chosen_species)
     if dex_num <= NB_POKEMON
-      download_unfused_alt_sprites(dex_num)
+      download_all_unfused_alt_sprites(dex_num)
     else
-      body_id = getBodyID(@species)
-      head_id = getHeadID(@species, body_id)
+      body_id = getBodyID(chosen_species)
+      head_id = getHeadID(chosen_species, body_id)
       download_custom_sprite(head_id, body_id)
       download_autogen_sprite(head_id, body_id)
-      download_alt_sprites(head_id, body_id)
+      download_all_alt_sprites(head_id, body_id)
     end
-
-    return PokedexUtils.new.pbGetAvailableAlts(@species)
+    return PokedexUtils.new.pbGetAvailableAlts(chosen_species, @formIndex)
   end
 
   def hide_all_selected_windows
@@ -135,10 +158,11 @@ class PokemonPokedexInfo_Scene
     if previousIndex < 0
       previousIndex = @available.size - 1
     end
-    @sprites["previousSprite"].visible = false if @available.size <= 2
-    @sprites["nextSprite"].visible = false if @available.size <= 1
+    @sprites["previousSprite"].visible = @available.size > 2
+    @sprites["nextSprite"].visible = @available.size > 1
 
     @sprites["previousSprite"].setBitmap(@available[previousIndex]) if previousIndex != nextIndex
+
     @sprites["selectedSprite"].setBitmap(@available[@selected_index])
     @sprites["nextSprite"].setBitmap(@available[nextIndex])
 
@@ -173,33 +197,85 @@ class PokemonPokedexInfo_Scene
     pbDrawTextPositions(@creditsOverlay, textpos)
   end
 
-  def pbChooseForm
+  def list_pokemon_forms
+    dexNum = dexNum(@species)
+    if dexNum > NB_POKEMON
+      body_id = getBodyID(dexNum)
+    else
+      if @species.is_a?(Symbol)
+        body_id = get_body_number_from_symbol(@species)
+      else
+        body_id = dexNum
+      end
+    end
+    forms_list = []
+    found_last_form = false
+    form_index = 0
+    while !found_last_form
+      form_index += 1
+      form_path = Settings::BATTLERS_FOLDER + body_id.to_s + "_" + form_index.to_s
+      echoln form_path
+      if File.directory?(form_path)
+        forms_list << form_index
+      else
+        found_last_form = true
+      end
+    end
+    return forms_list
+  end
+
+
+
+  def pbChooseAlt(brief=false)
     loop do
-      @sprites["uparrow"].visible = true
-      @sprites["downarrow"].visible = true
+      @sprites["rightarrow"].visible = true
+      @sprites["leftarrow"].visible = true
+      if @forms_list.length >= 1
+        @sprites["uparrow"].visible = true
+        @sprites["downarrow"].visible = true
+      end
+      multiple_forms = @forms_list.length > 0
       Graphics.update
       Input.update
       pbUpdate
-      if Input.trigger?(Input::RIGHT)
+      if Input.trigger?(Input::LEFT)
         pbPlayCursorSE
         @selected_index -= 1 #(index+@available.length-1)%@available.length
         if @selected_index < 0
           @selected_index = @available.size - 1
         end
         update_displayed
-      elsif Input.trigger?(Input::LEFT)
+      elsif Input.trigger?(Input::RIGHT)
         pbPlayCursorSE
-        @selected_index += 1 #= (index+1)%@available.length
+        @selected_index += 1
         if @selected_index > @available.size - 1
           @selected_index = 0
         end
+        update_displayed
+      elsif Input.trigger?(Input::UP) && multiple_forms
+        pbPlayCursorSE
+        @formIndex += 1
+        if @formIndex > @forms_list.length
+          @formIndex = 0
+        end
+        @available = pbGetAvailableForms()
+        @selected_index = 0
+        update_displayed
+      elsif Input.trigger?(Input::DOWN) && multiple_forms
+        pbPlayCursorSE
+        @formIndex -= 1
+        if @formIndex < 0
+          @formIndex = @forms_list.length
+        end
+        @available = pbGetAvailableForms()
+        @selected_index = 0
         update_displayed
       elsif Input.trigger?(Input::BACK)
         pbPlayCancelSE
         break
       elsif Input.trigger?(Input::USE)
         pbPlayDecisionSE
-        if select_sprite
+        if select_sprite(brief)
           @endscene = true
           break
         end
@@ -227,7 +303,7 @@ class PokemonPokedexInfo_Scene
       index = @selected_index
     end
     selected_sprite = @available[index]
-    species_id = getDexNumberForSpecies(@species)
+    species_id = getDexNumberForSpecies(@species).to_s
     $PokemonGlobal.alt_sprite_substitutions = {} if !$PokemonGlobal.alt_sprite_substitutions
     if $PokemonGlobal.alt_sprite_substitutions[species_id]
       return $PokemonGlobal.alt_sprite_substitutions[species_id] == selected_sprite
@@ -244,14 +320,28 @@ class PokemonPokedexInfo_Scene
     return spritename.match?(/[a-zA-Z]/)
   end
 
-  def select_sprite
-    if is_main_sprite
-      pbMessage("This sprite is already the displayed sprite")
-    else
-      if pbConfirmMessage(_INTL('Would you like to use this sprite instead of the current sprite?'))
-        swap_main_sprite()
-        return true
+  def select_sprite(brief=false)
+    if @available.length > 1
+      if is_main_sprite
+        if brief
+          pbMessage("This sprite will remain the displayed sprite")
+          return true
+        else
+          pbMessage("This sprite is already the displayed sprite")
+        end
+      else
+        if @forms_list.length > 0
+          message = _INTL('Would you like to use this sprite instead of the current sprite for form {1}?', @formIndex)
+        else
+          message = 'Would you like to use this sprite instead of the current sprite?'
+        end
+        if pbConfirmMessage(_INTL(message))
+          swap_main_sprite()
+          return true
+        end
       end
+    else
+      pbMessage("This is the only sprite available for this Pokémon!")
     end
     return false
   end
@@ -260,7 +350,7 @@ class PokemonPokedexInfo_Scene
     old_main_sprite = @available[0]
     new_main_sprite = @available[@selected_index]
     species_number = dexNum(@species)
-    set_alt_sprite_substitution(species_number, new_main_sprite)
+    set_alt_sprite_substitution(species_number, new_main_sprite, @formIndex)
   end
 
   # def swap_main_sprite
@@ -301,9 +391,14 @@ class PokemonGlobalMetadata
   attr_accessor :alt_sprite_substitutions
 end
 
-def set_alt_sprite_substitution(original_sprite_name, selected_alt)
+def set_alt_sprite_substitution(original_sprite_name, selected_alt, formIndex = 0)
   if !$PokemonGlobal.alt_sprite_substitutions
     $PokemonGlobal.alt_sprite_substitutions = {}
   end
-  $PokemonGlobal.alt_sprite_substitutions[original_sprite_name] = selected_alt
+  if formIndex
+    form_suffix = formIndex != 0 ? "_" + formIndex.to_s : ""
+  else
+    form_suffix = ""
+  end
+  $PokemonGlobal.alt_sprite_substitutions[original_sprite_name.to_s + form_suffix] = selected_alt
 end
