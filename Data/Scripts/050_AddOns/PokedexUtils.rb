@@ -1,33 +1,44 @@
 class PokedexUtils
-  POSSIBLE_ALTS = ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
-                   "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+  # POSSIBLE_ALTS = ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
+  #                  "r", "s", "t", "u", "v", "w", "x", "y", "z", "aa", "ab", "ac", "ad", "ae", "af", "ag", "ah",
+  #                  "ai", "aj", "ak", "al", "am", "an", "ao", "ap", "aq", "ar", "as", "at", "au", "av", "aw", "ax",
+  #                  "ay", "az"]
 
-  def pbGetAvailableAlts(species)
+  def getAltLettersList()
+    return ('a'..'z').to_a + ('aa'..'az').to_a
+  end
+
+  def pbGetAvailableAlts(species, form_index = 0)
+    if form_index
+      form_suffix = form_index <= 0 ? "" : "_" + form_index.to_s
+    else
+      form_suffix = ""
+    end
+
     ret = []
     return ret if !species
     dexNum = getDexNumberForSpecies(species)
     isFusion = dexNum > NB_POKEMON
     if !isFusion
-      ret << Settings::BATTLERS_FOLDER + dexNum.to_s + "/" + dexNum.to_s + ".png"
+      ret << Settings::BATTLERS_FOLDER + dexNum.to_s + form_suffix + "/" + dexNum.to_s + form_suffix + ".png"
 
-      POSSIBLE_ALTS.each { |alt_letter|
-        altFilePath = Settings::CUSTOM_BASE_SPRITES_FOLDER + dexNum.to_s + alt_letter + ".png"
+      getAltLettersList().each { |alt_letter|
+        altFilePath = Settings::CUSTOM_BASE_SPRITES_FOLDER + dexNum.to_s + form_suffix + alt_letter + ".png"
         if pbResolveBitmap(altFilePath)
           ret << altFilePath
         end
       }
-
       return ret
     end
     body_id = getBodyID(species)
     head_id = getHeadID(species, body_id)
 
-    baseFilename = head_id.to_s + "." + body_id.to_s
+    baseFilename = head_id.to_s + "." + body_id.to_s + form_suffix
     baseFilePath = Settings::CUSTOM_BATTLERS_FOLDER_INDEXED + head_id.to_s + "/" + baseFilename + ".png"
     if pbResolveBitmap(baseFilePath)
       ret << baseFilePath
     end
-    POSSIBLE_ALTS.each { |alt_letter|
+    getAltLettersList().each { |alt_letter|
       if alt_letter != "" #empty is included in alt letters because unfused sprites can be alts and not have a letter
         altFilePath = Settings::CUSTOM_BATTLERS_FOLDER_INDEXED + head_id.to_s + "/" + baseFilename + alt_letter + ".png"
         if pbResolveBitmap(altFilePath)
