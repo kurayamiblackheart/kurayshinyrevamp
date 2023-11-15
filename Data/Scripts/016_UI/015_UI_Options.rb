@@ -97,6 +97,9 @@ class PokemonSystem
   attr_accessor :raiser
   attr_accessor :raiserb
 
+  
+  attr_accessor :dexspriteselect
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -159,6 +162,7 @@ class PokemonSystem
     @sb_level = 0
     @debugfeature = 0
     @debug = 0
+    @dexspriteselect = 0
     @importnodelete = 0
 	@sb_stat_tracker = 0
 	@player_wins = 0
@@ -203,12 +207,13 @@ class PokemonSystem
     @darkmode = saved.darkmode if saved.darkmode
     @debugfeature = saved.debugfeature if saved.debugfeature
     @debug = saved.debug if saved.debug
-    if saved.globalvalues
-      @globalvalues = saved.globalvalues
-      if saved.globalvalues != 0
-        load_file_data(saved)#also load per-savefile datas
-      end
-    end
+    @dexspriteselect = saved.dexspriteselect if saved.dexspriteselect
+    # if saved.globalvalues
+    #   @globalvalues = saved.globalvalues
+    #   if saved.globalvalues != 0
+    #     load_file_data(saved)#also load per-savefile datas
+    #   end
+    # end
   end
 
   def load_file_data(saved)
@@ -773,6 +778,13 @@ class PokemonOption_Scene
                               proc { $PokemonSystem.quicksurf },
                               proc { |value| $PokemonSystem.quicksurf = value },
                               "Use Field Moves quicker"
+    )
+
+    options << EnumOption.new(_INTL("Dex Sprite Select"), [_INTL("Off"), _INTL("On")],
+                              proc { $PokemonSystem.dexspriteselect },
+                              proc { |value| $PokemonSystem.dexspriteselect = value },
+                              ["Not used",
+                              "Each new pokemon/fusion prompts a sprite selection"]
     )
 
     if $scene && $scene.is_a?(Scene_Map)
@@ -1507,12 +1519,12 @@ class KurayOptSc_4 < PokemonOption_Scene
     proc {}
     )
 
-    options << EnumOption.new(_INTL("Global Options"), [_INTL("Off"), _INTL("On")],
-                      proc { $PokemonSystem.globalvalues },
-                      proc { |value| $PokemonSystem.globalvalues = value },
-                      ["Some options stays per-save file",
-                      "All options are applied globally"]
-    )
+    # options << EnumOption.new(_INTL("Global Options"), [_INTL("Off"), _INTL("On")],
+    #                   proc { $PokemonSystem.globalvalues },
+    #                   proc { |value| $PokemonSystem.globalvalues = value },
+    #                   ["Some options stays per-save file",
+    #                   "All options are applied globally"]
+    # )
     options << EnumOption.new(_INTL("Debug Exclusive"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.debugfeature },
                       proc { |value| $PokemonSystem.debugfeature = value },
