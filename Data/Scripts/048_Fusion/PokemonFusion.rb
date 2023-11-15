@@ -916,7 +916,7 @@ class PokemonFusionScene
       end
 
       @pokemon1.debug_shiny = true if @pokemon1.debug_shiny || @pokemon2.debug_shiny
-      @pokemon1.kuraycustomfilereset
+      # @pokemon1.kuraycustomfilereset
 
       setFusionIVs(superSplicer)
       #add to pokedex
@@ -938,6 +938,7 @@ class PokemonFusionScene
       if @pokemon2.egg? || @pokemon1.egg?
         @pokemon1.steps_to_hatch = @pokemon1.species_data.hatch_steps
       end
+      @pokemon1.kuraycustomfilereset
       #@pokemon1.ability = pbChooseAbility(@pokemon1, hiddenAbility1, hiddenAbility2)
       pbChooseAbility(@pokemon1, hiddenAbility1, hiddenAbility2)
 

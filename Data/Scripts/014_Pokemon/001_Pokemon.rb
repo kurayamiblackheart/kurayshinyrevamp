@@ -325,7 +325,7 @@ class Pokemon
   def kuraycustomfilereset
     #We don't have one, need to generate one
     #If oldkuraycustomfile is temporarily holding a customfile, kuraycustomfile? check cannot generate a sprite by itself to prevent bugs.
-    if species_data.id_number && @oldkuraycustomfile != nil
+    if species_data.id_number
       @kuraycustomfile=kurayGetCustomSprite(species_data.id_number)
     else
       return nil
