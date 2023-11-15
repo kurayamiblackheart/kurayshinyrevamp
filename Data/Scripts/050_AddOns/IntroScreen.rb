@@ -157,6 +157,14 @@ end
 class GenOneStyle
 
   def initialize
+    # Shenanigans
+    graph_path = "Graphics/Tilesets"
+    graph_file = "Caves.png"
+    if file_exist_case_sensitive(graph_path, graph_file)
+      # it is "Caves.png", rename it "caves.png"
+      File.rename(graph_path + "/" + graph_file, graph_path + "/" + "caves.png")
+    end
+    # End of shenanigans
     Kernel.pbDisplayText("Keybindings: F1", 80, 0, 99999)
     #KurayX Version System
     # kuraversion = "0.6.18"

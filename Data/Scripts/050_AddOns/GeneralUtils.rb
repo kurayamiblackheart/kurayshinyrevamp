@@ -93,6 +93,10 @@ def pbHasSpecies?(species)
   return false
 end
 
+# KurayX Case sensitive check
+def file_exist_case_sensitive(containing_dir, filename)
+  Dir[File.join(containing_dir, "*")].select {|f| File.basename(f) == filename}.any?
+end
 
 #ancienne methode qui est encore callée un peu partout dans les vieux scripts
 def getID(pbspecies_unused,species)
