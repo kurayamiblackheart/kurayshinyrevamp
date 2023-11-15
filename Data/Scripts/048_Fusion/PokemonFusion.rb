@@ -916,6 +916,7 @@ class PokemonFusionScene
       end
 
       @pokemon1.debug_shiny = true if @pokemon1.debug_shiny || @pokemon2.debug_shiny
+      @pokemon1.kuraycustomfilereset
 
       setFusionIVs(superSplicer)
       #add to pokedex
