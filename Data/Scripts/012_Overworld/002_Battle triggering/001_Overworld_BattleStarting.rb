@@ -341,7 +341,11 @@ def pbWildBattle(species, level, outcomeVar=1, canRun=true, canLose=false)
   dexnum = getDexNumberForSpecies(species)
   if $game_switches[SWITCH_RANDOM_STATIC_ENCOUNTERS] && dexnum <= NB_POKEMON
     newSpecies = $PokemonGlobal.psuedoBSTHash[dexnum]
-    species = getSpecies(newSpecies)
+    if !newSpecies
+      displayRandomizerErrorMessage()
+    else
+      species = getSpecies(newSpecies)
+    end
   end
 
   # Potentially call a different pbWildBattle-type method instead (for roaming

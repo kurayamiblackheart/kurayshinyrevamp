@@ -103,6 +103,7 @@ class PokemonPokedexInfo_Scene
 
   def set_displayed_to_current_alt(altsList)
     species_id = getDexNumberForSpecies(@species).to_s
+    $PokemonGlobal.alt_sprite_substitutions = {} if !$PokemonGlobal.alt_sprite_substitutions
     return if !$PokemonGlobal.alt_sprite_substitutions[species_id]
 
     current_sprite =$PokemonGlobal.alt_sprite_substitutions[species_id]

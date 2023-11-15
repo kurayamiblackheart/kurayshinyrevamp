@@ -6063,7 +6063,7 @@ class PokemonStorageScreen
 
 
     if (Kernel.pbConfirmMessage(_INTL("Fuse the two Pokémon?")))
-      pbFuse(selectedHead, selectedBase, isSuperSplicer)
+      pbFuse(selectedHead, selectedBase, @fusionItem)
       if canDeleteItem(@fusionItem)
         $PokemonBag.pbDeleteItem(@fusionItem)
       end

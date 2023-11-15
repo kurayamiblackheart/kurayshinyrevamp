@@ -659,7 +659,7 @@ class PokemonPokedexInfoScreen
     # For use when capturing a new species
     nb_sprites_for_alts_page = isSpeciesFusion(species) ? 2 : 1
     alts_list = @scene.pbGetAvailableForms(species)
-    if alts_list.length > nb_sprites_for_alts_page
+    if alts_list.length > nb_sprites_for_alts_page && ($PokemonSystem.dexspriteselect != nil && $PokemonSystem.dexspriteselect == 1)
       @scene.pbStartSpritesSelectSceneBrief(species,alts_list)
       @scene.pbSelectSpritesSceneBrief
       @scene.pbEndScene

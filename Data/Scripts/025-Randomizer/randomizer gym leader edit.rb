@@ -129,7 +129,7 @@ def bstOk(newspecies, oldPokemonSpecies, bst_range = 50)
 end
 
 def gymLeaderOk(newspecies)
-  return true if $game_variables[152] == -1 #not in a gym
+  return true if $game_variables[VAR_CURRENT_GYM_TYPE] == -1 #not in a gym
   leaderType = getLeaderType()
   if leaderType == nil
     return true
@@ -140,7 +140,7 @@ def gymLeaderOk(newspecies)
 end
 
 def getLeaderType()
-  currentGym = $game_variables[152]
+  currentGym = $game_variables[VAR_CURRENT_GYM_TYPE]
   if currentGym > $game_variables[151].length
     return nil
   else

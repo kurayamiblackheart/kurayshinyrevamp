@@ -210,10 +210,7 @@ def playPokeFluteAnimation
 end
 
 def restoreDefaultCharacterSprite(charset_number=0)
-  meta = GameData::Metadata.get_player($Trainer.character_ID)
-  charset = pbGetPlayerCharset(meta,charset_number)
-
-  $game_player.setDefaultCharName(charset, 0, false)
+  $game_player.setDefaultCharName(nil, 0, false)
   Graphics.update
   Input.update
   pbUpdateSceneMap
@@ -617,6 +614,14 @@ def validate_regirock_ice_puzzle(solution)
   return true
 end
 
+def unpress_all_regirock_steel_switches()
+  switch_ids = [75,77,76,67, 74,68, 73,72,70,69]
+  regi_map = 813
+  switch_ids.each do |event_id|
+    pbSetSelfSwitch(event_id,"A",false,regi_map)
+  end
+end
+
 def validate_regirock_steel_puzzle()
   expected_pressed_switches = [75,77,74,68,73,69]
   expected_unpressed_switches = [76,67,72,70]
@@ -701,8 +706,10 @@ def regirock_steel_move_boulder()
     pbSEPlay("Entering Door")
     pbSetSelfSwitch(switch_event.id, "A", true) if switch_event
   end
-
-
 end
 
 
+def displayRandomizerErrorMessage()
+  Kernel.pbMessage(_INTL("The randomizer has encountered an error. You should try to re-randomize your game as soon as possible."))
+  Kernel.pbMessage(_INTL("You can do this on the top floor of Pokémon Centers."))
+end

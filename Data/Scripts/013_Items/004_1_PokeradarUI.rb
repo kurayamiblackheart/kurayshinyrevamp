@@ -61,9 +61,9 @@ class PokeRadar_UI
 
   def addPokemonIcon(species, blackened = false, rare=false)
     pokemonId=dexNum(species)
-    iconId = _INTL("icon{1}", pokemonId)
+    iconId = _INTL("{1}", species)
 
-    pokemonBitmap = pbCheckPokemonIconFiles(getDexNumberForSpecies(pokemonId))
+    pokemonBitmap = pbCheckPokemonIconFiles(species)
 
     if rare
       outlineSprite = IconSprite.new(@current_x, @current_y)

@@ -82,6 +82,7 @@ end
 # Blacking out animation
 #===============================================================================
 def pbStartOver(gameover=false)
+  $game_variables[VAR_CURRENT_GYM_TYPE]=-1
   if pbInBugContest?
     pbBugContestStartOver
     return

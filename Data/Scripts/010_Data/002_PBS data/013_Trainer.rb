@@ -154,7 +154,9 @@ module GameData
       end
       if $game_switches[SWITCH_RANDOM_GYM_PERSIST_TEAMS] && $PokemonGlobal.randomGymTrainersHash != nil
         if $PokemonGlobal.randomGymTrainersHash[trainerId] != nil && $PokemonGlobal.randomGymTrainersHash[trainerId].length >= $PokemonGlobal.randomTrainersHash[trainerId].length
-          return getSpecies($PokemonGlobal.randomGymTrainersHash[trainerId][pokemonIndex])
+          newSpecies = getSpecies($PokemonGlobal.randomGymTrainersHash[trainerId][pokemonIndex])
+          return newSpecies if newSpecies
+          return species
         end
       end
       new_species = generateRandomGymSpecies(species)

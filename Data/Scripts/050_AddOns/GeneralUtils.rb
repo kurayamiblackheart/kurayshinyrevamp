@@ -118,12 +118,12 @@ def pbPokemonIconFile(pokemon)
   return bitmapFileName
 end
 
-def pbCheckPokemonIconFiles(speciesNum, egg = false, dna = false)
+def pbCheckPokemonIconFiles(speciesID, egg = false, dna = false)
   if egg
     bitmapFileName = sprintf("Graphics/Icons/iconEgg")
     return pbResolveBitmap(bitmapFileName)
   else
-    bitmapFileName = sprintf("Graphics/Icons/icon%03d", speciesNum)
+    bitmapFileName = _INTL("Graphics/Pokemon/Icons/{1}", speciesID)
     ret = pbResolveBitmap(bitmapFileName)
     return ret if ret
   end
