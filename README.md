@@ -6,9 +6,13 @@ Kuray Infinite Fusion (KIF) is community-based and community-focused, it's made 
 
 -----------------------------------------------
 
-Join our Discord! https://discord.gg/UFxQkUZeyE
+_Base KIF Game **\[REQUIRED TO INSTALL AND PLAY KIF\]**:_ https://app.mediafire.com/iju9vkdnphkse
+_How to Install KIF tutorial:_ https://www.youtube.com/watch?v=Vm_jfprpk3k
+_Text instruction on how to Install KIF are available on the Google Docs:_ https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE/edit
 
-Google Docs of the game: https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE/edit
+**Join our Discord! https://discord.gg/UFxQkUZeyE**
+
+__Google Docs of the game:__ https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE/edit
 
 The Google Docs already explain everything about this game.
 
