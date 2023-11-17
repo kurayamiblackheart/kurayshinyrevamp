@@ -20,6 +20,7 @@ def pbAddRgssScriptTexts(items,script)
 end
 
 def pbSetTextMessages
+  require 'zlib'
   Graphics.update
   begin
     t = Time.now.to_i
