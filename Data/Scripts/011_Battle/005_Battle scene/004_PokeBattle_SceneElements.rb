@@ -81,25 +81,25 @@ class PokemonDataBox < SpriteWrapper
     # Determine the co-ordinates of the data box and the left edge padding width
     if onPlayerSide
       @spriteX = Graphics.width - 244
-      @spriteY = Graphics.height - 176#192
+      @spriteY = Graphics.height - 192#176
       @spriteBaseX = 34
     else
       @spriteX = 8 #-16
       @spriteY = 36
-      @spriteBaseX = 0#16
+      @spriteBaseX = 8#0#16
     end
     case sideSize
     when 2
       @spriteX += [-12,  12,  0,  0][@battler.index]
-      # @spriteY += [-20, -34, 34, 20][@battler.index]
+      @spriteY += [-20, -34, 34, 20][@battler.index]
       #@spriteY += [-38, -6, 16, 48][@battler.index]    #standard
       #@spriteY += [-32, -6, 16, 42][@battler.index]     #smaller gap
-      @spriteY += [-18, -6, 16, 28][@battler.index]     #overlap
+      # @spriteY += [-18, -6, 16, 28][@battler.index]     #overlap
     when 3
       @spriteX += [-12,  12, -6,  6,  0,  0][@battler.index]
-      # @spriteY += [-42, -46,  4,  0, 50, 46][@battler.index]
+      @spriteY += [-42, -46,  4,  0, 50, 46][@battler.index]
       #@spriteY += [-74, -8,  -28,  38, 16, 84][@battler.index]    #standard
-      @spriteY += [-54, -8,  -18,  26, 16, 58][@battler.index]    #overlap
+      # @spriteY += [-54, -8,  -18,  26, 16, 58][@battler.index]    #overlap
     end
   end
 

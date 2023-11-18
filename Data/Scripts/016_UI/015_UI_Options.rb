@@ -97,6 +97,8 @@ class PokemonSystem
   attr_accessor :raiser
   attr_accessor :raiserb
 
+  attr_accessor :legendarybreed
+
   
   attr_accessor :dexspriteselect
 
@@ -163,6 +165,7 @@ class PokemonSystem
     @debugfeature = 0
     @debug = 0
     @dexspriteselect = 0
+    @legendarybreed = 0
     @importnodelete = 0
 	@sb_stat_tracker = 0
 	@player_wins = 0
@@ -255,6 +258,7 @@ class PokemonSystem
     @savefolder = saved.savefolder if saved.savefolder
     @nopngexport = saved.nopngexport if saved.nopngexport
     @nopngimport = saved.nopngimport if saved.nopngimport
+    @legendarybreed = saved.legendarybreed if saved.legendarybreed
   end
 end
 
@@ -1348,6 +1352,12 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.damage_variance = value },
                       ["Damage Variance is disabled.",
                       "Damage Variance is enabled."]
+    )
+    options << EnumOption.new(_INTL("Head Legendary Breeding"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.legendarybreed },
+                      proc { |value| $PokemonSystem.legendarybreed = value },
+                      ["Legendary Head cannot breed (like new PIF).",
+                      "Legendary Head can breed (like old PIF)."]
     )
 
     return options

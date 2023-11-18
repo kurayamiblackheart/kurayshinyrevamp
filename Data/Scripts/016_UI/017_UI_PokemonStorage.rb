@@ -1856,6 +1856,7 @@ class PokemonStorageScene
     cmdDefSprite = -1
     cmdOpenShinyFinder = -1
     cmdShowSprite = -1
+    cmdDebug1 = -1
     canExportImport = true
     if $PokemonSystem.debugfeature
       if $PokemonSystem.debugfeature == 1
@@ -1878,8 +1879,11 @@ class PokemonStorageScene
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG || canExportImport
     commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
     commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
-    commands[cmdCarpFill = commands.length] = _INTL("CarpFill") if $DEBUG && File.file?("Kurayami.krs")
-    commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny") if $DEBUG && File.file?("Kurayami.krs")
+    if $DEBUG && File.file?("Kurayami.krs")
+      commands[cmdCarpFill = commands.length] = _INTL("CarpFill")
+      commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny")
+      commands[cmdDebug1 = commands.length] = _INTL("Print EggGroups")
+    end
     commands[cmdCancel = commands.length] = _INTL("Cancel")
     command = pbShowCommands(helptext, commands)
     if cmdEvoLock >= 0 && command == cmdEvoLock # EvoLock
@@ -1912,6 +1916,8 @@ class PokemonStorageScene
       pbShowSprite(selected, heldpoke)
     elsif cmdOpenShinyFinder >= 0 && command == cmdOpenShinyFinder # Show Sprite
       pbShinyFinder(selected, heldpoke)
+    elsif cmdDebug1 >= 0 && command == cmdDebug1 # Show Sprite
+      pbDisplay(_INTL(pokemon.species_data.egg_groups.to_s))
     end
   end
 

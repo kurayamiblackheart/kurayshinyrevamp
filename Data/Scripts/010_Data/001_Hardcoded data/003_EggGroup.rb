@@ -30,6 +30,10 @@ GameData::EggGroup.register({
                               :id => :Undiscovered,
                               :name => _INTL("Undiscovered")
                             })
+GameData::EggGroup.register({
+                              :id => :HeadUndiscovered,
+                              :name => _INTL("Head Undiscovered")
+                            })
 
 GameData::EggGroup.register({
                               :id => :Monster,

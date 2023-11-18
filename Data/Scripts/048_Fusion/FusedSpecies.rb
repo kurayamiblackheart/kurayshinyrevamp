@@ -55,7 +55,8 @@ module GameData
       @evolutions = calculate_evolutions() # hash[:evolutions] || []
 
       #breeding
-      @egg_groups = [:Undiscovered] #calculate_egg_groups() # hash[:egg_groups] || [:Undiscovered]
+      @egg_groups = calculate_egg_groups() # hash[:egg_groups] || [:Undiscovered]
+      # @egg_groups = [:Undiscovered] #calculate_egg_groups() # hash[:egg_groups] || [:Undiscovered]
       @hatch_steps = calculate_hatch_steps() #  hash[:hatch_steps] || 1
       @incense = nil #hash[:incense]
 
@@ -259,7 +260,12 @@ module GameData
     def calculate_egg_groups
       body_egg_groups = @body_pokemon.egg_groups
       head_egg_groups = @head_pokemon.egg_groups
-      return :Undiscovered if body_egg_groups.include?(:Undiscovered) || head_egg_groups.include?(:Undiscovered)
+    
+      # Replace :Undiscovered with :HeadUndiscovered in head_egg_groups
+      head_egg_groups.map! { |group| group == :Undiscovered ? :HeadUndiscovered : group }
+    
+      return :Undiscovered if body_egg_groups.include?(:Undiscovered)# || head_egg_groups.include?(:Undiscovered)
+    
       return combine_arrays(body_egg_groups, head_egg_groups)
     end
 

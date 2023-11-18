@@ -129,6 +129,8 @@ def pbDayCareGetCompat
   egg_groups2 = pkmn2.species_data.egg_groups
   return 0 if egg_groups1.include?(:Undiscovered) ||
               egg_groups2.include?(:Undiscovered)
+  return 0 if (!$PokemonSystem.legendarybreed || $PokemonSystem.legendarybreed == 0) &&
+              (egg_groups1.include?(:HeadUndiscovered) || egg_groups2.include?(:HeadUndiscovered))
   # Pokémon that don't share an egg group (and neither is in the Ditto group)
   # cannot breed
   return 0 if !egg_groups1.include?(:Ditto) &&
