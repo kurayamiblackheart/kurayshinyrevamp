@@ -183,6 +183,20 @@ module GameData
       @alwaysUseGeneratedSprite=false
     end
 
+    #KurayX
+    def as_json(options={})
+      {
+        "type1" => @type1,
+        "type2" => @type2
+      }
+    end
+
+    #KurayX
+    def load_json(jsonparse)
+      @type1 = jsonparse['type1']
+      @type2 = jsonparse['type2']
+    end
+
     def set_always_use_generated_sprite(useGeneratedSprite)
       @alwaysUseGeneratedSprite=useGeneratedSprite
     end

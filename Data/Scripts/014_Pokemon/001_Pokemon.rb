@@ -1734,7 +1734,7 @@ class Pokemon
   #KurayX
   def as_json(options={})
     {
-      "json_version" => "0.2",
+      "json_version" => "0.3",
       "species" => @species,
       "form" => @form,
       "forced_form" => @forced_form,
@@ -1803,7 +1803,8 @@ class Pokemon
       "kuray_no_evo" => @kuray_no_evo,
       "ribbons" => @ribbons.clone,
       "spriteform_body" => @spriteform_body,
-      "spriteform_head" => @spriteform_head
+      "spriteform_head" => @spriteform_head,
+      "half_specie" => @species_data.as_json
     }
   end
 
@@ -1900,6 +1901,20 @@ class Pokemon
     @moves = []
     jsonparse['moves'].each_with_index { |m, i| @moves.push(Pokemon::Move.new(m['id'])) }
     jsonparse['moves'].each_with_index { |m, i| @moves[i].load_json(m) }
+    
+
+    
+    if jsonparse.key?('json_version')
+      json_version = jsonparse['json_version']
+      # Perform version-specific loading logic based on json_version value
+      case json_version
+      when '0.3'
+        # Load new variables from version 0.3
+        @species_data = GameData::Species.get(@species)
+        @species_data.load_json(jsonparse['half_specie'])
+      end
+    end
+
     noimport = 0
     if jsonfile && jsonfile != nil
       if $PokemonSystem.nopngimport
