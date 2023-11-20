@@ -268,7 +268,7 @@ class PokemonPauseMenu
         oldmart = $game_temp.mart_prices.clone
         $game_temp.fromkurayshop = 1
 
-
+        # 303 = TM Light Screen
         # 314 = TM Return
         # 329 = TM Facade
         # 335 = TM Round
@@ -294,6 +294,7 @@ class PokemonPauseMenu
         # 656 = TM Stomping Tantrum
         # 657 = TM Throat Chop
         # 659 = TM Scald
+        $game_temp.mart_prices[303] = [10000, 5000]
         $game_temp.mart_prices[314] = [10000, 5000]
         $game_temp.mart_prices[329] = [10000, 5000]
         $game_temp.mart_prices[335] = [10000, 5000]
@@ -303,7 +304,7 @@ class PokemonPauseMenu
         $game_temp.mart_prices[356] = [10000, 5000]
         $game_temp.mart_prices[358] = [10000, 5000]
         $game_temp.mart_prices[367] = [10000, 5000]
-        $game_temp.mart_prices[371] = [10000, 5000]
+        # $game_temp.mart_prices[371] = [10000, 5000]
         $game_temp.mart_prices[618] = [30000, 15000]
         $game_temp.mart_prices[619] = [30000, 15000]
         $game_temp.mart_prices[646] = [30000, 15000]
@@ -318,7 +319,7 @@ class PokemonPauseMenu
         $game_temp.mart_prices[655] = [30000, 15000]
         $game_temp.mart_prices[656] = [30000, 15000]
         $game_temp.mart_prices[657] = [30000, 15000]
-        $game_temp.mart_prices[659] = [30000, 15000]
+        # $game_temp.mart_prices[659] = [30000, 15000]
         # 570 = Transgender Stone
         # 604 = Secret Capsule
         # 568 = Mist Stone (evolve any Pokemon)
@@ -343,6 +344,18 @@ class PokemonPauseMenu
         $game_temp.mart_prices[246] = [3600, 1800]
         $game_temp.mart_prices[248] = [12000, 6000]
         $game_temp.mart_prices[250] = [29120, 14560]
+        # 121 = Power Weight
+        # 122 = Power Bracer
+        # 123 = Power Belt
+        # 124 = Power Lens
+        # 125 = Power Band
+        # 126 = Power Anklet
+        $game_temp.mart_prices[121] = [3000, 1500]
+        $game_temp.mart_prices[122] = [3000, 1500]
+        $game_temp.mart_prices[123] = [3000, 1500]
+        $game_temp.mart_prices[124] = [3000, 1500]
+        $game_temp.mart_prices[125] = [3000, 1500]
+        $game_temp.mart_prices[126] = [3000, 1500]
         # 114 = Focus Sash
         # 115 = Flame Orb
         # 116 = Toxic Orb
