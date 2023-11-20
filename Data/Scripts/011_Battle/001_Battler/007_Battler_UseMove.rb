@@ -595,9 +595,15 @@ class PokeBattle_Battler
     end
   end
 
+  def ensure_form_has_sprite(pokemon,spriteform_body,spriteform_head)
+    GameData::Species.sprite_filename(pokemon.dexNum, spriteform_body,spriteform_head)
+  end
+
   def changeForm(newForm, formChangingSpecies, animation = "UltraBurst2")
     spriteform_body = newForm if @pokemon.hasBodyOf?(formChangingSpecies)
     spriteform_head = newForm if @pokemon.hasHeadOf?(formChangingSpecies)
+
+    ensure_form_has_sprite(@pokemon,spriteform_body,spriteform_head)
 
     if self.isFusion?
       current_form_has_custom = customSpriteExists(@pokemon.species)
@@ -606,7 +612,6 @@ class PokeBattle_Battler
     else
       should_change_sprite=true
     end
-
 
     if should_change_sprite
       @pokemon.spriteform_body = spriteform_body

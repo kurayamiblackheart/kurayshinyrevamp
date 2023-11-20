@@ -17,6 +17,11 @@ module GameData
       validate other => [Symbol, self, String, Integer]
       other = other.id if other.is_a?(self)
       other = other.to_sym if other.is_a?(String)
+
+      if self == GameData::Species
+        return !get(other).nil?
+      end
+
       return !self::DATA[other].nil?
     end
 

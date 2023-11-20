@@ -534,7 +534,6 @@ def customSpriteExistsForm(species,form_id_head=nil, form_id_body=nil)
   spritename += "_" + form_id_body.to_s if form_id_body
 
   pathCustom = _INTL("Graphics/CustomBattlers/indexed/{1}/{2}.png", folder, spritename)
-
   return true if pbResolveBitmap(pathCustom) != nil
   return download_custom_sprite(head, body,form_id_head,form_id_body) != nil
 end

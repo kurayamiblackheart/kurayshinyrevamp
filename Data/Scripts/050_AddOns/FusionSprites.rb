@@ -345,7 +345,8 @@ def get_fusion_sprite_path(head_id, body_id, spriteform_body = nil, spriteform_h
   return local_generated_path if pbResolveBitmap(local_generated_path)
 
   #Download generated sprite if nothing else found
-  autogen_path = download_autogen_sprite(head_id, body_id)
+  # autogen_path = download_autogen_sprite(head_id, body_id)
+  autogen_path = download_autogen_sprite(head_id, body_id,spriteform_body,spriteform_head)
   return autogen_path if pbResolveBitmap(autogen_path)
 
   return Settings::DEFAULT_SPRITE_PATH
