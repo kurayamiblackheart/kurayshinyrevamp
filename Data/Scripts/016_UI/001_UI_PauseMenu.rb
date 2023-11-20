@@ -364,6 +364,8 @@ class PokemonPauseMenu
         $game_temp.mart_prices[115] = [6000, 3000]
         $game_temp.mart_prices[116] = [6000, 3000]
         $game_temp.mart_prices[100] = [6000, 3000]
+        # 194 = Deep Sea Scale
+        $game_temp.mart_prices[194] = [10000, 1000]
         # 235 = Rage Candy Bar
         # 263 = Rare Candy
         # 264 = Master Ball
