@@ -14,4 +14,10 @@ echo:
 echo Installer/Updater made by Hungry Pickle
 echo:
 echo Thank you for installing or updating! You can close this window now.
-pause
+
+set arg1=%1
+if "%arg1%" == "auto" (
+    start "" .\Game.exe
+) else (
+    pause
+)
