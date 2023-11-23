@@ -87,7 +87,8 @@ Events.onStepTakenTransferPossible += proc { |_sender, e|
   if $PokemonGlobal.stepcount % 4 == 0 && Settings::POISON_IN_FIELD
     flashed = false
     for i in $Trainer.able_party
-      if i.status == :POISON && !i.hasAbility?(:IMMUNITY)
+      #if i.status == :POISON && !i.hasAbility?(:POISONHEAL)
+      if i.status == :POISON && !i.hasAbility?(:IMMUNITY) && ($PokemonSystem.walkingpoison && $PokemonSystem.walkingpoison == 0)
         if !flashed
           pbFlash(Color.new(163, 73, 164, 128), 8)
           flashed = true
@@ -106,6 +107,9 @@ Events.onStepTakenTransferPossible += proc { |_sender, e|
           handled[0] = true
           pbCheckAllFainted
         end
+      elsif i.status == :POISON && i.hasAbility?(:POISONHEAL) && i.hasAbility?(:MAGICGUARD) && ($PokemonSystem.walkingpoison && $PokemonSystem.walkingpoison == 1)
+      elsif i.status == :POISON && i.hasAbility?(:POISONHEAL) && i.hp != i.totalhp && ($PokemonSystem.walkingpoison && $PokemonSystem.walkingpoison == 2)
+        i.hp += 1
       end
     end
   end

@@ -102,6 +102,9 @@ class PokemonSystem
   
   attr_accessor :dexspriteselect
 
+  #Blue Wuppo
+  attr_accessor :walkingpoison
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -180,6 +183,7 @@ class PokemonSystem
     else
       @shinyodds = 16
     end
+    @walkingpoison = 0
   end
 
   def load_bootup_data(saved)
@@ -259,6 +263,7 @@ class PokemonSystem
     @nopngexport = saved.nopngexport if saved.nopngexport
     @nopngimport = saved.nopngimport if saved.nopngimport
     @legendarybreed = saved.legendarybreed if saved.legendarybreed
+    @walkingpoison = saved.walkingpoison if saved.walkingpoison
   end
 end
 
@@ -1358,6 +1363,13 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.legendarybreed = value },
                       ["Legendary Head cannot breed (like new PIF).",
                       "Legendary Head can breed (like old PIF)."]
+    )
+    options << EnumOption.new(_INTL("Overworld Poison"), [_INTL("Off"), _INTL("On"), _INTL("On+Healing")],
+                      proc { $PokemonSystem.walkingpoison },
+                      proc { |value| $PokemonSystem.walkingpoison = value },
+                      ["Vanilla PIF functionality.",
+                      "Abilities that disable Poison Damage in Battle will function in the Overworld.",
+                      "Same as previous option, except Poison Heal will now Heal your Pokemon."]
     )
 
     return options
