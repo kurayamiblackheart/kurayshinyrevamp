@@ -100,6 +100,11 @@ class PokemonSystem
   attr_accessor :legendarybreed
 
   
+
+  #Made by Blue Wuppo
+  attr_accessor :walkingpoison
+  #End of By Blue Wuppo
+
   attr_accessor :dexspriteselect
 
   def initialize
@@ -180,6 +185,9 @@ class PokemonSystem
     else
       @shinyodds = 16
     end
+    #Made by Blue Wuppo
+    @walkingpoison = 0
+    #End of By Blue Wuppo
   end
 
   def load_bootup_data(saved)
@@ -259,6 +267,9 @@ class PokemonSystem
     @nopngexport = saved.nopngexport if saved.nopngexport
     @nopngimport = saved.nopngimport if saved.nopngimport
     @legendarybreed = saved.legendarybreed if saved.legendarybreed
+    #Made by Blue Wuppo
+    @walkingpoison = saved.walkingpoison if saved.walkingpoison
+    #End of By Blue Wuppo
   end
 end
 
@@ -1591,6 +1602,15 @@ class KurayOptSc_4 < PokemonOption_Scene
                       "Rare Candies/Master Balls and more are free in Kuray Shop",
                       "Also Unlimited WonderTrades (need 1 badge)"]
     )
+    #Made by Blue Wuppo
+    options << EnumOption.new(_INTL("Overworld Poison"), [_INTL("Off"), _INTL("On"), _INTL("On+Healing")],
+                      proc { $PokemonSystem.walkingpoison },
+                      proc { |value| $PokemonSystem.walkingpoison = value },
+                      ["Everyone takes dmg on overworld poison.",
+                      "Some abilities immune to dmg on overworld poison.",
+                      "Some abilities heal instead of taking dmg on overworld poison."]
+    )
+    #End of By Blue Wuppo
 
     return options
   end

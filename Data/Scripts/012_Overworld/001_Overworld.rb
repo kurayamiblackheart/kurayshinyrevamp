@@ -87,7 +87,10 @@ Events.onStepTakenTransferPossible += proc { |_sender, e|
   if $PokemonGlobal.stepcount % 4 == 0 && Settings::POISON_IN_FIELD
     flashed = false
     for i in $Trainer.able_party
-      if i.status == :POISON && !i.hasAbility?(:IMMUNITY)
+      #Made by Blue Wuppo + Correction of Reïzod
+      # Case 1 for dmgs - 0 + VANILLA ABILITY MISSNG | Case 2 for dmgs - not 0 + any ability
+      if (i.status == :POISON && !i.hasAbility?(:IMMUNITY) && (!$PokemonSystem.walkingpoison || $PokemonSystem.walkingpoison == 0)) || (i.status == :POISON && !i.hasAbility?(:POISONHEAL) && !i.hasAbility?(:MAGICGUARD) && !i.hasAbility?(:IMMUNITY) && ($PokemonSystem.walkingpoison && $PokemonSystem.walkingpoison != 0))
+        #We are taking damage.
         if !flashed
           pbFlash(Color.new(163, 73, 164, 128), 8)
           flashed = true
@@ -106,7 +109,16 @@ Events.onStepTakenTransferPossible += proc { |_sender, e|
           handled[0] = true
           pbCheckAllFainted
         end
+      elsif i.status == :POISON && (i.hasAbility?(:POISONHEAL) || i.hasAbility?(:MAGICGUARD)) && ($PokemonSystem.walkingpoison && $PokemonSystem.walkingpoison == 2)
+        #We are healing from it
+        if !flashed
+          pbFlash(Color.new(73, 164, 163, 128), 8)
+          flashed = true
+          #We flash a green-cyan color during healing instead of a red one.
+        end
+        i.hp += 1 if i.hp < i.totalhp#We don't want the HP to be able to go above the MaxHP
       end
+      #End of By Blue Wuppo
     end
   end
 }
