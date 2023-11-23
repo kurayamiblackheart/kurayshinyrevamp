@@ -109,7 +109,7 @@ Events.onStepTakenTransferPossible += proc { |_sender, e|
           handled[0] = true
           pbCheckAllFainted
         end
-      elsif i.status == :POISON && (i.hasAbility?(:POISONHEAL) || i.hasAbility?(:MAGICGUARD)) && ($PokemonSystem.walkingpoison && $PokemonSystem.walkingpoison == 2)
+      elsif i.status == :POISON && i.hasAbility?(:POISONHEAL) && ($PokemonSystem.walkingpoison && $PokemonSystem.walkingpoison == 2)
         #We are healing from it
         if !flashed
           pbFlash(Color.new(73, 164, 163, 128), 8)
