@@ -199,7 +199,7 @@ class PokeBattle_AI
         end
       end
       # If user is asleep, prefer moves that are usable while asleep
-      if user.status == :SLEEP && !move.usableWhenAsleep?
+      if user.status == :SLEEP && !move.usableWhenAsleep? && (!$PokemonSystem.drowsy || $PokemonSystem.drowsy == 0)
         user.eachMove do |m|
           next unless m.usableWhenAsleep?
           score -= 60

@@ -113,7 +113,7 @@ class PokeBattle_Battler
   attr_reader :status
 
   def status=(value)
-    @effects[PBEffects::Truant] = false if @status == :SLEEP && value != :SLEEP
+    @effects[PBEffects::Truant] = false if @status == :SLEEP && value != :SLEEP && (!$PokemonSystem.drowsy || $PokemonSystem.drowsy == 0)
     @effects[PBEffects::Toxic]  = 0 if value != :POISON
     @status = value
     @pokemon.status = value if @pokemon

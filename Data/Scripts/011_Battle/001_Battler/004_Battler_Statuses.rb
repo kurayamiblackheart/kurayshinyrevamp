@@ -31,10 +31,20 @@ class PokeBattle_Battler
         msg = ""
         case self.status
         when :SLEEP     then msg = _INTL("{1} is already asleep!", pbThis)
+          if (!$PokemonSystem.drowsy || $PokemonSystem.drowsy == 0)
+            then msg = _INTL("{1} is already asleep!", pbThis)
+          elsif ($PokemonSystem.drowsy && $PokemonSystem.drowsy != 0)
+            then msg = _INTL("{1} is already drowsy!", pbThis)
+          end
         when :POISON    then msg = _INTL("{1} is already poisoned!", pbThis)
         when :BURN      then msg = _INTL("{1} already has a burn!", pbThis)
         when :PARALYSIS then msg = _INTL("{1} is already paralyzed!", pbThis)
-        when :FROZEN    then msg = _INTL("{1} is already frozen solid!", pbThis)
+        when :FROZEN
+          if (!$PokemonSystem.frostbite || $PokemonSystem.frostbite == 0)
+            then msg = _INTL("{1} is already frozen solid!", pbThis)
+          elsif ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+            then msg = _INTL("{1} is already frostbitten!", pbThis)
+          end
         end
         @battle.pbDisplay(msg)
       end
@@ -126,7 +136,12 @@ class PokeBattle_Battler
           when :POISON    then msg = _INTL("{1} cannot be poisoned!", pbThis)
           when :BURN      then msg = _INTL("{1} cannot be burned!", pbThis)
           when :PARALYSIS then msg = _INTL("{1} cannot be paralyzed!", pbThis)
-          when :FROZEN    then msg = _INTL("{1} cannot be frozen solid!", pbThis)
+          when :FROZEN
+            if (!$PokemonSystem.frostbite || $PokemonSystem.frostbite == 0)
+              then msg = _INTL("{1} cannot be frozen solid!", pbThis)
+            elsif ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+              then msg = _INTL("{1} cannot be frostbitten!", pbThis)
+            end
           end
         elsif immAlly
           case newStatus
@@ -143,8 +158,13 @@ class PokeBattle_Battler
             msg = _INTL("{1} cannot be paralyzed because of {2}'s {3}!",
                pbThis,immAlly.pbThis(true),immAlly.abilityName)
           when :FROZEN
-            msg = _INTL("{1} cannot be frozen solid because of {2}'s {3}!",
-               pbThis,immAlly.pbThis(true),immAlly.abilityName)
+            if (!$PokemonSystem.frostbite || $PokemonSystem.frostbite == 0)
+              then msg = _INTL("{1} cannot be frozen solid because of {2}'s {3}!",
+              pbThis,immAlly.pbThis(true),immAlly.abilityName)
+            elsif ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+              then msg = _INTL("{1} cannot be frostbitten because of {2}'s {3}!",
+              pbThis,immAlly.pbThis(true),immAlly.abilityName)
+            end
           end
         else
           case newStatus
@@ -231,7 +251,11 @@ class PokeBattle_Battler
     else
       case newStatus
       when :SLEEP
-        @battle.pbDisplay(_INTL("{1} fell asleep!", pbThis))
+        if (!$PokemonSystem.drowsy || $PokemonSystem.drowsy == 0)
+          then @battle.pbDisplay(_INTL("{1} fell asleep!", pbThis))
+        elsif ($PokemonSystem.drowsy && $PokemonSystem.drowsy != 0)
+          then @battle.pbDisplay(_INTL("{1} starts to feel drowsy!", pbThis))
+        end
       when :POISON
         if newStatusCount>0
           @battle.pbDisplay(_INTL("{1} was badly poisoned!", pbThis))
@@ -243,7 +267,11 @@ class PokeBattle_Battler
       when :PARALYSIS
         @battle.pbDisplay(_INTL("{1} is paralyzed! It may be unable to move!", pbThis))
       when :FROZEN
-        @battle.pbDisplay(_INTL("{1} was frozen solid!", pbThis))
+        if (!$PokemonSystem.frostbite || $PokemonSystem.frostbite == 0)
+          then @battle.pbDisplay(_INTL("{1} was frozen solid!", pbThis))
+        elsif ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+          then @battle.pbDisplay(_INTL("{1} was frostbitten!", pbThis))
+        end
       end
     end
     PBDebug.log("[Status change] #{pbThis}'s sleep count is #{newStatusCount}") if newStatus == :SLEEP
@@ -405,10 +433,13 @@ class PokeBattle_Battler
       anim_name = GameData::Status.get(self.status).animation
       @battle.pbCommonAnimation(anim_name, self) if anim_name
     end
+    if self.status == :SLEEP && ($PokemonSystem.drowsy && $PokemonSystem.drowsy != 0)
+      then @battle.pbDisplay(_INTL("{1} is drowsy.", pbThis))
+    end
     yield if block_given?
     case self.status
-    when :SLEEP
-      @battle.pbDisplay(_INTL("{1} is fast asleep.", pbThis))
+    when :SLEEP && (!$PokemonSystem.drowsy || $PokemonSystem.drowsy == 0)
+      then @battle.pbDisplay(_INTL("{1} is fast asleep.", pbThis))
     when :POISON
       @battle.pbDisplay(_INTL("{1} was hurt by poison!", pbThis))
     when :BURN
@@ -416,7 +447,11 @@ class PokeBattle_Battler
     when :PARALYSIS
       @battle.pbDisplay(_INTL("{1} is paralyzed! It can't move!", pbThis))
     when :FROZEN
-      @battle.pbDisplay(_INTL("{1} is frozen solid!", pbThis))
+      if (!$PokemonSystem.frostbite || $PokemonSystem.frostbite == 0)
+        then @battle.pbDisplay(_INTL("{1} is frozen solid!", pbThis))
+      elsif ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+        then @battle.pbDisplay(_INTL("{1} was hurt by its frostbite!", pbThis))
+      end
     end
     PBDebug.log("[Status continues] #{pbThis}'s sleep count is #{@statusCount}") if self.status == :SLEEP
   end
@@ -430,7 +465,12 @@ class PokeBattle_Battler
       when :POISON    then @battle.pbDisplay(_INTL("{1} was cured of its poisoning.", pbThis))
       when :BURN      then @battle.pbDisplay(_INTL("{1}'s burn was healed.", pbThis))
       when :PARALYSIS then @battle.pbDisplay(_INTL("{1} was cured of paralysis.", pbThis))
-      when :FROZEN    then @battle.pbDisplay(_INTL("{1} thawed out!", pbThis))
+      when :FROZEN
+        if (!$PokemonSystem.frostbite || $PokemonSystem.frostbite == 0)
+          then @battle.pbDisplay(_INTL("{1} thawed out!", pbThis))
+        elsif ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+          then @battle.pbDisplay(_INTL("{1}'s frostbite was healed!", pbThis))
+        end
       end
     end
     PBDebug.log("[Status change] #{pbThis}'s status was cured") if !showMessages

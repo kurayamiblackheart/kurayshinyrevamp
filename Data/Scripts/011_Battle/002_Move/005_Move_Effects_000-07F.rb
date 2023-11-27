@@ -69,7 +69,11 @@ class PokeBattle_Move_004 < PokeBattle_Move
 
   def pbEffectAgainstTarget(user,target)
     target.effects[PBEffects::Yawn] = 2
-    @battle.pbDisplay(_INTL("{1} made {2} drowsy!",user.pbThis,target.pbThis(true)))
+    if (!$PokemonSystem.drowsy || $PokemonSystem.drowsy == 0)
+      then @battle.pbDisplay(_INTL("{1} made {2} drowsy!",user.pbThis,target.pbThis(true)))
+    elsif ($PokemonSystem.drowsy && $PokemonSystem.drowsy != 0)
+      then @battle.pbDisplay(_INTL("{2} is getting tired!",user.pbThis,target.pbThis(true)))
+    end
   end
 end
 
@@ -438,7 +442,11 @@ class PokeBattle_Move_019 < PokeBattle_Move
     end
     case oldStatus
     when :SLEEP
-      @battle.pbDisplay(_INTL("{1} was woken from sleep.",curedName))
+      if (!$PokemonSystem.drowsy || $PokemonSystem.drowsy == 0)
+        then @battle.pbDisplay(_INTL("{1} was woken from sleep.",curedName))
+      elsif ($PokemonSystem.drowsy && $PokemonSystem.drowsy != 0)
+        then @battle.pbDisplay(_INTL("{1} is awake.",curedName))
+      end
     when :POISON
       @battle.pbDisplay(_INTL("{1} was cured of its poisoning.",curedName))
     when :BURN
@@ -446,7 +454,11 @@ class PokeBattle_Move_019 < PokeBattle_Move
     when :PARALYSIS
       @battle.pbDisplay(_INTL("{1} was cured of paralysis.",curedName))
     when :FROZEN
-      @battle.pbDisplay(_INTL("{1} was thawed out.",curedName))
+      if (!$PokemonSystem.frostbite || $PokemonSystem.frostbite == 0)
+        then @battle.pbDisplay(_INTL("{1} was thawed out.",curedName))
+      elsif ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+        then @battle.pbDisplay(_INTL("{1}'s frostbite was healed.",curedName))
+      end
     end
   end
 
@@ -544,7 +556,11 @@ class PokeBattle_Move_01B < PokeBattle_Move
       msg = _INTL("{1} was cured of paralysis.",user.pbThis)
     when :FROZEN
       target.pbFreeze
-      msg = _INTL("{1} was thawed out.",user.pbThis)
+      if (!$PokemonSystem.frostbite || $PokemonSystem.frostbite == 0)
+        then msg = _INTL("{1} was thawed out.",user.pbThis)
+      elsif ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+        then msg = _INTL("{1}'s frostbite was healed.",user.pbThis)
+      end
     end
     if msg!=""
       user.pbCureStatus(false)

@@ -1392,8 +1392,13 @@ BattleHandlers::TargetAbilityOnHit.add(:EFFECTSPORE,
         if user.pbCanSleep?(target,PokeBattle_SceneConstants::USE_ABILITY_SPLASH)
           msg = nil
           if !PokeBattle_SceneConstants::USE_ABILITY_SPLASH
-            msg = _INTL("{1}'s {2} made {3} fall asleep!",target.pbThis,
-               target.abilityName,user.pbThis(true))
+            if (!$PokemonSystem.drowsy || $PokemonSystem.drowsy == 0)
+              then msg = _INTL("{1}'s {2} made {3} fall asleep!",target.pbThis,
+              target.abilityName,user.pbThis(true))
+            elsif ($PokemonSystem.drowsy && $PokemonSystem.drowsy != 0)
+              then msg = _INTL("{1}'s {2} made {3} drowsy!",target.pbThis,
+              target.abilityName,user.pbThis(true))
+            end
           end
           user.pbSleep(msg)
         end
