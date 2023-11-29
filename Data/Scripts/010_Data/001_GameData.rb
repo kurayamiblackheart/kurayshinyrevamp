@@ -48,7 +48,7 @@ module GameData
       end
 
       if !self::DATA.has_key?(other)
-        echo _INTL("Unknown ID {1}.", other)
+        echoln _INTL("Unknown ID {1}.", other)
         return self::get(:PIKACHU)
       end
 

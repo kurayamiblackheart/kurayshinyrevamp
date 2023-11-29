@@ -138,12 +138,12 @@ QUESTS = [
   Quest.new(37, "The Largest Carp", "A fisherman wants you to fish up a Magikarp that's exceptionally high-level at Dragon's Den.", questBranchHotels, "BW (71)", "Blackthorn City", defaultQuestColor),
 
   #Ecruteak City
-  Quest.new(38, "Kalos Pokémon", "A woman wants you to show her a Pokémon native to the Kalos region.", questBranchHotels, "BW (37)", "Ecruteak City", defaultQuestColor),
+  Quest.new(38, "Kalos Pokémon", "A woman wants you to show her a Pokémon native to the Kalos region.", questBranchHotels, "BW (348)", "Ecruteak City", defaultQuestColor),
   Quest.new(39, "Ghost Evolution", "A girl in Ecruteak City wants you to show her a fully-evolved Ghost Pokémon.", questBranchHotels, "BW014", "Ecruteak City", defaultQuestColor),
 
   #Kin Island
-  Quest.new(40, "Banana Slamma!", "Collect 30 bananas", questBranchHotels, "BW029", "Kin Island", defaultQuestColor),
-  Quest.new(41, "Unova Pokémon", "A woman wants you to show her a Pokémon native to the Unova region.", questBranchHotels, "BW (37)", "Kin Island", defaultQuestColor),
+  Quest.new(40, "Banana Slamma!", "Collect 30 bananas", questBranchHotels, "BW059", "Kin Island", defaultQuestColor),
+  Quest.new(41, "Unova Pokémon", "A woman wants you to show her a Pokémon native to the Unova region.", questBranchHotels, "BW (48)", "Kin Island", defaultQuestColor),
   Quest.new(42, "Stolen artifact", "Recover a stolen vase from a burglar in the Pokémon Mansion", questBranchHotels, "BW (21)", "Cinnabar Island", defaultQuestColor),
   Quest.new(43, "Fallen Meteor", "Investigate a crater near Bond Bridge.", questBranchHotels, "BW009", "Kin Island", defaultQuestColor),
   Quest.new(44, "First Contact", "Find the missing pieces of a fallen alien spaceship", questBranchHotels, "BW (92)", "Bond Bridge", questBranchField),

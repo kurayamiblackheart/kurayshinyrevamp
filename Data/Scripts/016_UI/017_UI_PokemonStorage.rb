@@ -62,6 +62,11 @@ class PokemonBoxIcon < IconSprite
     return false
   end
 
+  def useTripleFusionIcon(species)
+    dexNum = getDexNumberForSpecies(species)
+    return isTripleFusion?(dexNum)
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES
   #KuraIcon
   def createRBGableShiny(pokemon)
@@ -301,6 +306,8 @@ class PokemonBoxIcon < IconSprite
         ## self.setBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon), GameData::Species.calculateShinyHueOffset(@pokemon.dexNum, @pokemon.bodyShiny?, @pokemon.headShiny?, @pokemon.shinyValue?))
         ## self.setBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon), GameData::Species.calculateShinyHueOffset(@pokemon.dexNum, @pokemon.bodyShiny?, @pokemon.headShiny?, @pokemon.shinyValue?))
       ## end
+    elsif useTripleFusionIcon(@pokemon.species)
+      self.setBitmap(pbResolveBitmap(sprintf("Graphics/Icons/iconDNA")))
     else
       self.setBitmapDirectly(createFusionIcon(@pokemon.species,@pokemon.spriteform_head, @pokemon.spriteform_body))
       if fusion_enabled
@@ -3482,7 +3489,7 @@ class PokemonStorageScreen
           if heldpoke || selected[0] == -1
             p = (heldpoke) ? heldpoke : @storage[-1, index]
             p.time_form_set = nil
-            p.form = 0 if p.isSpecies?(:SHAYMIN)
+            # p.form = 0 if p.isSpecies?(:SHAYMIN)
             p.heal if !$game_temp.fromkurayshop
           end
           @scene.pbStore(selected, heldpoke, destbox, firstfree)
@@ -3524,7 +3531,9 @@ class PokemonStorageScreen
     box = selected[0]
     index = selected[1]
     if @storage[box, index]
-      raise _INTL("Position {1},{2} is not empty...", box, index)
+      pbDisplay("Can't place that there.")
+      return
+      echoln _INTL("Position {1},{2} is not empty...", box, index)
     end
     if box != -1 && index >= @storage.maxPokemon(box)
       pbDisplay("Can't place that there.")

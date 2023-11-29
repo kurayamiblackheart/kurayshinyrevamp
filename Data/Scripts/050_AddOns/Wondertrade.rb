@@ -116,7 +116,7 @@ def pbWonderTrade(lvl, except = [], except2 = [], premiumWonderTrade = true)
       end
     end
     randTrainerNames = RandTrainerNames_male + RandTrainerNames_female + RandTrainerNames_others
-    tname = randTrainerNames[rand(randTrainerNames.size)] # Randomizes Trainer Names
+    # tname = randTrainerNames[rand(randTrainerNames.size)] # Randomizes Trainer Names
     pname = RandPokeNick[rand(RandPokeNick.size)] # Randomizes Pokemon Nicknames
 
     #num of Wondertrade - 1
@@ -125,7 +125,8 @@ def pbWonderTrade(lvl, except = [], except2 = [], premiumWonderTrade = true)
     else
       $game_variables[VAR_STANDARD_WONDERTRADE_LEFT] -= 1
     end
-
+    tname = getSpriterCreditForDexNumber(species)
+    tname = randTrainerNames[rand(randTrainerNames.size)] if ! tname
     newpoke = pbStartTrade(pbGet(1), species, pname, tname, 0, true) # Starts the trade
     #lower level by 1 to prevent abuse
     if poke.level > 25

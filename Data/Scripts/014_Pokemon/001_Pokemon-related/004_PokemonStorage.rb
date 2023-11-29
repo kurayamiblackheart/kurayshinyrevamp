@@ -315,7 +315,7 @@ class PokemonStorage
   def pbStoreCaught(pkmn)
     if @currentBox>=0
       pkmn.time_form_set = nil
-      pkmn.form          = 0 if pkmn.isSpecies?(:SHAYMIN)
+      # pkmn.form          = 0 if pkmn.isSpecies?(:SHAYMIN)
       pkmn.heal
     end
     for i in 0...maxPokemon(@currentBox)

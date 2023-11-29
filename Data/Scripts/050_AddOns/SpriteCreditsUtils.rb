@@ -220,3 +220,37 @@ def format_names_for_game_credits()
   end
   return formatted
 end
+
+def get_spritename_from_path(file_path,includeExtension=false)
+  filename_with_extension = File.basename(file_path)
+  filename_without_extension = File.basename(filename_with_extension, ".*")
+  return filename_with_extension if includeExtension
+  return filename_without_extension
+end
+
+def getSpriterCreditForDexNumber(species_sym)
+  #download sprite to make sure it's in the substitutions map
+  body_id = getBodyID(species_sym)
+  head_id = getHeadID(species_sym,body_id)
+
+  spritePath = get_fusion_sprite_path(head_id,body_id)
+  spritename = get_spritename_from_path(spritePath)
+
+  return getSpriteCredits(spritename)
+end
+
+
+#
+# def getSpriterCreditForPokemon(species_sym)
+#   p species_sym
+#   #download sprite to make sure it's in the substitutions map
+#   head_id = get_head_id_from_symbol(species_sym)
+#   body_id = get_body_id_from_symbol(species_sym)
+#
+#   echoln head_id
+#   echoln body_id
+#   spritename = get_fusion_sprite_path(head_id,body_id)
+#   p spritename
+#   p getSpriteCredits(spritename)
+#   return getSpriteCredits(spritename)
+# end

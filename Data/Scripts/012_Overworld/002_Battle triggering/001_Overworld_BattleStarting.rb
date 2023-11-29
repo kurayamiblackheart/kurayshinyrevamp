@@ -337,6 +337,10 @@ end
 #===============================================================================
 # Used when walking in tall grass, hence the additional code.
 def pbWildBattle(species, level, outcomeVar=1, canRun=true, canLose=false)
+  if !species
+    displayRandomizerErrorMessage()
+    return
+  end
   species = GameData::Species.get(species).id
   dexnum = getDexNumberForSpecies(species)
   if $game_switches[SWITCH_RANDOM_STATIC_ENCOUNTERS] && dexnum <= NB_POKEMON

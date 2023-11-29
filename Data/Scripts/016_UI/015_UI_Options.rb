@@ -139,7 +139,7 @@ class PokemonSystem
     @kurayshinyanim = 0
     @kurayfonts = 0
     @kuraybigicons = 0
-    @kurayindividcustomsprite = 0
+    @kurayindividcustomsprite = 1
     @typedisplay = 0
     @battlegui = 0
     @darkmode = 1
@@ -1385,6 +1385,39 @@ class KurayOptSc_2 < PokemonOption_Scene
                       ["Legendary Head cannot breed (like new PIF).",
                       "Legendary Head can breed (like old PIF)."]
     )
+    # Made by Blue Woppo
+    options << EnumOption.new(_INTL("Modern Hail"), [_INTL("Off"), _INTL("Hail"), _INTL("Snow")],
+    proc { $PokemonSystem.modernhail },
+    proc { |value| $PokemonSystem.modernhail = value },
+    ["Vanilla hail.",
+    "Ice types receive a defensive boost during hail.",
+    "Hail becomes Snow, behaves like Gen 9+."]
+    )
+    options << EnumOption.new(_INTL("Frostbite"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.frostbite },
+    proc { |value| $PokemonSystem.frostbite = value },
+    ["Vanilla Frozen Status.",
+    "Frostbite Status from Gen 9+ replaces Frozen Status."]
+    )
+    options << EnumOption.new(_INTL("Drowsy"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.drowsy },
+    proc { |value| $PokemonSystem.drowsy = value },
+    ["Vanilla Sleep Status.",
+    "Drowsy Status from Gen 9+ replaces Sleep Status."]
+    )
+    options << EnumOption.new(_INTL("Bug Type Buffs"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.bugbuff },
+    proc { |value| $PokemonSystem.bugbuff = value },
+    ["Vanilla Bug Types.",
+    "Bug Types now resist Fairy, Psychic, and Dark."]
+    )
+    options << EnumOption.new(_INTL("Ice Type Buffs"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.icebuff },
+    proc { |value| $PokemonSystem.icebuff = value },
+    ["Vanilla Ice Types.",
+    "Ice Types now resist Water and Flying."]
+    )
+    # End of made By Blue Woppo
 
     return options
   end
@@ -1624,37 +1657,6 @@ class KurayOptSc_4 < PokemonOption_Scene
                       ["Everyone takes dmg on overworld poison.",
                       "Some abilities immune to dmg on overworld poison.",
                       "Some abilities heal instead of taking dmg on overworld poison."]
-    )
-    options << EnumOption.new(_INTL("Modern Hail"), [_INTL("Off"), _INTL("Hail"), _INTL("Snow")],
-    proc { $PokemonSystem.modernhail },
-    proc { |value| $PokemonSystem.modernhail = value },
-    ["Vanilla hail.",
-    "Ice types receive a defensive boost during hail.",
-    "Hail becomes Snow, behaves like Gen 9+."]
-    )
-    options << EnumOption.new(_INTL("Frostbite"), [_INTL("Off"), _INTL("On")],
-    proc { $PokemonSystem.frostbite },
-    proc { |value| $PokemonSystem.frostbite = value },
-    ["Vanilla Frozen Status.",
-    "Frostbite Status from Gen 9+ replaces Frozen Status."]
-    )
-    options << EnumOption.new(_INTL("Drowsy"), [_INTL("Off"), _INTL("On")],
-    proc { $PokemonSystem.drowsy },
-    proc { |value| $PokemonSystem.drowsy = value },
-    ["Vanilla Sleep Status.",
-    "Drowsy Status from Gen 9+ replaces Sleep Status."]
-    )
-    options << EnumOption.new(_INTL("Bug Type Buffs"), [_INTL("Off"), _INTL("On")],
-    proc { $PokemonSystem.bugbuff },
-    proc { |value| $PokemonSystem.bugbuff = value },
-    ["Vanilla Bug Types.",
-    "Bug Types now resist Fairy, Psychic, and Dark."]
-    )
-    options << EnumOption.new(_INTL("Ice Type Buffs"), [_INTL("Off"), _INTL("On")],
-    proc { $PokemonSystem.icebuff },
-    proc { |value| $PokemonSystem.icebuff = value },
-    ["Vanilla Ice Types.",
-    "Ice Types now resist Water and Flying."]
     )
     #End of By Blue Wuppo
 
