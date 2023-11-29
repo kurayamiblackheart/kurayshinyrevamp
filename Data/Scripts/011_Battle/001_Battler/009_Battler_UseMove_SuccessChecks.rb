@@ -238,9 +238,7 @@ class PokeBattle_Battler
           @lastMoveFailed = true
           return false
         end
-      end
-    when :FROZEN
-      if !move.thawsUser?
+      elsif !move.thawsUser?
         if @battle.pbRandom(100)<20
           pbCureStatus
         else

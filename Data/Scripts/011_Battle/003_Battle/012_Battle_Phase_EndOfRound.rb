@@ -388,7 +388,7 @@ class PokeBattle_Battle
     end
     # Damage from frostbite
     priority.each do |b|
-      next if (b.status != :FROZEN || !b.takesIndirectDamage?) && ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0) 
+      next if (b.status != :FROZEN || !b.takesIndirectDamage?) || ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0) 
       oldHP = b.hp
       dmg = (Settings::MECHANICS_GENERATION >= 7) ? b.totalhp/16 : b.totalhp/8
       b.pbContinueStatus { b.pbReduceHP(dmg,false) }
