@@ -61,6 +61,15 @@ class PokeBattle_Move
     return Effectiveness::NORMAL_EFFECTIVE if !moveType
     return Effectiveness::NORMAL_EFFECTIVE if moveType == :GROUND &&
        target.pbHasType?(:FLYING) && target.hasActiveItem?(:IRONBALL)
+    if ($PokemonSystem.bugbuff && $PokemonSystem.bugbuff != 0)
+      return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :DARK && target.pbHasType?(:BUG)
+      return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :PSYCHIC && target.pbHasType?(:BUG)
+      return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :FAIRY && target.pbHasType?(:BUG)
+    end
+      if ($PokemonSystem.icebuff && $PokemonSystem.icebuff != 0)
+        return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :WATER && target.pbHasType?(:ICE)
+        return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :FLYING && target.pbHasType?(:ICE)
+      end
     # Determine types
     tTypes = target.pbTypes(true)
     # Get effectivenesses
@@ -399,6 +408,10 @@ class PokeBattle_Move
       if target.pbHasType?(:ROCK) && specialMove? && @function != "122"   # Psyshock
         multipliers[:defense_multiplier] *= 1.5
       end
+    when :Hail
+      if target.pbHasType?(:ICE) && (physicalMove? || @function = "122") && ($PokemonSystem.modernhail && $PokemonSystem.modernhail != 0)
+        multipliers[:defense_multiplier] *= 1.5
+      end
     end
     # Critical hits
     if target.damageState.critical
@@ -426,6 +439,14 @@ class PokeBattle_Move
     # Burn
     if user.status == :BURN && physicalMove? && damageReducedByBurn? &&
        !user.hasActiveAbility?(:GUTS)
+      multipliers[:final_damage_multiplier] /= 2
+    end
+    #Frostbite
+    if user.status == :FROZEN && ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0) && specialMove? && !user.hasActiveAbility?(:GUTS)
+      multipliers[:final_damage_multiplier] /= 2
+    end
+    #Drowsy
+    if user.status == :SLEEP && ($PokemonSystem.drowsy && $PokemonSystem.drowsy != 0) && !user.hasActiveAbility?(:GUTS)
       multipliers[:final_damage_multiplier] /= 2
     end
     # Aurora Veil, Reflect, Light Screen

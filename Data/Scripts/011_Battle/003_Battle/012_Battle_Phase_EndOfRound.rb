@@ -43,7 +43,12 @@ class PokeBattle_Battle
       when :Sun       then pbDisplay(_INTL("The sunlight faded."))
       when :Rain      then pbDisplay(_INTL("The rain stopped."))
       when :Sandstorm then pbDisplay(_INTL("The sandstorm subsided."))
-      when :Hail      then pbDisplay(_INTL("The hail stopped."))
+      when :Hail
+        if (!$PokemonSystem.modernhail || $PokemonSystem.modernhail != 2)
+          then pbDisplay(_INTL("The hail stopped."))
+        elsif ($PokemonSystem.modernhail && $PokemonSystem.modernhail == 2)
+          then pbDisplay(_INTL("The snow stopped."))
+        end
       when :ShadowSky then pbDisplay(_INTL("The shadow sky faded."))
       end
       @field.weather = :None
@@ -60,7 +65,12 @@ class PokeBattle_Battle
 #    when :Sun         then pbDisplay(_INTL("The sunlight is strong."))
 #    when :Rain        then pbDisplay(_INTL("Rain continues to fall."))
     when :Sandstorm   then pbDisplay(_INTL("The sandstorm is raging."))
-    when :Hail        then pbDisplay(_INTL("The hail is crashing down."))
+    when :Hail
+      if (!$PokemonSystem.modernhail || $PokemonSystem.modernhail != 2)
+        then pbDisplay(_INTL("The hail is crashing down."))
+      elsif ($PokemonSystem.modernhail && $PokemonSystem.modernhail == 2)
+        then pbDisplay(_INTL("The snow is falling down."))
+      end
 #    when :HarshSun    then pbDisplay(_INTL("The sunlight is extremely harsh."))
 #    when :HeavyRain   then pbDisplay(_INTL("It is raining heavily."))
 #    when :StrongWinds then pbDisplay(_INTL("The wind is strong."))
@@ -85,12 +95,13 @@ class PokeBattle_Battle
         b.pbItemHPHealCheck
         b.pbFaint if b.fainted?
       when :Hail
+        next if ($PokemonSystem.modernhail && $PokemonSystem.modernhail == 2)
         next if !b.takesHailDamage?
-        pbDisplay(_INTL("{1} is buffeted by the hail!",b.pbThis))
-        @scene.pbDamageAnimation(b)
-        b.pbReduceHP(b.totalhp/16,false)
-        b.pbItemHPHealCheck
-        b.pbFaint if b.fainted?
+          pbDisplay(_INTL("{1} is buffeted by the hail!",b.pbThis))
+          @scene.pbDamageAnimation(b)
+          b.pbReduceHP(b.totalhp/16,false)
+          b.pbItemHPHealCheck
+          b.pbFaint if b.fainted?
       when :ShadowSky
         next if !b.takesShadowSkyDamage?
         pbDisplay(_INTL("{1} is hurt by the shadow sky!",b.pbThis))
@@ -370,6 +381,16 @@ class PokeBattle_Battle
       oldHP = b.hp
       dmg = (Settings::MECHANICS_GENERATION >= 7) ? b.totalhp/16 : b.totalhp/8
       dmg = (dmg/2.0).round if b.hasActiveAbility?(:HEATPROOF)
+      b.pbContinueStatus { b.pbReduceHP(dmg,false) }
+      b.pbItemHPHealCheck
+      b.pbAbilitiesOnDamageTaken(oldHP)
+      b.pbFaint if b.fainted?
+    end
+    # Damage from frostbite
+    priority.each do |b|
+      next if (b.status != :FROZEN || !b.takesIndirectDamage?) && ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0) 
+      oldHP = b.hp
+      dmg = (Settings::MECHANICS_GENERATION >= 7) ? b.totalhp/16 : b.totalhp/8
       b.pbContinueStatus { b.pbReduceHP(dmg,false) }
       b.pbItemHPHealCheck
       b.pbAbilitiesOnDamageTaken(oldHP)

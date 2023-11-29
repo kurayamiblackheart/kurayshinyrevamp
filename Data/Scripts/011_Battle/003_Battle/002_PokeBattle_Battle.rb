@@ -669,7 +669,12 @@ class PokeBattle_Battle
     when :Sun         then pbDisplay(_INTL("The sunlight turned harsh!"))
     when :Rain        then pbDisplay(_INTL("It started to rain!"))
     when :Sandstorm   then pbDisplay(_INTL("A sandstorm brewed!"))
-    when :Hail        then pbDisplay(_INTL("It started to hail!"))
+    when :Hail
+      if (!$PokemonSystem.modernhail || $PokemonSystem.modernhail != 2)
+        then pbDisplay(_INTL("It started to hail!"))
+      elsif ($PokemonSystem.modernhail && $PokemonSystem.modernhail == 2)
+        then pbDisplay(_INTL("It started to snow!"))
+      end
     when :HarshSun    then pbDisplay(_INTL("The sunlight turned extremely harsh!"))
     when :HeavyRain   then pbDisplay(_INTL("A heavy rain began to fall!"))
     when :StrongWinds then pbDisplay(_INTL("Mysterious strong winds are protecting Flying-type Pokémon!"))

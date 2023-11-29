@@ -1756,7 +1756,7 @@ class PokeBattle_AI
     when "0B3"
     #---------------------------------------------------------------------------
     when "0B4"
-      if user.asleep?
+      if user.asleep? && (!$PokemonSystem.drowsy || $PokemonSystem.drowsy == 0)
         score += 100   # Because it can only be used while asleep
       else
         score -= 90

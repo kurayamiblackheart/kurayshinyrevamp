@@ -478,7 +478,11 @@ ItemHandlers::UseOnPokemon.add(:ICEHEAL, proc { |item, pkmn, scene|
   end
   pkmn.heal_status
   scene.pbRefresh
-  scene.pbDisplay(_INTL("{1} was thawed out.", pkmn.name))
+  if (!$PokemonSystem.frostbite || $PokemonSystem.frostbite == 0)
+    then scene.pbDisplay(_INTL("{1} was thawed out.", pkmn.name))
+  elsif ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+    then scene.pbDisplay(_INTL("{1}'s frostbite was healed.", pkmn.name))
+  end
   next true
 })
 

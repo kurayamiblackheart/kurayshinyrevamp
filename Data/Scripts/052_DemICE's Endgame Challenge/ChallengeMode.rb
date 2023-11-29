@@ -281,6 +281,11 @@ class PokeBattle_Move
 			   !user.hasActiveAbility?(:GUTS)
 			  multipliers[:final_damage_multiplier] /= 2
 			end
+			# Frostbite
+			if user.status == :FROZEN && specialMove? && ($PokemonSystem.frostbite && $PokemonSystem.frostbite != 0)
+				!user.hasActiveAbility?(:GUTS)
+			   multipliers[:final_damage_multiplier] /= 2
+			 end
 			# Aurora Veil, Reflect, Light Screen
 			if !ignoresReflect? && !target.damageState.critical &&
 			   !user.hasActiveAbility?(:INFILTRATOR)
