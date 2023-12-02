@@ -114,7 +114,19 @@ module Effectiveness
   end
 
   def calculate_one(attack_type, defend_type)
-    return GameData::Type.get(defend_type).effectiveness(attack_type)
+    ret = GameData::Type.get(defend_type).effectiveness(attack_type)
+    #Ice Buff
+    if ($PokemonSystem.icebuff && $PokemonSystem.icebuff != 0) && defend_type == :ICE && (attack_type == :WATER || attack_type == :FLYING)
+      ret = 1
+    end
+    #Bug Buff
+    if ($PokemonSystem.bugbuff && $PokemonSystem.bugbuff != 0) && defend_type == :BUG && (attack_type == :PSYCHIC || attack_type == :DARK || attack_type == :FAIRY)
+      ret = 1
+    end
+    if ($PokemonSystem.bugbuff && $PokemonSystem.bugbuff == 2) && defend_type == :FAIRY && attack_type == :BUG
+      ret = 4
+    end
+    return ret
   end
 
   def calculate(attack_type, defend_type1, defend_type2 = nil, defend_type3 = nil)
