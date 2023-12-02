@@ -1405,12 +1405,12 @@ class KurayOptSc_2 < PokemonOption_Scene
     ["Vanilla Sleep Status.",
     "Drowsy Status from Gen 9+ replaces Sleep Status."]
     )
-    options << EnumOption.new(_INTL("Bug Type Buffs"), [_INTL("Off"), _INTL("Resistances Only"), _INTL("Resistances + Offensive")],
+    options << EnumOption.new(_INTL("Bug Type Buffs"), [_INTL("Off"), _INTL("Defensive"), _INTL("+ Offensive")],
     proc { $PokemonSystem.bugbuff },
     proc { |value| $PokemonSystem.bugbuff = value },
     ["Vanilla Bug Types.",
-    "Bug Types now resist Fairy, Psychic, and Dark.",
-    "Bug Type moves now hit Fairy types for Super Effective damage."]
+    "Bug Types resist Fairy, Psychic, and Dark.",
+    "Fairy Types are weak to Bug Type Moves."]
     )
     options << EnumOption.new(_INTL("Ice Type Buffs"), [_INTL("Off"), _INTL("On")],
     proc { $PokemonSystem.icebuff },
