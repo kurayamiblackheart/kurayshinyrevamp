@@ -61,15 +61,6 @@ class PokeBattle_Move
     return Effectiveness::NORMAL_EFFECTIVE if !moveType
     return Effectiveness::NORMAL_EFFECTIVE if moveType == :GROUND &&
        target.pbHasType?(:FLYING) && target.hasActiveItem?(:IRONBALL)
-    if ($PokemonSystem.bugbuff && $PokemonSystem.bugbuff != 0)
-      return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :DARK && target.pbHasType?(:BUG)
-      return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :PSYCHIC && target.pbHasType?(:BUG)
-      return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :FAIRY && target.pbHasType?(:BUG)
-    end
-      if ($PokemonSystem.icebuff && $PokemonSystem.icebuff != 0)
-        return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :WATER && target.pbHasType?(:ICE)
-        return Effectiveness::NOT_VERY_EFFECTIVE_ONE if moveType == :FLYING && target.pbHasType?(:ICE)
-      end
     # Determine types
     tTypes = target.pbTypes(true)
     # Get effectivenesses
