@@ -233,9 +233,9 @@ class AnimatedBitmap
     # greeninclude = [1, 3, 5, 6, 7, 8, 11, 13, 15, 17, 18, 19, 20, 23]
     # redinclude = [0, 3, 4, 6, 8, 9, 10, 12, 15, 16, 18, 20, 21, 22]
     # blueinclude = [2, 4, 5, 7, 9, 10, 11, 14, 16, 17, 19, 21, 22, 23]
-    greeninclude = [1, 3, 5, 7, 9, 11]
-    redinclude = [0, 3, 4, 6, 9, 10]
-    blueinclude = [2, 4, 5, 8, 10, 11]
+    greeninclude = [1, 3, 5, 7, 9, 11, 12, 13, 14, 16, 17, 19, 20, 22, 23, 25]
+    redinclude = [0, 3, 4, 6, 9, 10, 12, 13, 14, 15, 17, 18, 20, 21, 23, 24]
+    blueinclude = [2, 4, 5, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25]
     greenShiny = self.pbGetGreenChannel if greeninclude.include?(shinyR) || greeninclude.include?(shinyB) || greeninclude.include?(shinyG)
     redShiny = self.pbGetRedChannel if redinclude.include?(shinyR) || redinclude.include?(shinyB) || redinclude.include?(shinyG)
     blueShiny = self.pbGetBlueChannel if blueinclude.include?(shinyR) || blueinclude.include?(shinyB) || blueinclude.include?(shinyG)
@@ -263,10 +263,19 @@ class AnimatedBitmap
 
     for i in 0..@bitmap.bitmap.width
       for j in 0..@bitmap.bitmap.height
+        # begin
         if @bitmap.bitmap.get_pixel(i, j).alpha != 0
           depth = i * (@bitmap.bitmap.height + 1) + j
           @bitmap.bitmap.set_pixel(i, j, Color.new(canalRed[depth], canalGreen[depth], canalBlue[depth], @bitmap.bitmap.get_pixel(i, j).alpha))
         end
+        # rescue TypeError => e
+        #   puts "Caught TypeError: #{e.message}"
+        #   puts "i: #{i}, j: #{j}"
+        #   puts "Canal Red: #{canalRed[depth]}"
+        #   puts "Canal Green: #{canalGreen[depth]}"
+        #   puts "Canal Blue: #{canalBlue[depth]}"
+        #   puts "Depth: #{depth}"
+        # end
       end
     end
     # end
@@ -319,51 +328,56 @@ class AnimatedBitmap
       elsif shiny == 11
         colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
         return colordoing.map { |r| 255.0 - r }
+      else
+        return redShiny.clone
       end
     else
       timidblack = shinyKRS[idcol + 6]
+      redincr = shinyKRS[0].to_f
+      greenincr = shinyKRS[1].to_f
+      blueincr = shinyKRS[2].to_f
       # Advanced (advanced shinies)
       if shiny == 1
-        return greenShiny.clone.map{|value| value+shinyKRS[1].to_f}
+        return greenShiny.clone.map{|value| value+greenincr}
       elsif shiny == 2
-        return blueShiny.clone.map{|value| value+shinyKRS[2].to_f}
+        return blueShiny.clone.map{|value| value+blueincr}
       elsif shiny == 0
-        return redShiny.clone.map{|value| value+shinyKRS[0].to_f}
+        return redShiny.clone.map{|value| value+redincr}
       elsif shiny == 3
-        return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+shinyKRS[0].to_f + g+shinyKRS[1].to_f) / 2 }
+        return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+redincr + g+greenincr) / 2 }
       elsif shiny == 4
-        return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+shinyKRS[0].to_f + b+shinyKRS[2].to_f) / 2 }
+        return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+redincr + b+blueincr) / 2 }
       elsif shiny == 5
-        return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+shinyKRS[1].to_f + b+shinyKRS[2].to_f) / 2 }
+        return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+greenincr + b+blueincr) / 2 }
       elsif shiny == 6
         colordoing = redShiny.clone
         return colordoing.map do |r|
-          if (timidblack == 1 && r + shinyKRS[0].to_f > 16) || (timidblack == 2 && r + shinyKRS[0].to_f > 42) || (timidblack == 0)
-            255.0 - (r + shinyKRS[0].to_f)
+          if (timidblack == 1 && r + redincr > 16) || (timidblack == 2 && r + redincr > 42) || (timidblack == 0)
+            255.0 - (r + redincr)
           else
-            r + shinyKRS[0].to_f
+            r + redincr
           end
         end
       elsif shiny == 7
         colordoing = greenShiny.clone
         return colordoing.map do |r|
-          if (timidblack == 1 && r + shinyKRS[1].to_f > 16) || (timidblack == 2 && r + shinyKRS[1].to_f > 42) || (timidblack == 0)
-            255.0 - (r + shinyKRS[1].to_f)
+          if (timidblack == 1 && r + greenincr > 16) || (timidblack == 2 && r + greenincr > 42) || (timidblack == 0)
+            255.0 - (r + greenincr)
           else
-            r + shinyKRS[1].to_f
+            r + greenincr
           end
         end
       elsif shiny == 8
         colordoing = blueShiny.clone
         return colordoing.map do |r|
-          if (timidblack == 1 && r + shinyKRS[2].to_f > 16) || (timidblack == 2 && r + shinyKRS[2].to_f > 42) || (timidblack == 0)
-            255.0 - (r + shinyKRS[2].to_f)
+          if (timidblack == 1 && r + blueincr > 16) || (timidblack == 2 && r + blueincr > 42) || (timidblack == 0)
+            255.0 - (r + blueincr)
           else
-            r + shinyKRS[2].to_f
+            r + blueincr
           end
         end
       elsif shiny == 9
-        colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+shinyKRS[0].to_f + g+shinyKRS[1].to_f) / 2 }
+        colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+redincr + g+greenincr) / 2 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -372,7 +386,7 @@ class AnimatedBitmap
           end
         end
       elsif shiny == 10
-        colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+shinyKRS[0].to_f + b+shinyKRS[2].to_f) / 2 }
+        colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+redincr + b+blueincr) / 2 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -381,7 +395,7 @@ class AnimatedBitmap
           end
         end
       elsif shiny == 11
-        colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+shinyKRS[1].to_f + b+shinyKRS[2].to_f) / 2 }
+        colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+greenincr + b+blueincr) / 2 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -390,9 +404,9 @@ class AnimatedBitmap
           end
         end
       elsif shiny == 12
-        return greenShiny.clone.zip(blueShiny.clone, redShiny.clone).map { |g, b, r| (g+shinyKRS[1].to_f + b+shinyKRS[2].to_f + r+shinyKRS[0].to_f) / 3 }
+        return greenShiny.clone.zip(blueShiny.clone, redShiny.clone).map { |g, b, r| (g+greenincr + b+blueincr + r+redincr) / 3 }
       elsif shiny == 13
-        colordoing = greenShiny.clone.zip(blueShiny.clone, redShiny.clone).map { |g, b, r| (g+shinyKRS[1].to_f + b+shinyKRS[2].to_f + r+shinyKRS[0].to_f) / 3 }
+        colordoing = greenShiny.clone.zip(blueShiny.clone, redShiny.clone).map { |g, b, r| (g+greenincr + b+blueincr + r+redincr) / 3 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -401,20 +415,19 @@ class AnimatedBitmap
           end
         end
       elsif shiny == 14#Citrine
-        return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+shinyKRS[0].to_f + (g+shinyKRS[1].to_f)*3) / 4 }
+        return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+redincr + (g+greenincr)*3) / 4 }
       elsif shiny == 15#Violet
-        return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+shinyKRS[0].to_f + (b+shinyKRS[2].to_f)*3) / 4 }
+        return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+redincr + (b+blueincr)*3) / 4 }
       elsif shiny == 16#Marine
-        return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+shinyKRS[1].to_f + (b+shinyKRS[2].to_f)*3) / 4 }
+        return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+greenincr + (b+blueincr)*3) / 4 }
       elsif shiny == 17#Orange
-        return greenShiny.clone.zip(redShiny.clone).map { |g, r| (g+shinyKRS[1].to_f + (r+shinyKRS[0].to_f)*3) / 4 }
+        return greenShiny.clone.zip(redShiny.clone).map { |g, r| (g+greenincr + (r+redincr)*3) / 4 }
       elsif shiny == 18#Pink
-        return blueShiny.clone.zip(redShiny.clone).map { |b, r| (b+shinyKRS[2].to_f + (r+shinyKRS[0].to_f)*3) / 4 }
+        return blueShiny.clone.zip(redShiny.clone).map { |b, r| (b+blueincr + (r+redincr)*3) / 4 }
       elsif shiny == 19#Jade
-        return blueShiny.clone.zip(greenShiny.clone).map { |b, g| (b+shinyKRS[2].to_f + (g+shinyKRS[1].to_f)*3) / 4 }
-      
+        return blueShiny.clone.zip(greenShiny.clone).map { |b, g| (b+blueincr + (g+greenincr)*3) / 4 }
       elsif shiny == 20#Inverted Citrine
-        colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+shinyKRS[0].to_f + (g+shinyKRS[1].to_f)*3) / 4 }
+        colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+redincr + (g+greenincr)*3) / 4 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -423,7 +436,7 @@ class AnimatedBitmap
           end
         end
       elsif shiny == 21#Inverted Violet
-        colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+shinyKRS[0].to_f + (b+shinyKRS[2].to_f)*3) / 4 }
+        colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+redincr + (b+blueincr)*3) / 4 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -432,7 +445,7 @@ class AnimatedBitmap
           end
         end
       elsif shiny == 22#Inverted Marine
-        colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+shinyKRS[1].to_f + (b+shinyKRS[2].to_f)*3) / 4 }
+        colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+greenincr + (b+blueincr)*3) / 4 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -441,7 +454,7 @@ class AnimatedBitmap
           end
         end
       elsif shiny == 23#Inverted Orange
-        colordoing = greenShiny.clone.zip(redShiny.clone).map { |g, r| (g+shinyKRS[1].to_f + (r+shinyKRS[0].to_f)*3) / 4 }
+        colordoing = greenShiny.clone.zip(redShiny.clone).map { |g, r| (g+greenincr + (r+redincr)*3) / 4 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -450,7 +463,7 @@ class AnimatedBitmap
           end
         end
       elsif shiny == 24#Inverted Pink
-        colordoing = blueShiny.clone.zip(redShiny.clone).map { |b, r| (b+shinyKRS[2].to_f + (r+shinyKRS[0].to_f)*3) / 4 }
+        colordoing = blueShiny.clone.zip(redShiny.clone).map { |b, r| (b+blueincr + (r+redincr)*3) / 4 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -459,7 +472,7 @@ class AnimatedBitmap
           end
         end
       elsif shiny == 25#Inverted Jade
-        colordoing = blueShiny.clone.zip(greenShiny.clone).map { |b, g| (b+shinyKRS[2].to_f + (g+shinyKRS[1].to_f)*3) / 4 }
+        colordoing = blueShiny.clone.zip(greenShiny.clone).map { |b, g| (b+blueincr + (g+greenincr)*3) / 4 }
         return colordoing.map do |r|
           if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
             255.0 - r
@@ -467,6 +480,8 @@ class AnimatedBitmap
             r
           end
         end
+      else
+        return redShiny.clone
       end
     end
 

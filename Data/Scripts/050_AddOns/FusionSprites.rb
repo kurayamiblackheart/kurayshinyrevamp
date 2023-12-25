@@ -85,7 +85,7 @@ module GameData
 
     #KurayX - KURAYX_ABOUT_SHINIES
     #KuraSprite
-    def self.front_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[],cusFile=nil)
+    def self.front_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0],cusFile=nil)
       spriteform_body = nil if spriteform_body == 0
       spriteform_head = nil if spriteform_head == 0
 
@@ -117,7 +117,7 @@ module GameData
 
     #KurayX - KURAYX_ABOUT_SHINIES
     #KuraSprite
-    def self.back_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[], cusFile=nil)
+    def self.back_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0], cusFile=nil)
       if cusFile == nil
         filename = self.sprite_filename(dex_number, spriteform_body, spriteform_head)
       else

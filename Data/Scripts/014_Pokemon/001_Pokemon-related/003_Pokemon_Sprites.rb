@@ -60,7 +60,7 @@ class PokemonSprite < SpriteWrapper
 
   #KurayX - KURAYX_ABOUT_SHINIES
   # def setPokemonBitmapFromId(id, back = false, shiny=false, bodyShiny=false, headShiny=false,spriteform_body=nil,spriteform_head=nil, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2)
-  def setPokemonBitmapFromId(id, back = false, shiny=false, bodyShiny=false, headShiny=false, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2, pokeKRS = [])
+  def setPokemonBitmapFromId(id, back = false, shiny=false, bodyShiny=false, headShiny=false, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2, pokeKRS = [0, 0, 0, 0, 0, 0, 0, 0, 0])
     @_iconbitmap.dispose if @_iconbitmap
     @_iconbitmap = GameData::Species.sprite_bitmap_from_pokemon_id(id, back,shiny, bodyShiny,headShiny, pokeHue, pokeR, pokeG, pokeB, pokeKRS)
     self.bitmap = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
