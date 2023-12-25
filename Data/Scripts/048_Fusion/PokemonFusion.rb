@@ -688,7 +688,7 @@ class PokemonFusionScene
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    @sprites["rsprite2"].setPokemonBitmapFromId(@newspecies, false, pokemon1.shiny? || pokemon2.shiny?, pokemon1.shiny?, pokemon2.shiny?, domepokehue, domepoker, domepokeg, domepokeb)
+    @sprites["rsprite2"].setPokemonBitmapFromId(@newspecies, false, pokemon1.shiny? || pokemon2.shiny?, pokemon1.shiny?, pokemon2.shiny?, domepokehue, domepoker, domepokeg, domepokeb, domepokekrs)
     # @sprites["rsprite2"].setPokemonBitmapFromId(@newspecies, false, pokemon1.shiny? || pokemon2.shiny?, pokemon1.shiny?, pokemon2.shiny?)
 
     splicer_bitmap = _INTL("Graphics/Items/{1}",splicerItem)
