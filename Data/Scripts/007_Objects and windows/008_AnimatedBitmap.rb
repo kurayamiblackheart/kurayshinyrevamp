@@ -293,6 +293,7 @@ class AnimatedBitmap
         else
           v
         end
+      end
     elsif condif == 3
       channel = channel.map{|v| v >= 127 ? 255.0 - (v - 127.0) : v}#127 -> 255 / 255 -> 127
     elsif condif == 4
@@ -303,6 +304,7 @@ class AnimatedBitmap
         else
           v
         end
+      end
     end
     return channel
   end
