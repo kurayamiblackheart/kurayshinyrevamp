@@ -282,14 +282,27 @@ class AnimatedBitmap
   end
 
   def krsapply(channel, condif)
+    timidblack = shinyKRS[idcol + 6]
     if condif == 1
       channel = channel.map{|v| v >= 127 ? v-127.0: v}#127 -> 0 / 255 -> 127
     elsif condif == 2
-      channel = channel.map{|v| v!=0&&v <= 127 ? v+127.0 : v}#0 -> 127 / 127 -> 255
+      channel = channel.map do |v|#0 -> 127 / 127 -> 255
+        # v>16&&v <= 127 ? v+127.0 : v
+        if ((timidblack == 1 && v > 16) || (timidblack == 2 && v > 42) || (timidblack == 0)) && v <= 127
+          v+127.0
+        else
+          v
+        end
     elsif condif == 3
       channel = channel.map{|v| v >= 127 ? 255.0 - (v - 127.0) : v}#127 -> 255 / 255 -> 127
     elsif condif == 4
-      channel = channel.map{|v| v!=0&&v <= 127 ? 127.0 - v : v}#0 -> 127 / 127 -> 0
+      channel = channel.map do |v|#0 -> 127 / 127 -> 0
+        # v>16&&v <= 127 ? 127.0 - v : v
+        if ((timidblack == 1 && v > 16) || (timidblack == 2 && v > 42) || (timidblack == 0)) && v <= 127
+          127.0-v
+        else
+          v
+        end
     end
     return channel
   end
