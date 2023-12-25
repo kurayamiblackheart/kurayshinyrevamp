@@ -99,6 +99,8 @@ class PokemonSystem
 
   attr_accessor :legendarybreed
 
+  attr_accessor :shinyadvanced
+
   
 
   #Made by Blue Wuppo
@@ -184,6 +186,7 @@ class PokemonSystem
     @sb_loopbreaker = 0
     @savefolder = 0
     @exportdelete = 0
+    @shinyadvanced = 2
     @is_in_battle = false
     if Settings::SHINY_POKEMON_CHANCE
       @shinyodds = Settings::SHINY_POKEMON_CHANCE
@@ -273,6 +276,7 @@ class PokemonSystem
     @importdevolve = saved.importdevolve if saved.importdevolve
     @importnodelete = saved.importnodelete if saved.importnodelete
     @exportdelete = saved.exportdelete if saved.exportdelete
+    @shinyadvanced = saved.shinyadvanced if saved.shinyadvanced
     @savefolder = saved.savefolder if saved.savefolder
     @nopngexport = saved.nopngexport if saved.nopngexport
     @nopngimport = saved.nopngimport if saved.nopngimport
@@ -1183,12 +1187,12 @@ class KurayOptSc_1 < PokemonOption_Scene
     )
 
 
-    options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
-                      proc { $PokemonSystem.kuraynormalshiny },
-                      proc { |value| $PokemonSystem.kuraynormalshiny = value },
-                      ["Use Shiny Revamping (shiny Pokemons look better)",
-                      "Don't use Shiny Revamping (shiny Pokemons look worse)"]
-    )
+    # options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
+    #                   proc { $PokemonSystem.kuraynormalshiny },
+    #                   proc { |value| $PokemonSystem.kuraynormalshiny = value },
+    #                   ["Use Shiny Revamping (shiny Pokemons look better)",
+    #                   "Don't use Shiny Revamping (shiny Pokemons look worse)"]
+    # )
     options << EnumOption.new(_INTL("Shiny Animation"), [_INTL("On"), _INTL("Off"), _INTL("All")],
                       proc { $PokemonSystem.kurayshinyanim },
                       proc { |value| $PokemonSystem.kurayshinyanim = value },
@@ -1216,6 +1220,13 @@ class KurayOptSc_1 < PokemonOption_Scene
     proc {}
     )
 
+    options << EnumOption.new(_INTL("Shiny Colors"), [_INTL("Simple"), _INTL("Normal"), _INTL("Advanced")],
+                      proc { $PokemonSystem.shinyadvanced },
+                      proc { |value| $PokemonSystem.shinyadvanced = value },
+                      ["Shinies only have hue shifting (best performances)",
+                      "Shinies have hue and channels shifting (mid performances)",
+                      "Most powerful shiny system (low performances)"]
+    )
     options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, $PokemonSystem.raiser,
                       proc { $PokemonSystem.kuraygambleodds },
                       proc { |value|

@@ -99,40 +99,40 @@ class AnimatedBitmap
   #     return self.gradientMapping(blueShiny.clone, greenShiny.clone)
   #   elsif shiny == 12
   #     colordoing = redShiny.clone
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 13
   #     colordoing = greenShiny.clone
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 14
   #     colordoing = blueShiny.clone
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 15
   #     colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r + g) / 2 }
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 16
   #     colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r + b) / 2 }
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 17
   #     colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 18
   #     colordoing = self.gradientMapping(greenShiny.clone, redShiny.clone)
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 19
   #     colordoing = self.gradientMapping(greenShiny.clone, blueShiny.clone)
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 20
   #     colordoing = self.gradientMapping(redShiny.clone, greenShiny.clone)
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 21
   #     colordoing = self.gradientMapping(redShiny.clone, blueShiny.clone)
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 22
   #     colordoing = self.gradientMapping(blueShiny.clone, redShiny.clone)
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   elsif shiny == 23
   #     colordoing = self.gradientMapping(blueShiny.clone, greenShiny.clone)
-  #     return colordoing.map { |r| 255 - r }
+  #     return colordoing.map { |r| 255.0 - r }
   #   end
   # end
 
@@ -214,14 +214,17 @@ class AnimatedBitmap
   # end
 
   #KurayX - KURAYX_ABOUT_SHINIES Modified by ChatGPT
-  def pbGiveFinaleColor(shinyR, shinyG, shinyB, offset)
-    dontmodify = 0
-    if shinyR == 0 && shinyG == 1 && shinyB == 2
-      dontmodify = 1
-    end
+  def pbGiveFinaleColor(shinyR, shinyG, shinyB, offset, shinyKRS)
+    # dontmodify = 0
+    # if shinyR == 0 && shinyG == 1 && shinyB == 2
+    #   dontmodify = 1
+    # end
     @bitmap = nil
     newbitmap = GifBitmap.new(@path, @filename, offset, shinyR, shinyG, shinyB)
     @bitmap = newbitmap.copy
+    if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 0
+      return
+    end
 
     greenShiny = []
     redShiny = []
@@ -237,58 +240,269 @@ class AnimatedBitmap
     redShiny = self.pbGetRedChannel if redinclude.include?(shinyR) || redinclude.include?(shinyB) || redinclude.include?(shinyG)
     blueShiny = self.pbGetBlueChannel if blueinclude.include?(shinyR) || blueinclude.include?(shinyB) || blueinclude.include?(shinyG)
 
+    if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 2
+      if shinyKRS[3] > 0
+        redShiny = self.krsapply(redShiny, shinyKRS[3])
+      end
+      if shinyKRS[4] > 0
+        greenShiny = self.krsapply(greenShiny, shinyKRS[4])
+      end
+      if shinyKRS[5] > 0
+        blueShiny = self.krsapply(blueShiny, shinyKRS[5])
+      end
+    end
+
     # greenShiny = self.pbGetGreenChannel
     # redShiny = self.pbGetRedChannel
     # blueShiny = self.pbGetBlueChannel
   
-    canalRed = self.getChannelGradient(shinyR, redShiny, greenShiny, blueShiny)
-    canalGreen = self.getChannelGradient(shinyG, redShiny, greenShiny, blueShiny)
-    canalBlue = self.getChannelGradient(shinyB, redShiny, greenShiny, blueShiny)
-    if dontmodify == 0
-      for i in 0..@bitmap.bitmap.width
-        for j in 0..@bitmap.bitmap.height
-          if @bitmap.bitmap.get_pixel(i, j).alpha != 0
-            depth = i * (@bitmap.bitmap.height + 1) + j
-            @bitmap.bitmap.set_pixel(i, j, Color.new(canalRed[depth], canalGreen[depth], canalBlue[depth], @bitmap.bitmap.get_pixel(i, j).alpha))
+    # if dontmodify == 0 || ($PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced != 0)
+    canalRed = self.getChannelGradient(shinyR, redShiny, greenShiny, blueShiny, shinyKRS, 0)
+    canalGreen = self.getChannelGradient(shinyG, redShiny, greenShiny, blueShiny, shinyKRS, 1)
+    canalBlue = self.getChannelGradient(shinyB, redShiny, greenShiny, blueShiny, shinyKRS, 2)
+
+    for i in 0..@bitmap.bitmap.width
+      for j in 0..@bitmap.bitmap.height
+        if @bitmap.bitmap.get_pixel(i, j).alpha != 0
+          depth = i * (@bitmap.bitmap.height + 1) + j
+          @bitmap.bitmap.set_pixel(i, j, Color.new(canalRed[depth], canalGreen[depth], canalBlue[depth], @bitmap.bitmap.get_pixel(i, j).alpha))
+        end
+      end
+    end
+    # end
+  end
+
+  def krsapply(channel, condif)
+    if condif == 1
+      channel = channel.map{|v| v >= 127 ? v-127.0: v}#127 -> 0 / 255 -> 127
+    elsif condif == 2
+      channel = channel.map{|v| v!=0&&v <= 127 ? v+127.0 : v}#0 -> 127 / 127 -> 255
+    elsif condif == 3
+      channel = channel.map{|v| v >= 127 ? 255.0 - (v - 127.0) : v}#127 -> 255 / 255 -> 127
+    elsif condif == 4
+      channel = channel.map{|v| v!=0&&v <= 127 ? 127.0 - v : v}#0 -> 127 / 127 -> 0
+    end
+    return channel
+  end
+
+  #ChatGPT
+  def getChannelGradient(shiny, redShiny, greenShiny, blueShiny, shinyKRS, idcol)
+    if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 1
+      # Normal (Non-advanced shinies)
+      if shiny == 1
+        return greenShiny.clone
+      elsif shiny == 2
+        return blueShiny.clone
+      elsif shiny == 0
+        return redShiny.clone
+      elsif shiny == 3
+        return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r + g) / 2 }
+      elsif shiny == 4
+        return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r + b) / 2 }
+      elsif shiny == 5
+        return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
+      elsif shiny == 6
+        colordoing = redShiny.clone
+        return colordoing.map { |r| 255.0 - r }
+      elsif shiny == 7
+        colordoing = greenShiny.clone
+        return colordoing.map { |r| 255.0 - r }
+      elsif shiny == 8
+        colordoing = blueShiny.clone
+        return colordoing.map { |r| 255.0 - r }
+      elsif shiny == 9
+        colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r + g) / 2 }
+        return colordoing.map { |r| 255.0 - r }
+      elsif shiny == 10
+        colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r + b) / 2 }
+        return colordoing.map { |r| 255.0 - r }
+      elsif shiny == 11
+        colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
+        return colordoing.map { |r| 255.0 - r }
+      end
+    else
+      timidblack = shinyKRS[idcol + 6]
+      # Advanced (advanced shinies)
+      if shiny == 1
+        return greenShiny.clone.map{|value| value+shinyKRS[1].to_f}
+      elsif shiny == 2
+        return blueShiny.clone.map{|value| value+shinyKRS[2].to_f}
+      elsif shiny == 0
+        return redShiny.clone.map{|value| value+shinyKRS[0].to_f}
+      elsif shiny == 3
+        return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+shinyKRS[0].to_f + g+shinyKRS[1].to_f) / 2 }
+      elsif shiny == 4
+        return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+shinyKRS[0].to_f + b+shinyKRS[2].to_f) / 2 }
+      elsif shiny == 5
+        return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+shinyKRS[1].to_f + b+shinyKRS[2].to_f) / 2 }
+      elsif shiny == 6
+        colordoing = redShiny.clone
+        return colordoing.map do |r|
+          if (timidblack == 1 && r + shinyKRS[0].to_f > 16) || (timidblack == 2 && r + shinyKRS[0].to_f > 42) || (timidblack == 0)
+            255.0 - (r + shinyKRS[0].to_f)
+          else
+            r + shinyKRS[0].to_f
+          end
+        end
+      elsif shiny == 7
+        colordoing = greenShiny.clone
+        return colordoing.map do |r|
+          if (timidblack == 1 && r + shinyKRS[1].to_f > 16) || (timidblack == 2 && r + shinyKRS[1].to_f > 42) || (timidblack == 0)
+            255.0 - (r + shinyKRS[1].to_f)
+          else
+            r + shinyKRS[1].to_f
+          end
+        end
+      elsif shiny == 8
+        colordoing = blueShiny.clone
+        return colordoing.map do |r|
+          if (timidblack == 1 && r + shinyKRS[2].to_f > 16) || (timidblack == 2 && r + shinyKRS[2].to_f > 42) || (timidblack == 0)
+            255.0 - (r + shinyKRS[2].to_f)
+          else
+            r + shinyKRS[2].to_f
+          end
+        end
+      elsif shiny == 9
+        colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+shinyKRS[0].to_f + g+shinyKRS[1].to_f) / 2 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
+          end
+        end
+      elsif shiny == 10
+        colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+shinyKRS[0].to_f + b+shinyKRS[2].to_f) / 2 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
+          end
+        end
+      elsif shiny == 11
+        colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+shinyKRS[1].to_f + b+shinyKRS[2].to_f) / 2 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
+          end
+        end
+      elsif shiny == 12
+        return greenShiny.clone.zip(blueShiny.clone, redShiny.clone).map { |g, b, r| (g+shinyKRS[1].to_f + b+shinyKRS[2].to_f + r+shinyKRS[0].to_f) / 3 }
+      elsif shiny == 13
+        colordoing = greenShiny.clone.zip(blueShiny.clone, redShiny.clone).map { |g, b, r| (g+shinyKRS[1].to_f + b+shinyKRS[2].to_f + r+shinyKRS[0].to_f) / 3 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
+          end
+        end
+      elsif shiny == 14#Citrine
+        return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+shinyKRS[0].to_f + (g+shinyKRS[1].to_f)*3) / 4 }
+      elsif shiny == 15#Violet
+        return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+shinyKRS[0].to_f + (b+shinyKRS[2].to_f)*3) / 4 }
+      elsif shiny == 16#Marine
+        return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+shinyKRS[1].to_f + (b+shinyKRS[2].to_f)*3) / 4 }
+      elsif shiny == 17#Orange
+        return greenShiny.clone.zip(redShiny.clone).map { |g, r| (g+shinyKRS[1].to_f + (r+shinyKRS[0].to_f)*3) / 4 }
+      elsif shiny == 18#Pink
+        return blueShiny.clone.zip(redShiny.clone).map { |b, r| (b+shinyKRS[2].to_f + (r+shinyKRS[0].to_f)*3) / 4 }
+      elsif shiny == 19#Jade
+        return blueShiny.clone.zip(greenShiny.clone).map { |b, g| (b+shinyKRS[2].to_f + (g+shinyKRS[1].to_f)*3) / 4 }
+      
+      elsif shiny == 20#Inverted Citrine
+        colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r+shinyKRS[0].to_f + (g+shinyKRS[1].to_f)*3) / 4 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
+          end
+        end
+      elsif shiny == 21#Inverted Violet
+        colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r+shinyKRS[0].to_f + (b+shinyKRS[2].to_f)*3) / 4 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
+          end
+        end
+      elsif shiny == 22#Inverted Marine
+        colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g+shinyKRS[1].to_f + (b+shinyKRS[2].to_f)*3) / 4 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
+          end
+        end
+      elsif shiny == 23#Inverted Orange
+        colordoing = greenShiny.clone.zip(redShiny.clone).map { |g, r| (g+shinyKRS[1].to_f + (r+shinyKRS[0].to_f)*3) / 4 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
+          end
+        end
+      elsif shiny == 24#Inverted Pink
+        colordoing = blueShiny.clone.zip(redShiny.clone).map { |b, r| (b+shinyKRS[2].to_f + (r+shinyKRS[0].to_f)*3) / 4 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
+          end
+        end
+      elsif shiny == 25#Inverted Jade
+        colordoing = blueShiny.clone.zip(greenShiny.clone).map { |b, g| (b+shinyKRS[2].to_f + (g+shinyKRS[1].to_f)*3) / 4 }
+        return colordoing.map do |r|
+          if (timidblack == 1 && r > 16) || (timidblack == 2 && r > 42) || (timidblack == 0)
+            255.0 - r
+          else
+            r
           end
         end
       end
     end
-  end
 
-  #ChatGPT
-  def getChannelGradient(shiny, redShiny, greenShiny, blueShiny)
-    if shiny == 1
-      return greenShiny.clone
-    elsif shiny == 2
-      return blueShiny.clone
-    elsif shiny == 0
-      return redShiny.clone
-    elsif shiny == 3
-      return redShiny.clone.zip(greenShiny.clone).map { |r, g| (r + g) / 2 }
-    elsif shiny == 4
-      return redShiny.clone.zip(blueShiny.clone).map { |r, b| (r + b) / 2 }
-    elsif shiny == 5
-      return greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
-    elsif shiny == 6
-      colordoing = redShiny.clone
-      return colordoing.map { |r| 255 - r }
-    elsif shiny == 7
-      colordoing = greenShiny.clone
-      return colordoing.map { |r| 255 - r }
-    elsif shiny == 8
-      colordoing = blueShiny.clone
-      return colordoing.map { |r| 255 - r }
-    elsif shiny == 9
-      colordoing = redShiny.clone.zip(greenShiny.clone).map { |r, g| (r + g) / 2 }
-      return colordoing.map { |r| 255 - r }
-    elsif shiny == 10
-      colordoing = redShiny.clone.zip(blueShiny.clone).map { |r, b| (r + b) / 2 }
-      return colordoing.map { |r| 255 - r }
-    elsif shiny == 11
-      colordoing = greenShiny.clone.zip(blueShiny.clone).map { |g, b| (g + b) / 2 }
-      return colordoing.map { |r| 255 - r }
-    end
+    # Brainstorm
+    # ShinyKRS []
+    # 0 - Red increment
+    # 1 - Green increment
+    # 2 - Blue increment
+    # 3 - R's Semi-Inverted
+    # 4 - G's ~
+    # 5 - B's ~
+    # 6 - R's TimidBlack
+    # 7 - G's ~
+    # 8 - B's ~
+
+    # - TimidBlack -
+    # In this case, RGB is the output directly, it does not affect the shifting
+    # 0 (none, weight of 32)
+    # 1 (when inverted, black remains the same, weight of 16)
+    # 2 (when inverted, 0...10 remains the same, weight of 4)
+
+    # - Increment -
+    # 0 (none, weight of 512)
+    # -50 - 50 (normal mutation - weight of 64)
+    # -100 - 100 (advanced mutation - weight of 16)
+    # -200 - 200 (severe mutation - weight of 4)
+
+    # - Semi-Inverted -
+    # 0 (none, weight of 512)
+    # 127+ > 0-127 (light darkened, weight of 64)
+    # 127- > 127-255 (dark lightened [black ignored!], weight of 64)
+    # 127+ > 127-255 (light inverted, weight of 8)
+    # 127- > 0-127 (dark inverted [black ignored!], weight of 8)
+
+    # Grey
+
     # 0 = Red
     # 1 = Green
     # 2 = Blue
@@ -301,6 +515,23 @@ class AnimatedBitmap
     # 9 = Inverse Yellow
     # 10 = Inverse Magenta
     # 11 = Inverse Cyan
+    
+    # 12 = Grey
+    # 13 = Inverse Grey
+    
+    # 14 = Citrine (0.5 R | 1.5 G)
+    # 15 = Violet (0.5 R | 1.5 B)
+    # 16 = Marine (0.5 G | 1.5 B)
+    # 17 = Orange (0.5 G | 1.5 R)
+    # 18 = Pink (0.5  B| 1.5 R)
+    # 19 = Jade (0.5  B| 1.5 G)
+
+    # 20 = Inverted Citrine
+    # 21 = Inverted Violet
+    # 22 = Inverted Marine
+    # 23 = Inverted Orange
+    # 24 = Inverted Pink
+    # 25 = Inverted Jade
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES (Default)
