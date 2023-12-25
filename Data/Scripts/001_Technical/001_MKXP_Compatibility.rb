@@ -125,7 +125,7 @@ def kurayRNGforChannels
       return rand(0..2)#Weight of 7959
     end
   else
-    kurayRNG = rand(0..1432620)
+    kurayRNG = rand(0..1800901)
     if kurayRNG < 1# Weight of 1
       return rand(0..25)
     elsif kurayRNG < 81# Weight of 80
