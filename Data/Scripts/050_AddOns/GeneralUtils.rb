@@ -301,6 +301,8 @@ def addShinyStarsToGraphicsArray(imageArray, xPos, yPos, shinyBody, shinyHead, d
     else
       color = Color.new(67,230,34,255)#Green Star (RGB)
     end
+  else
+    color = nil
   end
   imageloc = "Graphics/Pictures/shiny"
   imageArray.push([imageloc,xPos,yPos,srcx,srcy,width,height,color])
