@@ -242,13 +242,13 @@ class AnimatedBitmap
 
     if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 2
       if shinyKRS[3] > 0
-        redShiny = self.krsapply(redShiny, shinyKRS[3])
+        redShiny = self.krsapply(redShiny, shinyKRS[3], 0)
       end
       if shinyKRS[4] > 0
-        greenShiny = self.krsapply(greenShiny, shinyKRS[4])
+        greenShiny = self.krsapply(greenShiny, shinyKRS[4], 1)
       end
       if shinyKRS[5] > 0
-        blueShiny = self.krsapply(blueShiny, shinyKRS[5])
+        blueShiny = self.krsapply(blueShiny, shinyKRS[5], 2)
       end
     end
 
@@ -281,7 +281,7 @@ class AnimatedBitmap
     # end
   end
 
-  def krsapply(channel, condif)
+  def krsapply(channel, condif, idcol)
     timidblack = shinyKRS[idcol + 6]
     if condif == 1
       channel = channel.map{|v| v >= 127 ? v-127.0: v}#127 -> 0 / 255 -> 127
