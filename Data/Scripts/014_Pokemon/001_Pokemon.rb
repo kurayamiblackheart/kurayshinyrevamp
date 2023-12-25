@@ -1878,7 +1878,12 @@ class Pokemon
         # Load new variables from version 0.2
         @spriteform_body = jsonparse['spriteform_body']
         @spriteform_head = jsonparse['spriteform_head']
+      when '0.3'
+        @spriteform_body = jsonparse['spriteform_body']
+        @spriteform_head = jsonparse['spriteform_head']
       when '0.4'
+        @spriteform_body = jsonparse['spriteform_body']
+        @spriteform_head = jsonparse['spriteform_head']
         @shinyKRS = jsonparse['shinyKRS']
         @head_shinykrs = jsonparse['head_shinykrs']
         @body_shinykrs = jsonparse['body_shinykrs']
@@ -1963,6 +1968,10 @@ class Pokemon
       # Perform version-specific loading logic based on json_version value
       case json_version
       when '0.3'
+        # Load new variables from version 0.3
+        @species_data = GameData::Species.get(@species)
+        @species_data.load_json(jsonparse['half_specie'])
+      when '0.4'
         # Load new variables from version 0.3
         @species_data = GameData::Species.get(@species)
         @species_data.load_json(jsonparse['half_specie'])
