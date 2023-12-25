@@ -566,6 +566,7 @@ def reverseFusion(pokemon)
   pokemon.head_shinyg, pokemon.body_shinyg = pokemon.body_shinyg, pokemon.head_shinyg
   pokemon.head_shinyb, pokemon.body_shinyb = pokemon.body_shinyb, pokemon.head_shinyb
   pokemon.head_shinyhue, pokemon.body_shinyhue = pokemon.body_shinyhue, pokemon.head_shinyhue
+  pokemon.head_shinykrs, pokemon.body_shinykrs = pokemon.body_shinykrs.clone, pokemon.head_shinykrs.clone
   #play animation
   pbFadeOutInWithMusic(99999) {
     fus = PokemonEvolutionScene.new
@@ -1597,11 +1598,13 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
             pokemon.head_shinyr=pokemon.shinyR?
             pokemon.head_shinyg=pokemon.shinyG?
             pokemon.head_shinyb=pokemon.shinyB?
+            pokemon.head_shinykrs=pokemon.shinyKRS?.clone
           else
             pokemon.body_shinyhue=pokemon.shinyValue?
             pokemon.body_shinyr=pokemon.shinyR?
             pokemon.body_shinyg=pokemon.shinyG?
             pokemon.body_shinyb=pokemon.shinyB?
+            pokemon.body_shinykrs=pokemon.shinyKRS?.clone
           end
         end
         if pokemon.bodyShiny? && pokemon.headShiny?
@@ -1612,10 +1615,12 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
           pokemon.shinyR=pokemon.body_shinyr?
           pokemon.shinyG=pokemon.body_shinyg?
           pokemon.shinyB=pokemon.body_shinyb?
+          pokemon.shinyKRS=pokemon.body_shinykrs?.clone
           poke2.shinyValue=pokemon.head_shinyhue?
           poke2.shinyR=pokemon.head_shinyr?
           poke2.shinyG=pokemon.head_shinyg?
           poke2.shinyB=pokemon.head_shinyb?
+          poke2.shinyKRS=pokemon.head_shinykrs?.clone
           #####
           pokemon.natural_shiny = true if pokemon.natural_shiny && !pokemon.debug_shiny
           poke2.natural_shiny = true if pokemon.natural_shiny && !pokemon.debug_shiny
@@ -1626,6 +1631,7 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
           pokemon.shinyR=pokemon.body_shinyr?
           pokemon.shinyG=pokemon.body_shinyg?
           pokemon.shinyB=pokemon.body_shinyb?
+          pokemon.shinyKRS=pokemon.body_shinykrs?.clone
           #####
           poke2.shiny = false
           pokemon.natural_shiny = true if pokemon.natural_shiny && !pokemon.debug_shiny
@@ -1636,6 +1642,7 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
           poke2.shinyR=pokemon.head_shinyr?
           poke2.shinyG=pokemon.head_shinyg?
           poke2.shinyB=pokemon.head_shinyb?
+          poke2.shinyKRS=pokemon.head_shinykrs?.clone
           #####
           pokemon.shiny = false
           poke2.natural_shiny = true if pokemon.natural_shiny && !pokemon.debug_shiny
@@ -1656,6 +1663,7 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
             poke2.shinyR=pokemon.shinyR?
             poke2.shinyG=pokemon.shinyG?
             poke2.shinyB=pokemon.shinyB?
+            poke2.shinyKRS=pokemon.shinyKRS?.clone
             #####
           end
         end

@@ -24,8 +24,8 @@ class FusionPreviewScreen < DoublePreviewScreen
     fusion_left = (poke1.species_data.id_number) * NB_POKEMON + poke2.species_data.id_number
     fusion_right = (poke2.species_data.id_number) * NB_POKEMON + poke1.species_data.id_number
 
-    @picture1 = draw_window(fusion_left,new_level,20,30,poke2.shiny?,poke2.shinyValue?,poke2.shinyR?,poke2.shinyG?,poke2.shinyB?)
-    @picture2 = draw_window(fusion_right,new_level,270,30,poke1.shiny?,poke1.shinyValue?,poke1.shinyR?,poke1.shinyG?,poke1.shinyB?)
+    @picture1 = draw_window(fusion_left,new_level,20,30,poke2.shiny?,poke2.shinyValue?,poke2.shinyR?,poke2.shinyG?,poke2.shinyB?,poke2.shinyKRS?)
+    @picture2 = draw_window(fusion_right,new_level,270,30,poke1.shiny?,poke1.shinyValue?,poke1.shinyR?,poke1.shinyG?,poke1.shinyB?,poke1.shinyKRS?)
 
     @sprites["picture1"] = @picture1
     @sprites["picture2"] = @picture2

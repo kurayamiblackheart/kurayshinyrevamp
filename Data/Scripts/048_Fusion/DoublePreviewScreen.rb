@@ -102,14 +102,14 @@ class DoublePreviewScreen
     pbUpdateSpriteHash(@sprites)
   end
 
-  def draw_window(dexNumber, level, x, y, shiny, shinyV, shinyR, shinyG, shinyB)
+  def draw_window(dexNumber, level, x, y, shiny, shinyV, shinyR, shinyG, shinyB,shinyKRS)
     body_pokemon = getBodyID(dexNumber)
     head_pokemon = getHeadID(dexNumber, body_pokemon)
 
     picturePath = getPicturePath(head_pokemon, body_pokemon)
     bitmap = AnimatedBitmap.new(picturePath)
     if shiny && $PokemonSystem.kuraynormalshiny != 1
-      bitmap.pbGiveFinaleColor(shinyR, shinyG, shinyB, shinyV)
+      bitmap.pbGiveFinaleColor(shinyR, shinyG, shinyB, shinyV, shinyKRS)
     end
     bitmap.scale_bitmap(Settings::FRONTSPRITE_SCALE)
 

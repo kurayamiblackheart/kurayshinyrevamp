@@ -49,16 +49,100 @@ end
 
 ##### Kuray's Global Functions #####
 
-def kurayRNGforChannels
-  kurayRNG = rand(0..10000)
-  if kurayRNG < 5
-    return rand(0..11)
-  elsif kurayRNG < 41
-    return rand(0..8)
-  elsif kurayRNG < 2041
-    return rand(0..5)
+#Increment Color
+def kurayKRSfunc1(krsarray)
+  kurayRNG = rand(1..596)
+  if kurayRNG <= 512
+    krsarray.push(0)
+  elsif kurayRNG <= 576
+    krsarray.push(rand(-50..50))
+  elsif kurayRNG <= 592
+    krsarray.push(rand(-100..100))
   else
-    return rand(0..2)
+    krsarray.push(rand(-200..200))
+  end
+  return krsarray
+end
+
+# Semi-Inverted
+def kurayKRSfunc2(krsarray)
+  kurayRNG = rand(1..656)
+  if kurayRNG <= 512
+    krsarray.push(0)
+  elsif kurayRNG <= 576
+    krsarray.push(1)
+  elsif kurayRNG <= 640
+    krsarray.push(2)
+  elsif kurayRNG <= 648
+    krsarray.push(3)
+  else
+    krsarray.push(4)
+  end
+  return krsarray
+end
+
+# TimidBlack
+def kurayKRSfunc3(krsarray)
+  kurayRNG = rand(1..52)
+  if kurayRNG <= 32
+    krsarray.push(0)
+  elsif kurayRNG <= 48
+    krsarray.push(1)
+  else
+    krsarray.push(2)
+  end
+  return krsarray
+end
+
+def kurayKRSmake
+  krsarray = []
+  krs_functions = [
+    method(:kurayKRSfunc1),
+    method(:kurayKRSfunc1),
+    method(:kurayKRSfunc1),
+    method(:kurayKRSfunc2),
+    method(:kurayKRSfunc2),
+    method(:kurayKRSfunc2),
+    method(:kurayKRSfunc3),
+    method(:kurayKRSfunc3),
+    method(:kurayKRSfunc3)
+  ]
+  krs_functions.each { |func| krsarray = func.call(krsarray) }
+
+  return krsarray.clone
+end
+
+def kurayRNGforChannels
+  if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced != 2
+    kurayRNG = rand(0..10000)
+    if kurayRNG < 5# Weight of 5
+      return rand(0..11)
+    elsif kurayRNG < 41# Weight of 36
+      return rand(0..8)
+    elsif kurayRNG < 2041# Weight of 2000
+      return rand(0..5)
+    else
+      return rand(0..2)#Weight of 7959
+    end
+  else
+    kurayRNG = rand(0..1432620)
+    if kurayRNG < 1# Weight of 1
+      return rand(0..25)
+    elsif kurayRNG < 81# Weight of 80
+      return rand(0..19)
+    elsif kurayRNG < 201# Weight of 120
+      return rand(0..13)
+    elsif kurayRNG < 901# Weight of 700
+      return rand(0..12)
+    elsif kurayRNG < 1801# Weight of 900
+      return rand(0..11)
+    elsif kurayRNG < 8281# Weight of 6480
+      return rand(0..8)
+    elsif kurayRNG < 368281# Weight of 360 000
+      return rand(0..5)
+    else
+      return rand(0..2)#Weight of 1 432 620
+    end
   end
   # 0.04% chance to have an inverse magenta/yellow/cyan
   # 0.4% chance to have an inverse (4/1000*100)

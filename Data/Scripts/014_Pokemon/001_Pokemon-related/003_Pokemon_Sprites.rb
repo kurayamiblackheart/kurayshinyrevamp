@@ -197,7 +197,7 @@ class PokemonIconSprite < SpriteWrapper
             filename = @pokemon.kuraycustomfile?
             @animBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
             if @pokemon.shiny?
-              @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?)
+              @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
             end
           else
             @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
@@ -227,7 +227,7 @@ class PokemonIconSprite < SpriteWrapper
       @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(@pokemon))
       if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
         # @animBitmap.shiftColors(colorshifting)
-        @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?)
+        @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
       end
     elsif useTripleFusionIcon(@pokemon.species)
       @animBitmap = AnimatedBitmap.new(pbResolveBitmap(sprintf("Graphics/Icons/iconDNA")))
@@ -412,7 +412,7 @@ class PokemonIconSprite < SpriteWrapper
     end
     if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
       # result_icon.shiftColors(colorshifting)
-      result_icon.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?)
+      result_icon.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
     end
     return result_icon
   end

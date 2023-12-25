@@ -664,24 +664,27 @@ class PokemonFusionScene
     @sprites["dnasplicer"].opacity=0
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    @sprites["rsprite1"].setPokemonBitmapFromId(poke1_number, false, pokemon1.shiny?, false, false, pokemon1.shinyValue?, pokemon1.shinyR?, pokemon1.shinyG?, pokemon1.shinyB?)
-    @sprites["rsprite3"].setPokemonBitmapFromId(poke2_number, false, pokemon2.shiny?, false, false, pokemon2.shinyValue?, pokemon2.shinyR?, pokemon2.shinyG?, pokemon2.shinyB?)
+    @sprites["rsprite1"].setPokemonBitmapFromId(poke1_number, false, pokemon1.shiny?, false, false, pokemon1.shinyValue?, pokemon1.shinyR?, pokemon1.shinyG?, pokemon1.shinyB?, pokemon1.shinyKRS?)
+    @sprites["rsprite3"].setPokemonBitmapFromId(poke2_number, false, pokemon2.shiny?, false, false, pokemon2.shinyValue?, pokemon2.shinyR?, pokemon2.shinyG?, pokemon2.shinyB?, pokemon2.shinyKRS?)
 
     #KurayX - KURAYX_ABOUT_SHINIES
     domepokehue = rand(0..360) - 180
     domepoker = kurayRNGforChannels
     domepokeg = kurayRNGforChannels
     domepokeb = kurayRNGforChannels
+    domepokekrs = kurayKRSmake
     if pokemon2.shiny?
       domepokehue = pokemon2.shinyValue?
       domepoker = pokemon2.shinyR?
       domepokeg = pokemon2.shinyG?
       domepokeb = pokemon2.shinyB?
+      domepokekrs = pokemon2.shinyKRS?.clone
     elsif pokemon1.shiny?
       domepokehue = pokemon1.shinyValue?
       domepoker = pokemon1.shinyR?
       domepokeg = pokemon1.shinyG?
       domepokeb = pokemon1.shinyB?
+      domepokekrs = pokemon1.shinyKRS?.clone
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
@@ -880,11 +883,13 @@ class PokemonFusionScene
         @pokemon1.head_shinyr = @pokemon2.shinyR?
         @pokemon1.head_shinyg = @pokemon2.shinyG?
         @pokemon1.head_shinyb = @pokemon2.shinyB?
+        @pokemon1.head_shinykrs = @pokemon2.shinyKRS?.clone
         if $PokemonSystem.shinyfusedye == 1 || !@pokemon1.shiny?
           @pokemon1.shinyR = @pokemon2.shinyR?
           @pokemon1.shinyG = @pokemon2.shinyG?
           @pokemon1.shinyB = @pokemon2.shinyB?
           @pokemon1.shinyValue = @pokemon2.shinyValue?
+          @pokemon1.shinyKRS = @pokemon2.shinyKRS?.clone
         end
       end
       if @pokemon1.shiny?
@@ -893,26 +898,31 @@ class PokemonFusionScene
         @pokemon1.body_shinyr = @pokemon1.shinyR?
         @pokemon1.body_shinyg = @pokemon1.shinyG?
         @pokemon1.body_shinyb = @pokemon1.shinyB?
+        @pokemon1.body_shinykrs = @pokemon1.shinyKRS?.clone
       end
       if @pokemon2.shiny? && @pokemon1.shiny? && $PokemonSystem.shinyfusedye == 0
         @pokemon1.shinyR = @pokemon2.shinyR?
         @pokemon1.shinyG = @pokemon2.shinyG?
         @pokemon1.shinyB = @pokemon2.shinyB?
         @pokemon1.shinyValue = @pokemon2.shinyValue?
+        @pokemon1.shinyKRS = @pokemon2.shinyKRS?.clone
       end
       if $PokemonSystem.shinyfusedye == 2
         @pokemon1.shinyValue = rand(0..360) - 180
         @pokemon1.shinyR = kurayRNGforChannels
         @pokemon1.shinyG = kurayRNGforChannels
         @pokemon1.shinyB = kurayRNGforChannels
+        @pokemon1.shinyKRS = kurayKRSmake
         @pokemon1.body_shinyhue = rand(0..360) - 180
         @pokemon1.body_shinyr = kurayRNGforChannels
         @pokemon1.body_shinyg = kurayRNGforChannels
         @pokemon1.body_shinyb = kurayRNGforChannels
+        @pokemon1.body_shinykrs = kurayKRSmake
         @pokemon1.head_shinyhue = rand(0..360) - 180
         @pokemon1.head_shinyr = kurayRNGforChannels
         @pokemon1.head_shinyg = kurayRNGforChannels
         @pokemon1.head_shinyb = kurayRNGforChannels
+        @pokemon1.head_shinykrs = kurayKRSmake
       end
 
       @pokemon1.debug_shiny = true if @pokemon1.debug_shiny || @pokemon2.debug_shiny

@@ -47,11 +47,14 @@ class Pokemon
   attr_accessor :body_shinyg
   attr_accessor :head_shinyb
   attr_accessor :body_shinyb
+  attr_accessor :head_shinykrs
+  attr_accessor :body_shinykrs
   #KurayX - KURAYX_ABOUT_SHINIES
   attr_accessor :shinyValue
   attr_accessor :shinyR
   attr_accessor :shinyG
   attr_accessor :shinyB
+  attr_accessor :shinyKRS
   attr_accessor :kuray_no_evo
   attr_accessor :kuraygender
   attr_accessor :imported
@@ -259,6 +262,10 @@ class Pokemon
     @oldkuraycustomfile=value
   end
 
+  def shinyKRS=(value)
+    @shinyKRS=value
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES
   def shinyR=(value)
     @shinyR=value
@@ -297,6 +304,9 @@ class Pokemon
   #KurayX - KURAYX_ABOUT_SHINIES
   def shinyR?
     if @shinyR
+      if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced != 2 && @shinyR > 11
+        @shinyR=kurayRNGforChannels
+      end
       return @shinyR
     else
       @shinyR=kurayRNGforChannels
@@ -357,9 +367,21 @@ class Pokemon
     end
   end
 
+  def shinyKRS?
+    if @shinyKRS
+      return @shinyKRS
+    else
+      @shinyKRS=kurayKRSmake
+      return @shinyKRS
+    end
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES
   def shinyG?
     if @shinyG
+      if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced != 2 && @shinyG > 11
+        @shinyG=kurayRNGforChannels
+      end
       return @shinyG
     else
       @shinyG=kurayRNGforChannels
@@ -370,6 +392,9 @@ class Pokemon
   #KurayX - KURAYX_ABOUT_SHINIES
   def shinyB?
     if @shinyB
+      if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced != 2 && @shinyB > 11
+        @shinyB=kurayRNGforChannels
+      end
       return @shinyB
     else
       @shinyB=kurayRNGforChannels
@@ -412,6 +437,24 @@ class Pokemon
     else
       @body_shinyr=kurayRNGforChannels
       return @body_shinyr
+    end
+  end
+
+  def head_shinykrs?
+    if @head_shinykrs
+      return @head_shinykrs
+    else
+      @head_shinykrs=kurayKRSmake
+      return @head_shinykrs
+    end
+  end
+
+  def body_shinykrs?
+    if @body_shinykrs
+      return @body_shinykrs
+    else
+      @body_shinykrs=kurayKRSmake
+      return @body_shinykrs
     end
   end
 
@@ -524,6 +567,10 @@ class Pokemon
   #KurayX - Custom Filenames
   def oldkuraycustomfile
     return @oldkuraycustomfile
+  end
+
+  def shinyKRS
+    return @shinyKRS
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
@@ -1734,7 +1781,7 @@ class Pokemon
   #KurayX
   def as_json(options={})
     {
-      "json_version" => "0.3",
+      "json_version" => "0.4",
       "species" => @species,
       "form" => @form,
       "forced_form" => @forced_form,
@@ -1753,6 +1800,7 @@ class Pokemon
       "shinyR" => @shinyR,
       "shinyG" => @shinyG,
       "shinyB" => @shinyB,
+      "shinyKRS" => @shinyKRS.clone,
       "ability_index" => @ability_index,
       "ability" => @ability,
       "ability2_index" => @ability2_index,
@@ -1800,6 +1848,8 @@ class Pokemon
       "body_shinyg" => @body_shinyg,
       "head_shinyb" => @head_shinyb,
       "body_shinyb" => @body_shinyb,
+      "head_shinykrs" => @head_shinykrs.clone,
+      "body_shinykrs" => @body_shinykrs.clone,
       "kuray_no_evo" => @kuray_no_evo,
       "ribbons" => @ribbons.clone,
       "spriteform_body" => @spriteform_body,
@@ -1828,6 +1878,10 @@ class Pokemon
         # Load new variables from version 0.2
         @spriteform_body = jsonparse['spriteform_body']
         @spriteform_head = jsonparse['spriteform_head']
+      when '0.4'
+        @shinyKRS = jsonparse['shinyKRS']
+        @head_shinykrs = jsonparse['head_shinykrs']
+        @body_shinykrs = jsonparse['body_shinykrs']
       end
     end
     @species = jsonparse['species']
@@ -2003,6 +2057,7 @@ class Pokemon
     @shinyR = kurayRNGforChannels
     @shinyG = kurayRNGforChannels
     @shinyB = kurayRNGforChannels
+    @shinyKRS = kurayKRSmake
     @ability_index = nil
     @ability2_index = nil
     @ability = nil

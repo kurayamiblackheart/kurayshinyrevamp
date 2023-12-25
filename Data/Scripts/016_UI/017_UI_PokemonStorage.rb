@@ -75,7 +75,7 @@ class PokemonBoxIcon < IconSprite
     dexNum = getDexNumberForSpecies(pokemon.species)
     if pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
       # result_icon.shiftColors(colorshifting)
-      result_icon.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?)
+      result_icon.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?, pokemon.shinyKRS?)
     end
     return result_icon
   end
@@ -235,7 +235,7 @@ class PokemonBoxIcon < IconSprite
     end
     if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
       # result_icon.shiftColors(colorshifting)
-      result_icon.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?)
+      result_icon.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
     end
     return result_icon
   end
@@ -266,7 +266,7 @@ class PokemonBoxIcon < IconSprite
             filename = @pokemon.kuraycustomfile?
             tempBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
             if @pokemon.shiny?
-              tempBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?)
+              tempBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
             end
           else
             tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
@@ -2103,7 +2103,7 @@ class PokemonStorageScene
     else
       if File.file?("Shiny Finder.exe")
         exe_path = 'Shiny Finder.exe'
-        arguments = ' --pxd="' + pokemon.kuraycustomfile.to_s + '" --red=' + pokemon.shinyR.to_s + ' --green=' + pokemon.shinyG.to_s + ' --blue=' + pokemon.shinyB.to_s + ' --hue=' + (pokemon.shinyValue).to_s
+        arguments = ' --pxd="' + pokemon.kuraycustomfile.to_s + '" --red=' + pokemon.shinyR.to_s + ' --green=' + pokemon.shinyG.to_s + ' --blue=' + pokemon.shinyB.to_s + ' --hue=' + (pokemon.shinyValue).to_s + ' --krs=' + (pokemon.shinyKRS).to_s
         system('start "ini" "' + exe_path.to_s + '" ' + arguments.to_s)
       else
         pbPlayBuzzerSE
@@ -2196,6 +2196,7 @@ class PokemonStorageScene
               pokemon.shinyR=kurayRNGforChannels
               pokemon.shinyG=kurayRNGforChannels
               pokemon.shinyB=kurayRNGforChannels
+              pokemon.shinyKRS=kurayKRSmake
               pbHardRefresh
               pbDisplay(_INTL("Wait... Its shiny color changed!"))
             else
@@ -2242,10 +2243,10 @@ class PokemonStorageScene
       end
     end
     qty = 0
-    helptext = pbDisplay(_INTL("RedChannel (0-11)"))
+    helptext = pbDisplay(_INTL("RedChannel (0-25)"))
     params = ChooseNumberParams.new
     params.setMaxDigits(2)
-    params.setRange(0, 11)
+    params.setRange(0, 25)
     #Before ChatGPT new
     # params.setRange(0, 2)
     params.setDefaultValue(pokemon.shinyR?)
@@ -2255,17 +2256,17 @@ class PokemonStorageScene
     qty = @scene.pbChooseNumber(helptext,params)
     #Before ChatGPT new
     # if qty < 3
-    if qty < 12
+    if qty < 26
       if qty > -1
         pokemon.shinyR=qty
         pbHardRefresh
         pbDisplay(_INTL("Changed Red Channel!"))
       end
     end
-    helptext = pbDisplay(_INTL("GreenChannel (0-11)"))
+    helptext = pbDisplay(_INTL("GreenChannel (0-25)"))
     params = ChooseNumberParams.new
     params.setMaxDigits(2)
-    params.setRange(0, 11)
+    params.setRange(0, 25)
     #Before ChatGPT new
     # params.setRange(0, 2)
     params.setDefaultValue(pokemon.shinyG?)
@@ -2275,17 +2276,17 @@ class PokemonStorageScene
     qty = @scene.pbChooseNumber(helptext,params)
     #Before ChatGPT new
     # if qty < 3
-    if qty < 12
+    if qty < 26
       if qty > -1
         pokemon.shinyG=qty
         pbHardRefresh
         pbDisplay(_INTL("Changed Green Channel!"))
       end
     end
-    helptext = pbDisplay(_INTL("BlueChannel (0-11)"))
+    helptext = pbDisplay(_INTL("BlueChannel (0-25)"))
     params = ChooseNumberParams.new
     params.setMaxDigits(2)
-    params.setRange(0, 11)
+    params.setRange(0, 25)
     #Before ChatGPT new
     # params.setRange(0, 2)
     params.setDefaultValue(pokemon.shinyB?)
@@ -2295,13 +2296,78 @@ class PokemonStorageScene
     qty = @scene.pbChooseNumber(helptext,params)
     #Before ChatGPT new
     # if qty < 3
-    if qty < 12
+    if qty < 26
       if qty > -1
         pokemon.shinyB=qty
         pbHardRefresh
         pbDisplay(_INTL("Changed Blue Channel!"))
       end
     end
+
+    # Increment
+    iddoing = 0
+    maxdoing = 400
+    3.times do |iddoing|
+      helptext = pbDisplay(_INTL("#{['R', 'G', 'B'][iddoing]} Increment (0-#{maxdoing})"))
+      params = ChooseNumberParams.new
+      params.setMaxDigits(3)
+      params.setRange(0, maxdoing)
+      params.setDefaultValue(pokemon.shinyKRS?[iddoing]+200)
+      params.setInitialValue(pokemon.shinyKRS?[iddoing]+200)
+      params.setCancelValue(pokemon.shinyKRS?[iddoing]+200)
+      params.setNegativesAllowed(false)
+      qty = @scene.pbChooseNumber(helptext, params)
+      if qty < maxdoing + 1 && qty > -1
+        pokemon.shinyKRS[iddoing] = qty-200
+        pbHardRefresh
+        pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Increment!"))
+      end
+    end
+
+    # Semi-Inverted
+    iddoing = 0
+    currslot = 2
+    maxdoing = 4
+    3.times do |iddoing|
+      currslot += 1
+      helptext = pbDisplay(_INTL("#{['R', 'G', 'B'][iddoing]} Semi-Inverted (0-#{maxdoing})"))
+      params = ChooseNumberParams.new
+      params.setMaxDigits(1)
+      params.setRange(0, maxdoing)
+      params.setDefaultValue(pokemon.shinyKRS?[currslot])
+      params.setInitialValue(pokemon.shinyKRS?[currslot])
+      params.setCancelValue(pokemon.shinyKRS?[currslot])
+      params.setNegativesAllowed(false)
+      qty = @scene.pbChooseNumber(helptext, params)
+      if qty < maxdoing + 1 && qty > -1
+        pokemon.shinyKRS[currslot] = qty
+        pbHardRefresh
+        pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Semi-Inverted!"))
+      end
+    end
+
+    # TimidBlack
+    iddoing = 0
+    currslot = 5
+    maxdoing = 2
+    3.times do |iddoing|
+      currslot += 1
+      helptext = pbDisplay(_INTL("#{['R', 'G', 'B'][iddoing]} Timid-Black (0-#{maxdoing})"))
+      params = ChooseNumberParams.new
+      params.setMaxDigits(1)
+      params.setRange(0, maxdoing)
+      params.setDefaultValue(pokemon.shinyKRS?[currslot])
+      params.setInitialValue(pokemon.shinyKRS?[currslot])
+      params.setCancelValue(pokemon.shinyKRS?[currslot])
+      params.setNegativesAllowed(false)
+      qty = @scene.pbChooseNumber(helptext, params)
+      if qty < maxdoing + 1 && qty > -1
+        pokemon.shinyKRS[currslot] = qty
+        pbHardRefresh
+        pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Timid-Black!"))
+      end
+    end
+
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
@@ -2319,6 +2385,7 @@ class PokemonStorageScene
     pokemon.shinyR=kurayRNGforChannels
     pokemon.shinyG=kurayRNGforChannels
     pokemon.shinyB=kurayRNGforChannels
+    pokemon.shinyKRS=kurayKRSmake
     pbHardRefresh
     pbDisplay(_INTL("Re-rolled into " + pokemon.shinyValue.to_s + ";" + pokemon.shinyR.to_s + ";" + pokemon.shinyG.to_s + ";" + pokemon.shinyB.to_s + "!"))
   end
@@ -2596,16 +2663,16 @@ class PokemonStorageScene
           @storage.pbImportKuray(p, i, doing)
         end
         relta += 1
-        if relta > 11
+        if relta > 25
           relta = 0
           gelta += 1
         end
-        if gelta > 11
+        if gelta > 25
           relta = 0
           gelta = 0
           belta += 1
         end
-        if belta > 11
+        if belta > 25
           relta = 0
           gelta = 0
           belta = 0
@@ -2915,7 +2982,7 @@ class PokemonStorageScene
       end
       if pokemon.shiny?
         #KurayX new ShinyStars
-        addShinyStarsToGraphicsArray(imagepos,156,198,pokemon.bodyShiny?,pokemon.headShiny?,pokemon.debugShiny?,nil,nil,nil,nil,false,true,[pokemon.shinyR?,pokemon.shinyG?,pokemon.shinyB?])
+        addShinyStarsToGraphicsArray(imagepos,156,198,pokemon.bodyShiny?,pokemon.headShiny?,pokemon.debugShiny?,nil,nil,nil,nil,false,true,[pokemon.shinyR?,pokemon.shinyG?,pokemon.shinyB?,pokemon.shinyKRS?])
         #imagepos.push(["Graphics/Pictures/shiny", 156, 198])
       end
       typebitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))

@@ -51,18 +51,21 @@ module RPG
       end
       #KurayX - KURAYX_ABOUT_SHINIES
       # if hue == 0
-      if hue == 0 && rcode == 0 && gcode == 1 && bcode == 2
+      # if hue == 0 && rcode == 0 && gcode == 1 && bcode == 2
+      if hue == 0
         ret.addRef if cached
         return ret
       end
       #KurayX - KURAYX_ABOUT_SHINIES
-      key = [path, hue, rcode, gcode, bcode]
+      key = [path, hue]
+      # key = [path, hue, rcode, gcode, bcode]
       # key = [path, hue]
       ret2 = fromCache(key)
       if ret2
         ret2.addRef
       else
         ret2 = ret.copy
+        # puts hue.to_s + " is hue.to_s"
         ret2.hue_change(hue)
         @cache[key] = ret2
       end
@@ -83,14 +86,14 @@ module RPG
         cached = false
       end
       #KurayX - KURAYX_ABOUT_SHINIES
-      # if hue == 0
-      if hue == 0 && rcode == 0 && gcode == 1 && bcode == 2
+      if hue == 0
+      # if hue == 0 && rcode == 0 && gcode == 1 && bcode == 2
         ret.addRef if cached
         return ret
       end
       #KurayX - KURAYX_ABOUT_SHINIES
-      key = [path, hue, rcode, gcode, bcode]
-      # key = [path, hue]
+      # key = [path, hue, rcode, gcode, bcode]
+      key = [path, hue]
       ret2 = fromCache(key)
       if ret2
         ret2.addRef
