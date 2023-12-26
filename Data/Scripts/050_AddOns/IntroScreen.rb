@@ -21,6 +21,11 @@ class Scene_Intro
   alias main_old main
 
   def playIntroCinematic
+    if File.exists?("NoIntro.krs")
+      sscene = PokemonLoad_Scene.new
+      sscreen = PokemonLoadScreen.new(sscene)
+      sscreen.pbStartLoadScreen
+    end
     intro_frames_path = "Graphics\\Pictures\\Intro\\INTRO-%03d"
     intro_bgm = "INTRO_music_cries"
     intro_movie = Movie.new(intro_frames_path,intro_bgm,230,true)
