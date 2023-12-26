@@ -125,24 +125,42 @@ def kurayRNGforChannels
       return rand(0..2)#Weight of 7959
     end
   else
-    kurayRNG = rand(0..1800901)
+    kurayRNG = rand(0..24632)
     if kurayRNG < 1# Weight of 1
       return rand(0..25)
-    elsif kurayRNG < 81# Weight of 80
+    elsif kurayRNG < 801# Weight of 800
       return rand(0..19)
-    elsif kurayRNG < 201# Weight of 120
+    elsif kurayRNG < 804# Weight of 3
       return rand(0..13)
-    elsif kurayRNG < 901# Weight of 700
+    elsif kurayRNG < 2204# Weight of 1400
       return rand(0..12)
-    elsif kurayRNG < 1801# Weight of 900
+    elsif kurayRNG < 2212# Weight of 8
       return rand(0..11)
-    elsif kurayRNG < 8281# Weight of 6480
+    elsif kurayRNG < 2232# Weight of 20
       return rand(0..8)
-    elsif kurayRNG < 368281# Weight of 360 000
+    elsif kurayRNG < 7832# Weight of 5600
       return rand(0..5)
     else
-      return rand(0..2)#Weight of 1 432 620
+      return rand(0..2)#Weight of 16800
     end
+    # kurayRNG = rand(0..1800901)
+    # if kurayRNG < 1# Weight of 1
+    #   return rand(0..25)
+    # elsif kurayRNG < 81# Weight of 80
+    #   return rand(0..19)
+    # elsif kurayRNG < 201# Weight of 120
+    #   return rand(0..13)
+    # elsif kurayRNG < 901# Weight of 700
+    #   return rand(0..12)
+    # elsif kurayRNG < 1801# Weight of 900
+    #   return rand(0..11)
+    # elsif kurayRNG < 8281# Weight of 6480
+    #   return rand(0..8)
+    # elsif kurayRNG < 368281# Weight of 360 000
+    #   return rand(0..5)
+    # else
+    #   return rand(0..2)#Weight of 1 432 620
+    # end
   end
   # 0.04% chance to have an inverse magenta/yellow/cyan
   # 0.4% chance to have an inverse (4/1000*100)
