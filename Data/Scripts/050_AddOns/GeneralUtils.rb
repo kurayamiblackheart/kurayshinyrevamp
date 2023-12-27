@@ -259,51 +259,54 @@ end
 
 #KurayX new ShinyStars
 def addShinyStarsToGraphicsArray(imageArray, xPos, yPos, shinyBody, shinyHead, debugShiny, srcx=nil, srcy=nil, width=nil, height=nil,
-                                 showSecondStarUnder=false, showSecondStarAbove=false, kuraxRGB=[0,0,0])
+                                 showSecondStarUnder=false, showSecondStarAbove=false, fakeshiny=false,kuraxRGB=[0,0,0])
   # color = debugShiny ? Color.new(0,0,0,255) : nil
   # if debugShiny
   #   color = Color.new(0,0,0,255)
-  if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 1
-    if [9,10,11].include?(kuraxRGB[0]) || [9,10,11].include?(kuraxRGB[1]) || [9,10,11].include?(kuraxRGB[2])
-      color = Color.new(0,255,255,255)
-      #Inverted Magenta/Cyan/Yellow
-    elsif [3,4,5].include?(kuraxRGB[0]) || [3,4,5].include?(kuraxRGB[1]) || [3,4,5].include?(kuraxRGB[2])
-      color = Color.new(255,255,0,255)
-      #Magenta/Cyan/Yellow
-    elsif [6,7,8].include?(kuraxRGB[0]) || [6,7,8].include?(kuraxRGB[1]) || [6,7,8].include?(kuraxRGB[2])
-      color = Color.new(0,0,0,255)
-      #Inverted Red/Blue/Green
-    else
-      color = Color.new(255,0,0,255)
-    end
-  elsif $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 2
-    if [20,21,22,23,24,25].include?(kuraxRGB[0]) || [20,21,22,23,24,25].include?(kuraxRGB[1]) || [20,21,22,23,24,25].include?(kuraxRGB[2])
-      color = Color.new(230,34,230,255)#Magenta Star
-      #Inverted NEW
-    elsif [14,15,16,17,18,19].include?(kuraxRGB[0]) || [14,15,16,17,18,19].include?(kuraxRGB[1]) || [14,15,16,17,18,19].include?(kuraxRGB[2])
-      color = Color.new(230,34,67,255)#Red Star
-      #NEW
-    elsif [13].include?(kuraxRGB[0]) || [13].include?(kuraxRGB[1]) || [13].include?(kuraxRGB[2])
-      color = Color.new(230,230,34,255)#Yellow Star
-      #Inverted Grey
-    elsif [12].include?(kuraxRGB[0]) || [12].include?(kuraxRGB[1]) || [12].include?(kuraxRGB[2])
-      color = Color.new(100,100,100,255)#Grey Star
-      #Grey
-    elsif [9,10,11].include?(kuraxRGB[0]) || [9,10,11].include?(kuraxRGB[1]) || [9,10,11].include?(kuraxRGB[2])
-      color = Color.new(34,230,230,255)#Cyan Star
-      #Inverted Magenta/Cyan/Yellow
-    elsif [3,4,5].include?(kuraxRGB[0]) || [3,4,5].include?(kuraxRGB[1]) || [3,4,5].include?(kuraxRGB[2])
-      color = Color.new(34,67,230,255)#Blue Star
-      #Magenta/Cyan/Yellow
-    elsif [6,7,8].include?(kuraxRGB[0]) || [6,7,8].include?(kuraxRGB[1]) || [6,7,8].include?(kuraxRGB[2])
-      color = Color.new(0,0,0,255)#Black Star
-      #Inverted Red/Blue/Green
-    else
-      color = Color.new(67,230,34,255)#Green Star (RGB)
-    end
+  if fakeshiny
+    color = Color.new(235,235,235,255)#white
   else
-    color = nil
-  end
+    if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 1
+      if [9,10,11].include?(kuraxRGB[0]) || [9,10,11].include?(kuraxRGB[1]) || [9,10,11].include?(kuraxRGB[2])
+        color = Color.new(0,255,255,255)
+        #Inverted Magenta/Cyan/Yellow
+      elsif [3,4,5].include?(kuraxRGB[0]) || [3,4,5].include?(kuraxRGB[1]) || [3,4,5].include?(kuraxRGB[2])
+        color = Color.new(255,255,0,255)
+        #Magenta/Cyan/Yellow
+      elsif [6,7,8].include?(kuraxRGB[0]) || [6,7,8].include?(kuraxRGB[1]) || [6,7,8].include?(kuraxRGB[2])
+        color = Color.new(0,0,0,255)
+        #Inverted Red/Blue/Green
+      else
+        color = Color.new(255,0,0,255)
+      end
+    elsif $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 2
+      if [20,21,22,23,24,25].include?(kuraxRGB[0]) || [20,21,22,23,24,25].include?(kuraxRGB[1]) || [20,21,22,23,24,25].include?(kuraxRGB[2])
+        color = Color.new(230,34,230,255)#Magenta Star
+        #Inverted NEW
+      elsif [14,15,16,17,18,19].include?(kuraxRGB[0]) || [14,15,16,17,18,19].include?(kuraxRGB[1]) || [14,15,16,17,18,19].include?(kuraxRGB[2])
+        color = Color.new(230,34,67,255)#Red Star
+        #NEW
+      elsif [13].include?(kuraxRGB[0]) || [13].include?(kuraxRGB[1]) || [13].include?(kuraxRGB[2])
+        color = Color.new(230,230,34,255)#Yellow Star
+        #Inverted Grey
+      elsif [12].include?(kuraxRGB[0]) || [12].include?(kuraxRGB[1]) || [12].include?(kuraxRGB[2])
+        color = Color.new(100,100,100,255)#Grey Star
+        #Grey
+      elsif [9,10,11].include?(kuraxRGB[0]) || [9,10,11].include?(kuraxRGB[1]) || [9,10,11].include?(kuraxRGB[2])
+        color = Color.new(34,230,230,255)#Cyan Star
+        #Inverted Magenta/Cyan/Yellow
+      elsif [3,4,5].include?(kuraxRGB[0]) || [3,4,5].include?(kuraxRGB[1]) || [3,4,5].include?(kuraxRGB[2])
+        color = Color.new(34,67,230,255)#Blue Star
+        #Magenta/Cyan/Yellow
+      elsif [6,7,8].include?(kuraxRGB[0]) || [6,7,8].include?(kuraxRGB[1]) || [6,7,8].include?(kuraxRGB[2])
+        color = Color.new(0,0,0,255)#Black Star
+        #Inverted Red/Blue/Green
+      else
+        color = Color.new(67,230,34,255)#Green Star (RGB)
+      end
+    else
+      color = nil
+    end
   imageloc = "Graphics/Pictures/shiny"
   imageArray.push([imageloc,xPos,yPos,srcx,srcy,width,height,color])
   if shinyBody && shinyHead

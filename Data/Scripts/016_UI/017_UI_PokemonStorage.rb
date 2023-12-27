@@ -3012,7 +3012,7 @@ class PokemonStorageScene
       end
       if pokemon.shiny? || pokemon.fakeshiny?
         #KurayX new ShinyStars
-        addShinyStarsToGraphicsArray(imagepos,156,198,pokemon.bodyShiny?,pokemon.headShiny?,pokemon.debugShiny?,nil,nil,nil,nil,false,true,[pokemon.shinyR?,pokemon.shinyG?,pokemon.shinyB?,pokemon.shinyKRS?])
+        addShinyStarsToGraphicsArray(imagepos,156,198,pokemon.bodyShiny?,pokemon.headShiny?,pokemon.debugShiny?,nil,nil,nil,nil,false,true,pokemon.fakeshiny?,[pokemon.shinyR?,pokemon.shinyG?,pokemon.shinyB?,pokemon.shinyKRS?])
         #imagepos.push(["Graphics/Pictures/shiny", 156, 198])
       end
       typebitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
