@@ -307,6 +307,7 @@ def addShinyStarsToGraphicsArray(imageArray, xPos, yPos, shinyBody, shinyHead, d
     else
       color = nil
     end
+  end
   imageloc = "Graphics/Pictures/shiny"
   imageArray.push([imageloc,xPos,yPos,srcx,srcy,width,height,color])
   if shinyBody && shinyHead
