@@ -57,7 +57,7 @@ class PokeBattle_Scene
           pbCommonAnimation("Shiny",@battle.battlers[idxBattler])
           next
         end
-        next if !@battle.battlers[idxBattler] || !@battle.battlers[idxBattler].shiny? || $PokemonSystem.kurayshinyanim != 0
+        next if !@battle.battlers[idxBattler] || (!@battle.battlers[idxBattler].shiny? && !@battle.battlers[idxBattler].fakeshiny?) || $PokemonSystem.kurayshinyanim != 0
         pbCommonAnimation("Shiny",@battle.battlers[idxBattler])
       end
     elsif $PokemonSystem.kurayshinyanim == 0
@@ -68,7 +68,7 @@ class PokeBattle_Scene
           pbCommonAnimation("Shiny",@battle.battlers[idxBattler])
           next
         end
-        next if !@battle.battlers[idxBattler] || !@battle.battlers[idxBattler].shiny? || $PokemonSystem.kurayshinyanim != 0
+        next if !@battle.battlers[idxBattler] || (!@battle.battlers[idxBattler].shiny? && !@battle.battlers[idxBattler].fakeshiny?) || $PokemonSystem.kurayshinyanim != 0
         pbCommonAnimation("Shiny",@battle.battlers[idxBattler])
       end
     end
