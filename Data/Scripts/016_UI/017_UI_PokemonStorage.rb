@@ -2408,6 +2408,23 @@ class PokemonStorageScene
     end
   end
 
+  def shinyPNGMake(pokemon, pathexport)
+    if pokemon.kuraycustomfile? == nil
+      exportbitmap = GameData::Species.sprite_bitmap_from_pokemon(pokemon)
+    else
+      if pbResolveBitmap(pokemon.kuraycustomfile?) && !pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
+        filename = pokemon.kuraycustomfile?
+        exportbitmap = (filename) ? AnimatedBitmap.new(filename) : nil
+        if pokemon.shiny?
+          exportbitmap.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?, pokemon.shinyKRS?)
+        end
+      else
+        exportbitmap = GameData::Species.sprite_bitmap_from_pokemon(pokemon)
+      end
+    end
+    exportbitmap.bitmap_to_png(pathexport)
+  end
+
   #KurayX
   def pbExport(selected, heldpoke, dodelete=0)
     deletepkm = false
@@ -2441,7 +2458,14 @@ class PokemonStorageScene
     
     # Marshal not working anymore !
     # File.open(importname + ".pkm", 'wb') { |f| f.write(Marshal.dump(pokemon)) }
+    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
+      pokemon.shiny = false
+    end
     File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
+    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
+      # give shininess back after export
+      pokemon.shiny = true
+    end
     logic_png(pokemon, importname)
     # File.open(importname + ".json3", 'w') { |f| f.write(pokemon.to_s) }
     # File.open(importname + ".json2", 'w') { |f| f.write(pokemon.self) }
@@ -2481,7 +2505,11 @@ class PokemonStorageScene
       copyfile = pokemon.kuraycustomfile?
     end
     begin
-      File.copy(copyfile, importname + ".png")
+      if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
+        shinyPNGMake(pokemon, importname + ".png")
+      else
+        File.copy(copyfile, importname + ".png")
+      end
     rescue => e
       return
     end

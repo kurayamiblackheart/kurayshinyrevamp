@@ -1825,11 +1825,12 @@ class KurayOptSc_5 < PokemonOption_Scene
                       ["Exported Pokemons will not be deleted.",
                       "Exported Pokemons will be deleted."]
     )
-    options << EnumOption.new(_INTL("Export Sprite on Export"), [_INTL("On"), _INTL("Off")],
+    options << EnumOption.new(_INTL("Export Sprite on Export"), [_INTL("On"), _INTL("Off"), _INTL("Shiny")],
                       proc { $PokemonSystem.nopngexport },
                       proc { |value| $PokemonSystem.nopngexport = value },
                       ["The .png of the Pokemon will also be exported.",
-                      "The .png (appearence) of the Pokemon will not be exported."]
+                      "The .png (appearence) of the Pokemon will not be exported.",
+                      ".png exported as shiny, shiny appearence but pokemon un-shinified."]
     )
     options << EnumOption.new(_INTL("Import Sprite on Import"), [_INTL("On"), _INTL("Read-Only"), _INTL("Off")],
                       proc { $PokemonSystem.nopngimport },
