@@ -38,6 +38,7 @@ class Pokemon
   attr_accessor :body_shiny
   attr_accessor :debug_shiny
   attr_accessor :natural_shiny
+  attr_accessor :fakeshiny
   #KurayX - KURAYX_ABOUT_SHINIES
   attr_accessor :head_shinyhue
   attr_accessor :body_shinyhue
@@ -203,6 +204,10 @@ class Pokemon
     headSpecies = getHeadID(species)
     checkSpeciesId = getID(nil,check_species)
     return headSpecies == checkSpeciesId
+  end
+
+  def fakeshiny=(value)
+    @fakeshiny=value
   end
 
   def shiny=(value)
@@ -1025,6 +1030,9 @@ class Pokemon
   # Shininess
   #=============================================================================
 
+  def fakeshiny?
+    return @fakeshiny
+
   # @return [Boolean] whether this Pokémon is shiny (differently colored)
   def shiny?
     if @shiny.nil?
@@ -1781,7 +1789,7 @@ class Pokemon
   #KurayX
   def as_json(options={})
     {
-      "json_version" => "0.4",
+      "json_version" => "0.5",
       "species" => @species,
       "form" => @form,
       "forced_form" => @forced_form,
@@ -1792,6 +1800,7 @@ class Pokemon
       "heal_status" => heal_status,
       "gender" => @gender,
       "shiny" => @shiny,
+      "fakeshiny" => @fakeshiny,
       "kuraygender" => @kuraygender,
       "shinyValue" => @shinyValue,
       "veryunique" => @veryunique,
@@ -1887,6 +1896,13 @@ class Pokemon
         @shinyKRS = jsonparse['shinyKRS']
         @head_shinykrs = jsonparse['head_shinykrs']
         @body_shinykrs = jsonparse['body_shinykrs']
+      when '0.5'
+        @spriteform_body = jsonparse['spriteform_body']
+        @spriteform_head = jsonparse['spriteform_head']
+        @shinyKRS = jsonparse['shinyKRS']
+        @head_shinykrs = jsonparse['head_shinykrs']
+        @body_shinykrs = jsonparse['body_shinykrs']
+        @fakeshiny = jsonparse['fakeshiny']
       end
     end
     @species = jsonparse['species']
@@ -2056,6 +2072,7 @@ class Pokemon
     @imported = false
     @gender = nil
     @shiny = nil
+    @fakeshiny = nil
     #KurayX - KURAYX_ABOUT_SHINIES
     @shinyValue = rand(0..360) - 180
     @kuraygender = rand(65536)

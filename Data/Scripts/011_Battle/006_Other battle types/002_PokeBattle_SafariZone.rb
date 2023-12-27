@@ -23,8 +23,10 @@ class PokeBattle_FakeBattler
   def totalhp;        return @pokemon.totalhp; end
   def displayGender;  return @pokemon.gender;  end
   def shiny?;         return @pokemon.shiny?;  end
+  def fakeshiny?;     return @pokemon.fakeshiny?; end
   def kuraygender?;         return @pokemon.kuraygender?;  end
   alias isShiny? shiny?
+  alias isFakeShiny? fakeshiny?
 
   def isSpecies?(check_species)
     return @pokemon && @pokemon.isSpecies?(check_species)

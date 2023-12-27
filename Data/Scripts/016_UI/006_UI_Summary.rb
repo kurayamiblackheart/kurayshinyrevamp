@@ -339,7 +339,7 @@ class PokemonSummary_Scene
       imagepos.push([sprintf("Graphics/Pictures/Summary/icon_pokerus"), 176, 100])
     end
     # Show shininess star
-    if @pokemon.shiny?
+    if @pokemon.shiny? || @pokemon.fakeshiny?
       #KurayX new ShinyStars
       addShinyStarsToGraphicsArray(imagepos,2,134,@pokemon.bodyShiny?,@pokemon.headShiny?,@pokemon.debugShiny?,nil,nil,nil,nil,true,false,[@pokemon.shinyR?,@pokemon.shinyG?,@pokemon.shinyB?,@pokemon.shinyKRS?])
       #imagepos.push([sprintf("Graphics/Pictures/shiny"), 2, 134])

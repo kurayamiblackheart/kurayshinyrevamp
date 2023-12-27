@@ -449,7 +449,7 @@ class PokemonPartyPanel < SpriteWrapper
           # textpos.push([_INTL(kuraygender3t), 224, 10, 0, Color.new(kuraygender3r[0], kuraygender3r[1], kuraygender3r[2]), Color.new(kuraygender3s[0], kuraygender3s[1], kuraygender3s[2])])
         end
         # Draw shiny icon
-        if @pokemon.shiny?
+        if @pokemon.shiny? || @pokemon.fakeshiny?
           # imagePos=[]
           #KurayX new ShinyStars
           addShinyStarsToGraphicsArray(imagePos,80,48,@pokemon.bodyShiny?,@pokemon.headShiny?,@pokemon.debugShiny?,0,0,16,16,false,false,[@pokemon.shinyR?,@pokemon.shinyG?,@pokemon.shinyB?,@pokemon.shinyKRS?])

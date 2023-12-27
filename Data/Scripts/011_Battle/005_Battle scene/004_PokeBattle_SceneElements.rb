@@ -417,7 +417,7 @@ class PokemonDataBox < SpriteWrapper
     imagePos.push(["Graphics/Pictures/Battle/overlay_lv",@spriteBaseX+140,16]) if !$game_switches[SWITCH_NO_LEVELS_MODE]
     pbDrawNumber(@battler.level,self.bitmap,@spriteBaseX+162,16) if !$game_switches[SWITCH_NO_LEVELS_MODE]
     # Draw shiny icon
-    if @battler.shiny?
+    if @battler.shiny? || @battler.fakeshiny?
       shinyX = (@battler.opposes?(0)) ? 206 : -6   # Foe's/player's
       #KurayX
       # pokeRadarShiny= !@battler.pokemon.debugShiny? && !@battler.pokemon.naturalShiny?

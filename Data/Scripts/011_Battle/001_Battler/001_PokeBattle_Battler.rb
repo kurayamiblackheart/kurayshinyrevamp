@@ -214,6 +214,13 @@ class PokeBattle_Battler
     return self.form
   end
 
+  def fakeshiny?
+    return @effects[PBEffects::Illusion].fakeshiny? if @effects[PBEffects::Illusion]
+    return @pokemon && @pokemon.fakeshiny?
+  end
+  alias isFakeShiny? fakeshiny?
+
+
   def shiny?
     return @effects[PBEffects::Illusion].shiny? if @effects[PBEffects::Illusion]
     return @pokemon && @pokemon.shiny?

@@ -2459,12 +2459,14 @@ class PokemonStorageScene
     # Marshal not working anymore !
     # File.open(importname + ".pkm", 'wb') { |f| f.write(Marshal.dump(pokemon)) }
     if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
-      pokemon.shiny = false
+      pokemon.shiny=false
+      pokemon.fakeshiny=true
     end
     File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
     if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
       # give shininess back after export
-      pokemon.shiny = true
+      pokemon.shiny=true
+      pokemon.fakeshiny=false
     end
     logic_png(pokemon, importname)
     # File.open(importname + ".json3", 'w') { |f| f.write(pokemon.to_s) }
@@ -3008,7 +3010,7 @@ class PokemonStorageScene
       else
         textstrings.push([_INTL("No item"), 86, 336, 2, nonbase, nonshadow])
       end
-      if pokemon.shiny?
+      if pokemon.shiny? || pokemon.fakeshiny?
         #KurayX new ShinyStars
         addShinyStarsToGraphicsArray(imagepos,156,198,pokemon.bodyShiny?,pokemon.headShiny?,pokemon.debugShiny?,nil,nil,nil,nil,false,true,[pokemon.shinyR?,pokemon.shinyG?,pokemon.shinyB?,pokemon.shinyKRS?])
         #imagepos.push(["Graphics/Pictures/shiny", 156, 198])
