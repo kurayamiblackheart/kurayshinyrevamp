@@ -264,7 +264,7 @@ def addShinyStarsToGraphicsArray(imageArray, xPos, yPos, shinyBody, shinyHead, d
   # if debugShiny
   #   color = Color.new(0,0,0,255)
   if fakeshiny
-    color = Color.new(235,235,235,255)#white
+    color = Color.new(79,33,97,255)#Dark Violet
   else
     if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 1
       if [9,10,11].include?(kuraxRGB[0]) || [9,10,11].include?(kuraxRGB[1]) || [9,10,11].include?(kuraxRGB[2])
