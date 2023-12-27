@@ -1035,6 +1035,7 @@ class Pokemon
       @fakeshiny=false
     end
     return @fakeshiny
+  end
 
   # @return [Boolean] whether this Pokémon is shiny (differently colored)
   def shiny?
