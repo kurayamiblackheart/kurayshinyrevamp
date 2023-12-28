@@ -1880,35 +1880,58 @@ class Pokemon
     return current
   end
 
+  def convertjsonver(jsonparse)
+    if jsonparse.key?('json_version')
+      json_version = jsonparse['json_version']
+      case json_version
+      when '0.1'
+        return 1
+      when '0.2'
+        return 2
+      when '0.3'
+        return 3
+      when '0.4'
+        return 4
+      when '0.5'
+        return 5
+      when '0.6'
+        return 6
+      end
+    else
+      return 0
+    end
+  end
+
+  def jsonload1(jsonparse)
+    json_ver = convertjsonver(jsonparse)
+    if json_ver > 1#V.2
+      @spriteform_body = jsonparse['spriteform_body']
+      @spriteform_head = jsonparse['spriteform_head']
+    end
+    if json_ver > 3#V.4
+      @shinyKRS = jsonparse['shinyKRS']
+      @head_shinykrs = jsonparse['head_shinykrs']
+      @body_shinykrs = jsonparse['body_shinykrs']
+    end
+    if json_ver > 4#V.5
+      @fakeshiny = jsonparse['fakeshiny']
+    end
+  end
+
+  def jsonload2(jsonparse)
+    json_ver = convertjsonver(jsonparse)
+    if json_ver > 2#V.3
+      # Load new variables from version 0.3
+      @species_data = GameData::Species.get(@species)
+      @species_data.load_json(jsonparse['half_specie'])
+    end
+  end
+
+
   #KurayX
   def load_json(jsonparse, jsonfile=nil, forcereadonly=false)
     @imported = true
-    if jsonparse.key?('json_version')
-      json_version = jsonparse['json_version']
-      # Perform version-specific loading logic based on json_version value
-      case json_version
-      when '0.2'
-        # Load new variables from version 0.2
-        @spriteform_body = jsonparse['spriteform_body']
-        @spriteform_head = jsonparse['spriteform_head']
-      when '0.3'
-        @spriteform_body = jsonparse['spriteform_body']
-        @spriteform_head = jsonparse['spriteform_head']
-      when '0.4'
-        @spriteform_body = jsonparse['spriteform_body']
-        @spriteform_head = jsonparse['spriteform_head']
-        @shinyKRS = jsonparse['shinyKRS']
-        @head_shinykrs = jsonparse['head_shinykrs']
-        @body_shinykrs = jsonparse['body_shinykrs']
-      when '0.5'
-        @spriteform_body = jsonparse['spriteform_body']
-        @spriteform_head = jsonparse['spriteform_head']
-        @shinyKRS = jsonparse['shinyKRS']
-        @head_shinykrs = jsonparse['head_shinykrs']
-        @body_shinykrs = jsonparse['body_shinykrs']
-        @fakeshiny = jsonparse['fakeshiny']
-      end
-    end
+    jsonload1(jsonparse)
     @species = jsonparse['species']
     @form = jsonparse['form']
     @forced_form = jsonparse['forced_form']
@@ -1983,20 +2006,7 @@ class Pokemon
     
 
     
-    if jsonparse.key?('json_version')
-      json_version = jsonparse['json_version']
-      # Perform version-specific loading logic based on json_version value
-      case json_version
-      when '0.3'
-        # Load new variables from version 0.3
-        @species_data = GameData::Species.get(@species)
-        @species_data.load_json(jsonparse['half_specie'])
-      when '0.4'
-        # Load new variables from version 0.3
-        @species_data = GameData::Species.get(@species)
-        @species_data.load_json(jsonparse['half_specie'])
-      end
-    end
+    jsonload2(jsonparse)
 
     noimport = 0
     if jsonfile && jsonfile != nil
