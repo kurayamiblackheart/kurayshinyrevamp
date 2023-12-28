@@ -172,16 +172,18 @@ def pbChangeLevel(pkmn, newlevel, scene)
       next if i[0] != pkmn.level
       pbLearnMove(pkmn, i[1], true) { scene.pbUpdate }
     end
-    # Check for evolution
-    newspecies = pkmn.check_evolution_on_level_up
-    if newspecies && (pkmn.kuray_no_evo? == 0 || $PokemonSystem.kuray_no_evo == 0)
-      pbFadeOutInWithMusic {
-        evo = PokemonEvolutionScene.new
-        evo.pbStartScreen(pkmn, newspecies)
-        evo.pbEvolution
-        evo.pbEndScreen
-        scene.pbRefresh if scene.is_a?(PokemonPartyScreen)
-      }
+    if pkmn.kuray_no_evo? == 0 || $PokemonSystem.kuray_no_evo == 0
+      # Check for evolution
+      newspecies = pkmn.check_evolution_on_level_up
+      if newspecies
+        pbFadeOutInWithMusic {
+          evo = PokemonEvolutionScene.new
+          evo.pbStartScreen(pkmn, newspecies)
+          evo.pbEvolution
+          evo.pbEndScreen
+          scene.pbRefresh if scene.is_a?(PokemonPartyScreen)
+        }
+      end
     end
   end
 end

@@ -4677,7 +4677,10 @@ class PokemonStorageScreen
           if @storage[@storage.currentBox, k]
             pokekuray = @storage[@storage.currentBox, k]
             if pokekuray.shiny?
-              shinykur = (pokekuray.shinyValue?+1)+(pokekuray.shinyB?+1)*361+(pokekuray.shinyG?+1)*361*12+(pokekuray.shinyR?+1)*361*12*12
+                # Not working, just sorting by if shiny or not now
+                # shinykur = (pokekuray.shinyValue?+1)+(pokekuray.shinyB?+1)*361+(pokekuray.shinyG?+1)*361*12+(pokekuray.shinyR?+1)*361*12*12
+                # Not working, just sorting by if shiny or not now
+                shinykur = 1
             #   shinykur = pokekuray.shinyValue?
             #   if shinykur < 10
             #     shinykur = '00' + shinykur.to_s
@@ -4686,7 +4689,7 @@ class PokemonStorageScreen
             #   end
             #   reskur = pokekuray.shinyR?.to_s + pokekuray.shinyG?.to_s + pokekuray.shinyB?.to_s + shinykur.to_s
             #   shinykur = reskur.to_i
-            # else
+            else
               shinykur = 0
             end
             cansort = 1
@@ -5066,8 +5069,12 @@ class PokemonStorageScreen
               pokekuray = @storage[j, k]
               if pokekuray.shiny?
                 # shinykur = pokekuray.shinyValue?
-                shinykur = (pokekuray.shinyValue?+1)+(pokekuray.shinyB?+1)*361+(pokekuray.shinyG?+1)*361*12+(pokekuray.shinyR?+1)*361*12*12
-              #   shinykur = pokekuray.shinyValue?
+                # Not working, just sorting by if shiny or not now
+                # shinykur = (pokekuray.shinyValue?+1)+(pokekuray.shinyB?+1)*361+(pokekuray.shinyG?+1)*361*12+(pokekuray.shinyR?+1)*361*12*12
+                # Not working, just sorting by if shiny or not now
+                shinykur = 1
+
+                #   shinykur = pokekuray.shinyValue?
               #   if shinykur < 10
               #     shinykur = '00' + shinykur.to_s
               #   elsif shinykur < 100
@@ -5075,7 +5082,7 @@ class PokemonStorageScreen
               #   end
               #   reskur = pokekuray.shinyR?.to_s + pokekuray.shinyG?.to_s + pokekuray.shinyB?.to_s + shinykur.to_s
               #   shinykur = reskur.to_i
-              # else
+              else
                 shinykur = 0
               end
               cansort = 1
