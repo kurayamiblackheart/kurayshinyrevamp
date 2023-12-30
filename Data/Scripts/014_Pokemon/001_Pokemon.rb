@@ -65,7 +65,7 @@ class Pokemon
   attr_accessor :veryunique
 
 
-  
+
   # The index of this Pokémon's ability (0, 1 are natural abilities, 2+ are
   # hidden abilities)as defined for its species/form. An ability may not be
   # defined at this index. Is recalculated (as 0 or 1) if made nil.
@@ -327,7 +327,7 @@ class Pokemon
       return nil
     end
   end
-  
+
   def veryunique?
     if @veryunique
       return @veryunique
@@ -739,10 +739,10 @@ class Pokemon
       end
       # let's modify kurayboost depending on kuraystat sums here
     end
-    # DemICE tying the self-fusion buff to an option 
+    # DemICE tying the self-fusion buff to an option
     kurayboost =1.0 if $PokemonSystem.self_fusion_boost==0
     # DemICE (And also disabling it for the endgame challenge)
-    if $game_switches && $game_switches[850] && 
+    if $game_switches && $game_switches[850] &&
       ($game_map.map_id == 314 ||  # Pokemon League Lobby
         $game_map.map_id == 315 || # Lorelei
         $game_map.map_id == 316 || # Bruno
@@ -753,7 +753,7 @@ class Pokemon
         $game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
         $game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
           kurayboost=1.0
-    end     
+    end
     # Calculate stats
     stats = {}
     GameData::Stat.each_main do |s|
@@ -1265,6 +1265,31 @@ class Pokemon
       kuraychecking = checkspecie
     end
     return kuraymoves
+  end
+
+  # Includes event moves of both fused pokemon and all pre-evolutions
+  # @return [Array<Symbol>] a list of this Pokemon's event moves
+  def getEventMoveList
+    if self.isFusion?
+      body_id = getBasePokemonID(self.species, true)
+      head_id = getBasePokemonID(self.species, false)
+      body_species = GameData::Species.get(body_id).species
+      head_species = GameData::Species.get(head_id).species
+      return get_event_moves(body_species) | get_event_moves(head_species)
+    else
+      return get_event_moves(self.species)
+    end
+  end
+
+  # recursive helper function for getEventMoveList
+  # @return [Array<Symbol>] the event moves of given species and its pre-evolutions
+  def get_event_moves(species)
+    moves = EVENT_MOVES.fetch(species, [])
+    prev_species = GameData::Species.get(species).get_previous_species
+    if species.to_s == prev_species.to_s
+      return moves
+    end
+    return get_event_moves(prev_species) | moves
   end
 
   # Sets this Pokémon's movelist to the default movelist it originally had.
@@ -2003,9 +2028,9 @@ class Pokemon
     @moves = []
     jsonparse['moves'].each_with_index { |m, i| @moves.push(Pokemon::Move.new(m['id'])) }
     jsonparse['moves'].each_with_index { |m, i| @moves[i].load_json(m) }
-    
 
-    
+
+
     jsonload2(jsonparse)
 
     noimport = 0
@@ -2060,10 +2085,10 @@ class Pokemon
   def createVeryUnique()
     # Define the characters to choose from
     characters = ('0'..'9').to_a
-  
+
     # Generate a random ID of the specified length
     random_id = (1..24).map { characters.sample }.join
-  
+
     return random_id
   end
 

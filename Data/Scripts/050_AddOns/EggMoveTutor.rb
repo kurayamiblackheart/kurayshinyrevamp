@@ -11,7 +11,7 @@ end
 class MoveRelearnerScreen
   def pbStartScreenEgg(pkmn)
     baby = pbGetBabySpecies(pkmn.species)
-    moves = pbGetSpeciesEggMoves(baby)
+    moves = pbGetSpeciesEggMoves(baby) | pkmn.getEventMoveList
 
     @scene.pbStartScene(pkmn, moves)
     loop do
