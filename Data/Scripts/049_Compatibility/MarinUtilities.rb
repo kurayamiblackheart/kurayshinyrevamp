@@ -1117,7 +1117,23 @@ end
 #Kurayx LevelCAP
 def getkuraylevelcap()
   if $PokemonSystem.kuraylevelcap > 0
-    LEVEL_CAPS.each{|badge, levelcap| if $game_switches[badge] then return levelcap[$PokemonSystem.kuraylevelcap-1] end }
+    if $game_switches[SWITCH_MODERN_MODE]
+      trainer_level = LEVEL_CAPS_MODERN.fetch(SWITCH_DEFINED_RIVAL_STARTER)
+      LEVEL_CAPS_MODERN.each{|badge, level| if $game_switches[badge] then trainer_level = level; break end}
+    else
+      trainer_level = LEVEL_CAPS_CLASSIC.fetch(SWITCH_DEFINED_RIVAL_STARTER)
+      LEVEL_CAPS_CLASSIC.each{|badge, level| if $game_switches[badge] then trainer_level = level; break end}
+    end
+
+    if $game_switches[SWITCH_GAME_DIFFICULTY_HARD]
+      trainer_level = (trainer_level * Settings::HARD_MODE_LEVEL_MODIFIER).ceil
+      if trainer_level > Settings::MAXIMUM_LEVEL
+        trainer_level = Settings::MAXIMUM_LEVEL
+      end
+    end
+
+    cap = (trainer_level * LEVEL_CAP_DIFFICULTY_MULTIPLIERS[$PokemonSystem.kuraylevelcap - 1]).round(0)
+    return cap if cap <= Settings::MAXIMUM_LEVEL
   end
   return Settings::MAXIMUM_LEVEL
 end

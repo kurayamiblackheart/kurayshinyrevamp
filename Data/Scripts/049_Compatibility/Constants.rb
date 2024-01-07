@@ -201,25 +201,50 @@ DUST_ANIMATION_ID=2
 SWITCH_TRIPLE_BOSS_BATTLE = 824
 SWITCH_SILVERBOSS_BATTLE = 675
 
-# The level caps for each level cap difficulty setting. [Easy, Normal, Hard]
-LEVEL_CAPS = {
-  SWITCH_BEAT_MT_SILVER => Array.new(3, Settings::MAXIMUM_LEVEL),
-  SWITCH_GOT_BADGE_16 =>          [92, 86, 82], # HT 87 
-  SWITCH_GOT_BADGE_15 =>          [88, 75, 72], # HT 76
-  SWITCH_GOT_BADGE_14 =>          [84, 74, 71], # HT 75
-  SWITCH_GOT_BADGE_13 =>          [82, 73, 70], # HT 74
-  SWITCH_GOT_BADGE_12 =>          [80, 72, 69], # HT 73
-  SWITCH_GOT_BADGE_11 =>          [78, 71, 68], # HT 72
-  SWITCH_GOT_BADGE_10 =>          [76, 70, 67], # HT 71
-  SWITCH_GOT_BADGE_9 =>           [75, 69, 66], # HT 70
-  SWITCH_BEAT_THE_LEAGUE =>       [72, 63, 61], # HT 64
-  SWITCH_GOT_BADGE_8 =>           [69, 62, 60], # HT 65
-  SWITCH_GOT_BADGE_7 =>           [66, 61, 58], # HT 62
-  SWITCH_GOT_BADGE_6 =>           [64, 58, 55], # HT 59
-  SWITCH_GOT_BADGE_5 =>           [56, 49, 47], # HT 50
-  SWITCH_GOT_BADGE_4 =>           [52, 46, 44], # HT 47
-  SWITCH_GOT_BADGE_3 =>           [46, 40, 38], # HT 41
-  SWITCH_GOT_BADGE_2 =>           [32, 27, 25], # HT 28
-  SWITCH_GOT_BADGE_1 =>           [28, 24, 22], # HT 25
-  SWITCH_DEFINED_RIVAL_STARTER => [16, 13, 11]  # HT 14
+# The level cap difficulty multipliers [Easy, Normal, Hard]
+LEVEL_CAP_DIFFICULTY_MULTIPLIERS = [1.1, 1.0, 0.9]
+
+# The level caps for Classic and Modern Mode
+LEVEL_CAPS_CLASSIC = {
+  SWITCH_BEAT_MT_SILVER => Settings::MAXIMUM_LEVEL,
+  SWITCH_GOT_BADGE_16 =>          79, # Gold
+  SWITCH_GOT_BADGE_13 =>          68, # Jasmine
+  SWITCH_GOT_BADGE_14 =>          67, # Morty
+  SWITCH_GOT_BADGE_12 =>          65, # Pryce
+  SWITCH_GOT_BADGE_15 =>          65, # Claire (Actual 66)
+  SWITCH_GOT_BADGE_11 =>          64, # Chuck
+  SWITCH_GOT_BADGE_10 =>          63, # Falkner
+  SWITCH_GOT_BADGE_9 =>           62, # Kurt
+  SWITCH_BEAT_THE_LEAGUE =>       58, # Whitney
+  SWITCH_GOT_BADGE_8 =>           58, # Lance (Actual 59)
+  SWITCH_GOT_BADGE_7 =>           54, # Giovanni
+  SWITCH_GOT_BADGE_6 =>           51, # Blaine
+  SWITCH_GOT_BADGE_5 =>           45, # Sabrina
+  SWITCH_GOT_BADGE_4 =>           38, # Koga
+  SWITCH_GOT_BADGE_3 =>           35, # Erika
+  SWITCH_GOT_BADGE_2 =>           26, # Surge
+  SWITCH_GOT_BADGE_1 =>           22, # Misty
+  SWITCH_DEFINED_RIVAL_STARTER => 12  # Brock
+}
+
+LEVEL_CAPS_MODERN = {
+  SWITCH_BEAT_MT_SILVER => Settings::MAXIMUM_LEVEL,
+  SWITCH_GOT_BADGE_16 =>          79, # Gold
+  SWITCH_GOT_BADGE_15 =>          69, # Jasmine
+  SWITCH_GOT_BADGE_13 =>          68, # Chuck
+  SWITCH_GOT_BADGE_14 =>          68, # Morty
+  SWITCH_GOT_BADGE_12 =>          65, # Pryce
+  SWITCH_GOT_BADGE_11 =>          65, # Claire (Actual 66)
+  SWITCH_GOT_BADGE_10 =>          65, # Falkner
+  SWITCH_GOT_BADGE_9 =>           63, # Kurt
+  SWITCH_BEAT_THE_LEAGUE =>       58, # Whitney
+  SWITCH_GOT_BADGE_8 =>           58, # Lance (Actual 59)
+  SWITCH_GOT_BADGE_7 =>           56, # Giovanni
+  SWITCH_GOT_BADGE_6 =>           53, # Blaine
+  SWITCH_GOT_BADGE_5 =>           45, # Sabrina
+  SWITCH_GOT_BADGE_4 =>           42, # Koga
+  SWITCH_GOT_BADGE_3 =>           37, # Erika
+  SWITCH_GOT_BADGE_2 =>           25, # Surge
+  SWITCH_GOT_BADGE_1 =>           22, # Misty
+  SWITCH_DEFINED_RIVAL_STARTER => 12  # Brock
 }
