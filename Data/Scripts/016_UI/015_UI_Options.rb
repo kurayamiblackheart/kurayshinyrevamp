@@ -76,7 +76,7 @@ class PokemonSystem
   attr_accessor :debug
 
   attr_accessor :is_in_battle
-  
+
   attr_accessor :sb_stat_tracker
   attr_accessor :player_wins
   attr_accessor :enemy_wins
@@ -99,9 +99,11 @@ class PokemonSystem
 
   attr_accessor :legendarybreed
 
+  attr_accessor :eventmoves
+
   attr_accessor :shinyadvanced
 
-  
+
 
   #Made by Blue Wuppo
   attr_accessor :walkingpoison
@@ -178,6 +180,7 @@ class PokemonSystem
     @debug = 0
     @dexspriteselect = 0
     @legendarybreed = 0
+    @eventmoves = 0
     @importnodelete = 0
 	@sb_stat_tracker = 0
 	@player_wins = 0
@@ -281,6 +284,7 @@ class PokemonSystem
     @nopngexport = saved.nopngexport if saved.nopngexport
     @nopngimport = saved.nopngimport if saved.nopngimport
     @legendarybreed = saved.legendarybreed if saved.legendarybreed
+    @eventmoves = saved.eventmoves if saved.eventmoves
     #Made by Blue Wuppo
     @walkingpoison = saved.walkingpoison if saved.walkingpoison
     @modernhail = saved.modernhail if saved.modernhail
@@ -442,7 +446,7 @@ end
 class ButtonOption < Option
   include PropertyMixin
   attr_reader :name
-  
+
   def initialize(name, selectProc, description = "")
     super(description)
     @name = name
@@ -704,7 +708,7 @@ class PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = []
-    
+
     options << ButtonOption.new(_INTL("### GLOBAL ###"),
       proc {}
     )
@@ -1181,7 +1185,7 @@ class KurayOptSc_1 < PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = []
-    
+
     options << ButtonOption.new(_INTL("### GLOBAL ###"),
     proc {}
     )
@@ -1213,7 +1217,7 @@ class KurayOptSc_1 < PokemonOption_Scene
     return options
   end
 
-  
+
   def pbGetInGameOptions()
     options = []
     options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
@@ -1295,7 +1299,7 @@ class KurayOptSc_2 < PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = []
-    
+
     options << ButtonOption.new(_INTL("### GLOBAL ###"),
     proc {}
     )
@@ -1317,7 +1321,7 @@ class KurayOptSc_2 < PokemonOption_Scene
     return options
   end
 
-  
+
   def pbGetInGameOptions()
     options = []
     options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
@@ -1345,7 +1349,7 @@ class KurayOptSc_2 < PokemonOption_Scene
                       ["Stat boost for self-fusions is disabled.",
                       "Stat boost for self-fusions is enabled."]
     )
-    
+
     options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.improved_pokedex },
                       proc { |value| $PokemonSystem.improved_pokedex = value },
@@ -1395,6 +1399,12 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.legendarybreed = value },
                       ["Legendary Head cannot breed (like new PIF).",
                       "Legendary Head can breed (like old PIF)."]
+    )
+    options << EnumOption.new(_INTL("Event Moves"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.eventmoves },
+    proc { |value| $PokemonSystem.eventmoves = value },
+    ["No Event Moves.",
+    "Event Moves are available at the Battle Factory Egg Move Tutor."]
     )
     # Made by Blue Woppo
     options << EnumOption.new(_INTL("Modern Hail"), [_INTL("Off"), _INTL("Hail"), _INTL("Snow")],
@@ -1467,7 +1477,7 @@ class KurayOptSc_3 < PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = []
-    
+
     options << ButtonOption.new(_INTL("### GLOBAL ###"),
     proc {}
     )
@@ -1480,7 +1490,7 @@ class KurayOptSc_3 < PokemonOption_Scene
                       "Pokémon icons will use their full-size battle sprites (except in boxes)",
                       "Pokémon icons will use their full-size battle sprites"]
     )
-	
+
     options << EnumOption.new(_INTL("Fusion Preview"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kurayfusepreview },
                       proc { |value| $PokemonSystem.kurayfusepreview = value },
@@ -1505,14 +1515,14 @@ class KurayOptSc_3 < PokemonOption_Scene
                       "Swaps the HP/Exp bar to v1 | created by Mirasein",
                       "Swaps the HP/Exp bar to v2 | created by Mirasein"]
    )
-   
+
     options << EnumOption.new(_INTL("Dark Mode"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.darkmode },
                       proc { |value| $PokemonSystem.darkmode = value },
                       ["Default UI",
                       "Swaps the message graphics during battle"]
     )
-    
+
     options << EnumOption.new(_INTL("Game's Font"), [_INTL("Default "), _INTL("FR/LG "), _INTL("D/P "), _INTL("R/B")],
                       proc { $PokemonSystem.kurayfonts },
                       proc { |value|
@@ -1595,7 +1605,7 @@ class KurayOptSc_4 < PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = []
-    
+
     options << ButtonOption.new(_INTL("### GLOBAL ###"),
     proc {}
     )
@@ -1624,7 +1634,7 @@ class KurayOptSc_4 < PokemonOption_Scene
     return options
   end
 
-  
+
   def pbGetInGameOptions()
     options = []
     options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
@@ -1718,7 +1728,7 @@ class KurayOptSc_5 < PokemonOption_Scene
     return options
   end
 
-  
+
   def pbGetInGameOptions()
     options = []
     options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),

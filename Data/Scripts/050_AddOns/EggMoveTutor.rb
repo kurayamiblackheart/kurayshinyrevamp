@@ -11,7 +11,10 @@ end
 class MoveRelearnerScreen
   def pbStartScreenEgg(pkmn)
     baby = pbGetBabySpecies(pkmn.species)
-    moves = pbGetSpeciesEggMoves(baby) | pkmn.getEventMoveList
+    moves = pbGetSpeciesEggMoves(baby)
+    if $PokemonSystem.eventmoves > 0
+      moves = moves | pkmn.getEventMoveList
+    end
 
     @scene.pbStartScene(pkmn, moves)
     loop do
