@@ -142,7 +142,7 @@ class PokeBattle_Battler
     @effects[PBEffects::ChoiceBand] = nil
     @effects[PBEffects::Unburden]   = true if self.item
 
-    if ($PokemonSystem.recover_consumables == 1 || permanent) && self.item == self.initialItem
+    if permanent && self.item == self.initialItem
       if $PokemonBag.pbQuantity(self.initialItem)>=1
         $PokemonBag.pbDeleteItem(self.initialItem)
       else
