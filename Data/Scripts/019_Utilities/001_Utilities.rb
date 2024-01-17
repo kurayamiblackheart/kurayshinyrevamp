@@ -602,3 +602,12 @@ def pbScreenCapture
   Graphics.screenshot(capturefile)
   pbSEPlay("Pkmn exp full") if FileTest.audio_exist?("Audio/SE/Pkmn exp full")
 end
+
+
+def pbDominantFusionTypes?
+  return true if $PokemonSystem.dominant_fusion_types==1 #|| $game_switches[850]
+  if !$game_switches.nil?
+    return true if $game_switches[850]
+  end
+  return false
+end

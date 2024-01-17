@@ -896,6 +896,13 @@ class Pokemon
     if @ability == :MULTITYPE && species_data.type1 == :NORMAL
       return getHeldPlateType()
     end
+    if pbDominantFusionTypes?
+      return :ICE if self.species == :DEWGONG
+      return :WATER if [:OMANYTE,:OMASTAR].include?(self.species)
+      return :STEEL if [:SCIZOR,:MAGNEZONE,:EMPOLEON,:FERROTHORN].include?(self.species)
+      return :GRASS if self.species == :CELEBI
+      return :GROUND if self.species == :GASTRODON # Lookking out for the future, heh
+    end
     return @type1 if @type1
     return species_data.type1
   end
@@ -904,6 +911,16 @@ class Pokemon
   def type2
     if @ability == :MULTITYPE && species_data.type2 == :NORMAL
       return getHeldPlateType()
+    end
+    if pbDominantFusionTypes?
+      return :WATER if self.species == :DEWGONG
+      return :ROCK if [:OMANYTE,:OMASTAR].include?(self.species)
+      return :BUG if self.species == :SCIZOR
+      return :ELECTRIC if self.species == :MAGNEZONE
+      return :WATER if self.species == :EMPOLEON
+      return :GRASS if self.species == :FERROTHORN
+      return :PSYCHIC if self.species == :CELEBI
+      return :WATER if self.species == :GASTRODON # Lookking out for the future, heh
     end
     sp_data = species_data
     return sp_data.type2 || sp_data.type1

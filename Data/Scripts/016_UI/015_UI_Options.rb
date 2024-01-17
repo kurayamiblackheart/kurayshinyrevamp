@@ -47,6 +47,7 @@ class PokemonSystem
   attr_accessor :kuraylevelcap
   attr_accessor :kurayqol
   attr_accessor :self_fusion_boost
+  attr_accessor :dominant_fusion_types
   attr_accessor :damage_variance
   attr_accessor :shiny_trainer_pkmn
   attr_accessor :kuraygambleodds
@@ -158,6 +159,7 @@ class PokemonSystem
     @kuraygambleodds = 100
     @kurayqol = 1
     @self_fusion_boost = 0
+    @dominant_fusion_types = 0
     @damage_variance = 1
     @shiny_trainer_pkmn = 0
     @shenanigans = 0
@@ -259,6 +261,7 @@ class PokemonSystem
     @kuraygambleodds = saved.kuraygambleodds if saved.kuraygambleodds
     @kurayqol = saved.kurayqol if saved.kurayqol
     @self_fusion_boost = saved.self_fusion_boost if saved.self_fusion_boost
+    @dominant_fusion_types = saved.dominant_fusion_types if saved.dominant_fusion_types
     @damage_variance = saved.damage_variance if saved.damage_variance
     @shiny_trainer_pkmn = saved.shiny_trainer_pkmn if saved.shiny_trainer_pkmn
     @shenanigans = saved.shenanigans if saved.shenanigans
@@ -1348,6 +1351,12 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.self_fusion_boost = value },
                       ["Stat boost for self-fusions is disabled.",
                       "Stat boost for self-fusions is enabled."]
+    )
+    options << EnumOption.new(_INTL("Dominant Fusion Types"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.dominant_fusion_types },
+                      proc { |value| $PokemonSystem.dominant_fusion_types = value },
+                      ["Brings back the dominant/inverse fusion types from pre-v6.",
+                      "Brings back the dominant/inverse fusion types from pre-v6."]
     )
 
     options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],

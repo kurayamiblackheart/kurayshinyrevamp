@@ -110,11 +110,41 @@ module GameData
     end
 
     def calculate_type1()
+      if pbDominantFusionTypes?
+        # Inverse Types
+        return :ICE if @head_pokemon.species == :DEWGONG
+        return :WATER if [:OMANYTE,:OMASTAR].include?(@head_pokemon.species)
+        return :STEEL if [:SCIZOR,:MAGNEZONE,:EMPOLEON,:FERROTHORN].include?(@head_pokemon.species)
+        return :GRASS if @head_pokemon.species == :CELEBI
+        return :GROUND if @head_pokemon.species == :GASTRODON # Lookking out for the future, heh
+      end
       return @head_pokemon.type2 if @head_pokemon.type1 == :NORMAL && @head_pokemon.type2 == :FLYING
       return @head_pokemon.type1
     end
 
     def calculate_type2()
+      if pbDominantFusionTypes?
+        # Dominant types
+        return :GRASS if [:BULBASAUR,:IVYSAUR,:VENUSAUR].include?(@body_pokemon.species)
+        return :FIRE if [:CHARMANDER,:CHARMELEON,:CHARIZARD,:MOLTRES].include?(@body_pokemon.species)
+        return :WATER if [:SQUIRTLE,:WARTORTLE,:BLASTOISE,:GYARADOS].include?(@body_pokemon.species)
+        return :GHOST if [:GASTLY,:HAUNTER,:GENGAR].include?(@body_pokemon.species)
+        return :ROCK if [:GEODUDE,:GRAVELER,:GOLEM,:ONIX].include?(@body_pokemon.species)
+        return :STEEL if @body_pokemon.species == :STEELIX
+        return :BUG if @body_pokemon.species == :SCYTHER
+        return :ELECTRIC if @body_pokemon.species == :ZAPDOS
+        return :ICE if @body_pokemon.species == :ARTICUNO
+        return :DRAGON if @body_pokemon.species == :DRAGONITE
+        # Inverse types
+        return :WATER if @body_pokemon.species == :DEWGONG
+        return :ROCK if [:OMANYTE,:OMASTAR].include?(@body_pokemon.species)
+        return :BUG if @body_pokemon.species == :SCIZOR
+        return :ELECTRIC if @body_pokemon.species == :MAGNEZONE
+        return :WATER if @body_pokemon.species == :EMPOLEON
+        return :GRASS if @body_pokemon.species == :FERROTHORN
+        return :PSYCHIC if @body_pokemon.species == :CELEBI
+        return :WATER if @body_pokemon.species == :GASTRODON # Lookking out for the future, heh
+      end
       return @body_pokemon.type1 if @body_pokemon.type2 == @type1
       return @body_pokemon.type2
     end

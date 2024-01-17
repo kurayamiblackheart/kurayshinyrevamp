@@ -116,8 +116,10 @@ module Graphics
           $DEBUG = true
         end
       else
-        $GameSpeed = 0
-        updateTitle
+        if !File.exists?("DemICE.krs")
+          $GameSpeed = 0
+          updateTitle
+        end
       end
       # $GameSpeed = 4 if $GameSpeed < 0
       #KurayX
