@@ -104,6 +104,8 @@ class PokemonSystem
 
   attr_accessor :shinyadvanced
 
+  attr_accessor :custom_bst
+  attr_accessor :custom_bst_sliders
 
 
   #Made by Blue Wuppo
@@ -183,6 +185,9 @@ class PokemonSystem
     @dexspriteselect = 0
     @legendarybreed = 0
     @eventmoves = 0
+    @custom_bst = 0
+    @custom_bst_sliders = { :HP => 65, :ATTACK => 35, :DEFENSE => 35,
+      :SPECIAL_ATTACK => 65, :SPECIAL_DEFENSE => 65, :SPEED => 35 }
     @importnodelete = 0
 	@sb_stat_tracker = 0
 	@player_wins = 0
@@ -288,6 +293,8 @@ class PokemonSystem
     @nopngimport = saved.nopngimport if saved.nopngimport
     @legendarybreed = saved.legendarybreed if saved.legendarybreed
     @eventmoves = saved.eventmoves if saved.eventmoves
+    @custom_bst = saved.custom_bst if saved.custom_bst
+    @custom_bst_sliders = saved.custom_bst_sliders if saved.custom_bst_sliders
     #Made by Blue Wuppo
     @walkingpoison = saved.walkingpoison if saved.walkingpoison
     @modernhail = saved.modernhail if saved.modernhail
@@ -1351,6 +1358,43 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.self_fusion_boost = value },
                       ["Stat boost for self-fusions is disabled.",
                       "Stat boost for self-fusions is enabled."]
+    )
+    options << EnumOption.new(_INTL("Fusion Base Stats"), [_INTL("Off"), _INTL("Head"), _INTL("Better")],
+                      proc { $PokemonSystem.custom_bst },
+                      proc { |value| $PokemonSystem.custom_bst = value },
+                      ["Default fusion base stats.",
+                      "Sliders determine what % of each stat is derived from the head pokemon.",
+                      "Sliders determine what % of each stat is derived from the better base stat."]
+    )
+    options << SliderOption.new(_INTL("    HP"), 0, 100, 5,
+                      proc { $PokemonSystem.custom_bst_sliders[:HP] },
+                      proc { |value| $PokemonSystem.custom_bst_sliders[:HP] = value },
+                      "Percentage of base HP contributed."
+    )
+    options << SliderOption.new(_INTL("    Attack"), 0, 100, 5,
+                      proc { $PokemonSystem.custom_bst_sliders[:ATTACK] },
+                      proc { |value| $PokemonSystem.custom_bst_sliders[:ATTACK] = value },
+                      "Percentage of base Attack contributed."
+    )
+    options << SliderOption.new(_INTL("    Defense"), 0, 100, 5,
+                      proc { $PokemonSystem.custom_bst_sliders[:DEFENSE] },
+                      proc { |value| $PokemonSystem.custom_bst_sliders[:DEFENSE] = value },
+                      "Percentage of base Defense contributed."
+    )
+    options << SliderOption.new(_INTL("    Special Attack"), 0, 100, 5,
+                      proc { $PokemonSystem.custom_bst_sliders[:SPECIAL_ATTACK] },
+                      proc { |value| $PokemonSystem.custom_bst_sliders[:SPECIAL_ATTACK] = value },
+                      "Percentage of base Special Attack contributed."
+    )
+    options << SliderOption.new(_INTL("    Special Defense"), 0, 100, 5,
+                      proc { $PokemonSystem.custom_bst_sliders[:SPECIAL_DEFENSE] },
+                      proc { |value| $PokemonSystem.custom_bst_sliders[:SPECIAL_DEFENSE] = value },
+                      "Percentage of base Special Defense contributed."
+    )
+    options << SliderOption.new(_INTL("    Speed"), 0, 100, 5,
+                      proc { $PokemonSystem.custom_bst_sliders[:SPEED] },
+                      proc { |value| $PokemonSystem.custom_bst_sliders[:SPEED] = value },
+                      "Percentage of base Speed contributed."
     )
     options << EnumOption.new(_INTL("Dominant Fusion Types"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.dominant_fusion_types },

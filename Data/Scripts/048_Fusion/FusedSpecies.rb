@@ -168,6 +168,29 @@ module GameData
       return fused_stats
     end
 
+    def calculate_base_stats_custom()
+      head_stats = @head_pokemon.base_stats
+      body_stats = @body_pokemon.base_stats
+
+      fused_stats = {}
+
+      if $PokemonSystem.custom_bst == 1 # Head
+        head_stats.each{|stat, head_value| fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat])}
+      elsif $PokemonSystem.custom_bst == 2 # Better
+        head_stats.each{|stat, head_value|
+          if head_value > body_stats[stat] then
+            fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat])
+          else
+            fused_stats[stat] = calculate_fused_stats_custom(body_stats[stat], head_value, $PokemonSystem.custom_bst_sliders[stat])
+          end
+        }
+      else
+        fused_stats = calculate_base_stats
+      end
+
+      return fused_stats
+    end
+
     def calculate_base_exp()
       head_exp = @head_pokemon.base_exp
       body_exp = @body_pokemon.base_exp
@@ -290,12 +313,12 @@ module GameData
     def calculate_egg_groups
       body_egg_groups = @body_pokemon.egg_groups
       head_egg_groups = @head_pokemon.egg_groups
-    
+
       # Replace :Undiscovered with :HeadUndiscovered in head_egg_groups
       head_egg_groups.map! { |group| group == :Undiscovered ? :HeadUndiscovered : group }
-    
+
       return :Undiscovered if body_egg_groups.include?(:Undiscovered)# || head_egg_groups.include?(:Undiscovered)
-    
+
       return combine_arrays(body_egg_groups, head_egg_groups)
     end
 
@@ -343,6 +366,11 @@ module GameData
 
     def calculate_fused_stats(dominantStat, otherStat)
       return ((2 * dominantStat) / 3) + (otherStat / 3).floor
+    end
+
+    def calculate_fused_stats_custom(dominantStat, otherStat, slider)
+      ratio = slider / 100.to_f
+      return ((dominantStat * ratio) + (otherStat * (1 - ratio))).floor
     end
 
     def average_values(value1, value2)

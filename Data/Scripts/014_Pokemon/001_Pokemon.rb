@@ -1766,7 +1766,11 @@ class Pokemon
 
   # @return [Hash<Integer>] this Pokémon's base stats, a hash with six key/value pairs
   def baseStats
-    this_base_stats = species_data.base_stats
+    if $PokemonSystem.custom_bst > 0 && species_data.is_a?(GameData::FusedSpecies)
+      this_base_stats = species_data.calculate_base_stats_custom
+    else
+      this_base_stats = species_data.base_stats
+    end
     ret = {}
     GameData::Stat.each_main { |s| ret[s.id] = this_base_stats[s.id] }
     return ret
