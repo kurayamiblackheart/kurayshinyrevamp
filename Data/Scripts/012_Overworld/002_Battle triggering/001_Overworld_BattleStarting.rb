@@ -180,7 +180,7 @@ def pbPrepareBattle(battle)
     backdrop = "indoorA" if !isOutdoor
     backdrop = "Field" if isOutdoor
   end
-  
+
   battle.backdrop = backdrop
   # Choose a name for bases depending on environment
   if battleRules["base"].nil?
@@ -700,7 +700,6 @@ def pbAfterBattle(decision,canLose)
       (Graphics.frame_rate/4).times { Graphics.update }
     end
   end
-  $PokemonSystem.is_in_battle = false
   Events.onEndBattle.trigger(nil,decision,canLose)
   $game_player.straighten
 end

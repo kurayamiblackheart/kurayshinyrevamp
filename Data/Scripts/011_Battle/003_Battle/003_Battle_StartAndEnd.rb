@@ -339,6 +339,7 @@ class PokeBattle_Battle
       break if @decision>0
       @turnCount += 1
     end
+    $PokemonSystem.is_in_battle = false
     pbEndOfBattle
   end
 
