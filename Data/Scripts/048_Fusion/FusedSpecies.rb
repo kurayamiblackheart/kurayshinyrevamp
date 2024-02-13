@@ -175,13 +175,13 @@ module GameData
       fused_stats = {}
 
       if $PokemonSystem.custom_bst == 1 # Head
-        head_stats.each{|stat, head_value| fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat])}
+        head_stats.each{|stat, head_value| fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat], $PokemonSystem.custom_bst_sliders["#{stat}_BODY".to_sym])}
       elsif $PokemonSystem.custom_bst == 2 # Better
         head_stats.each{|stat, head_value|
           if head_value > body_stats[stat] then
-            fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat])
+            fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat], $PokemonSystem.custom_bst_sliders["#{stat}_BODY".to_sym])
           else
-            fused_stats[stat] = calculate_fused_stats_custom(body_stats[stat], head_value, $PokemonSystem.custom_bst_sliders[stat])
+            fused_stats[stat] = calculate_fused_stats_custom(body_stats[stat], head_value, $PokemonSystem.custom_bst_sliders[stat], $PokemonSystem.custom_bst_sliders["#{stat}_BODY".to_sym])
           end
         }
       else
@@ -368,9 +368,10 @@ module GameData
       return ((2 * dominantStat) / 3) + (otherStat / 3).floor
     end
 
-    def calculate_fused_stats_custom(dominantStat, otherStat, slider)
-      ratio = slider / 100.to_f
-      return ((dominantStat * ratio) + (otherStat * (1 - ratio))).floor
+    def calculate_fused_stats_custom(dominantStat, otherStat, slider, slider2)
+      dominatRatio = slider / 100.to_f
+      otherRatio = slider2 / 100.to_f
+      return ((dominantStat * dominatRatio) + (otherStat * otherRatio)).floor
     end
 
     def average_values(value1, value2)
