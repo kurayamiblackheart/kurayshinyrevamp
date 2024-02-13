@@ -1444,7 +1444,7 @@ class KurayOptSc_2 < PokemonOption_Scene
                       "Percentage of base Speed contributed by Head/Better."
     )
 
-    options << SliderOption.new(_INTL("    SPEED_BODY"), 0, 120, 1,
+    options << SliderOption.new(_INTL("    Speed 2"), 0, 120, 1,
                   proc { $PokemonSystem.custom_bst_sliders[:SPEED_BODY] },
                   proc { |value| $PokemonSystem.custom_bst_sliders[:SPEED_BODY] = value },
                   "Percentage of base Speed contributed by Body/Worse."
