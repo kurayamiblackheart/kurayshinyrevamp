@@ -46,6 +46,7 @@ class PokemonSystem
   attr_accessor :shinyfusedye
   attr_accessor :kuraylevelcap
   attr_accessor :kurayqol
+  attr_accessor :tutornet # DemICE
   attr_accessor :self_fusion_boost
   attr_accessor :dominant_fusion_types
   attr_accessor :damage_variance
@@ -160,6 +161,7 @@ class PokemonSystem
     @kuraylevelcap = 0
     @kuraygambleodds = 100
     @kurayqol = 1
+    @tutornet = 1 # DemICE
     @self_fusion_boost = 0
     @dominant_fusion_types = 0
     @damage_variance = 1
@@ -265,6 +267,7 @@ class PokemonSystem
     @kuraystreamerdream = saved.kuraystreamerdream if saved.kuraystreamerdream
     @kuraygambleodds = saved.kuraygambleodds if saved.kuraygambleodds
     @kurayqol = saved.kurayqol if saved.kurayqol
+    @tutornet = saved.tutornet if saved.tutornet # DemICE
     @self_fusion_boost = saved.self_fusion_boost if saved.self_fusion_boost
     @dominant_fusion_types = saved.dominant_fusion_types if saved.dominant_fusion_types
     @damage_variance = saved.damage_variance if saved.damage_variance
@@ -1699,6 +1702,12 @@ class KurayOptSc_4 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.kurayqol = value },
                       ["Kuray's QoL features OFF",
                       "Kuray's QoL features ON"]
+    )
+    options << EnumOption.new(_INTL("Tutor.net"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.tutornet },
+                      proc { |value| $PokemonSystem.tutornet = value },
+                      ["Save Tutors/TMs in a handy list: OFF",
+                      "Save Tutors/TMs in a handy list: ON"]
     )
     options << EnumOption.new(_INTL("Kuray's Shenanigans"), [_INTL("On"), _INTL("Off")],
                       proc { $PokemonSystem.shenanigans },

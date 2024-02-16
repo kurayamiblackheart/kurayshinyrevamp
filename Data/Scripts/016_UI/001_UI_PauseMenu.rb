@@ -108,6 +108,8 @@ class PokemonPauseMenu
     cmdBag = -1
     #KurayX Creating kuray shop
     cmdKurayShop = -1
+    #KurayX Creating kuray shop
+    cmdTutorNet = -1
     cmdTrainer = -1
     cmdSave = -1
     cmdOption = -1
@@ -133,6 +135,7 @@ class PokemonPauseMenu
     commands[cmdPC = commands.length] = _INTL("PC") if $PokemonSystem.kurayqol == 1
     commands[cmdKurayHeal = commands.length] = _INTL("Heal Pokémon") if $PokemonSystem.kurayqol == 1
     commands[cmdKurayShop = commands.length] = _INTL("Kuray Shop") if !pbInBugContest? && $PokemonSystem.kurayqol == 1
+    commands[cmdTutorNet = commands.length] = _INTL("Tutor.net") if !pbInBugContest? && $PokemonSystem.tutornet == 1
     commands[cmdPokegear = commands.length] = _INTL("Pokégear") if $Trainer.has_pokegear
     commands[cmdTrainer = commands.length] = $Trainer.name
     if pbInSafari?
@@ -398,6 +401,22 @@ class PokemonPauseMenu
         $game_temp.mart_prices = oldmart.clone
         $game_temp.fromkurayshop = nil
         oldmart = []
+      elsif cmdTutorNet >= 0 && command == cmdTutorNet
+        # Prevent use in Elite 4 / Champion / Hall of Fame
+        invalidMaps = [315, 316, 317, 318, 328, 341]
+        if invalidMaps.include?($game_map.map_id)
+          @scene.pbHideMenu
+          pbMessage(_INTL("Can't use that here."))
+          break
+        end
+        pbPlayDecisionSE
+        pbFadeOutIn {
+          tmtutor_convert
+          scene = PokemonTutorNet_Scene.new
+          screen = PokemonTutorNetScreen.new(scene)
+          screen.pbStartScreen
+          @scene.pbRefresh
+        }
       elsif cmdPokegear >= 0 && command == cmdPokegear
         pbPlayDecisionSE
         pbFadeOutIn {
