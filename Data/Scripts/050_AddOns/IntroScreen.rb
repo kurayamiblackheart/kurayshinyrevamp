@@ -33,7 +33,7 @@ class Scene_Intro
     @skip = false
 
 
-    if File.exists?("NoIntro.krs")
+    if File.exists?(RTP.getSaveFolder + "\\NoIntro.krs")
       sscene = PokemonLoad_Scene.new
       sscreen = PokemonLoadScreen.new(sscene)
       sscreen.pbStartLoadScreen

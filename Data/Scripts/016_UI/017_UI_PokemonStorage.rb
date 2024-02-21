@@ -1886,7 +1886,7 @@ class PokemonStorageScene
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG || canExportImport
     commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
     commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
-    if $DEBUG && File.file?("Kurayami.krs")
+    if $DEBUG && File.file?(RTP.getSaveFolder + "\\Kurayami.krs")
       commands[cmdCarpFill = commands.length] = _INTL("CarpFill")
       commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny")
       commands[cmdDebug1 = commands.length] = _INTL("Print EggGroups")
