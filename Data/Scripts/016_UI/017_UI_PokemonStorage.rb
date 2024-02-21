@@ -2458,12 +2458,12 @@ class PokemonStorageScene
     
     # Marshal not working anymore !
     # File.open(importname + ".pkm", 'wb') { |f| f.write(Marshal.dump(pokemon)) }
-    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
+    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2 && pokemon.shiny?
       pokemon.shiny=false
       pokemon.fakeshiny=true
     end
     File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
-    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
+    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2 && pokemon.shiny?
       # give shininess back after export
       pokemon.shiny=true
       pokemon.fakeshiny=false
@@ -2507,7 +2507,7 @@ class PokemonStorageScene
       copyfile = pokemon.kuraycustomfile?
     end
     begin
-      if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
+      if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2 && pokemon.shiny?
         shinyPNGMake(pokemon, importname + ".png")
       else
         File.copy(copyfile, importname + ".png")
@@ -4134,6 +4134,8 @@ class PokemonStorageScreen
       else#we already have an array in this variable!
         next unless index
         tmppkm = index.clone
+        # puts tmppkm.species
+        # puts tmppkm.species_data
         tempclone = tmppkm.to_json
         pokemon = Pokemon.new(:BULBASAUR, 1)
         pokemon.load_json(tempclone)
@@ -4190,9 +4192,9 @@ class PokemonStorageScreen
       for i in 0...finaleparty.length
         # player level setup
         $Trainer.party[i] = finaleparty[i].clone
-        if i >= playernum
-          break
-        end
+        # if i >= playernum
+          # break
+        # end
         if $PokemonSystem.sb_level
           if $PokemonSystem.sb_level == 1
             $Trainer.party[i].level = 1

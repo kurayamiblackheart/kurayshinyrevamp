@@ -147,7 +147,7 @@ class PokemonSystem
     @kurayshinyanim = 0
     @kurayfonts = 0
     @kuraybigicons = 0
-    @kurayindividcustomsprite = 1
+    @kurayindividcustomsprite = 0
     @typedisplay = 0
     @battlegui = 0
     @darkmode = 1
@@ -1715,16 +1715,17 @@ class KurayOptSc_4 < PokemonOption_Scene
                       ["You're playing with Shenanigans! (Easter Eggs)",
                       "You're playing normally! (No Easter Eggs)"]
     )
-    options << EnumOption.new(_INTL("Streamer's Dream"), [_INTL("Off"), _INTL("On"), _INTL("Dream more!")],
+    # options << EnumOption.new(_INTL("Streamer's Dream"), [_INTL("Off"), _INTL("On"), _INTL("Dream more!")],
+    options << EnumOption.new(_INTL("Streamer's Dream"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.kuraystreamerdream },
                       proc { |value|
                         if value == 0
                           $PokemonSystem.kuraystreamerdream = 0
                         elsif value == 1
                           $PokemonSystem.kuraystreamerdream = 1
-                        elsif value == 2
-                          $PokemonSystem.kuraystreamerdream = 2
-                          $game_switches[252]=true
+                        # elsif value == 2
+                          # $PokemonSystem.kuraystreamerdream = 2
+                          # $game_switches[252]=true
                           # $game_variables[VAR_PREMIUM_WONDERTRADE_LEFT] = 999999
                           # $game_variables[VAR_STANDARD_WONDERTRADE_LEFT] = 999999
                         end

@@ -1913,7 +1913,7 @@ class Pokemon
       "ribbons" => @ribbons.clone,
       "spriteform_body" => @spriteform_body,
       "spriteform_head" => @spriteform_head,
-      "half_specie" => @species_data.as_json
+      "half_specie" => species_data.as_json
     }
   end
 
