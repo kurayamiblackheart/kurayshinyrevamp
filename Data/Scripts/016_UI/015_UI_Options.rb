@@ -169,17 +169,17 @@ class PokemonSystem
     @shenanigans = 0
     @kuraystreamerdream = 0
     @autobattler = 0
-    @sb_maxing = 0
+    @sb_maxing = 1
     @unfusetraded = 0
     @sb_soullinked = 0
     @globalvalues = 0
     @sb_randomizeteam = 0
-    @sb_randomizeshare = 0
-    @sb_randomizesize = 0
-    @sb_battlesize = 0
+    @sb_randomizeshare = 1
+    @sb_randomizesize = 5
+    @sb_battlesize = 5
     @importlvl = 0
     @importdevolve = 0
-    @sb_select = 0
+    @sb_select = 1
     @sb_playerfolder = 0
     @sb_level = 0
     @debugfeature = 0
@@ -187,6 +187,8 @@ class PokemonSystem
     @dexspriteselect = 0
     @legendarybreed = 0
     @eventmoves = 0
+    @nopngexport = 0
+    @nopngimport = 0
     @custom_bst = 0
     @custom_bst_sliders = { :HP => 65, :ATTACK => 35, :DEFENSE => 35,
       :SPECIAL_ATTACK => 65, :SPECIAL_DEFENSE => 65, :SPEED => 35 }
