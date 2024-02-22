@@ -218,6 +218,26 @@ class PokeBattle_Battle
     priority = pbPriority(true)   # in order of fastest -> slowest speeds only
     # Weather
     pbEORWeather(priority)
+    # BerserkerIncrease
+    if $PokemonSystem.ch_berserker && $PokemonSystem.ch_berserker != 0
+      @positions.each_with_index do |pos,idxPos|
+        next if !pos || @battlers[idxPos].pbOwnedByPlayerSerious?
+        requiredturns = [1, 3, 2, 1, 1]
+        if requiredturns[$PokemonSystem.ch_berserker] > 1
+          next if @battlers[idxPos].turnCount % requiredturns[$PokemonSystem.ch_berserker] != 0
+        end
+        berserkup = [:ATTACK,1,:DEFENSE,1,:SPECIAL_ATTACK,1,:SPECIAL_DEFENSE,1,:SPEED,1]
+        next if !@battlers[idxPos].pbCanRaiseStatStage?(berserkup[0],@battlers[idxPos],self,true)
+        pbDisplay(_INTL("All stats from {1} increased! [BERSERKER MODE]",@battlers[idxPos].pbThis))
+        showAnim = true
+        for i in 0...berserkup.length/2
+          next if !@battlers[idxPos].pbCanRaiseStatStage?(berserkup[i*2],@battlers[idxPos],self)
+          if @battlers[idxPos].pbRaiseStatStage(berserkup[i*2],berserkup[i*2+1],@battlers[idxPos],showAnim)
+            showAnim = false
+          end
+        end
+      end
+    end
     # Future Sight/Doom Desire
     @positions.each_with_index do |pos,idxPos|
       next if !pos || pos.effects[PBEffects::FutureSightCounter]==0

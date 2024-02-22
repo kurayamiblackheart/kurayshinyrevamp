@@ -280,6 +280,11 @@ class PokeBattle_Battle
     return pbGetOwnerIndexFromBattlerIndex(idxBattler)==0
   end
 
+  def pbOwnedByPlayerSerious?(idxBattler)
+    return false if opposes?(idxBattler)
+    return pbGetOwnerIndexFromBattlerIndex(idxBattler)==0
+  end
+
   # Returns the number of Pokémon positions controlled by the given trainerIndex
   # on the given side of battle.
   def pbNumPositions(side,idxTrainer)

@@ -118,6 +118,11 @@ class PokemonSystem
   attr_accessor :icebuff
   #End of By Blue Wuppo
 
+  attr_accessor :ch_metronome
+  attr_accessor :ch_letdownplayer
+  attr_accessor :ch_letdown
+  attr_accessor :ch_berserker
+
   attr_accessor :dexspriteselect
 
   def initialize
@@ -189,6 +194,13 @@ class PokemonSystem
     @eventmoves = 0
     @nopngexport = 0
     @nopngimport = 0
+    
+    # Challenges
+    @ch_metronome = 0
+    @ch_letdownplayer = 0
+    @ch_letdown = 0
+    @ch_berserker = 0
+
     @custom_bst = 0
     @custom_bst_sliders = { :HP => 65, :ATTACK => 35, :DEFENSE => 35,
       :SPECIAL_ATTACK => 65, :SPECIAL_DEFENSE => 65, :SPEED => 35 }
@@ -307,6 +319,10 @@ class PokemonSystem
     @drowsy = saved.drowsy if saved.drowsy
     @bugbuff = saved.bugbuff if saved.bugbuff
     @icebuff = saved.icebuff if saved.icebuff
+    @ch_metronome = saved.ch_metronome if saved.ch_metronome
+    @ch_letdownplayer = saved.ch_letdownplayer if saved.ch_letdownplayer
+    @ch_letdown = saved.ch_letdown if saved.ch_letdown
+    @ch_berserker = saved.ch_berserker if saved.ch_berserker
     #End of By Blue Wuppo
   end
 end
@@ -1078,6 +1094,12 @@ class KurayOptionsScene < PokemonOption_Scene
         openKuray5()
       }, "Self-battling & import features"
     )
+    options << ButtonOption.new(_INTL("Challenges"),
+      proc {
+        @kuray_menu = true
+        openKuray6()
+      }, "Challenges"
+    )
     options << ButtonOption.new(_INTL("Others"),
       proc {
         @kuray_menu = true
@@ -1161,6 +1183,15 @@ class KurayOptionsScene < PokemonOption_Scene
     return if !@kuray_menu
     pbFadeOutIn {
       scene = KurayOptSc_5.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @kuray_menu = false
+  end
+  def openKuray6()
+    return if !@kuray_menu
+    pbFadeOutIn {
+      scene = KurayOptSc_6.new
       screen = PokemonOptionScreen.new(scene)
       screen.pbStartScreen
     }
@@ -1626,6 +1657,91 @@ class KurayOptSc_3 < PokemonOption_Scene
                         end
                         $PokemonSystem.kurayfonts = value
                       }, "Changes the Game's font"
+    )
+
+    return options
+  end
+end
+
+#===============================================================================
+# CHALLENGES
+#===============================================================================
+class KurayOptSc_6 < PokemonOption_Scene
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = Color.new(35, 35, 200)
+    @sprites["option"].nameShadowColor = Color.new(20, 20, 115)
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Challenges settings"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Customize modded features")
+
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbGetOptions(inloadscreen = false)
+    options = []
+
+    if $scene && $scene.is_a?(Scene_Map)
+      options.concat(pbGetInGameOptions())
+    else
+      options << ButtonOption.new(_INTL("### EMPTY ###"),
+      proc {}
+      )
+    end
+    return options
+  end
+
+  def pbGetInGameOptions()
+    options = []
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
+    proc {}
+    )
+
+    options << EnumOption.new(_INTL("Metronome Madness"), [_INTL("Off"), _INTL("Normal"), _INTL("Hard")],
+                      proc { $PokemonSystem.ch_metronome },
+                      proc { |value| $PokemonSystem.ch_metronome = value },
+                      ["Metronome disabled.",
+                      "All Pokemons are forced to use Metronome. [Normal]",
+                      "Only your Pokemons are forced to use Metronome. [Hard]"]
+    )
+    options << EnumOption.new(_INTL("Letdown"), [_INTL("Off"), _INTL("1%"), _INTL("5%"), _INTL("10%"), _INTL("25%"), _INTL("50%")],
+                      proc { $PokemonSystem.ch_letdown },
+                      proc { |value| $PokemonSystem.ch_letdown = value },
+                      ["Letdown disabled.",
+                        "1% chance that Pokemons use Splash instead.",
+                        "5% chance that Pokemons use Splash instead.",
+                        "10% chance that Pokemons use Splash instead.",
+                        "25% chance that Pokemons use Splash instead.",
+                        "50% chance that Pokemons use Splash instead."]
+    )
+    options << EnumOption.new(_INTL("Letdown Player Only"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.ch_letdownplayer },
+                      proc { |value| $PokemonSystem.ch_letdownplayer = value },
+                      ["Letdown doesn't only affect the player.",
+                        "Letdown only affects the player."]
+    )
+    options << EnumOption.new(_INTL("Berserker"), [_INTL("Off"), _INTL("Easy"), _INTL("Normal"), _INTL("Hard"), _INTL("Chaos")],
+                      proc { $PokemonSystem.ch_berserker },
+                      proc { |value| $PokemonSystem.ch_berserker = value },
+                      ["Berserker disabled.",
+                      "Opponent stats raise by 1 every 3 turns. [Easy]",
+                      "Opponent stats raise by 1 every 2 turns. [Normal]",
+                      "Opponent stats raise by 1 every turn. [Hard]",
+                      "Opponent stats raise by 2 every turn. [Hardcore]"]
     )
 
     return options
