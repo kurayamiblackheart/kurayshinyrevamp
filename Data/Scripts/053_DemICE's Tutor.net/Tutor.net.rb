@@ -812,7 +812,6 @@ def pbMoveTutorNetChoose(commands, cmd, movelist = nil, bymachine = false, oneus
 											end  
 											@scene.pbStartScene(realcommands, $Trainer.party, commands,cmd,chosen)
 										end	
-										$stats.moves_taught_by_tutor += 1
 										@scene.pbRefresh(chosen)
 										ret=true
 										return ret if mode[1]>=0
@@ -851,7 +850,6 @@ def pbMoveTutorNetChoose(commands, cmd, movelist = nil, bymachine = false, oneus
 											end  
 											@scene.pbStartScene(realcommands, $Trainer.party, commands,cmd,chosen)
 										end	
-										$stats.moves_taught_by_tutor += 1
 										@scene.pbRefresh(chosen)
 										ret=true
 										return ret if mode[1]>=0
@@ -887,7 +885,6 @@ def pbMoveTutorNetChoose(commands, cmd, movelist = nil, bymachine = false, oneus
 											end  
 											@scene.pbStartScene(realcommands, $Trainer.party, commands,cmd,chosen)
 										end	
-										$stats.moves_taught_by_tutor += 1
 										@scene.pbRefresh(chosen)
 										ret=true
 										return ret if mode[1]>=0
@@ -1080,7 +1077,7 @@ end
 def pbMoveTutorChoose(move,movelist=nil,bymachine=false,oneusemachine=false,selectedPokemonVariable=nil)
   ret = false
   move = GameData::Move.get(move).id
-  pbTutorNetAdd(move)
+  pbTutorNetAdd(move,10000)
   if movelist!=nil && movelist.is_a?(Array)
     for i in 0...movelist.length
       movelist[i] = GameData::Move.get(movelist[i]).id

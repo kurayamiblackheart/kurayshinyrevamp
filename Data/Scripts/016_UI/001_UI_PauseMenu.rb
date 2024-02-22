@@ -251,7 +251,7 @@ class PokemonPauseMenu
           722,723,724,720, #Dream sequence
           304,306,307       #Victory road
         ]
-        if invalidMaps.include?($game_map.map_id)
+        if invalidMaps.include?($game_map.map_id) && !File.exists?("DemICE.krs")
           @scene.pbHideMenu
           pbMessage(_INTL("Can't use that here."))
           break
@@ -261,7 +261,7 @@ class PokemonPauseMenu
       elsif cmdKurayShop >= 0 && command == cmdKurayShop
         # Prevent use in Elite 4 / Champion / Hall of Fame
         invalidMaps = [315, 316, 317, 318, 328, 341]
-        if invalidMaps.include?($game_map.map_id)
+        if invalidMaps.include?($game_map.map_id) && !File.exists?("DemICE.krs")
           @scene.pbHideMenu
           pbMessage(_INTL("Can't use that here."))
           break
