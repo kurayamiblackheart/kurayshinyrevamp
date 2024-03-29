@@ -173,11 +173,21 @@ class PokeBattle_Battle
   def wildBattle?;    return @opponent.nil?;  end
   def trainerBattle?; return !@opponent.nil?; end
 
+  # def get_default_battle_format()
+  #   case $PokemonSystem.battle_type
+  #   when 0 then return [1, 1]
+  #   when 1 then return [2, 2]
+  #   when 2 then return [3, 3]
+  #   end
+  #   return [1,1]
+  # end
+
   # Sets the number of battler slots on each side of the field independently.
   # For "1v2" names, the first number is for the player's side and the second
   # number is for the opposing side.
   def setBattleMode(mode)
     # default = $game_variables[VAR_DEFAULT_BATTLE_TYPE].is_a?(Array) ? $game_variables[VAR_DEFAULT_BATTLE_TYPE] : [1, 1]
+    # default = get_default_battle_format()
     #KurayX patching battles
     default = $game_variables[VAR_DEFAULT_BATTLE_TYPE].is_a?(Array) ? $game_variables[VAR_DEFAULT_BATTLE_TYPE].clone : [1, 1]
     @sideSizes =

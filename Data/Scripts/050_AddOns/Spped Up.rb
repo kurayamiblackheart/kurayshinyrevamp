@@ -125,6 +125,20 @@ module Graphics
       #KurayX
     end
     if $CanToggle && Input.trigger?(Input::AUX1)
+      # if $PokemonSystem
+      #   case $PokemonSystem.speedtoggle
+      #   when 0#Old way of speeding up
+      #     $PokemonSystem.speedtoggle == 0:
+      #     $GameSpeed += 1
+      #     $GameSpeed = 0 if $GameSpeed >= SPEEDUP_STAGES.size
+      #     #KurayX
+      #     updateTitle
+      #   when 1#Hold to speed up
+      #     pass
+      #   when 2#Toggle to speed up
+      #     pass
+      #   end
+      # end
       $GameSpeed += 1
       $GameSpeed = 0 if $GameSpeed >= SPEEDUP_STAGES.size
       #KurayX

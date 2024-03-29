@@ -25,6 +25,7 @@ class Game_Character
   attr_reader :move_speed
   attr_accessor :walk_anime
   attr_writer :bob_height
+  attr_accessor :under_everything
 
   def initialize(map = nil)
     @map = map
@@ -75,6 +76,7 @@ class Game_Character
     @moved_this_frame = false
     @locked = false
     @prelock_direction = 0
+    @under_everything=false
   end
 
   def at_coordinate?(check_x, check_y)
@@ -93,6 +95,10 @@ class Game_Character
         yield i, j
       end
     end
+  end
+
+  def set_opacity(opacity)
+    @opacity = opacity
   end
 
   def move_speed=(val)
@@ -231,10 +237,11 @@ class Game_Character
 
 
   def passable?(x, y, d, strict = false)
+    return false if self == $game_player && $game_switches[SWITCH_LOCK_PLAYER_MOVEMENT]
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
     new_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)
     return false unless self.map.valid?(new_x, new_y)
-    if self.character_name == "SHARPEDO"
+    if self.character_name == "SHARPEDO" || self.character_name == "nightmare"
       return false if pbFacingTerrainTag().id==:SharpedoObstacle
     end
     return true if @through
@@ -329,6 +336,7 @@ class Game_Character
   end
 
   def screen_z(height = 0)
+    return -1 if @under_everything
     return 999 if @always_on_top
     z = screen_y_ground
     if @tile_id > 0
@@ -362,6 +370,7 @@ class Game_Character
   end
 
   def force_move_route(move_route)
+    echoln screen_z() if self == $game_player
     if @original_move_route == nil
       @original_move_route = @move_route
       @original_move_route_index = @move_route_index

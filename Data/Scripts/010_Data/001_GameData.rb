@@ -264,6 +264,7 @@ module GameData
     TrainerType.load
     Trainer.load
     TrainerModern.load
+    TrainerExpert.load
     Metadata.load
     MapMetadata.load
 

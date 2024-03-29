@@ -2069,16 +2069,28 @@ class PokeBattle_Move_164 < PokeBattle_Move_163
     @calcCategory = (realAtk > realSpAtk) ? 0 : 1
 
     if user.hasActiveItem?(:NECROZIUM) && (user.isFusionOf(:NECROZMA) && !user.pokemon.spriteform_body && !user.pokemon.spriteform_head)
-      user.type2 = :DRAGON if user.pokemon.hasBodyOf?(:NECROZMA)
-      user.attack*=1.3
-      user.spatk*=1.3
-      user.defense*=0.5
-      user.spdef*=0.5
-      user.speed*=1.5
-      user.changeForm(1,:NECROZMA)
+      # user.type2 = :DRAGON if user.pokemon.hasBodyOf?(:NECROZMA)
+      # user.attack*=1.3
+      # user.spatk*=1.3
+      # user.defense*=0.5
+      # user.spdef*=0.5
+      # user.speed*=1.5
+
+      user.changeFormSpecies(:NECROZMA,:U_NECROZMA,"UltraBurst2")
+      #user.changeForm(1,:NECROZMA)
     end
   end
 end
+
+#change back at the end of battle
+Events.onEndBattle += proc { |_sender,_e|
+  $Trainer.party.each_with_index do |value, i|
+    pokemon = $Trainer.party[i]
+    if pokemon.isFusionOf(:U_NECROZMA)
+      pokemon.changeFormSpecies(:U_NECROZMA,:NECROZMA)
+    end
+  end
+}
 
 #===============================================================================
 # Negates the target's ability while it remains on the field, if it has already

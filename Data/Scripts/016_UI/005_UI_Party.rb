@@ -1230,7 +1230,6 @@ class PokemonPartyScreen
       cmdItem = -1
       # Build the commands
       commands[cmdSummary = commands.length] = _INTL("Summary")
-      commands[cmdNickname = commands.length] = _INTL("Nickname") if !pkmn.egg?
       commands[cmdDebug = commands.length] = _INTL("Debug") if $DEBUG
       if !pkmn.egg?
         # Check for hidden moves and add any that were found
@@ -1249,6 +1248,7 @@ class PokemonPartyScreen
           commands[cmdItem = commands.length] = _INTL("Item")
         end
       end
+      commands[cmdNickname = commands.length] = _INTL("Nickname") if !pkmn.egg?
       commands[commands.length] = _INTL("Cancel")
       command = @scene.pbShowCommands(_INTL("Do what with {1}?", pkmn.name), commands)
       havecommand = false

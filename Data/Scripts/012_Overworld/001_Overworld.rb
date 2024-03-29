@@ -42,6 +42,11 @@ def pbBatteryLow?
   return false
 end
 
+def pbOnBattery?
+  pstate = System.power_state
+  return pstate[:discharging]
+end
+
 Events.onMapUpdate += proc { |_sender, _e|
   if !$PokemonTemp.batterywarning && pbBatteryLow?
     if !$game_temp.in_menu && !$game_temp.in_battle &&

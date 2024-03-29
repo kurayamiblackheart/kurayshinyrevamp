@@ -49,6 +49,7 @@ def download_pokemon_sprite_if_missing(body, head)
   get_fusion_sprite_path(head, body)
 end
 
+
 def download_sprite(base_path, head_id, body_id, saveLocation = "Graphics/temp", alt_letter = "", spriteformBody_suffix = "", spriteformHead_suffix = "")
   begin
     head_id = (head_id.to_s) + spriteformHead_suffix
@@ -75,7 +76,7 @@ def download_sprite(base_path, head_id, body_id, saveLocation = "Graphics/temp",
       echoln _INTL("\nDownloaded file from {1} to {2}", base_path, saveLocation)
       return downloaded_file_name
     end
-    echoln "tried to download " + base_path
+    echoln "tried to download " + url
     return nil
   rescue MKXPError, Errno::ENOENT
     return nil
@@ -102,6 +103,20 @@ def download_custom_sprite(head_id, body_id, spriteformBody_suffix = "", spritef
   return nil if $PokemonSystem.download_sprites != 0
   #base_path = "https://raw.githubusercontent.com/Aegide/custom-fusion-sprites/main/CustomBattlers/{1}.{2}.png"
   # url = "https://raw.githubusercontent.com/infinitefusion/sprites/main/CustomBattlers/{1}.{2}.png"
+  url = Settings::CUSTOM_SPRITES_REPO_URL + "{1}.{2}{3}.png"
+  destPath = _INTL("{1}{2}", Settings::CUSTOM_BATTLERS_FOLDER_INDEXED, head_id)
+  if !Dir.exist?(destPath)
+    Dir.mkdir(destPath)
+  end
+  sprite = download_sprite(_INTL(url, head_id, body_id,alt_letter), head_id, body_id, destPath, alt_letter)
+  return sprite if sprite
+  return nil
+end
+
+def download_custom_sprite_filename(filename)
+  head_id = (head_id.to_s) + spriteformHead_suffix.to_s
+  body_id = (body_id.to_s) + spriteformBody_suffix.to_s
+  return nil if $PokemonSystem.download_sprites != 0
   url = Settings::CUSTOM_SPRITES_REPO_URL + "{1}.{2}{3}.png"
   destPath = _INTL("{1}{2}", Settings::CUSTOM_BATTLERS_FOLDER_INDEXED, head_id)
   if !Dir.exist?(destPath)

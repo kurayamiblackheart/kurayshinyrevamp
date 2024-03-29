@@ -305,6 +305,8 @@ def getTrainersDataMode
   mode = GameData::Trainer
   if $game_switches && $game_switches[SWITCH_MODERN_MODE]
     mode = GameData::TrainerModern
+  elsif $game_switches && $game_switches[SWITCH_EXPERT_MODE]
+    mode = GameData::TrainerExpert
   end
   return mode
 end

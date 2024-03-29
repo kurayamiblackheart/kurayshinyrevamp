@@ -154,6 +154,12 @@ def getFusedPokemonIdFromDexNum(body_dex, head_dex)
   return ("B" + body_dex.to_s + "H" + head_dex.to_s).to_sym
 end
 
+def getFusedPokemonIdFromSymbols(body_dex, head_dex)
+  bodyDexNum =  GameData::Species.get(body_dex).id_number
+  headDexNum =  GameData::Species.get(head_dex).id_number
+  return getFusedPokemonIdFromDexNum(body_dex,head_dex)
+end
+
 def getPokemon(dexNum)
   if dexNum.is_a?(Integer)
     if dexNum > NB_POKEMON

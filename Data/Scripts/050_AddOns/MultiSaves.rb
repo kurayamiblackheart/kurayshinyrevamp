@@ -380,6 +380,8 @@ class PokemonLoadScreen
       #Kuray Add Documentation & Discord server links
       cmd_doc         = -1
       cmd_discord         = -1
+      cmd_pifdiscord        = -1
+      cmd_wiki        = -1
       show_continue = !@save_data.empty?
       new_game_plus = show_continue && (@save_data[:player].new_game_plus_unlocked || $DEBUG)
 
@@ -395,8 +397,10 @@ class PokemonLoadScreen
         commands[cmd_new_game_plus = commands.length] = _INTL('New Game +')
       end
       commands[cmd_options = commands.length] = _INTL('Options')
-      commands[cmd_discord = commands.length]     = _INTL('Join Mod\'s Discord')
-      commands[cmd_doc = commands.length]     = _INTL('Open Mod\'s Documentation')
+      commands[cmd_discord = commands.length]     = _INTL('KIF Discord')
+      commands[cmd_doc = commands.length]     = _INTL('KIF Documentation (Obsolete)')
+      commands[cmd_pifdiscord = commands.length]     = _INTL('PIF Discord')
+      commands[cmd_wiki = commands.length] = _INTL('Wiki')
       commands[cmd_language = commands.length] = _INTL('Language') if Settings::LANGUAGES.length >= 2
       commands[cmd_debug = commands.length] = _INTL('Debug') if $DEBUG
       commands[cmd_quit = commands.length] = _INTL('Quit Game')
@@ -437,14 +441,20 @@ class PokemonLoadScreen
           Game.start_new(@save_data[:bag], @save_data[:storage_system], @save_data[:player])
           @save_data[:player].new_game_plus_unlocked = true
           return
+        when cmd_pifdiscord
+          openUrlInBrowser(Settings::PIF_DISCORD_URL)
+        when cmd_wiki
+          openUrlInBrowser(Settings::WIKI_URL)
         when cmd_doc
+          openUrlInBrowser("https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE")
           # https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE
-          system("start https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE")
+          # system("start https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE")
           # `open https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE`
           return
         when cmd_discord
           # https://discord.gg/UFxQkUZeyE
-          system("start https://discord.gg/UFxQkUZeyE")
+          openUrlInBrowser(Settings::DISCORD_URL)
+          # system("start https://discord.gg/UFxQkUZeyE")
           # `open https://discord.gg/UFxQkUZeyE`
           return
         when cmd_mystery_gift

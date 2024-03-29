@@ -359,6 +359,9 @@ class HallOfFame_Scene
     if $game_switches[SWITCH_MODERN_MODE]
       gameMode = "Modern mode"
     end
+    if $game_switches[SWITCH_EXPERT_MODE]
+      gameMode = "Expert mode"
+    end
     if $game_switches[SWITCH_SINGLE_POKEMON_MODE]
       pokemon_number = pbGet(VAR_SINGLE_POKEMON_MODE)
       if pokemon_number.is_a?(Integer) && pokemon_number >0

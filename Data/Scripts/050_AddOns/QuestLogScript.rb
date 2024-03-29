@@ -164,6 +164,13 @@ QUESTS = [
   Quest.new(55, "The Cursed Forest", "A child wants you to find a floating tree stump in Ilex Forest. What could she be talking about?", questBranchHotels, "BW109", "Goldenrod City", defaultQuestColor),
   Quest.new(56, "Bitey Pokémon", "A fisherman wants to know what is the sharp-toothed Pokémon that bit him in the Safari Zone's lake.", questBranchHotels, "BW (71)", "Fuchsia City", defaultQuestColor),
 
+  Quest.new(57, "A legendary band (Part 1)", "The singer of a band in Saffron City wants you to help them recruit a drummer. They think they've heard some drumming around Crimson City...", questBranchField, "BW107", "Saffron City", specialQuestColor),
+  Quest.new(58, "A legendary band (Part 2)", "The drummer from a legendary Pokéband wants you to find its former bandmates. The band manager talked about two former guitarists...", questBranchField, "band_drummer", "Saffron City", specialQuestColor),
+  Quest.new(59, "A legendary band (Part 3)", "The drummer from a legendary Pokéband wants you to find its former bandmates. There are rumors about strange music that was heard around the region.", questBranchField, "band_drummer", "Saffron City", specialQuestColor),
+  Quest.new(60, "A legendary band (Part 4)", "You assembled the full band! Come watch the show on Saturday night.", questBranchField, "BW117", "Saffron City", specialQuestColor),
+
+  Quest.new(61, "Mysterious Lunar feathers", "A mysterious entity asked you to collect Lunar Feather for them. It said that they will come at night to tell you where look. Whoever that may be...", questBranchField, "lunarFeather", "Lavender Town", specialQuestColor),
+
   # attention: c'est un array et non un hash... l'id est en fait l'index, donc il est important de garder l'ordre
   #out of order quests
   #42 (cinnabar)

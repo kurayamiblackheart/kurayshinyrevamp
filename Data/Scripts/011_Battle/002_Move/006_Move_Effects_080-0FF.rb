@@ -3012,10 +3012,10 @@ class PokeBattle_Move_0EB < PokeBattle_Move
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
-    if @battle.wildBattle? && target.level>user.level
-      @battle.pbDisplay(_INTL("But it failed!"))
-      return true
-    end
+    # if @battle.wildBattle? && target.level>user.level
+    #   @battle.pbDisplay(_INTL("But it failed!"))
+    #   return true
+    # end
     if @battle.trainerBattle?
       canSwitch = false
       @battle.eachInTeamFromBattlerIndex(target.index) do |_pkmn,i|

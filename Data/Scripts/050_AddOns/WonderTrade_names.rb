@@ -1082,5 +1082,7 @@ RandPokeNick = [
   "Darkmost",
   "Globby",
   "TM",
-  "Trapstarr"
+  "Trapstarr",
+  "TheDuoDesign",
+  "MinamoStyle"
 ]

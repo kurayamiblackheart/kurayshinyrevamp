@@ -97,6 +97,15 @@ module GameData
       return id.to_s.match(/(?<=H)\d+/)[0].to_i
     end
 
+    def get_body_species
+      return @body_pokemon
+    end
+
+    def get_head_species
+      return @head_pokemon
+    end
+
+
     def adjust_stats_with_evs
       GameData::Stat.each_main do |s|
         @base_stats[s.id] = 1 if !@base_stats[s.id] || @base_stats[s.id] <= 0

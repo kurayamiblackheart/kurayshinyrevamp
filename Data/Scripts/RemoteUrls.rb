@@ -11,4 +11,9 @@ module Settings
   CUSTOM_SPRITES_REPO_URL = "https://gitlab.com/pokemoninfinitefusion/customsprites/-/raw/master/CustomBattlers/"
   BASE_POKEMON_SPRITES_REPO_URL = "https://gitlab.com/pokemoninfinitefusion/autogen-fusion-sprites/-/raw/master/Battlers/"
   BASE_POKEMON_ALT_SPRITES_REPO_URL = "https://gitlab.com/pokemoninfinitefusion/customsprites/-/raw/master/Other/BaseSprites/"
+  
+  DISCORD_URL = "https://discord.gg/kuray-hub-1121345297352753243"
+  
+  PIF_DISCORD_URL = "https://discord.com/invite/infinitefusion"
+  WIKI_URL = "https://infinitefusion.fandom.com/"
 end

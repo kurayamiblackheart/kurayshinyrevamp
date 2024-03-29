@@ -112,6 +112,7 @@ def pbBattleAnimation(bgm=nil,battletype=0,foe=nil)
   $PokemonGlobal.nextBattleME        = nil
   $PokemonGlobal.nextBattleCaptureME = nil
   $PokemonGlobal.nextBattleBack      = nil
+  $PokemonTemp.forced_alt_sprites=nil
   $PokemonEncounters.reset_step_count
   # Fade back to the overworld
   viewport.color = Color.new(0,0,0,255)

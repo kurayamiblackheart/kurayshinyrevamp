@@ -358,37 +358,38 @@ class RandomizerItemOptionsScene < PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = [
-      EnumOption.new(_INTL("Type"), [_INTL("Mapped"), _INTL("Dynamic")],
-                     proc {
-                       if $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC]
-                         1
-                       else
-                         0
-                       end
-                     },
-                     proc { |value|
-                       if value == 0
-                         $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = true
-                         $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC] = false
-                       else
-                         value == 1
-                         $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = false
-                         $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC] = true
-                       end
-                     },
-                     [
-                       "Random items are decided at the start of the game",
-                       "Random items are decided as you obtain them"],
+      # EnumOption.new(_INTL("Type"), [_INTL("Mapped"), _INTL("Dynamic")],
+      #                proc {
+      #                  if $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC]
+      #                    1
+      #                  else
+      #                    0
+      #                  end
+      #                },
+      #                proc { |value|
+      #                  if value == 0
+      #                    $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = true
+      #                    $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC] = false
+      #                  else
+      #                    value == 1
+      #                    $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = false
+      #                    $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC] = true
+      #                  end
+      #                },
+      #                [
+      #                  "Random items are decided at the start of the game",
+      #                  "Random items are decided as you obtain them"],
       # proc { $game_switches[SWITCH_RANDOM_ITEMS_FULL] ? 0 : 1 },
       # proc { |value|
       #   $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = value == 0
       #   $game_switches[SWITCH_RANDOM_ITEMS_FULL] = value == 1
       # }, ["Random items are decided at the start of the game", "Random items are decided as you obtain them"]
-      ),
+      # ),
       EnumOption.new(_INTL("Found items"), [_INTL("On"), _INTL("Off")],
                      proc { $game_switches[SWITCH_RANDOM_FOUND_ITEMS] ? 0 : 1 },
                      proc { |value|
                        $game_switches[SWITCH_RANDOM_FOUND_ITEMS] = value == 0
+                       $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = value == 0
                        $game_switches[SWITCH_RANDOM_ITEMS] = $game_switches[SWITCH_RANDOM_FOUND_ITEMS] || $game_switches[SWITCH_RANDOM_GIVEN_ITEMS]
                      }, "Randomize the items picked up on the ground"
       ),

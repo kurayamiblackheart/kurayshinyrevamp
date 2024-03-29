@@ -231,7 +231,8 @@ class PokemonPokedex_Scene
     pbUpdateSpriteHash(@sprites)
   end
 
-  def pbStartScene
+  def pbStartScene(filter_owned=false)
+    @filter_owned=filter_owned
     @sliderbitmap       = AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_slider")
     @typebitmap         = AnimatedBitmap.new(_INTL("Graphics/Pictures/Pokedex/icon_types"))
     @shapebitmap        = AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_shapes")
@@ -345,7 +346,7 @@ class PokemonPokedex_Scene
   # end
 
 
-  def pbGetDexList()
+  def pbGetDexList(filter_owned=false)
     dexlist=[]
     regionalSpecies=[]
     for i in 1..PBSpecies.maxValue
@@ -354,8 +355,10 @@ class PokemonPokedex_Scene
     for i in 1...PBSpecies.maxValue
       nationalSpecies=i
       if $Trainer.seen?(nationalSpecies)
-        species = GameData::Species.get(nationalSpecies)
-        dexlist.push([species.id_number,species.real_name,0,0,i+1,0])
+        if !filter_owned || $Trainer.owned?(nationalSpecies)
+          species = GameData::Species.get(nationalSpecies)
+          dexlist.push([species.id_number,species.real_name,0,0,i+1,0])
+        end
       end
     end
     return dexlist
@@ -365,7 +368,7 @@ class PokemonPokedex_Scene
     if index == nil
       index = 0
     end
-    dexlist = pbGetDexList
+    dexlist = pbGetDexList(@filter_owned)
     case $PokemonGlobal.pokedexMode
     when MODENUMERICAL
       # Hide the Dex number 0 species if unseen
@@ -1178,7 +1181,7 @@ class PokemonPokedex_Scene
     return 0
   end
 
-  def pbPokedex
+  def pbPokedex()
     pbActivateWindow(@sprites,"pokedex") {
       loop do
         Graphics.update
@@ -1221,9 +1224,9 @@ class PokemonPokedexScreen
     @scene = scene
   end
 
-  def pbStartScreen
-    @scene.pbStartScene
-    @scene.pbPokedex
+  def pbStartScreen(filter_owned=false)
+    @scene.pbStartScene(filter_owned)
+    @scene.pbPokedex()
     @scene.pbEndScene
   end
 end

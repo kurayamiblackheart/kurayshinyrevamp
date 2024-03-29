@@ -100,6 +100,11 @@ class PokemonPokedexInfo_Scene
 
   end
 
+  def get_currently_selected_sprite()
+    species_id = getDexNumberForSpecies(@species).to_s
+    $PokemonGlobal.alt_sprite_substitutions = {} if !$PokemonGlobal.alt_sprite_substitutions
+    return $PokemonGlobal.alt_sprite_substitutions[species_id]
+  end
 
   def set_displayed_to_current_alt(altsList)
     species_id = getDexNumberForSpecies(@species).to_s
@@ -215,7 +220,7 @@ class PokemonPokedexInfo_Scene
     while !found_last_form
       form_index += 1
       form_path = Settings::BATTLERS_FOLDER + body_id.to_s + "_" + form_index.to_s
-      echoln form_path
+      # echoln form_path
       if File.directory?(form_path)
         forms_list << form_index
       else

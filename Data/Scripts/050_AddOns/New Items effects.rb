@@ -357,6 +357,58 @@ ItemHandlers::UseFromBag.add(:DEBUGGER, proc { |item|
   end
 })
 
+def useSleepingBag()
+  currentSecondsValue = pbGet(UnrealTime::EXTRA_SECONDS)
+  choices = ["1 hour", "6 hours", "12 hours", "24 hours", "Cancel"]
+  choice = Kernel.pbMessage("Sleep for how long?", choices, choices.length)
+  echoln choice
+  return 0 if choice == choices.length-1
+  oldDay = getDayOfTheWeek()
+  timeAdded =0
+  case choice
+  when 0
+    timeAdded=3600
+  when 1
+    timeAdded=21600
+  when 2
+    timeAdded=43200
+  when 3
+    timeAdded=86400
+  end
+  pbSet(UnrealTime::EXTRA_SECONDS,currentSecondsValue+timeAdded)
+  pbSEPlay("Sleep",100)
+    pbFadeOutIn {
+      Kernel.pbMessage(_INTL("{1} slept for a while...",$Trainer.name))
+    }
+  time = pbGetTimeNow.strftime("%I:%M %p")
+  newDay = getDayOfTheWeek()
+  if newDay != oldDay
+    Kernel.pbMessage(_INTL("The current time is now {1} on {2}.",time,newDay.downcase.capitalize))
+  else
+    Kernel.pbMessage(_INTL("The current time is now {1}.",time))
+  end
+  return 1
+end
+
+ItemHandlers::UseFromBag.add(:SLEEPINGBAG, proc { |item|
+  mapMetadata = GameData::MapMetadata.try_get($game_map.map_id)
+  if !mapMetadata || !mapMetadata.outdoor_map
+    Kernel.pbMessage(_INTL("Can't use that here..."))
+    next 0
+  end
+  next useSleepingBag()
+})
+
+ItemHandlers::UseInField.add(:SLEEPINGBAG, proc { |item|
+  mapMetadata = GameData::MapMetadata.try_get($game_map.map_id)
+  if !mapMetadata || !mapMetadata.outdoor_map
+    Kernel.pbMessage(_INTL("Can't use that here..."))
+    next 0
+  end
+  next useSleepingBag()
+})
+
+
 ItemHandlers::UseFromBag.add(:ODDKEYSTONE, proc { |item|
   TOTAL_SPIRITS_NEEDED = 108
   nbSpirits = pbGet(VAR_ODDKEYSTONE_NB)
@@ -1744,6 +1796,8 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
       #On ajoute l'autre dans le pokedex aussi
       $Trainer.pokedex.set_seen(poke1.species)
       $Trainer.pokedex.set_owned(poke1.species)
+      $Trainer.pokedex.set_seen(poke2.species)
+      $Trainer.pokedex.set_owned(poke2.species)
 
       pokemon.species = poke1.species
       pokemon.level = poke1.level

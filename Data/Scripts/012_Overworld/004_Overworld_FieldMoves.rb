@@ -677,6 +677,55 @@ HiddenMoveHandlers::UseMove.add(:HEADBUTT, proc { |move, pokemon|
   pbHeadbuttEffect(facingEvent)
 })
 
+
+HiddenMoveHandlers::CanUseMove.add(:RELICSONG, proc { |move, pokemon, showmsg|
+  if  !(pokemon.isFusionOf(:MELOETTA_A) || pokemon.isFusionOf(:MELOETTA_P))
+    pbMessage(_INTL("It won't have any effect")) if showmsg
+    next false
+  end
+  next true
+})
+
+HiddenMoveHandlers::UseMove.add(:RELICSONG, proc { |move, pokemon|
+  if !pbHiddenMoveAnimation(pokemon)
+    pbMessage(_INTL("{1} used {2}!", pokemon.name, GameData::Move.get(move).name))
+  end
+  changeMeloettaForm(pokemon)
+})
+
+def changeMeloettaForm(pokemon)
+  is_meloetta_A = pokemon.isFusionOf(:MELOETTA_A)
+  is_meloetta_P = pokemon.isFusionOf(:MELOETTA_P)
+  if !pokemon.isFusion?
+    if is_meloetta_A
+      changeSpeciesSpecific(pokemon, :MELOETTA_P)
+      pbMessage(_INTL("{1} changed to the Pirouette form!", pokemon.name))
+    end
+    if is_meloetta_P
+      changeSpeciesSpecific(pokemon, :MELOETTA_A)
+      pbMessage(_INTL("{1} changed to the Aria form!", pokemon.name))
+    end
+    return
+  end
+  if is_meloetta_A && is_meloetta_P
+    if pokemon.species_data.get_body_species() == :MELOETTA_A
+      changeSpeciesSpecific(pokemon, :B467H466)
+    else
+      changeSpeciesSpecific(pokemon, :B466H467)
+    end
+    pbMessage(_INTL("{1} changed form!", pokemon.name))
+  else
+    if is_meloetta_P
+    replaceFusionSpecies(pokemon, :MELOETTA_P, :MELOETTA_A)
+    pbMessage(_INTL("{1} changed to the Aria form!", pokemon.name))
+    end
+    if is_meloetta_A
+      replaceFusionSpecies(pokemon, :MELOETTA_A, :MELOETTA_P)
+      pbMessage(_INTL("{1} changed to the Pirouette form!", pokemon.name))
+    end
+  end
+end
+
 #===============================================================================
 # Rock Smash
 #===============================================================================

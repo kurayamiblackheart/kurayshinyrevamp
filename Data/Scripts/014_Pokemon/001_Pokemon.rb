@@ -154,11 +154,16 @@ class Pokemon
     return str
   end
 
+  # def species_data
+  #   if !@species_data || @species != @species_data.species
+  #     @species_data = GameData::Species.get(@species)
+  #   end
+  #   return @species_data #GameData::Species.get(@species)
+  # end
+
   def species_data
-    if !@species_data || @species != @species_data.species
-      @species_data = GameData::Species.get(@species)
-    end
-    return @species_data #GameData::Species.get(@species)
+    @species_data = GameData::Species.get(@species)
+    return @species_data
   end
 
   #=============================================================================
@@ -630,6 +635,36 @@ class Pokemon
     calc_form = MultipleForms.call("getForm", self)
     self.form = calc_form if calc_form != nil && calc_form != @form
     return @form
+  end
+
+  def changeFormSpecies(oldForm, newForm)
+    is_already_old_form = self.isFusionOf(oldForm) #A 466
+    is_already_new_form = self.isFusionOf(newForm) #P
+
+    #reverse the fusion if it's a meloA and meloP fusion
+    # There's probably a smarter way to do this but laziness lol
+    if is_already_old_form && is_already_new_form
+      if self.species_data.get_body_species() == oldForm
+        changeSpeciesSpecific(self, getFusedPokemonIdFromSymbols(newForm, oldForm))
+      else
+        changeSpeciesSpecific(self, getFusedPokemonIdFromSymbols(oldForm, newForm))
+      end
+    else
+      changeSpecies(self, oldForm, newForm) if is_already_old_form
+      changeSpecies(self, newForm, oldForm) if is_already_new_form
+    end
+
+    calc_stats
+  end
+
+  def changeSpecies(pokemon, speciesToReplace, newSpecies)
+    if pokemon.isFusion?()
+      replaceFusionSpecies(pokemon, speciesToReplace, newSpecies)
+    else
+      changeSpeciesSpecific(pokemon, newSpecies)
+    end
+    $Trainer.pokedex.set_seen(pokemon.species)
+    $Trainer.pokedex.set_owned(pokemon.species)
   end
 
   def form_simple

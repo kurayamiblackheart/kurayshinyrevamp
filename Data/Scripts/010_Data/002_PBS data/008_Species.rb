@@ -231,6 +231,14 @@ module GameData
     def is_fusion
       return @id_number > Settings::NB_POKEMON
     end
+    
+    def get_body_species
+      return @species
+    end
+
+    def get_head_species
+      return @species
+    end
 
     def hasType?(type)
       type = GameData::Type.get(type).id

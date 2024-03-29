@@ -125,6 +125,9 @@ class PokemonSystem
 
   attr_accessor :dexspriteselect
 
+  # attr_accessor :speedvalue
+  # attr_accessor :speedtoggle
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -227,6 +230,8 @@ class PokemonSystem
     @bugbuff = 0
     @icebuff = 0
     #End of By Blue Wuppo
+    # @speedvalue = 2
+    # @speedtoggle = 0#0 = Old way (Old PIF speedup system), 1 = HOLD (new way), 2 = TOGGLE (new way)
   end
 
   def load_bootup_data(saved)
@@ -258,6 +263,9 @@ class PokemonSystem
     @debugfeature = saved.debugfeature if saved.debugfeature
     @debug = saved.debug if saved.debug
     @dexspriteselect = saved.dexspriteselect if saved.dexspriteselect
+    # @speedtoggle = saved.speedtoggle if saved.speedtoggle
+    # @speedvalue = saved.speedvalue if saved.speedvalue
+
     # if saved.globalvalues
     #   @globalvalues = saved.globalvalues
     #   if saved.globalvalues != 0
@@ -319,11 +327,13 @@ class PokemonSystem
     @drowsy = saved.drowsy if saved.drowsy
     @bugbuff = saved.bugbuff if saved.bugbuff
     @icebuff = saved.icebuff if saved.icebuff
+    #End of By Blue Wuppo
+    # Challenges
     @ch_metronome = saved.ch_metronome if saved.ch_metronome
     @ch_letdownplayer = saved.ch_letdownplayer if saved.ch_letdownplayer
     @ch_letdown = saved.ch_letdown if saved.ch_letdown
     @ch_berserker = saved.ch_berserker if saved.ch_berserker
-    #End of By Blue Wuppo
+    # End of Challenges
   end
 end
 
@@ -773,6 +783,13 @@ class PokemonOption_Scene
                                   end
                                 }, "Sets the volume for sound effects"
     )
+
+    options << EnumOption.new(_INTL("Default Movement"), [_INTL("Walking"), _INTL("Running")],
+                              proc { $PokemonSystem.runstyle },
+                              proc { |value| $PokemonSystem.runstyle = value },
+                              ["Default to walking when not holding the Run key",
+                               "Default to running when not holding the Run key"]
+    )
     options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast")],
                               proc { $PokemonSystem.textspeed },
                               proc { |value|
@@ -780,6 +797,26 @@ class PokemonOption_Scene
                                 MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
                               }, "Sets the speed at which the text is displayed"
     )
+
+    # options << EnumOption.new(_INTL("Speed-up type"), [_INTL("Default"), _INTL("Hold"), _INTL("Toggle")],
+    #                           proc { $PokemonSystem.speedtoggle },
+    #                           proc { |value|
+    #                             $PokemonSystem.speedtoggle = value
+    #                           }, [
+    #                             "Old PIF speedup system",
+    #                             "Hold the button to speed up the game",
+    #                             "Toggle the speed up button"
+    #                           ]
+    # )
+
+    # options << SliderOption.new(_INTL("Speed-up speed"), 1, 10, 1,
+    #                           proc { $PokemonSystem.speedvalue },
+    #                           proc { |value|
+    #                             $PokemonSystem.speedvalue = value
+    #                           }, "Sets by how much to speed up the game when holding the speed up button (Default: 2x)"
+    # )
+
+    
     # if $game_switches && ($game_switches[SWITCH_NEW_GAME_PLUS] || $game_switches[SWITCH_BEAT_THE_LEAGUE]) #beat the league
     #   options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast"), _INTL("Instant")],
     #                             proc { $PokemonSystem.textspeed },
@@ -810,13 +847,6 @@ class PokemonOption_Scene
     proc { $PokemonSystem.battlescene },
     proc { |value| $PokemonSystem.battlescene = value },
     "Display move animations in battles"
-    )
-
-    options << EnumOption.new(_INTL("Default Movement"), [_INTL("Walking"), _INTL("Running")],
-                              proc { $PokemonSystem.runstyle },
-                              proc { |value| $PokemonSystem.runstyle = value },
-                              ["Default to walking when not holding the Run key",
-                               "Default to running when not holding the Run key"]
     )
 
     options << NumberOption.new(_INTL("Speech Frame"), 1, Settings::SPEECH_WINDOWSKINS.length,

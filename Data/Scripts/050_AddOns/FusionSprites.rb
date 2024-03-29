@@ -86,8 +86,9 @@ module GameData
     #KurayX - KURAYX_ABOUT_SHINIES
     #KuraSprite
     def self.front_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0],cusFile=nil)
-      spriteform_body = nil if spriteform_body == 0
-      spriteform_head = nil if spriteform_head == 0
+      spriteform_body = nil# if spriteform_body == 0
+      spriteform_head = nil# if spriteform_head == 0
+      #TODO Remove spriteform mechanic entirely
 
       #la méthode est utilisé ailleurs avec d'autres arguments (gender, form, etc.) mais on les veut pas
       if dex_number.is_a?(Symbol)
@@ -314,6 +315,16 @@ class PokemonGlobalMetadata
   attr_accessor :autogen_sprites_cache
 end
 
+#To force a specific sprites before a battle
+#
+#  ex:
+# $PokemonTemp.forced_alt_sprites={"20.25" => "20.25a"}
+#
+class PokemonTemp
+  attr_accessor :forced_alt_sprites
+end
+
+#todo: refactor into smaller methods
 def get_fusion_sprite_path(head_id, body_id, spriteform_body = nil, spriteform_head = nil)
   $PokemonGlobal.autogen_sprites_cache = {} if $PokemonGlobal && !$PokemonGlobal.autogen_sprites_cache
   #Todo: ça va chier si on fusionne une forme d'un pokemon avec une autre forme, mais pas un problème pour tout de suite
@@ -325,31 +336,42 @@ def get_fusion_sprite_path(head_id, body_id, spriteform_body = nil, spriteform_h
   dex_num = getSpeciesIdForFusion(head_id, body_id)
   substitution_id = dex_num.to_s + form_suffix
 
-
   if alt_sprites_substitutions_available && $PokemonGlobal.alt_sprite_substitutions.keys.include?(substitution_id)
     substitutionPath= $PokemonGlobal.alt_sprite_substitutions[substitution_id]
     return substitutionPath if pbResolveBitmap(substitutionPath)
   end
 
-  random_alt = get_random_alt_letter_for_custom(head_id, body_id) #nil if no main
-  random_alt = "" if !random_alt
-  #if the game has loaded an autogen earlier, no point in trying to redownload, so load that instead
-  return $PokemonGlobal.autogen_sprites_cache[substitution_id] if  $PokemonGlobal && $PokemonGlobal.autogen_sprites_cache[substitution_id]
 
-  #Try local custom sprite
   spriteform_body_letter = spriteform_body ? "_" + spriteform_body.to_s : ""
   spriteform_head_letter = spriteform_head ? "_" + spriteform_head.to_s : ""
 
-  filename = _INTL("{1}{2}.{3}{4}{5}.png", head_id, spriteform_head_letter, body_id, spriteform_body_letter, random_alt)
+  pokemon_name = _INTL("{1}{2}.{3}{4}",head_id, spriteform_head_letter, body_id, spriteform_body_letter)
+
+
+  #get altSprite letter
+  random_alt = get_random_alt_letter_for_custom(head_id, body_id) #nil if no main
+  random_alt = "" if !random_alt
+  forcingSprite=false
+  if $PokemonTemp.forced_alt_sprites && $PokemonTemp.forced_alt_sprites.key?(pokemon_name)
+    random_alt = $PokemonTemp.forced_alt_sprites[pokemon_name]
+    forcingSprite=true
+  end
+
+
+  filename = _INTL("{1}{2}.png", pokemon_name, random_alt)
+  #Try local custom sprite
   local_custom_path = Settings::CUSTOM_BATTLERS_FOLDER_INDEXED + head_id.to_s + spriteform_head_letter + "/" + filename
   if pbResolveBitmap(local_custom_path)
-    record_sprite_substitution(substitution_id, local_custom_path)
+    record_sprite_substitution(substitution_id, local_custom_path) if !forcingSprite
     return local_custom_path
   end
+  #if the game has loaded an autogen earlier, no point in trying to redownload, so load that instead
+  return $PokemonGlobal.autogen_sprites_cache[substitution_id] if  $PokemonGlobal && $PokemonGlobal.autogen_sprites_cache[substitution_id]
+
   #Try to download custom sprite if none found locally
   downloaded_custom = download_custom_sprite(head_id, body_id, spriteform_body_letter, spriteform_head_letter, random_alt)
   if downloaded_custom
-    record_sprite_substitution(substitution_id, downloaded_custom)
+    record_sprite_substitution(substitution_id, downloaded_custom) if !forcingSprite
     return downloaded_custom
   end
 
@@ -361,7 +383,6 @@ def get_fusion_sprite_path(head_id, body_id, spriteform_body = nil, spriteform_h
   end
 
   #Download generated sprite if nothing else found
-  # autogen_path = download_autogen_sprite(head_id, body_id)
   autogen_path = download_autogen_sprite(head_id, body_id,spriteform_body,spriteform_head)
   if pbResolveBitmap(autogen_path)
     add_to_autogen_cache(substitution_id,autogen_path)
@@ -370,6 +391,63 @@ def get_fusion_sprite_path(head_id, body_id, spriteform_body = nil, spriteform_h
 
   return Settings::DEFAULT_SPRITE_PATH
 end
+
+# def get_fusion_sprite_path(head_id, body_id, spriteform_body = nil, spriteform_head = nil)
+#   $PokemonGlobal.autogen_sprites_cache = {} if $PokemonGlobal && !$PokemonGlobal.autogen_sprites_cache
+#   #Todo: ça va chier si on fusionne une forme d'un pokemon avec une autre forme, mais pas un problème pour tout de suite
+#   form_suffix = ""
+#   form_suffix += "_" + spriteform_body.to_s if spriteform_body
+#   form_suffix += "_" + spriteform_head.to_s if spriteform_head
+
+#   #Swap path if alt is selected for this pokemon
+#   dex_num = getSpeciesIdForFusion(head_id, body_id)
+#   substitution_id = dex_num.to_s + form_suffix
+
+
+#   if alt_sprites_substitutions_available && $PokemonGlobal.alt_sprite_substitutions.keys.include?(substitution_id)
+#     substitutionPath= $PokemonGlobal.alt_sprite_substitutions[substitution_id]
+#     return substitutionPath if pbResolveBitmap(substitutionPath)
+#   end
+
+#   random_alt = get_random_alt_letter_for_custom(head_id, body_id) #nil if no main
+#   random_alt = "" if !random_alt
+#   #if the game has loaded an autogen earlier, no point in trying to redownload, so load that instead
+#   return $PokemonGlobal.autogen_sprites_cache[substitution_id] if  $PokemonGlobal && $PokemonGlobal.autogen_sprites_cache[substitution_id]
+
+#   #Try local custom sprite
+#   spriteform_body_letter = spriteform_body ? "_" + spriteform_body.to_s : ""
+#   spriteform_head_letter = spriteform_head ? "_" + spriteform_head.to_s : ""
+
+#   filename = _INTL("{1}{2}.{3}{4}{5}.png", head_id, spriteform_head_letter, body_id, spriteform_body_letter, random_alt)
+#   local_custom_path = Settings::CUSTOM_BATTLERS_FOLDER_INDEXED + head_id.to_s + spriteform_head_letter + "/" + filename
+#   if pbResolveBitmap(local_custom_path)
+#     record_sprite_substitution(substitution_id, local_custom_path)
+#     return local_custom_path
+#   end
+#   #Try to download custom sprite if none found locally
+#   downloaded_custom = download_custom_sprite(head_id, body_id, spriteform_body_letter, spriteform_head_letter, random_alt)
+#   if downloaded_custom
+#     record_sprite_substitution(substitution_id, downloaded_custom)
+#     return downloaded_custom
+#   end
+
+#   #Try local generated sprite
+#   local_generated_path = Settings::BATTLERS_FOLDER + head_id.to_s + spriteform_head_letter + "/" + filename
+#   if pbResolveBitmap(local_generated_path)
+#     add_to_autogen_cache(substitution_id,local_generated_path)
+#     return local_generated_path
+#   end
+
+#   #Download generated sprite if nothing else found
+#   # autogen_path = download_autogen_sprite(head_id, body_id)
+#   autogen_path = download_autogen_sprite(head_id, body_id,spriteform_body,spriteform_head)
+#   if pbResolveBitmap(autogen_path)
+#     add_to_autogen_cache(substitution_id,autogen_path)
+#     return autogen_path
+#   end
+
+#   return Settings::DEFAULT_SPRITE_PATH
+# end
 
 def get_random_alt_letter_for_custom(head_id, body_id, onlyMain = true)
   spriteName = _INTL("{1}.{2}", head_id, body_id)
@@ -417,16 +495,23 @@ def list_alt_sprite_letters(spriteName)
   end
 end
 
+
+
 def map_alt_sprite_letters_for_pokemon(spriteName)
   alt_sprites = {}
   File.foreach(Settings::CREDITS_FILE_PATH) do |line|
     row = line.split(',')
     sprite_name = row[0]
-    if sprite_name.start_with?(spriteName) && sprite_name.length > spriteName.length
-      letter = sprite_name[spriteName.length]
-      if letter.match?(/[a-zA-Z]/)
-        main_or_alt = row[2] ? row[2] : nil
-        alt_sprites[letter] = main_or_alt
+    if sprite_name.start_with?(spriteName)
+      if sprite_name.length > spriteName.length #alt letter
+        letter = sprite_name[spriteName.length]
+        if letter.match?(/[a-zA-Z]/)
+          main_or_alt = row[2] ? row[2] : nil
+          alt_sprites[letter] = main_or_alt
+        end
+      else  #letterless
+      main_or_alt = row[2] ? row[2] : nil
+      alt_sprites[""] = main_or_alt
       end
     end
   end

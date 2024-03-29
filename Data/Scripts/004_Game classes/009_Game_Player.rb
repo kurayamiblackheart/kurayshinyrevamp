@@ -9,6 +9,8 @@ class Game_Player < Game_Character
   attr_accessor :bump_se
   attr_accessor :charsetData
   attr_accessor :encounter_count
+  attr_accessor :x
+  attr_accessor :y
 
   SCREEN_CENTER_X = (Settings::SCREEN_WIDTH / 2 - Game_Map::TILE_WIDTH / 2) * Game_Map::X_SUBPIXELS
   SCREEN_CENTER_Y = (Settings::SCREEN_HEIGHT / 2 - Game_Map::TILE_HEIGHT / 2) * Game_Map::Y_SUBPIXELS

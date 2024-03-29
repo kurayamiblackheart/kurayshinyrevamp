@@ -6,8 +6,8 @@
 module Settings
   # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
   GAME_VERSION = '6.0.0'
-  IF_VERSION = "6.0.4"
-  GAME_VERSION_NUMBER = "0.12.0"
+  IF_VERSION = "6.1.1"
+  GAME_VERSION_NUMBER = "0.13.0"
 
   POKERADAR_LIGHT_ANIMATION_RED_ID = 17
   POKERADAR_LIGHT_ANIMATION_GREEN_ID = 18
@@ -21,7 +21,7 @@ module Settings
   FUSION_ICON_SPRITE_OFFSET = 10
 
   #Infinite fusion settings
-  NB_POKEMON = 465
+  NB_POKEMON = 470
   CUSTOM_BASE_SPRITES_FOLDER = "Graphics/BaseSprites/"
   # CUSTOM_BASE_SPRITES_FOLDER = "Graphics/CustomBattlers/customBaseSprites/"
   CUSTOM_BATTLERS_FOLDER = "Graphics/CustomBattlers/"
@@ -32,6 +32,7 @@ module Settings
   CREDITS_FILE_PATH = "Data/SPRITE_CREDS"
   VERSION_FILE_PATH = "Data/VERSION"
   CUSTOM_SPRITES_FILE_PATH = "Data/CUSTOM_SPRITES"
+  CUSTOM_DEX_ENTRIES_PATH = "Data/dex.json"
 
   # HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/Scripts/RemoteUrls.rb"
   HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/Scripts/RemoteUrls.rb"
@@ -40,6 +41,10 @@ module Settings
   HTTP_CONFIGS_FILE_PATH = "Data/Scripts/DownloadedSettings.rb"
   # MIGHT_NOT_NEED84x
   # LEVEL_CAPS=[12,22,26,35,38,45,51,54,58,62,63,64,64,65,67,68]
+
+  CUSTOM_ENTRIES_NAME_PLACEHOLDER = "POKENAME"
+
+  # DEFAULT_SPEED_UP_SPEED=2
 
   FRONTSPRITE_POSITION_OFFSET = 20
   FRONTSPRITE_SCALE = 0.6666666666666666
@@ -50,6 +55,11 @@ module Settings
   SHINY_HUE_OFFSET = 75
   NO_LEVEL_MODE_LEVEL_INCR = 5.8
   NO_LEVEL_MODE_LEVEL_BASE = 6
+
+  DISCORD_URL = "https://discord.gg/kuray-hub-1121345297352753243"
+  
+  PIF_DISCORD_URL = "https://discord.com/invite/infinitefusion"
+  WIKI_URL = "https://infinitefusion.fandom.com/"
 
   RIVAL_STARTER_PLACEHOLDER_SPECIES = :MEW #(MEW)
   VAR_1_PLACEHOLDER_SPECIES = :DIALGA
@@ -448,6 +458,7 @@ module Settings
   # ID of the animation played when a berry tree grows a stage while the player
   # is on the map (for new plant growth mechanics only).
   PLANT_SPARKLE_ANIMATION_ID = 7
+  SLEEP_ANIMATION_ID = 26
 
   CUT_TREE_ANIMATION_ID = 19
   ROCK_SMASH_ANIMATION_ID = 20

@@ -432,6 +432,7 @@ KANTO_OUTDOOR_MAPS = [
   167, #Crimson city
   303, #indigo plateau
   380, #Pewter city
+  827, #Mt. Moon summit
   #
   # DUNGEONS
   #
@@ -465,6 +466,7 @@ KANTO_OUTDOOR_MAPS = [
   467, #Pokemon Tower
   468, #Pokemon Tower
   469, #Pokemon Tower
+
 ]
 KANTO_DARKNESS_STAGE_1 = [
   50, #Lavender town
@@ -529,6 +531,7 @@ KANTO_DARKNESS_STAGE_3 = [
   228, #Route 20 underwater 2
   98, #Cinnabar island
   58, #Route 21
+  827, #Mt. Moon summit
 ]
 KANTO_DARKNESS_STAGE_4 = KANTO_OUTDOOR_MAPS
 
@@ -600,8 +603,6 @@ def has_species_or_fusion?(species, form = -1)
   return $Trainer.pokemon_party.any? { |p| p && p.isSpecies?(species) || p.isFusionOf(species) }
 end
 
-
-
 #Solution: position of boulders [[x,y],[x,y],etc.]
 def validate_regirock_ice_puzzle(solution)
   for boulder_position in solution
@@ -631,7 +632,6 @@ def validate_regirock_steel_puzzle()
                 74,68,
                 73,72,70,69]
 
-
   pressed_switches =[]
   unpressed_switches = []
   switch_ids.each do |switch_id|
@@ -643,7 +643,6 @@ def validate_regirock_steel_puzzle()
     end
   end
 
-
   for event_id in switch_ids
     is_pressed = pbGetSelfSwitch(event_id,"A")
     return false if !is_pressed && expected_pressed_switches.include?(event_id)
@@ -651,7 +650,6 @@ def validate_regirock_steel_puzzle()
   end
   return true
 end
-
 
 def registeel_ice_press_switch(letter)
   order = pbGet(1)
@@ -677,7 +675,6 @@ def registeel_ice_reset_switches()
   pbSet(1,"")
 end
 
-
 def regirock_steel_move_boulder()
 
   switches_position = [
@@ -689,7 +686,6 @@ def regirock_steel_move_boulder()
   old_x = boulder_event.x
   old_y = boulder_event.y
   stepped_off_switch = switches_position.find { |position| position[0] == old_x && position[1] == old_y }
-
 
   pbPushThisBoulder()
   boulder_event = get_self
@@ -710,8 +706,315 @@ def regirock_steel_move_boulder()
   end
 end
 
-
 def displayRandomizerErrorMessage()
   Kernel.pbMessage(_INTL("The randomizer has encountered an error. You should try to re-randomize your game as soon as possible."))
   Kernel.pbMessage(_INTL("You can do this on the top floor of Pokémon Centers."))
+end
+
+#ex:Game_Event.new
+# forced_sprites = {"1.133" => "a"}
+# setForcedAltSprites(forced_sprites)
+#
+def setForcedAltSprites(forcedSprites_map)
+  $PokemonTemp.forced_alt_sprites = forcedSprites_map
+end
+
+def playMeloettaBandMusic()
+  unlocked_members = []
+  unlocked_members << :DRUM if $game_switches[SWITCH_BAND_DRUMMER]
+  unlocked_members << :AGUITAR if $game_switches[SWITCH_BAND_ACOUSTIC_GUITAR]
+  unlocked_members << :EGUITAR if $game_switches[SWITCH_BAND_ELECTRIC_GUITAR]
+  unlocked_members << :FLUTE if $game_switches[SWITCH_BAND_FLUTE]
+  unlocked_members << :HARP if $game_switches[SWITCH_BAND_HARP]
+
+  echoln unlocked_members
+  echoln (unlocked_members & [:DRUM, :AGUITAR, :EGUITAR, :FLUTE, :HARP])
+
+  track = "band/band_1"
+  if unlocked_members == [:DRUM, :AGUITAR, :EGUITAR, :FLUTE, :HARP]
+    track = "band/band_full"
+  else
+    if unlocked_members.include?(:FLUTE)
+      track = "band/band_5a"
+    elsif unlocked_members.include?(:HARP)
+      track = "band/band_5b"
+    else
+      if unlocked_members.include?(:EGUITAR) && unlocked_members.include?(:AGUITAR)
+        track = "band/band_4"
+      elsif unlocked_members.include?(:AGUITAR)
+        track = "band/band_3a"
+      elsif unlocked_members.include?(:EGUITAR)
+        track = "band/band_3b"
+      elsif unlocked_members.include?(:DRUM)
+        track = "band/band_2"
+      end
+    end
+  end
+  echoln track
+  pbBGMPlay(track)
+end
+
+def setPokemonMoves(pokemon, move_ids = [])
+  moves = []
+  move_ids.each { |move_id|
+    moves << Pokemon::Move.new(move_id)
+  }
+  pokemon.moves = moves
+end
+
+def isTuesdayNight()
+  day = getDayOfTheWeek()
+  hour = pbGetTimeNow().hour
+  echoln hour
+  return (day == :TUESDAY && hour >= 20) || (day == :WEDNESDAY && hour < 5)
+end
+
+def apply_concert_lighting(light, duration = 1)
+  tone = Tone.new(0, 0, 0)
+  case light
+  when :GUITAR_HIT
+    tone = Tone.new(-50, -100, -50)
+  when :VERSE_1
+    tone = Tone.new(-90, -110, -50)
+  when :VERSE_2_LIGHT
+    tone = Tone.new(-40, -80, -30)
+  when :VERSE_2_DIM
+    tone = Tone.new(-60, -100, -50)
+  when :CHORUS_1
+    tone = Tone.new(0, -80, -50)
+  when :CHORUS_2
+    tone = Tone.new(0, -50, -80)
+  when :CHORUS_3
+    tone = Tone.new(0, -80, -80)
+  when :CHORUS_END
+    tone = Tone.new(-68, 0, -102)
+  when :MELOETTA_1
+    tone = Tone.new(-60, -50, 20)
+  end
+  $game_screen.start_tone_change(tone, duration)
+end
+
+def replaceFusionSpecies(pokemon, speciesToChange, newSpecies)
+  currentBody = pokemon.species_data.get_body_species()
+  currentHead = pokemon.species_data.get_head_species()
+  should_update_body = currentBody == speciesToChange
+  should_update_head = currentHead == speciesToChange
+  return if !should_update_body && !should_update_head
+
+  newSpeciesBody = should_update_body ? newSpecies : currentBody
+  newSpeciesHead = should_update_head ? newSpecies : currentHead
+
+  newSpecies = getFusionSpecies(newSpeciesBody, newSpeciesHead)
+  pokemon.species = newSpecies
+end
+
+def changeSpeciesSpecific(pokemon, newSpecies)
+  pokemon.species = newSpecies
+  $Trainer.pokedex.set_seen(newSpecies)
+  $Trainer.pokedex.set_owned(newSpecies)
+end
+
+def getNextLunarFeatherHint()
+  nb_feathers = pbGet(VAR_LUNAR_FEATHERS)
+  case nb_feathers
+  when 0
+    return "Find the first feather in the northernmost dwelling in the city of sunsets..."
+  when 1
+    return "Amidst a playground for Pokémon youngsters, the second feather hides, surrounded by innocence."
+  when 2
+    return "Find the next one in the inn where water meets rest"
+  when 3
+    return "Find the next one inside the lone house in the city at the edge of civilization."
+  when 4
+    return "The final feather lies back in the refuge for orphaned Pokémon..."
+  else
+    return "Lie in the bed... Bring me the feathers..."
+  end
+end
+
+def clearAllSelfSwitches(mapID, switch = "A", newValue = false)
+  map = $MapFactory.getMap(mapID, false)
+  map.events.each { |event_array|
+    event_id = event_array[0]
+    pbSetSelfSwitch(event_id, switch, newValue, mapID)
+  }
+end
+
+#@formatter:off
+def get_constellation_variable(pokemon)
+  case pokemon
+  when :IVYSAUR;    return  VAR_CONSTELLATION_IVYSAUR
+  when :WARTORTLE;  return  VAR_CONSTELLATION_WARTORTLE
+  when :ARCANINE;   return  VAR_CONSTELLATION_ARCANINE
+  when :MACHOKE;    return  VAR_CONSTELLATION_MACHOKE
+  when :RAPIDASH;   return  VAR_CONSTELLATION_RAPIDASH
+  when :GYARADOS;   return  VAR_CONSTELLATION_GYARADOS
+  when :ARTICUNO;   return  VAR_CONSTELLATION_ARTICUNO
+  when :MEW;        return  VAR_CONSTELLATION_MEW
+  # when :POLITOED;   return  VAR_CONSTELLATION_POLITOED
+  # when :URSARING;   return  VAR_CONSTELLATION_URSARING
+  # when :LUGIA;      return  VAR_CONSTELLATION_LUGIA
+  # when :HOOH;       return  VAR_CONSTELLATION_HOOH
+  # when :CELEBI;     return  VAR_CONSTELLATION_CELEBI
+  # when :SLAKING;    return  VAR_CONSTELLATION_SLAKING
+  # when :JIRACHI;    return  VAR_CONSTELLATION_JIRACHI
+  # when :TYRANTRUM;  return  VAR_CONSTELLATION_TYRANTRUM
+  # when :SHARPEDO;   return  VAR_CONSTELLATION_SHARPEDO
+  # when :ARCEUS;     return  VAR_CONSTELLATION_ARCEUS
+  end
+end
+#@formatter:on
+
+def promptCaughtPokemonAction(pokemon)
+  pickedOption = false
+  return pbStorePokemon(pokemon) if !$Trainer.party_full?
+
+  while !pickedOption
+    command = pbMessage(_INTL("\\ts[]Your team is full!"),
+                        [_INTL("Add to your party"), _INTL("Store to PC"),], 2)
+    echoln ("command " + command.to_s)
+    case command
+    when 0 #SWAP
+      if swapCaughtPokemon(pokemon)
+        echoln pickedOption
+        pickedOption = true
+      end
+    else
+      #STORE
+      pbStorePokemon(pokemon)
+      echoln pickedOption
+      pickedOption = true
+    end
+  end
+
+end
+
+#def pbChoosePokemon(variableNumber, nameVarNumber, ableProc = nil, allowIneligible = false)
+def swapCaughtPokemon(caughtPokemon)
+  pbChoosePokemon(1, 2,
+                  proc { |poke|
+                    !poke.egg? &&
+                      !(poke.isShadow? rescue false)
+                  })
+  index = pbGet(1)
+  return false if index == -1
+  $PokemonStorage.pbStoreCaught($Trainer.party[index])
+  pbRemovePokemonAt(index)
+  pbStorePokemon(caughtPokemon)
+  return true
+end
+
+def constellation_add_star(pokemon)
+  star_variables = get_constellation_variable(pokemon)
+
+  pbSEPlay("GUI trainer card open", 80)
+  nb_stars = pbGet(star_variables)
+  pbSet(star_variables, nb_stars + 1)
+end
+
+def clear_all_images()
+  for i in 1..99
+    echoln i.to_s + " : " + $game_screen.pictures[i].name
+    $game_screen.pictures[i].erase
+  end
+end
+
+def exportTeamForShowdown()
+  message=""
+  for pokemon in $Trainer.party
+    message << exportFusedPokemonForShowdown(pokemon)
+    message << "\n"
+  end
+  Input.clipboard = message
+end
+
+# Clefnair (Clefable) @ Life Orb
+# Ability: Magic Guard
+# Level: 33
+# Fusion: Dragonair
+# EVs: 252 HP / 252 SpD / 4 Spe
+# Modest Nature
+# - Dazzling Gleam
+# - Dragon Breath
+# - Wish
+# - Water Pulse
+def exportFusedPokemonForShowdown(pokemon)
+
+
+  if pokemon.species_data.is_a?(GameData::FusedSpecies)
+    head_pokemon_species = pokemon.species_data.head_pokemon
+    species_name = head_pokemon_species.name
+  else
+    species_name = pokemon.species_data.real_name
+  end
+
+
+  if pokemon.item
+    nameLine = _INTL("{1} ({2}) @ {3}", pokemon.name, species_name, pokemon.item.name)
+  else
+    nameLine = _INTL("{1} ({2})", pokemon.name, species_name)
+  end
+
+  abilityLine = _INTL("Ability: {1}", pokemon.ability.name)
+  levelLine = _INTL("Level: {1}", pokemon.level)
+
+  fusionLine=""
+  if pokemon.species_data.is_a?(GameData::FusedSpecies)
+    body_pokemon_species = pokemon.species_data.body_pokemon
+    fusionLine = _INTL("Fusion: {1}\n", body_pokemon_species.name)
+  end
+  evsLine = calculateEvLineForShowdown(pokemon)
+  ivsLine = calculateIvLineForShowdown(pokemon)
+
+  move1 = "", move2="", move3="", move4 = ""
+  move1 = _INTL("- {1}", GameData::Move.get(pokemon.moves[0].id).real_name) if pokemon.moves[0]
+  move2 = _INTL("- {1}", GameData::Move.get(pokemon.moves[1].id).real_name) if pokemon.moves[1]
+  move3 = _INTL("- {1}", GameData::Move.get(pokemon.moves[2].id).real_name) if pokemon.moves[2]
+  move4 = _INTL("- {1}", GameData::Move.get(pokemon.moves[3].id).real_name) if pokemon.moves[3]
+
+  ret = nameLine + "\n" +
+    abilityLine + "\n" +
+    levelLine + "\n" +
+    fusionLine +
+    evsLine + "\n" +
+    ivsLine + "\n" +
+    move1 + "\n" +
+    move2 + "\n" +
+    move3 + "\n" +
+    move4 + "\n"
+
+  return ret
+end
+
+def calculateEvLineForShowdown(pokemon)
+  evsLine = "EVs: "
+  evsLine << _INTL("{1} HP /", pokemon.ev[:HP])
+  evsLine << _INTL("{1} Atk / ", pokemon.ev[:ATTACK])
+  evsLine << _INTL("{1} Def / ", pokemon.ev[:DEFENSE])
+  evsLine << _INTL("{1} SpA / ", pokemon.ev[:SPECIAL_ATTACK])
+  evsLine << _INTL("{1} SpD / ", pokemon.ev[:SPECIAL_DEFENSE])
+  evsLine << _INTL("{1} Spe / ", pokemon.ev[:SPEED])
+  return evsLine
+end
+
+def calculateIvLineForShowdown(pokemon)
+  ivLine = "IVs: "
+  ivLine << _INTL("{1} HP / ", pokemon.iv[:HP])
+  ivLine << _INTL("{1} Atk / ", pokemon.iv[:ATTACK])
+  ivLine << _INTL("{1} Def / ", pokemon.iv[:DEFENSE])
+  ivLine << _INTL("{1} SpA / ", pokemon.iv[:SPECIAL_ATTACK])
+  ivLine << _INTL("{1} SpD / ", pokemon.iv[:SPECIAL_DEFENSE])
+  ivLine << _INTL("{1} Spe", pokemon.iv[:SPEED])
+  return ivLine
+end
+
+def openUrlInBrowser(url="")
+  begin
+  # Open the URL in the default web browser
+  system("xdg-open", url) || system("open", url) || system("start", url)
+  rescue
+    Input.clipboard = url
+    pbMessage("The game could not open the link in the browser")
+    pbMessage("The link has been copied to your clipboard instead")
+  end
 end

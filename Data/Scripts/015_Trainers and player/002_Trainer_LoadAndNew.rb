@@ -7,10 +7,11 @@ def getTrainersDataMode
   mode = GameData::Trainer
   if $game_switches && $game_switches[SWITCH_MODERN_MODE]
     mode = GameData::TrainerModern
+  elsif $game_switches && $game_switches[SWITCH_EXPERT_MODE]
+    mode = GameData::TrainerExpert
   end
   return mode
 end
-
 
 def pbLoadTrainer(tr_type, tr_name, tr_version = 0)
   tr_type_data = GameData::TrainerType.try_get(tr_type)
