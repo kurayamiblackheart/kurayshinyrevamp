@@ -593,6 +593,7 @@ class PokemonPokedexInfo_Scene
         oldindex = @index
         pbGoToPrevious
         if @index != oldindex
+          @selected_index=0
           pbUpdateDummyPokemon
           @available = pbGetAvailableForms
           pbSEStop
@@ -603,6 +604,7 @@ class PokemonPokedexInfo_Scene
         oldindex = @index
         pbGoToNext
         if @index != oldindex
+          @selected_index=0
           pbUpdateDummyPokemon
           @available = pbGetAvailableForms
           pbSEStop
