@@ -148,7 +148,7 @@ class TutorNetPartyBlankPanel < SpriteWrapper
 		super(viewport)
 		self.x = (index % 2) * 112 + 4
 		self.y = (index % 2) + 96 + 2
-		@panelbgsprite = AnimatedBitmap.new("Mods/Tutor.net/blank")
+		@panelbgsprite = AnimatedBitmap.new("Graphics/Pictures/Tutor.net/blank")
 		self.bitmap = @panelbgsprite.bitmap
 	end
 	
@@ -205,8 +205,8 @@ class TutorNetPartyPanel < SpriteWrapper
 		@overlaysprite.z = self.z + 4
 		@cursorsprite = BitmapSprite.new(Graphics.width, Graphics.height, viewport)
 		@cursorsprite.z = self.z + 6
-		@compat = AnimatedBitmap.new(_INTL("Mods/Tutor.net/compat"))
-		@monsel = AnimatedSprite.create("Mods/Tutor.net/moncursor", 4, 3)
+		@compat = AnimatedBitmap.new(_INTL("Graphics/Pictures/Tutor.net/compat"))
+		@monsel = AnimatedSprite.create("Graphics/Pictures/Tutor.net/moncursor", 4, 3)
 		@monsel.visible= false
 		@selected      = false
 		@refreshBitmap = true
