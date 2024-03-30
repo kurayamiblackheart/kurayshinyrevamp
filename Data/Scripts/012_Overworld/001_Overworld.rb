@@ -231,14 +231,7 @@ def getEncounter(encounter_type)
   return encounter
 end
 
-def pbBattleOnStepTaken(repel_active)
-  return if $Trainer.able_pokemon_count == 0
-  return if !$PokemonEncounters.encounter_possible_here?
-  encounter_type = $PokemonEncounters.encounter_type
-  return if !encounter_type
-  return if !$PokemonEncounters.encounter_triggered?(encounter_type, repel_active)
-  $PokemonTemp.encounterType = encounter_type
-
+def kurayEncounterInit(encounter_type)
   encounter = getEncounter(encounter_type)
   if isFusedEncounter()
     encounter_fusedWith = getEncounter(encounter_type)
@@ -250,19 +243,31 @@ def pbBattleOnStepTaken(repel_active)
   if encounter[0].is_a?(Integer)
     encounter[0] = getSpecies(encounter[0])
   end
+  return encounter
+end
+
+def pbBattleOnStepTaken(repel_active)
+  return if $Trainer.able_pokemon_count == 0
+  return if !$PokemonEncounters.encounter_possible_here?
+  encounter_type = $PokemonEncounters.encounter_type
+  return if !encounter_type
+  return if !$PokemonEncounters.encounter_triggered?(encounter_type, repel_active)
+  $PokemonTemp.encounterType = encounter_type
+
+  encounter = kurayEncounterInit(encounter_type)
 
   $game_switches[SWITCH_FORCE_FUSE_NEXT_POKEMON] = false
 
   encounter = EncounterModifier.trigger(encounter)
   if $PokemonEncounters.allow_encounter?(encounter, repel_active)
     if $PokemonEncounters.have_triple_wild_battle?
-      encounter3 = $PokemonEncounters.choose_wild_pokemon(encounter_type)
+      encounter3 = $PokemonEncounters.kurayEncounterInit(encounter_type)
       encounter3 = EncounterModifier.trigger(encounter3)
-      encounter2 = $PokemonEncounters.choose_wild_pokemon(encounter_type)
+      encounter2 = $PokemonEncounters.kurayEncounterInit(encounter_type)
       encounter2 = EncounterModifier.trigger(encounter2)
       pbTripleWildBattle(encounter[0], encounter[1], encounter2[0], encounter2[1], encounter3[0], encounter3[1])
     elsif $PokemonEncounters.have_double_wild_battle?
-      encounter2 = $PokemonEncounters.choose_wild_pokemon(encounter_type)
+      encounter2 = $PokemonEncounters.kurayEncounterInit(encounter_type)
       encounter2 = EncounterModifier.trigger(encounter2)
       pbDoubleWildBattle(encounter[0], encounter[1], encounter2[0], encounter2[1])
     else

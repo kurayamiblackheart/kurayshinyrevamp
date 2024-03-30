@@ -234,7 +234,7 @@ class PokemonSystem
     #End of By Blue Wuppo
     @speedvalue = 2
     @speedtoggle = 0#0 = Old way (Old PIF speedup system), 1 = HOLD (new way)
-    @speeduplimit = 5
+    @speeduplimit = 4
     @shiny_cache = 0#0 = ON, 1 = OFF
   end
 

@@ -130,22 +130,22 @@ module Graphics
       if $PokemonSystem.speedtoggle == 1
         $SpeedMode = 1
       end
-      $SpeedLimit = $PokemonSystem.speeduplimit
+      $SpeedLimit = $PokemonSystem.speeduplimit+1
     end
     if $CanToggle && Input.trigger?(Input::AUX1)
       if $SpeedMode == 0
         # Old way of speeding up (using toggle)
         $GameSpeed += 1
-        $GameSpeed = 1 if $GameSpeed >= $SpeedLimit
+        $GameSpeed = 1 if $GameSpeed > $SpeedLimit
         #KurayX
       else
         # We use Hold to speed up
-        $GameSpeed = $PokemonSystem.speedvalue
+        $GameSpeed = $PokemonSystem.speedvalue+1
       end
-      updateTitle
     elsif $SpeedMode == 1 && $GameSpeed != 1 && !Input.press?(Input::AUX1)
       $GameSpeed = 1
     end
+    updateTitle
     $frame += 1
     return unless $frame % $GameSpeed == 0
     fast_forward_update

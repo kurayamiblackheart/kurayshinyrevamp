@@ -64,6 +64,10 @@ class Pokemon
   attr_accessor :oldkuraycustomfile
   attr_accessor :veryunique
 
+  attr_accessor :type1kuray
+  attr_accessor :type2kuray
+  attr_accessor :typeoverwrite
+
 
 
   # The index of this Pokémon's ability (0, 1 are natural abilities, 2+ are
@@ -928,6 +932,9 @@ class Pokemon
 
   # @return [Symbol] this Pokémon's first type
   def type1
+    if self.type1kuraypure && self.type1kuraypure != :NONE && self.typeoverwrite
+      return self.type1kuraypure
+    end
     if @ability == :MULTITYPE && species_data.type1 == :NORMAL
       return getHeldPlateType()
     end
@@ -944,6 +951,9 @@ class Pokemon
 
   # @return [Symbol] this Pokémon's second type, or the first type if none is defined
   def type2
+    if self.type2kuraypure && self.type2kuraypure != :NONE && self.typeoverwrite
+      return self.type2kuraypure
+    end
     if @ability == :MULTITYPE && species_data.type2 == :NORMAL
       return getHeldPlateType()
     end
@@ -975,6 +985,42 @@ class Pokemon
     ret = [sp_data.type1]
     ret.push(sp_data.type2) if sp_data.type2 && sp_data.type2 != sp_data.type1
     return ret
+  end
+
+  # KurayX types overwrite
+  def type1kuray=(value)
+    @type1kuray = value
+  end
+
+  def type2kuray=(value)
+    @type2kuray = value
+  end
+
+  def type1kuraypure
+    return @type1kuray if @type1kuray
+  end
+
+  def type2kuraypure
+    return @type2kuray if @type2kuray
+  end
+
+  def type1kuray
+    return @type1kuray if @type1kuray
+    return self.type1
+  end
+
+  def type2kuray
+    return @type2kuray if @type2kuray
+    return self.type2
+  end
+
+  def typeoverwrite
+    return @typeoverwrite if @typeoverwrite
+    return false
+  end
+
+  def typeoverwrite=(value)
+    @typeoverwrite = value
   end
 
   # @param type [Symbol, String, Integer] type to check
@@ -1874,7 +1920,7 @@ class Pokemon
   #KurayX
   def as_json(options={})
     {
-      "json_version" => "0.5",
+      "json_version" => "0.6",
       "species" => @species,
       "form" => @form,
       "forced_form" => @forced_form,
@@ -1948,8 +1994,11 @@ class Pokemon
       "ribbons" => @ribbons.clone,
       "spriteform_body" => @spriteform_body,
       "spriteform_head" => @spriteform_head,
-      "half_specie" => species_data.as_json
+      "type1kuray" => self.type1kuray,
+      "type2kuray" => self.type2kuray,
+      "typeoverwrite" => self.typeoverwrite
     }
+    # "half_specie" => species_data.as_json
   end
 
   #KurayX
@@ -1977,6 +2026,8 @@ class Pokemon
         return 5
       when '0.6'
         return 6
+      when '0.7'
+        return 7
       end
     else
       return 0
@@ -1996,6 +2047,11 @@ class Pokemon
     end
     if json_ver > 4#V.5
       @fakeshiny = jsonparse['fakeshiny']
+    end
+    if json_ver > 5#V.6
+      @type1kuray = jsonparse['type1kuray']
+      @type2kuray = jsonparse['type2kuray']
+      @typeoverwrite = jsonparse['typeoverwrite']
     end
   end
 
@@ -2086,8 +2142,8 @@ class Pokemon
     jsonparse['moves'].each_with_index { |m, i| @moves[i].load_json(m) }
 
 
-
-    jsonload2(jsonparse)
+    # type handling changed
+    # jsonload2(jsonparse)
 
     noimport = 0
     if jsonfile && jsonfile != nil
@@ -2233,6 +2289,9 @@ class Pokemon
     @totalhp = 1
     @spriteform_body = nil
     @spriteform_head = nil
+    @type1kuray = nil
+    @type2kuray = nil
+    @typeoverwrite = false
     calc_stats
     if @form == 0 && recheck_form
       f = MultipleForms.call("getFormOnCreation", self)
