@@ -57,8 +57,7 @@ def generateFusionIcon(dexNum, path)
 end
 
 def ensureFusionIconExists
-  directory_name = "Graphics/Pokemon/FusionIcons"
-  Dir.mkdir(directory_name) unless File.exists?(directory_name)
+  checkDirectory("Graphics/Pokemon/FusionIcons")
 end
 
 def addNewTripleFusion(pokemon1,pokemon2,pokemon3,level = 1)

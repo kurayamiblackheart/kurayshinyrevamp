@@ -423,9 +423,38 @@ class AnimatedBitmap
     #   dontmodify = 1
     # end
     @bitmap = nil
-    newbitmap = GifBitmap.new(@path, @filename, offset, shinyR, shinyG, shinyB)
+    usedoffset = offset
+    # call load function for shiny if said shiny exists in cache
+    # return afterwards if it does (load the file)
+    loadedfromcache = false
+    # puts "Path: #{@path}"
+    # puts "Filename: #{@filename}"
+    if $PokemonSystem && $PokemonSystem.shiny_cache != 2
+      # File.exists?(usinglocation + "Disabled")
+      originfolder = getPathForShinyCache(@path)
+      checkDirectory("Cache")
+      checkDirectory("Cache/Shiny")
+      shinyname = "_#{offset+180}_#{shinyR}_#{shinyG}_#{shinyB}"
+      for i in 0..shinyKRS.size-1
+        shinyname += "_#{shinyKRS[i]}"
+      end
+      pathimport = "Cache/Shiny/"
+      cleanname = @filename[0...-4]
+      pathfilename = originfolder + cleanname + shinyname + ".png"
+      if File.exists?(pathimport + pathfilename)
+        @filename = pathfilename
+        @path = pathimport
+        usedoffset = 0
+        loadedfromcache = true
+      end
+    end
+
+    # puts "After Path: #{@path}"
+    # puts "After Filename: #{@filename}"
+    # puts "Loaded from cache: #{loadedfromcache}"
+    newbitmap = GifBitmap.new(@path, @filename, usedoffset, shinyR, shinyG, shinyB)
     @bitmap = newbitmap.copy
-    if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 0
+    if ($PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 0) || loadedfromcache
       return
     end
 
@@ -482,6 +511,24 @@ class AnimatedBitmap
       end
     end
     # end
+    if $PokemonSystem && $PokemonSystem.shiny_cache != 2
+      # Save the generated shiny sprite in the Cache folder
+      # puts "Filename: #{@filename}"
+      # puts "Path: #{@path}"
+      originfolder = getPathForShinyCache(@path)
+      checkDirectory("Cache")
+      checkDirectory("Cache/Shiny")
+      shinyname = "_#{offset+180}_#{shinyR}_#{shinyG}_#{shinyB}"
+      for i in 0..shinyKRS.size-1
+        shinyname += "_#{shinyKRS[i]}"
+      end
+      cleanname = @filename[0...-4]
+      pathexport = "Cache/Shiny/" + originfolder + cleanname + shinyname + ".png"
+      if !File.exists?(pathexport)
+        self.bitmap_to_png(pathexport)
+      end
+      # puts "Origin Folder: #{originfolder}"
+    end
   end
 
   def krsapply(channel, condif, idcol, shinyKRS)

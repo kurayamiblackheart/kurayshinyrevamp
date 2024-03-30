@@ -143,7 +143,7 @@ module Graphics
         $GameSpeed = $PokemonSystem.speedvalue
       end
       updateTitle
-    else $SpeedMode == 1 && $GameSpeed != 1 && !Input.press?(Input::AUX1)
+    elsif $SpeedMode == 1 && $GameSpeed != 1 && !Input.press?(Input::AUX1)
       $GameSpeed = 1
     end
     $frame += 1

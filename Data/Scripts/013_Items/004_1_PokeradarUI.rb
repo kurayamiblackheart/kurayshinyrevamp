@@ -230,7 +230,7 @@ class PokeRadar_UI
 
     #KurayX Github
     directory_name = "Graphics/Pokemon/FusionIcons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     # bitmapFileName = sprintf("Graphics/Pokemon/FusionIcons/icon%03d", pokemonId)
     dexNum = pokemonId
     #KurayX Custom icons

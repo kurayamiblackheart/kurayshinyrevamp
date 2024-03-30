@@ -128,6 +128,7 @@ class PokemonSystem
   attr_accessor :speedvalue
   attr_accessor :speedtoggle
   attr_accessor :speeduplimit
+  attr_accessor :shiny_cache
 
   def initialize
     # Vanilla Global
@@ -234,6 +235,7 @@ class PokemonSystem
     @speedvalue = 2
     @speedtoggle = 0#0 = Old way (Old PIF speedup system), 1 = HOLD (new way)
     @speeduplimit = 5
+    @shiny_cache = 0#0 = ON, 1 = OFF
   end
 
   def load_bootup_data(saved)
@@ -268,6 +270,7 @@ class PokemonSystem
     @speedtoggle = saved.speedtoggle if saved.speedtoggle
     @speedvalue = saved.speedvalue if saved.speedvalue
     @speeduplimit = saved.speeduplimit if saved.speeduplimit
+    @shiny_cache = saved.shiny_cache if saved.shiny_cache
 
     # if saved.globalvalues
     #   @globalvalues = saved.globalvalues
@@ -805,10 +808,9 @@ class PokemonOption_Scene
                               proc { $PokemonSystem.speedtoggle },
                               proc { |value|
                                 $PokemonSystem.speedtoggle = value
-                              }, [
-                                "Button toggles the speed-up",
-                                "Hold the button to speed-up the game"
-                              ]
+                              },
+                              ["Button toggles the speed-up",
+                                "Hold the button to speed-up the game"]
     )
 
     options << SliderOption.new(_INTL("Speed-up speed (Hold)"), 1, 10, 1,
@@ -1294,6 +1296,13 @@ class KurayOptSc_1 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.shiny_icons_kuray = value },
                       ["Shinies don't have a shiny icon",
                       "Shinies have shiny icons (reduces performances!)"]
+    )
+    options << EnumOption.new(_INTL("Shiny Cache"), [_INTL("Permanent"), _INTL("Per Session"), _INTL("Off")],
+                      proc { $PokemonSystem.shiny_cache },
+                      proc { |value| $PokemonSystem.shiny_cache = value },
+                      ["Shinies are cached permanently",
+                      "Shinies are cached per session",
+                      "Shinies are not cached"]
     )
 
     if $scene && $scene.is_a?(Scene_Map)

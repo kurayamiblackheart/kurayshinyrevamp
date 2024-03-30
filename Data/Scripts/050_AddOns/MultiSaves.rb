@@ -349,6 +349,14 @@ class PokemonLoadScreen
       end
     end
 
+    if $PokemonSystem && $PokemonSystem.shiny_cache == 1
+      checkDirectory("Cache")
+      checkDirectory("Cache/Shiny")
+      Dir.glob("Cache/Shiny/*").each do |file|
+        File.delete(file) if File.file?(file)
+      end
+    end
+
     if ($game_temp.unimportedSprites && $game_temp.unimportedSprites.size > 0)
       handleReplaceExistingSprites()
     end

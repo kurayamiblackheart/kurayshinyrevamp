@@ -210,7 +210,7 @@ class PokemonBoxIcon < IconSprite
 
     #KurayX Github
     directory_name = "Graphics/Pokemon/FusionIcons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     dexNum = getDexNumberForSpecies(pokemon.species)
     #KurayX Custom icons
     if dexNum.is_a?(Symbol)
@@ -2408,23 +2408,6 @@ class PokemonStorageScene
     end
   end
 
-  def shinyPNGMake(pokemon, pathexport)
-    if pokemon.kuraycustomfile? == nil
-      exportbitmap = GameData::Species.sprite_bitmap_from_pokemon(pokemon)
-    else
-      if pbResolveBitmap(pokemon.kuraycustomfile?) && !pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
-        filename = pokemon.kuraycustomfile?
-        exportbitmap = (filename) ? AnimatedBitmap.new(filename) : nil
-        if pokemon.shiny?
-          exportbitmap.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?, pokemon.shinyKRS?)
-        end
-      else
-        exportbitmap = GameData::Species.sprite_bitmap_from_pokemon(pokemon)
-      end
-    end
-    exportbitmap.bitmap_to_png(pathexport)
-  end
-
   #KurayX
   def pbExport(selected, heldpoke, dodelete=0)
     deletepkm = false
@@ -2434,7 +2417,7 @@ class PokemonStorageScene
       end
     end
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
@@ -2456,14 +2439,16 @@ class PokemonStorageScene
     end
     # importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.gender + "-" + pokemon.shiny? + "-" + pokemon.totalhp + "-" + pokemon.level + ".pkm"
     
+    giveback=false
     # Marshal not working anymore !
     # File.open(importname + ".pkm", 'wb') { |f| f.write(Marshal.dump(pokemon)) }
     if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2 && pokemon.shiny?
       pokemon.shiny=false
       pokemon.fakeshiny=true
+      giveback=true
     end
     File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
-    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2 && pokemon.shiny?
+    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2 && giveback
       # give shininess back after export
       pokemon.shiny=true
       pokemon.fakeshiny=false
@@ -2526,7 +2511,7 @@ class PokemonStorageScene
       end
     end
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     if @storage[box].empty?
       pbPlayBuzzerSE
       pbDisplay(_INTL("Box is empty!"))
@@ -2565,7 +2550,7 @@ class PokemonStorageScene
       end
     end
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     for j in 0...@storage.maxBoxes
       if @storage[j].empty?
         next
@@ -2640,7 +2625,7 @@ class PokemonStorageScene
   #KurayX
   def pbCarpFill(selected, heldpoke)
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     importname = directory_name + "/" + "CarpFill.json"
     if File.file?(importname)
       importunevo = false
@@ -2719,7 +2704,7 @@ class PokemonStorageScene
   #KurayX
   def pbImportJson(selected, heldpoke)
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     importname = directory_name + "/" + "Exported.json"
     if File.file?(importname)
       importunevo = false
@@ -3919,7 +3904,7 @@ class PokemonStorageScreen
   def navigationSystem(base_name, messagechoice)
     directory_name = base_name
     # directory_name = "ExportedPokemons"  # Replace with the actual path to your folder
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     cancelled = false
     havingjsons = []
     randomized = false
@@ -4294,7 +4279,7 @@ class PokemonStorageScreen
   #KurayX
   def pbExportSelected(box, frombox=false)
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     unless frombox
       selected = getMultiSelection(box, nil)
     end
