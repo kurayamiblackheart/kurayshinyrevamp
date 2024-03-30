@@ -125,8 +125,9 @@ class PokemonSystem
 
   attr_accessor :dexspriteselect
 
-  # attr_accessor :speedvalue
-  # attr_accessor :speedtoggle
+  attr_accessor :speedvalue
+  attr_accessor :speedtoggle
+  attr_accessor :speeduplimit
 
   def initialize
     # Vanilla Global
@@ -230,8 +231,9 @@ class PokemonSystem
     @bugbuff = 0
     @icebuff = 0
     #End of By Blue Wuppo
-    # @speedvalue = 2
-    # @speedtoggle = 0#0 = Old way (Old PIF speedup system), 1 = HOLD (new way), 2 = TOGGLE (new way)
+    @speedvalue = 2
+    @speedtoggle = 0#0 = Old way (Old PIF speedup system), 1 = HOLD (new way)
+    @speeduplimit = 5
   end
 
   def load_bootup_data(saved)
@@ -263,8 +265,9 @@ class PokemonSystem
     @debugfeature = saved.debugfeature if saved.debugfeature
     @debug = saved.debug if saved.debug
     @dexspriteselect = saved.dexspriteselect if saved.dexspriteselect
-    # @speedtoggle = saved.speedtoggle if saved.speedtoggle
-    # @speedvalue = saved.speedvalue if saved.speedvalue
+    @speedtoggle = saved.speedtoggle if saved.speedtoggle
+    @speedvalue = saved.speedvalue if saved.speedvalue
+    @speeduplimit = saved.speeduplimit if saved.speeduplimit
 
     # if saved.globalvalues
     #   @globalvalues = saved.globalvalues
@@ -798,25 +801,31 @@ class PokemonOption_Scene
                               }, "Sets the speed at which the text is displayed"
     )
 
-    # options << EnumOption.new(_INTL("Speed-up type"), [_INTL("Default"), _INTL("Hold"), _INTL("Toggle")],
-    #                           proc { $PokemonSystem.speedtoggle },
-    #                           proc { |value|
-    #                             $PokemonSystem.speedtoggle = value
-    #                           }, [
-    #                             "Old PIF speedup system",
-    #                             "Hold the button to speed up the game",
-    #                             "Toggle the speed up button"
-    #                           ]
-    # )
+    options << EnumOption.new(_INTL("Speed-up type"), [_INTL("Toggle"), _INTL("Hold")],
+                              proc { $PokemonSystem.speedtoggle },
+                              proc { |value|
+                                $PokemonSystem.speedtoggle = value
+                              }, [
+                                "Button toggles the speed-up",
+                                "Hold the button to speed-up the game"
+                              ]
+    )
 
-    # options << SliderOption.new(_INTL("Speed-up speed"), 1, 10, 1,
-    #                           proc { $PokemonSystem.speedvalue },
-    #                           proc { |value|
-    #                             $PokemonSystem.speedvalue = value
-    #                           }, "Sets by how much to speed up the game when holding the speed up button (Default: 2x)"
-    # )
+    options << SliderOption.new(_INTL("Speed-up speed (Hold)"), 1, 10, 1,
+                              proc { $PokemonSystem.speedvalue },
+                              proc { |value|
+                                $PokemonSystem.speedvalue = value
+                              }, "Sets by how much to speed-up the game when holding the speed-up button (Default: 2x)"
+    )
 
-    
+    options << SliderOption.new(_INTL("Speed-up limit (Toggle)"), 1, 10, 1,
+                              proc { $PokemonSystem.speeduplimit },
+                              proc { |value|
+                                $PokemonSystem.speeduplimit = value
+                              }, "Sets the limit of speed-up when using toggle mode (Default: 5x)"
+    )
+
+
     # if $game_switches && ($game_switches[SWITCH_NEW_GAME_PLUS] || $game_switches[SWITCH_BEAT_THE_LEAGUE]) #beat the league
     #   options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast"), _INTL("Instant")],
     #                             proc { $PokemonSystem.textspeed },

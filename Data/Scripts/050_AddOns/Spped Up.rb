@@ -29,7 +29,7 @@ PluginManager.register({
 
 # When the user clicks F, it'll pick the next number in this array.
 #KurayX
-SPEEDUP_STAGES = [1,2,3,4,5]
+# SPEEDUP_STAGES = [1,2,3,4,5]
 
 
 def pbAllowSpeedup
@@ -51,11 +51,11 @@ def updateTitle
   else
     txtloop = "(OFF)"
   end
-  System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | PIF Version: " + Settings::IF_VERSION + " | Speed: x" + ($GameSpeed+1).to_s + " | Auto-Battler " + txtauto.to_s + " | Loop Self-Battle " + txtloop.to_s)
+  System.set_window_title("Kuray Infinite Fusion (KIF) | Version: " + Settings::GAME_VERSION_NUMBER + " | PIF Version: " + Settings::IF_VERSION + " | Speed: x" + ($GameSpeed).to_s + " | Auto-Battler " + txtauto.to_s + " | Loop Self-Battle " + txtloop.to_s)
 end
 
 # Default game speed.
-$GameSpeed = 0
+$GameSpeed = 1
 $LoopBattle = false
 $AutoBattler = false
 if $PokemonSystem
@@ -117,35 +117,37 @@ module Graphics
         end
       else
         if !File.exists?(RTP.getSaveFolder + "\\DemICE.krs")
-          $GameSpeed = 0
+          $GameSpeed = 1
           updateTitle
         end
       end
-      # $GameSpeed = 4 if $GameSpeed < 0
+      # $GameSpeed = 4 if $GameSpeed < 1
       #KurayX
+    end
+    $SpeedMode = 0
+    $SpeedLimit = 5
+    if $PokemonSystem
+      if $PokemonSystem.speedtoggle == 1
+        $SpeedMode = 1
+      end
+      $SpeedLimit = $PokemonSystem.speeduplimit
     end
     if $CanToggle && Input.trigger?(Input::AUX1)
-      # if $PokemonSystem
-      #   case $PokemonSystem.speedtoggle
-      #   when 0#Old way of speeding up
-      #     $PokemonSystem.speedtoggle == 0:
-      #     $GameSpeed += 1
-      #     $GameSpeed = 0 if $GameSpeed >= SPEEDUP_STAGES.size
-      #     #KurayX
-      #     updateTitle
-      #   when 1#Hold to speed up
-      #     pass
-      #   when 2#Toggle to speed up
-      #     pass
-      #   end
-      # end
-      $GameSpeed += 1
-      $GameSpeed = 0 if $GameSpeed >= SPEEDUP_STAGES.size
-      #KurayX
+      if $SpeedMode == 0
+        # Old way of speeding up (using toggle)
+        $GameSpeed += 1
+        $GameSpeed = 1 if $GameSpeed >= $SpeedLimit
+        #KurayX
+      else
+        # We use Hold to speed up
+        $GameSpeed = $PokemonSystem.speedvalue
+      end
       updateTitle
+    else $SpeedMode == 1 && $GameSpeed != 1 && !Input.press?(Input::AUX1)
+      $GameSpeed = 1
     end
     $frame += 1
-    return unless $frame % SPEEDUP_STAGES[$GameSpeed] == 0
+    return unless $frame % $GameSpeed == 0
     fast_forward_update
     $frame = 0
   end
