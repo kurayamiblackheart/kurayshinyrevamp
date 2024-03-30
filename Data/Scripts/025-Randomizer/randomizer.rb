@@ -302,6 +302,7 @@ def getRandomizedTo(species)
 end
 
 def tryRandomizeGiftPokemon(pokemon, dontRandomize = false)
+  pokemon.kuraycustomfile = nil
   if $game_switches[SWITCH_RANDOM_GIFT_POKEMON] && $game_switches[SWITCH_RANDOM_WILD] && !dontRandomize
     oldSpecies = pokemon.is_a?(Pokemon) ? dexNum(pokemon) : dexNum(pokemon.species)
     if $PokemonGlobal.psuedoBSTHash[oldSpecies]
