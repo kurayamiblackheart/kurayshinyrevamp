@@ -127,6 +127,7 @@ class PokemonSystem
 
   attr_accessor :speedvalue
   attr_accessor :speedtoggle
+  attr_accessor :speedvaluedef
   attr_accessor :speeduplimit
   attr_accessor :shiny_cache
 
@@ -236,6 +237,7 @@ class PokemonSystem
     @speedtoggle = 0#0 = Old way (Old PIF speedup system), 1 = HOLD (new way)
     @speeduplimit = 4
     @shiny_cache = 0#0 = ON, 1 = OFF
+    @speedvaluedef = 0
   end
 
   def load_bootup_data(saved)
@@ -270,6 +272,7 @@ class PokemonSystem
     @speedtoggle = saved.speedtoggle if saved.speedtoggle
     @speedvalue = saved.speedvalue if saved.speedvalue
     @speeduplimit = saved.speeduplimit if saved.speeduplimit
+    @speedvaluedef = saved.speedvaluedef if saved.speedvaluedef
     @shiny_cache = saved.shiny_cache if saved.shiny_cache
 
     # if saved.globalvalues
@@ -803,30 +806,6 @@ class PokemonOption_Scene
                                 MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
                               }, "Sets the speed at which the text is displayed"
     )
-
-    options << EnumOption.new(_INTL("Speed-up type"), [_INTL("Toggle"), _INTL("Hold")],
-                              proc { $PokemonSystem.speedtoggle },
-                              proc { |value|
-                                $PokemonSystem.speedtoggle = value
-                              },
-                              ["Button toggles the speed-up",
-                                "Hold the button to speed-up the game"]
-    )
-
-    options << SliderOption.new(_INTL("Speed-up speed (Hold)"), 1, 10, 1,
-                              proc { $PokemonSystem.speedvalue },
-                              proc { |value|
-                                $PokemonSystem.speedvalue = value
-                              }, "Sets by how much to speed-up the game when holding the speed-up button (Default: 2x)"
-    )
-
-    options << SliderOption.new(_INTL("Speed-up limit (Toggle)"), 1, 10, 1,
-                              proc { $PokemonSystem.speeduplimit },
-                              proc { |value|
-                                $PokemonSystem.speeduplimit = value
-                              }, "Sets the limit of speed-up when using toggle mode (Default: 5x)"
-    )
-
 
     # if $game_switches && ($game_switches[SWITCH_NEW_GAME_PLUS] || $game_switches[SWITCH_BEAT_THE_LEAGUE]) #beat the league
     #   options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast"), _INTL("Instant")],
@@ -1848,6 +1827,35 @@ class KurayOptSc_4 < PokemonOption_Scene
                               proc { $PokemonSystem.quicksave },
                               proc { |value| $PokemonSystem.quicksave = value },
                               "Quicksave with S"
+    )
+    options << EnumOption.new(_INTL("Speed-up Type"), [_INTL("Toggle"), _INTL("Hold")],
+                              proc { $PokemonSystem.speedtoggle },
+                              proc { |value|
+                                $PokemonSystem.speedtoggle = value
+                              },
+                              ["Button toggles the speed-up",
+                                "Hold the button to speed-up the game"]
+    )
+
+    options << SliderOption.new(_INTL("Default Speed (Hold)"), 1, 10, 1,
+                              proc { $PokemonSystem.speedvaluedef },
+                              proc { |value|
+                                $PokemonSystem.speedvaluedef = value
+                              }, "Sets the default speed when not holding the speed-up button (Default: 1x)"
+    )
+
+    options << SliderOption.new(_INTL("Speed-up Speed (Hold)"), 1, 10, 1,
+                              proc { $PokemonSystem.speedvalue },
+                              proc { |value|
+                                $PokemonSystem.speedvalue = value
+                              }, "Sets by how much to speed-up the game when holding the speed-up button (Default: 2x)"
+    )
+
+    options << SliderOption.new(_INTL("Speed-up Limit (Toggle)"), 1, 10, 1,
+                              proc { $PokemonSystem.speeduplimit },
+                              proc { |value|
+                                $PokemonSystem.speeduplimit = value
+                              }, "Sets the limit of speed-up when using toggle mode (Default: 5x)"
     )
 
     if $scene && $scene.is_a?(Scene_Map)
