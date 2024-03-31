@@ -1614,13 +1614,14 @@ class KurayOptSc_3 < PokemonOption_Scene
                       "Preview what unknown fusions look like"]
     )
 
-    options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Icons"), _INTL("TCG"), _INTL("Sqr"), _INTL("Txt")],
+    options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Ico"), _INTL("TCG"), _INTL("Sqr"), _INTL("Pix"), _INTL("Txt")],
                       proc { $PokemonSystem.typedisplay },
                       proc { |value| $PokemonSystem.typedisplay = value },
                       ["Don't draw the type indicator in battle",
-                      "Draws handmade custom type icons in battle | Artwork by Lolpy1",
+                      "Draws handmade custom type icons in battle | By Lolpy1",
                       "Draws TCG themed type icons in battle",
-                      "Draws the square type icons in battle | Triple Fusion artwork by Lolpy1",
+                      "Draws the square type icons in battle | Triple Fusion by Lolpy1",
+                      "Draws handmade custom type icons in battle | By FairyGodmother",
                       "Draws the text type display in battle"]
     )
 
