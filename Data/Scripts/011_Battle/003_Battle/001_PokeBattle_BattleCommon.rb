@@ -5,9 +5,11 @@ module PokeBattle_BattleCommon
   def pbStorePokemon(pkmn)
     # Nickname the Pokémon (unless it's a Shadow Pokémon)
     if !pkmn.shadowPokemon?
-      if pbDisplayConfirm(_INTL("Would you like to give a nickname to {1}?", pkmn.name))
-        nickname = @scene.pbNameEntry(_INTL("{1}'s nickname?", pkmn.speciesName), pkmn)
-        pkmn.name = nickname
+      if $PokemonSystem.skipcaughtnickname != 1
+        if pbDisplayConfirm(_INTL("Would you like to give a nickname to {1}?", pkmn.name))
+          nickname = @scene.pbNameEntry(_INTL("{1}'s nickname?", pkmn.speciesName), pkmn)
+          pkmn.name = nickname
+        end
       end
     end
     # Store the Pokémon

@@ -131,6 +131,9 @@ class PokemonSystem
   attr_accessor :speeduplimit
   attr_accessor :shiny_cache
 
+  attr_accessor :skipcaughtprompt
+  attr_accessor :skipcaughtnickname
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -238,6 +241,8 @@ class PokemonSystem
     @speeduplimit = 4
     @shiny_cache = 0#0 = ON, 1 = OFF
     @speedvaluedef = 0
+    @skipcaughtnickname = 0#0 = false, 1 = true
+    @skipcaughtprompt = 0#0 = false, 1 = true
   end
 
   def load_bootup_data(saved)
@@ -343,6 +348,8 @@ class PokemonSystem
     @ch_letdown = saved.ch_letdown if saved.ch_letdown
     @ch_berserker = saved.ch_berserker if saved.ch_berserker
     # End of Challenges
+    @skipcaughtnickname = saved.skipcaughtnickname if saved.skipcaughtnickname
+    @skipcaughtprompt = saved.skipcaughtprompt if saved.skipcaughtprompt
   end
 end
 
@@ -1557,6 +1564,19 @@ class KurayOptSc_2 < PokemonOption_Scene
     )
     # End of made By Blue Woppo
 
+    options << EnumOption.new(_INTL("Skip Caught Prompt"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.skipcaughtprompt },
+    proc { |value| $PokemonSystem.skipcaughtprompt = value },
+    ["If your party is full, allows you to put the caught pokemon on your party.",
+    "If your party is full, always send the caught pokemon to the PC."]
+    )
+    options << EnumOption.new(_INTL("Skip Caught Nickname"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.skipcaughtnickname },
+    proc { |value| $PokemonSystem.skipcaughtnickname = value },
+    ["Prompts you to nickname newly caught pokemon.",
+    "Never prompts to nickname newly caught pokemon."]
+    )
+
     return options
   end
 end
@@ -1614,7 +1634,7 @@ class KurayOptSc_3 < PokemonOption_Scene
                       "Preview what unknown fusions look like"]
     )
 
-    options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Ico"), _INTL("TCG"), _INTL("Sqr"), _INTL("Pix"), _INTL("Txt")],
+    options << EnumOption.new(_INTL("Type Display"), [_INTL("Off"), _INTL("Ico"), _INTL("TCG"), _INTL("Sqr"), _INTL("FGM"), _INTL("Txt")],
                       proc { $PokemonSystem.typedisplay },
                       proc { |value| $PokemonSystem.typedisplay = value },
                       ["Don't draw the type indicator in battle",

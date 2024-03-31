@@ -868,6 +868,10 @@ end
 def promptCaughtPokemonAction(pokemon)
   pickedOption = false
   return pbStorePokemon(pokemon) if !$Trainer.party_full?
+  
+  if $PokemonSystem.skipcaughtprompt == 1
+    return pbStorePokemon(pokemon)
+  end
 
   while !pickedOption
     command = pbMessage(_INTL("\\ts[]Your team is full!"),
