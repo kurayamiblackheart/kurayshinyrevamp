@@ -161,7 +161,7 @@ class PokemonSystem
     @kurayshinyanim = 0
     @kurayfonts = 0
     @kuraybigicons = 0
-    @kurayindividcustomsprite = 0
+    @kurayindividcustomsprite = 1
     @typedisplay = 0
     @battlegui = 0
     @darkmode = 1
