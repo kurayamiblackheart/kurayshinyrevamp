@@ -147,6 +147,9 @@ module Graphics
     end
     updateTitle
     $frame += 1
+    if $GameSpeed < 1#ensure that gamespeed cannot be lower.
+      $GameSpeed = 1
+    end
     return unless $frame % $GameSpeed == 0
     fast_forward_update
     $frame = 0
