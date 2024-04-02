@@ -221,7 +221,7 @@ class PokemonSystem
     @sb_loopbreaker = 0
     @savefolder = 0
     @exportdelete = 0
-    @shinyadvanced = 2
+    @shinyadvanced = 1
     @is_in_battle = false
     if Settings::SHINY_POKEMON_CHANCE
       @shinyodds = Settings::SHINY_POKEMON_CHANCE
@@ -1264,12 +1264,12 @@ class KurayOptSc_1 < PokemonOption_Scene
     )
 
 
-    # options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
-    #                   proc { $PokemonSystem.kuraynormalshiny },
-    #                   proc { |value| $PokemonSystem.kuraynormalshiny = value },
-    #                   ["Use Shiny Revamping (shiny Pokemons look better)",
-    #                   "Don't use Shiny Revamping (shiny Pokemons look worse)"]
-    # )
+    options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
+                      proc { $PokemonSystem.kuraynormalshiny },
+                      proc { |value| $PokemonSystem.kuraynormalshiny = value },
+                      ["Use Shiny Revamping (shiny Pokemons look better)",
+                      "Don't use Shiny Revamping (shiny Pokemons look worse)"]
+    )
     options << EnumOption.new(_INTL("Shiny Animation"), [_INTL("On"), _INTL("Off"), _INTL("All")],
                       proc { $PokemonSystem.kurayshinyanim },
                       proc { |value| $PokemonSystem.kurayshinyanim = value },

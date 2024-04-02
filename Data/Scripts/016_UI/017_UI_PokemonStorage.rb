@@ -1929,6 +1929,11 @@ class PokemonStorageScene
   end
 
   def pbRerollSprite(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     while true
       pricenow = 5000
       pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
@@ -1964,7 +1969,7 @@ class PokemonStorageScene
           end
           if newfile != pokemon.kuraycustomfile? && newfile != nil
             pokemon.kuraycustomfile = newfile
-            pbHardRefresh
+            pbKurayRefresh(overlayvar1, overlayvar2)
             pbDisplay(_INTL("Oh! Its sprite changed!"))
             #Best option to refresh sprites so far \/
             break
@@ -1982,6 +1987,11 @@ class PokemonStorageScene
   end
 
   def pbDefaultSprite(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     pricenow = 500
     pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
     if $Trainer.money < pricenow
@@ -2010,7 +2020,7 @@ class PokemonStorageScene
           pbDisplay(_INTL("No Custom Sprite!"))
         else
           pokemon.kuraycustomfile = "none"
-          pbHardRefresh
+          pbKurayRefresh(overlayvar1, overlayvar2)
           pbDisplay(_INTL("It now uses default sprite!"))
           # if isKurayDefaultSprite(pokemon.dexNum, pokemon.kuraycustomfile)
             # newfile = kurayGetCustomSprite(pokemon.dexNum, 1)
@@ -2037,11 +2047,14 @@ class PokemonStorageScene
   end
 
   def pbBlackList(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2062,7 +2075,7 @@ class PokemonStorageScene
             pbDisplay(_INTL("Cannot blacklist default!"))
           else
             pokemon.kuraycustomfile = kurayPlayerBlackList(pokemon.dexNum, pokemon.kuraycustomfile)
-            pbHardRefresh
+            pbKurayRefresh(overlayvar1, overlayvar2)
             pbDisplay(_INTL("Sprite blacklisted!"))
           end
         end
@@ -2113,11 +2126,14 @@ class PokemonStorageScene
   end
 
   def pbShinySell(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2141,13 +2157,18 @@ class PokemonStorageScene
         # pokemon.shinyR=kurayRNGforChannels
         # pokemon.shinyG=kurayRNGforChannels
         # pokemon.shinyB=kurayRNGforChannels
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Shiny, no more!"))
       end
     end
   end
 
   def pbKuraShinify(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     pricenow = 1000
     pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
     while true
@@ -2197,14 +2218,14 @@ class PokemonStorageScene
               pokemon.shinyG=kurayRNGforChannels
               pokemon.shinyB=kurayRNGforChannels
               pokemon.shinyKRS=kurayKRSmake
-              pbHardRefresh
+              pbKurayRefresh(overlayvar1, overlayvar2)
               pbDisplay(_INTL("Wait... Its shiny color changed!"))
             else
               pokemon.shiny=true
-              pbHardRefresh
+              pbKurayRefresh(overlayvar1, overlayvar2)
               pbDisplay(_INTL("Wait... It became shiny!"))
             end
-            break
+            # break
           else
             pbDisplay(_INTL("Not this time :c Try again!"))
           end
@@ -2215,12 +2236,25 @@ class PokemonStorageScene
     end
   end
 
+  def pbKurayRefresh(selectid, useparty=nil)#This refresh the entire box storage (refresh the sprites in the box, and the displayed sprite on the left for the selected Pokemon as well)
+    if useparty
+      pbUpdateOverlay(selectid, useparty)
+    else
+      pbUpdateOverlay(selectid)
+    end
+    pbHardRefresh
+  end
+
   def pbDefineShinycolor(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2238,7 +2272,7 @@ class PokemonStorageScene
       if qty > -1
         newvalue = qty - 180
         pokemon.shinyValue=newvalue
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed Shiny Hue!"))
       end
     end
@@ -2259,7 +2293,7 @@ class PokemonStorageScene
     if qty < 26
       if qty > -1
         pokemon.shinyR=qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed Red Channel!"))
       end
     end
@@ -2279,7 +2313,7 @@ class PokemonStorageScene
     if qty < 26
       if qty > -1
         pokemon.shinyG=qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed Green Channel!"))
       end
     end
@@ -2299,7 +2333,7 @@ class PokemonStorageScene
     if qty < 26
       if qty > -1
         pokemon.shinyB=qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed Blue Channel!"))
       end
     end
@@ -2319,7 +2353,7 @@ class PokemonStorageScene
       qty = @scene.pbChooseNumber(helptext, params)
       if qty < maxdoing + 1 && qty > -1
         pokemon.shinyKRS[iddoing] = qty-200
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Increment!"))
       end
     end
@@ -2341,7 +2375,7 @@ class PokemonStorageScene
       qty = @scene.pbChooseNumber(helptext, params)
       if qty < maxdoing + 1 && qty > -1
         pokemon.shinyKRS[currslot] = qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Semi-Inverted!"))
       end
     end
@@ -2363,7 +2397,7 @@ class PokemonStorageScene
       qty = @scene.pbChooseNumber(helptext, params)
       if qty < maxdoing + 1 && qty > -1
         pokemon.shinyKRS[currslot] = qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Timid-Black!"))
       end
     end
@@ -2372,11 +2406,14 @@ class PokemonStorageScene
 
   #KurayX - KURAYX_ABOUT_SHINIES
   def pbRerollShiny(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2386,7 +2423,7 @@ class PokemonStorageScene
     pokemon.shinyG=kurayRNGforChannels
     pokemon.shinyB=kurayRNGforChannels
     pokemon.shinyKRS=kurayKRSmake
-    pbHardRefresh
+    pbKurayRefresh(overlayvar1, overlayvar2)
     pbDisplay(_INTL("Re-rolled into " + pokemon.shinyValue.to_s + ";" + pokemon.shinyR.to_s + ";" + pokemon.shinyG.to_s + ";" + pokemon.shinyB.to_s + "!"))
   end
 
@@ -2410,6 +2447,8 @@ class PokemonStorageScene
 
   #KurayX
   def pbExport(selected, heldpoke, dodelete=0)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     deletepkm = false
     if $PokemonSystem.exportdelete
       if $PokemonSystem.exportdelete == 1
@@ -2423,6 +2462,7 @@ class PokemonStorageScene
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2462,7 +2502,7 @@ class PokemonStorageScene
       else
         @storage.pbDelete(selected[0], selected[1])
       end
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
     end
     pbDisplay(_INTL("Pokemon Exported!"))
   end
@@ -2603,27 +2643,35 @@ class PokemonStorageScene
 
   #KurayX
   def pbToggleShiny(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
     if pokemon.shiny?
       pokemon.shiny=false
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
       pbDisplay(_INTL("Pokemon now Normal!"))
     else
       pokemon.shiny=true
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
       pbDisplay(_INTL("Pokemon now Shiny!"))
     end
   end
 
   #KurayX
   def pbCarpFill(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     directory_name = "ExportedPokemons"
     checkDirectory(directory_name)
     importname = directory_name + "/" + "CarpFill.json"
@@ -2693,7 +2741,7 @@ class PokemonStorageScene
           belta = 0
         end
       end
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
       pbDisplay(_INTL("CarpFill done!"))
     else
       pbPlayBuzzerSE
@@ -2703,6 +2751,11 @@ class PokemonStorageScene
 
   #KurayX
   def pbImportJson(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     directory_name = "ExportedPokemons"
     checkDirectory(directory_name)
     importname = directory_name + "/" + "Exported.json"
@@ -2743,7 +2796,7 @@ class PokemonStorageScene
       end
       # pokemon.calc_stats
       @storage.pbImportKuray(selected[0], selected[1], pokemon)
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
       pbDisplay(_INTL("Pokemon Imported!"))
     else
       pbPlayBuzzerSE
@@ -2767,6 +2820,7 @@ class PokemonStorageScene
       pbUpdateOverlay(@selection)
     end
     pbFadeInAndShow(@sprites, oldsprites)
+    pbHardRefresh
   end
 
   def pbMarkingSetArrow(arrow, selection)
@@ -3481,6 +3535,14 @@ class PokemonStorageScreen
 
   def pbHardRefresh # For debug
     @scene.pbHardRefresh
+  end
+
+  def pbKurayRefresh # For debug
+    @scene.pbKurayRefresh
+  end
+
+  def pbUpdateOverlay(selection, party = nil) # For debug
+    @scene.pbUpdateOverlay(selection, party)
   end
 
   def pbRefreshSingle(i)
@@ -4836,6 +4898,7 @@ class PokemonStorageScreen
             @storage[@storage.currentBox, k] = copytmp[dealwith[1].to_i]
           end
           pbHardRefresh
+          # pbUpdateOverlay(@selection)
           # @scene.pbRefresh
           # pbRefresh
           pbDisplay(_INTL("Pokemons sorted!"))
@@ -5334,6 +5397,7 @@ class PokemonStorageScreen
             @storage[boxhere, boxcheck] = copytmp[dealwith[1].to_i]
           end
           pbHardRefresh
+          # pbUpdateOverlay(@selection)
           # @scene.pbRefresh
           # pbRefresh
           pbDisplay(_INTL("Pokemons sorted!"))
@@ -5842,9 +5906,11 @@ class PokemonStorageScreen
           if outofspace == 1
             pbPlayBuzzerSE
             pbHardRefresh
+            # pbUpdateOverlay(@selection)
             pbDisplay(_INTL("Out of place!"))
           else
             pbHardRefresh
+            # pbUpdateOverlay(@selection)
             pbDisplay(_INTL("Pokemon(s) Imported!"))
           end
         end
@@ -5941,9 +6007,11 @@ class PokemonStorageScreen
           if outofspace == 1
             pbPlayBuzzerSE
             pbHardRefresh
+            # pbUpdateOverlay(@selection)
             pbDisplay(_INTL("Out of place!"))
           else
             pbHardRefresh
+            # pbUpdateOverlay(@selection)
             pbDisplay(_INTL("Pokemon(s) Imported!"))
           end
         end

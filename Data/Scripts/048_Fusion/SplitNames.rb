@@ -122,7 +122,7 @@ module GameData
     ["Sea", "king"],
     ["Star", "yu"],
     ["Star", "mie"],
-    ["Mr.", "mime"],
+    ["Mr. ", "mime"],
     ["Scy", "ther"],
     ["Jyn", "nx"],
     ["Electa", "buzz"],
