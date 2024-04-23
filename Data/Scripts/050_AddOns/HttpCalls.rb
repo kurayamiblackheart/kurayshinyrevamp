@@ -16,6 +16,11 @@ def updateCreditsFile
   download_file(Settings::CREDITS_FILE_URL, Settings::CREDITS_FILE_PATH,)
 end
 
+def updateCustomDexFile
+  return if $PokemonSystem.download_sprites != 0
+  download_file(Settings::CUSTOM_DEX_FILE_URL, Settings::CUSTOM_DEX_ENTRIES_PATH,)
+end
+
 def createCustomSpriteFolders()
   if !Dir.exist?(Settings::CUSTOM_BATTLERS_FOLDER)
     Dir.mkdir(Settings::CUSTOM_BATTLERS_FOLDER)

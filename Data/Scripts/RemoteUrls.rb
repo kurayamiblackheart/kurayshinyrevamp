@@ -6,6 +6,7 @@ module Settings
   # VERSION_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/VERSION"
   SPRITES_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/CUSTOM_SPRITES"
   VERSION_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/VERSION"
+  CUSTOM_DEX_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/dex.json"
 
   AUTOGEN_SPRITES_REPO_URL = "https://gitlab.com/pokemoninfinitefusion/autogen-fusion-sprites/-/raw/master/Battlers/"
   CUSTOM_SPRITES_REPO_URL = "https://gitlab.com/pokemoninfinitefusion/customsprites/-/raw/master/CustomBattlers/"

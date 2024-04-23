@@ -336,6 +336,7 @@ class PokemonLoadScreen
   def pbStartLoadScreen
     updateHttpSettingsFile
     updateCreditsFile
+    updateCustomDexFile
     newer_version = find_newer_available_version
     if newer_version
       if File.file?('.\INSTALL_OR_UPDATE.bat')
