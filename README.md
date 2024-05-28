@@ -6,19 +6,13 @@ Kuray Infinite Fusion (KIF) is community-based and community-focused, it's made 
 
 -----------------------------------------------
 
-_Base KIF Game **\[REQUIRED TO INSTALL AND PLAY KIF\]**:_ https://app.mediafire.com/iju9vkdnphkse
+_To install KIF, please go in "Releases" and get the last release (download Source Code.zip) or follow this link: https://github.com/kurayamiblackheart/kurayshinyrevamp/archive/refs/heads/release.zip _
 
-_How to Install KIF tutorial:_ https://www.youtube.com/watch?v=Vm_jfprpk3k
+_Text instruction on how to Install KIF are available on our Discord: https://discord.gg/UFxQkUZeyE_
 
-_Text instruction on how to Install KIF are available on the Google Docs:_ https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE/edit
+__Google Docs of the game (OBSOLETE, but some informations are still useful):__ https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE/edit
 
-**Join our Discord! https://discord.gg/UFxQkUZeyE**
-
-__Google Docs of the game:__ https://docs.google.com/document/d/1O6pKKL62dbLcapO0c2zDG2UI-eN6uatYlt_0GSk1dbE/edit
-
-The Google Docs already explain everything about this game.
-
-This Github allows you to see the game (open-source), but also to contribute to the development of this project with pull-requests, and download the latest release to stay up-to-date. You need to download the mediafire base of the Kuray Infinite Fusion (KIF) before applying the new releases of the github.
+This Github allows you to see the game (open-source), but also to contribute to the development of this project with pull-requests, and download the latest release to stay up-to-date.
 
 # List of Constant Features
 
