@@ -61,9 +61,14 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Pokemons added to Pokedex when catching/evolving fusions **| by TRAPSTARR**
 - Consumables Items recovered after battle **| by TRAPSTARR**
 - Configurable ExpAll redistribution. **| by HUNGRYPICKLE**
-- Types Icons in-battle **| by TRAPSTARR & MIRASEIN**
+- Types Icons in-battle *(various sets of icons to choose from)* **| by TRAPSTARR & MIRASEIN & FAIRYGODMOTHER**
 - Auto-Battle **| by REIZOD & TRAPSTARR**
 - Trainers use Shinies **| by TRAPSTARR**
 - Damage Variance deactivatable **| by DEMICE**
 - Option to unfuse traded Pokemons *(can be turned ON/OFF in the Options Menu)* **| by REIZOD**
 - Quicksave Feature **| by DEMICE**
+- Dark Battle GUI & More battle GUI to choose from **| by TRAPSTARR & MIRASEIN**
+- Option to enable/disable the sprite selection in Pokedex when catching a new Pokemon **| by REIZOD**
+- Option to enable/disable the prompt that asks you if you wish to nickname a newly obtained Pokemon **| by REIZOD**
+- Option to enable/disable the prompt that asks you if you wish to add a newly obtained Pokemon in your team or send it to PC **| by REIZOD**
+- Option to skip the intro cutscene when launching the game *(Open a batch console (you can do so by pressing WIN+R and entering "cmd" in the box), then execute this code: ``echo:Y>"%appdata%\kurayinfinitefusion\NoIntro.krs"``. Breakdown: The code will create a file named "NoIntro.krs" in your savefile directory. When this file exists, the intro cutscene will always be skipped at launch, launching the game faster.)* **| by REIZOD**
