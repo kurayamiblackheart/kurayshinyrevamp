@@ -50,7 +50,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Sort Pokemons in PC, sort a single box/all boxes (options: Specie Name, Name, Dex Number, Level, HP, Atk, Def, SpA, SpD, Spe, Caught Date, Shiny, OT (Original Trainer's name), Gender, Ability, Nature, Held Item, First Type, Second Type, Caught Map (Map ID), Happiness, Exp, Markings, Total IVs (sum of IVs), Total EVs (sum of EVs)) | by REIZOD
 - Multi-Select in PC | by SYLVI
 - Change Game's Font | by REIZOD
-- Pokemons' Sprites as Icons (in team and PC boxes) | by REIZOD
+- Pokemons' Sprites as Icons (in team and PC boxes) | by SYLVI
 - Individual Custom Sprites (can have 2 Eevees with different sprites, all sprites availables are being used giving more uniqueness to each Pokemon) | by REIZOD
 - Kuray Shop (buy items/HM/etc unobtainable otherwises (rare candie, masterball, transgender/mist stones, ...)) | by REIZOD
 - Self-Fusions boosts | by REIZOD
