@@ -32,6 +32,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Shiny Finder.exe *(a program created by Reïzod which allows you to quickly see all the shiny possibilities of a .png sprite)* **| by REIZOD**
 - Auto-updater *(thanks to HungryPickle)*, the game will check for update by itself, and if there is an update, will ask you whether you want to update or not (when launching the game), if you press yes, it will update without you having to do anything, and it will automatically restart, all updated! **| By HUNGRYPICKLE**
 - Brought back the feature that allowed in PIF to breed fused Pokemons. Before PIF 6.0, it was possible to do this in the base game of PIF. Now it's KIF-exclusive. **| by REIZOD**
+- A tool that allows you to install all the sprites *(autogen and custom)* from PIF's gitlab servers, so that you can have all the sprites that have been made for the game locally on your computer! Running this tool may take a few hours, please only run it overnight, or when you can let it run for a long time. There's more than 200 000 small sprites involved, so it takes a while to move them and organize them on the computer. You can also manually access those sprites from the gitlab servers yourself by following those links: https://gitlab.com/pokemoninfinitefusion/autogen-fusion-sprites *(autogen)* & https://gitlab.com/pokemoninfinitefusion/customsprites *(custom)* **| by REIZOD**
 
 # List of Optional Features (you can turn them ON/OFF and/or configure/customize them!)
 
@@ -40,7 +41,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - 1v1/2v2/3v3 Wild Battles **| by REIZOD**
 - 1v1/2v2/3v3 Trainer Battles **| by REIZOD**
 - Shiny Icons **| by REIZOD**
-- Export/Export All/Import One Random/Import All Pokemons *(from/to .json & .png files, store your Pokemons on your computer&share them to other players! You can even store their appearence (sprite) too!)* **| by REIZOD**
+- Export/Export All/Import One Random/Import All Pokemons *(from/to .json & .png files, store your Pokemons on your computer&share them to other players! You can even store their appearence (sprite) too! Possibility to export the shiny .png sprite of a Shiny Pokemon as well!)* **| by REIZOD**
 - Lock Evolution *(prevents a Pokemon from evolving until manually unlocked on an evo-locked Pokemon)* **| by REIZOD**
 - Choose/Re-roll Shiny Colors *(DEBUG only)* **| by REIZOD**
 - Shiny Dye Fusing **| by JUSTANOTHERU5ER**
@@ -54,7 +55,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Pokemons' Sprites as Icons *(in team and PC boxes)* **| by SYLVI**
 - Individual Custom Sprites *(can have 2 Eevees with different sprites, all sprites availables are being used giving more uniqueness to each Pokemon)* **| by REIZOD**
 - Kuray Shop *(buy items/HM/etc unobtainable otherwises (rare candie, masterball, transgender/mist stones, ...))* **| by REIZOD**
-- Self-Fusions boosts **| by REIZOD** 
+- Dynamic Self-Fusions stat boosts *(the Pokemons with the worst base stats gets the most boost from a self-fusion)*, you can turn this feature on/off in the options. **| by REIZOD** 
 - ~~Blacklisting/Rarity/Re-roll/Reset systems for sprites | by REIZOD~~ *(Abandoned, will have to be re-done)*
 - PC & Instant Heal from menu **| by REIZOD**
 - ~~Per-Save File/Global feature system | by SYLVI~~ *(Not working)*
@@ -75,9 +76,19 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Option to skip the intro cutscene when launching the game *(Open a batch console (you can do so by pressing WIN+R and entering "cmd" in the box), then execute this code: ``echo:Y>"%appdata%\kurayinfinitefusion\NoIntro.krs"``. Breakdown: The code will create a file named "NoIntro.krs" in your savefile directory. When this file exists, the intro cutscene will always be skipped at launch, launching the game faster.)* **| by REIZOD**
 - Ability to decompile and recompile the game entirely *(PIF does not allow you to decompile their database, but KIF allows you to do so)* - PLEASE, do not use this utility feature if you do not know what you're doing. It is available in the debug options menu. **| by REIZOD**
 - Brought back the feature that allowed in PIF to breed legendaries Pokemon, and any Pokemon, if the Pokemon that was unbreedable was the head in the fusion *(for example, a Mew head with a Pikachu head fusion, can breed if this feature is activated in the options)* before PIF 6.0, it was possible to do this in the base game of PIF. Now it's a KIF-exclusive option. **| by REIZOD**
-- Poison Overworld Config, allows you to make it so that Pokemons with certain abilities are immune to Poison in the Overworld *(can configure it so that they even heal from Overworld Poison, this feature is disabled by default)* **| by BlueWuppo**
-- Modern Hail feature *(optional)* **| by BlueWuppo**
-- Bug Type Buff feature *(optional)* **| by BlueWuppo**
-- Ice Type Buff feature *(optional)* **| by BlueWuppo**
-- Frostbite instead of Frozen feature *(optional)* **| by BlueWuppo**
-- Drowsy instead of Asleep feature *(optional)* **| by BlueWuppo**
+- Poison Overworld Config, allows you to make it so that Pokemons with certain abilities are immune to Poison in the Overworld *(can configure it so that they even heal from Overworld Poison, this feature is disabled by default)* **| by BLUEWUPPO**
+- Modern Hail feature *(optional)* **| by BLUEWUPPO**
+- Bug Type Buff feature *(optional)* **| by BLUEWUPPO**
+- Ice Type Buff feature *(optional)* **| by BLUEWUPPO**
+- Frostbite instead of Frozen feature *(optional)* **| by BLUEWUPPO**
+- Drowsy instead of Asleep feature *(optional)* **| by BLUEWUPPO**
+- Add Event Moves to the Battle Factory Egg Move Tutor **| by HUNGRYPICKLE & REKT1029**
+- Brought back the dominant typing for fusions that were in PIF before PIF 6.0, it is now a KIF-exclusive option. **| by DEMICE**
+- Ability to adjust the base stats spread for fused Pokemons. **| by HUNGRYPICKLE**
+- Tutor.net, allows you to teach TMs that you've already obtained to your Pokemons, also registers move tutors, all your move teaching in one menu! **| by DEMICE**
+- Added a "Metronome Madness" challenge *(forces Pokemons to use the move Metronome)*. **| by REIZOD**
+- Added a "Letdown" challenge *(sometimes, a Pokemon will use Splash instead of the move it was supposed to use)*. **| by REIZOD**
+- Added a "Berserker" challenge *(all the stats of the enemy will raise, the frequency depends on the difficulty you've choosen on this challenge)* **| by REIZOD**
+- Ability to choose how the speed-up works *(choose between Toggling the speed-up value, or only speeding up when you hold the button)* **| by REIZOD**
+- Shiny Cache System *(optimizes performances when displaying shinies from KIF, also allows you to access all the shinies .png from the "Cache" folder)*, because of the massive performance boost, the cache is turned on by default. **| by REIZOD**
+- 
