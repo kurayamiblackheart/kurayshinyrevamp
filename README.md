@@ -17,7 +17,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 # List of Constant Features
 
 - **Modding support** **| by DEMICE**
-- Game's Speed up to **x5** & displayed on the title **| by REIZOD**
+- Game's Speed up to **x10** & displayed on the title **| by REIZOD**
 - No double-confirmation for unfusing **| by REIZOD**
 - Revamped Gender Icons **| by REIZOD**
 - IV/EVs in Pokemon's Summary **| by LUMINATRON**
