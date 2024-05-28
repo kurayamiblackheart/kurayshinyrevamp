@@ -2,6 +2,8 @@ class PokemonBox
   attr_accessor   :pokemon
   attr_accessor :name
   attr_accessor :background
+  attr_accessor :sortlock
+  attr_accessor :exportlock
 
   BOX_WIDTH  = 6
   BOX_HEIGHT = 5
@@ -10,12 +12,30 @@ class PokemonBox
   def initialize(name, maxPokemon = BOX_SIZE)
     @pokemon = []
     @name = name
+    @sortlock = false
+    @exportlock = false
     @background = 0
     for i in 0...maxPokemon
       @pokemon[i] = nil
     end
   end
 
+  def sortlock?
+    return @sortlock
+  end
+  
+  def sortlock=(value)
+    @sortlock = value
+  end
+
+  def exportlock?
+    return @exportlock
+  end
+
+  def exportlock=(value)
+    @exportlock = value
+  end
+  
   def length
     return @pokemon.length
   end

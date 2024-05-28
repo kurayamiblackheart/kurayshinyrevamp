@@ -876,6 +876,11 @@ class PokemonFusionScene
       @pokemon1.kuraycustomfile = nil
       @pokemon2.kuraycustomfile = nil
 
+      # 2 = head
+      # 1 = body
+      if @pokemon2.item != nil && $PokemonBag.pbCanStore?(@pokemon2.item, 1)
+          $PokemonBag.pbStoreItem(@pokemon2.item, 1)
+      end
       #KurayX - KURAYX_ABOUT_SHINIES
       if @pokemon2.shiny?
         @pokemon1.head_shiny = true
