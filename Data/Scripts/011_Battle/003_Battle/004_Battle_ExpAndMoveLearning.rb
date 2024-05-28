@@ -242,7 +242,7 @@ class PokeBattle_Battle
       @scene.pbEXPBar(battler, levelMinExp, levelMaxExp, tempExp1, tempExp2)
       tempExp1 = tempExp2
       curLevel += 1
-      if curLevel > newLevel
+      if curLevel > newLevel || curLevel > GameData::GrowthRate.max_level
         # Gained all the Exp now, end the animation
         if $PokemonSystem.kuraylevelcap != 0 && pkmn.exp > growth_rate.minimum_exp_for_level(getkuraylevelcap()+1)
           if $PokemonSystem.levelcapbehavior == 2

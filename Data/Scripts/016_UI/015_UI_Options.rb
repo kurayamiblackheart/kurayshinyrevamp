@@ -136,6 +136,8 @@ class PokemonSystem
 
   attr_accessor :levelcapbehavior
 
+  attr_accessor :optionsnames
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -176,6 +178,7 @@ class PokemonSystem
     @shinyfusedye = 0
     @kuraylevelcap = 0
     @levelcapbehavior = 0
+    @optionsnames = Array.new(12) { |i| "Slot #{i + 1}" }
     @kuraygambleodds = 100
     @kurayqol = 1
     @tutornet = 1 # DemICE
@@ -304,6 +307,7 @@ class PokemonSystem
     @shinyfusedye = saved.shinyfusedye if saved.shinyfusedye
     @kuraylevelcap = saved.kuraylevelcap if saved.kuraylevelcap
     @levelcapbehavior = saved.levelcapbehavior if saved.levelcapbehavior
+    @optionsnames = saved.optionsnames if saved.optionsnames
     @kuraystreamerdream = saved.kuraystreamerdream if saved.kuraystreamerdream
     @kuraygambleodds = saved.kuraygambleodds if saved.kuraygambleodds
     @kurayqol = saved.kurayqol if saved.kurayqol
@@ -354,6 +358,303 @@ class PokemonSystem
     # End of Challenges
     @skipcaughtnickname = saved.skipcaughtnickname if saved.skipcaughtnickname
     @skipcaughtprompt = saved.skipcaughtprompt if saved.skipcaughtprompt
+  end
+end
+
+def as_json(options={})
+  {
+    "json_version" => "0.1",
+    "textspeed" => $PokemonSystem.textspeed,
+    "battlescene" => $PokemonSystem.battlescene,
+    "frame" => $PokemonSystem.frame,
+    "textskin" => $PokemonSystem.textskin,
+    "screensize" => $PokemonSystem.screensize,
+    "language" => $PokemonSystem.language,
+    "runstyle" => $PokemonSystem.runstyle,
+    "bgmvolume" => $PokemonSystem.bgmvolume,
+    "sevolume" => $PokemonSystem.sevolume,
+    "textinput" => $PokemonSystem.textinput,
+    "quicksurf" => $PokemonSystem.quicksurf,
+    "download_sprites" => $PokemonSystem.download_sprites,
+    "battlestyle" => $PokemonSystem.battlestyle,
+    "battle_type" => $PokemonSystem.battle_type,
+    "shiny_icons_kuray" => $PokemonSystem.shiny_icons_kuray,
+    "kurayfusepreview" => $PokemonSystem.kurayfusepreview,
+    "kuraynormalshiny" => $PokemonSystem.kuraynormalshiny,
+    "kurayshinyanim" => $PokemonSystem.kurayshinyanim,
+    "kurayfonts" => $PokemonSystem.kurayfonts,
+    "kuraybigicons" => $PokemonSystem.kuraybigicons,
+    "kurayindividcustomsprite" => $PokemonSystem.kurayindividcustomsprite,
+    "typedisplay" => $PokemonSystem.typedisplay,
+    "battlegui" => $PokemonSystem.battlegui,
+    "darkmode" => $PokemonSystem.darkmode,
+    "globalvalues" => $PokemonSystem.globalvalues,
+    "quicksave" => $PokemonSystem.quicksave,
+    "force_double_wild" => $PokemonSystem.force_double_wild,
+    "improved_pokedex" => $PokemonSystem.improved_pokedex,
+    "recover_consumables" => $PokemonSystem.recover_consumables,
+    "expall_redist" => $PokemonSystem.expall_redist,
+    "kuray_no_evo" => $PokemonSystem.kuray_no_evo,
+    "shinyfusedye" => $PokemonSystem.shinyfusedye,
+    "kuraylevelcap" => $PokemonSystem.kuraylevelcap,
+    "kurayqol" => $PokemonSystem.kurayqol,
+    "tutornet" => $PokemonSystem.tutornet,
+    "self_fusion_boost" => $PokemonSystem.self_fusion_boost,
+    "dominant_fusion_types" => $PokemonSystem.dominant_fusion_types,
+    "damage_variance" => $PokemonSystem.damage_variance,
+    "shiny_trainer_pkmn" => $PokemonSystem.shiny_trainer_pkmn,
+    "kuraygambleodds" => $PokemonSystem.kuraygambleodds,
+    "shenanigans" => $PokemonSystem.shenanigans,
+    "kuraystreamerdream" => $PokemonSystem.kuraystreamerdream,
+    "autobattler" => $PokemonSystem.autobattler,
+    "shinyodds" => $PokemonSystem.shinyodds,
+    "unfusetraded" => $PokemonSystem.unfusetraded,
+    "nomoneylost" => $PokemonSystem.nomoneylost,
+    "sb_maxing" => $PokemonSystem.sb_maxing,
+    "sb_soullinked" => $PokemonSystem.sb_soullinked,
+    "sb_randomizeteam" => $PokemonSystem.sb_randomizeteam,
+    "sb_randomizeshare" => $PokemonSystem.sb_randomizeshare,
+    "sb_randomizesize" => $PokemonSystem.sb_randomizesize,
+    "sb_battlesize" => $PokemonSystem.sb_battlesize,
+    "sb_select" => $PokemonSystem.sb_select,
+    "sb_level" => $PokemonSystem.sb_level,
+    "sb_playerfolder" => $PokemonSystem.sb_playerfolder,
+    "debugfeature" => $PokemonSystem.debugfeature,
+    "debug" => $PokemonSystem.debug,
+    "is_in_battle" => $PokemonSystem.is_in_battle,
+    "sb_stat_tracker" => $PokemonSystem.sb_stat_tracker,
+    "player_wins" => $PokemonSystem.player_wins,
+    "enemy_wins" => $PokemonSystem.enemy_wins,
+    "sb_loopinput" => $PokemonSystem.sb_loopinput,
+    "sb_loopbreaker" => $PokemonSystem.sb_loopbreaker,
+    "importnodelete" => $PokemonSystem.importnodelete,
+    "exportdelete" => $PokemonSystem.exportdelete,
+    "savefolder" => $PokemonSystem.savefolder,
+    "importlvl" => $PokemonSystem.importlvl,
+    "importdevolve" => $PokemonSystem.importdevolve,
+    "nopngexport" => $PokemonSystem.nopngexport,
+    "nopngimport" => $PokemonSystem.nopngimport,
+    "raiser" => $PokemonSystem.raiser,
+    "raiserb" => $PokemonSystem.raiserb,
+    "legendarybreed" => $PokemonSystem.legendarybreed,
+    "eventmoves" => $PokemonSystem.eventmoves,
+    "shinyadvanced" => $PokemonSystem.shinyadvanced,
+    "custom_bst" => $PokemonSystem.custom_bst,
+    "custom_bst_sliders" => $PokemonSystem.custom_bst_sliders,
+    "walkingpoison" => $PokemonSystem.walkingpoison,
+    "modernhail" => $PokemonSystem.modernhail,
+    "frostbite" => $PokemonSystem.frostbite,
+    "drowsy" => $PokemonSystem.drowsy,
+    "bugbuff" => $PokemonSystem.bugbuff,
+    "icebuff" => $PokemonSystem.icebuff,
+    "ch_metronome" => $PokemonSystem.ch_metronome,
+    "ch_letdownplayer" => $PokemonSystem.ch_letdownplayer,
+    "ch_letdown" => $PokemonSystem.ch_letdown,
+    "ch_berserker" => $PokemonSystem.ch_berserker,
+    "dexspriteselect" => $PokemonSystem.dexspriteselect,
+    "speedvalue" => $PokemonSystem.speedvalue,
+    "speedtoggle" => $PokemonSystem.speedtoggle,
+    "speedvaluedef" => $PokemonSystem.speedvaluedef,
+    "speeduplimit" => $PokemonSystem.speeduplimit,
+    "shiny_cache" => $PokemonSystem.shiny_cache,
+    "skipcaughtprompt" => $PokemonSystem.skipcaughtprompt,
+    "skipcaughtnickname" => $PokemonSystem.skipcaughtnickname,
+    "levelcapbehavior" => $PokemonSystem.levelcapbehavior,
+    "var_fusion_icon_style" => $game_variables[VAR_FUSION_ICON_STYLE],
+    "var_default_battle_type" => $game_variables[VAR_DEFAULT_BATTLE_TYPE],
+    "autosave_enabled_switch" => $game_switches[AUTOSAVE_ENABLED_SWITCH],
+    "autosave_healing_var" => $game_switches[AUTOSAVE_HEALING_VAR],
+    "autosave_catch_switch" => $game_switches[AUTOSAVE_CATCH_SWITCH],
+    "autosave_win_switch" => $game_switches[AUTOSAVE_WIN_SWITCH],
+    "autosave_steps_switch" => $game_switches[AUTOSAVE_STEPS_SWITCH]
+  }
+end
+
+def load_json(jsonparse)
+  json_ver = convertjsonver(jsonparse)
+  $PokemonSystem.textspeed = jsonparse['textspeed']
+  $PokemonSystem.battlescene = jsonparse['battlescene']
+  $PokemonSystem.frame = jsonparse['frame']
+  $PokemonSystem.textskin = jsonparse['textskin']
+  $PokemonSystem.screensize = jsonparse['screensize']
+  $PokemonSystem.language = jsonparse['language']
+  $PokemonSystem.runstyle = jsonparse['runstyle']
+  $PokemonSystem.bgmvolume = jsonparse['bgmvolume']
+  $PokemonSystem.sevolume = jsonparse['sevolume']
+  $PokemonSystem.textinput = jsonparse['textinput']
+  $PokemonSystem.quicksurf = jsonparse['quicksurf']
+  $PokemonSystem.download_sprites = jsonparse['download_sprites']
+  $PokemonSystem.battlestyle = jsonparse['battlestyle']
+  $PokemonSystem.battle_type = jsonparse['battle_type']
+  $PokemonSystem.shiny_icons_kuray = jsonparse['shiny_icons_kuray']
+  $PokemonSystem.kurayfusepreview = jsonparse['kurayfusepreview']
+  $PokemonSystem.kuraynormalshiny = jsonparse['kuraynormalshiny']
+  $PokemonSystem.kurayshinyanim = jsonparse['kurayshinyanim']
+  $PokemonSystem.kurayfonts = jsonparse['kurayfonts']
+  $PokemonSystem.kuraybigicons = jsonparse['kuraybigicons']
+  $PokemonSystem.kurayindividcustomsprite = jsonparse['kurayindividcustomsprite']
+  $PokemonSystem.typedisplay = jsonparse['typedisplay']
+  $PokemonSystem.battlegui = jsonparse['battlegui']
+  $PokemonSystem.darkmode = jsonparse['darkmode']
+  $PokemonSystem.globalvalues = jsonparse['globalvalues']
+  $PokemonSystem.quicksave = jsonparse['quicksave']
+  $PokemonSystem.force_double_wild = jsonparse['force_double_wild']
+  $PokemonSystem.improved_pokedex = jsonparse['improved_pokedex']
+  $PokemonSystem.recover_consumables = jsonparse['recover_consumables']
+  $PokemonSystem.expall_redist = jsonparse['expall_redist']
+  $PokemonSystem.kuray_no_evo = jsonparse['kuray_no_evo']
+  $PokemonSystem.shinyfusedye = jsonparse['shinyfusedye']
+  $PokemonSystem.kuraylevelcap = jsonparse['kuraylevelcap']
+  $PokemonSystem.kurayqol = jsonparse['kurayqol']
+  $PokemonSystem.tutornet = jsonparse['tutornet']
+  $PokemonSystem.self_fusion_boost = jsonparse['self_fusion_boost']
+  $PokemonSystem.dominant_fusion_types = jsonparse['dominant_fusion_types']
+  $PokemonSystem.damage_variance = jsonparse['damage_variance']
+  $PokemonSystem.shiny_trainer_pkmn = jsonparse['shiny_trainer_pkmn']
+  $PokemonSystem.kuraygambleodds = jsonparse['kuraygambleodds']
+  $PokemonSystem.shenanigans = jsonparse['shenanigans']
+  $PokemonSystem.kuraystreamerdream = jsonparse['kuraystreamerdream']
+  $PokemonSystem.autobattler = jsonparse['autobattler']
+  $PokemonSystem.shinyodds = jsonparse['shinyodds']
+  $PokemonSystem.unfusetraded = jsonparse['unfusetraded']
+  $PokemonSystem.nomoneylost = jsonparse['nomoneylost']
+  $PokemonSystem.sb_maxing = jsonparse['sb_maxing']
+  $PokemonSystem.sb_soullinked = jsonparse['sb_soullinked']
+  $PokemonSystem.sb_randomizeteam = jsonparse['sb_randomizeteam']
+  $PokemonSystem.sb_randomizeshare = jsonparse['sb_randomizeshare']
+  $PokemonSystem.sb_randomizesize = jsonparse['sb_randomizesize']
+  $PokemonSystem.sb_battlesize = jsonparse['sb_battlesize']
+  $PokemonSystem.sb_select = jsonparse['sb_select']
+  $PokemonSystem.sb_level = jsonparse['sb_level']
+  $PokemonSystem.sb_playerfolder = jsonparse['sb_playerfolder']
+  $PokemonSystem.debugfeature = jsonparse['debugfeature']
+  $PokemonSystem.debug = jsonparse['debug']
+  $PokemonSystem.is_in_battle = jsonparse['is_in_battle']
+  $PokemonSystem.sb_stat_tracker = jsonparse['sb_stat_tracker']
+  $PokemonSystem.player_wins = jsonparse['player_wins']
+  $PokemonSystem.enemy_wins = jsonparse['enemy_wins']
+  $PokemonSystem.sb_loopinput = jsonparse['sb_loopinput']
+  $PokemonSystem.sb_loopbreaker = jsonparse['sb_loopbreaker']
+  $PokemonSystem.importnodelete = jsonparse['importnodelete']
+  $PokemonSystem.exportdelete = jsonparse['exportdelete']
+  $PokemonSystem.savefolder = jsonparse['savefolder']
+  $PokemonSystem.importlvl = jsonparse['importlvl']
+  $PokemonSystem.importdevolve = jsonparse['importdevolve']
+  $PokemonSystem.nopngexport = jsonparse['nopngexport']
+  $PokemonSystem.nopngimport = jsonparse['nopngimport']
+  $PokemonSystem.raiser = jsonparse['raiser']
+  $PokemonSystem.raiserb = jsonparse['raiserb']
+  $PokemonSystem.legendarybreed = jsonparse['legendarybreed']
+  $PokemonSystem.eventmoves = jsonparse['eventmoves']
+  $PokemonSystem.shinyadvanced = jsonparse['shinyadvanced']
+  $PokemonSystem.custom_bst = jsonparse['custom_bst']
+  $PokemonSystem.custom_bst_sliders = jsonparse['custom_bst_sliders']
+  $PokemonSystem.walkingpoison = jsonparse['walkingpoison']
+  $PokemonSystem.modernhail = jsonparse['modernhail']
+  $PokemonSystem.frostbite = jsonparse['frostbite']
+  $PokemonSystem.drowsy = jsonparse['drowsy']
+  $PokemonSystem.bugbuff = jsonparse['bugbuff']
+  $PokemonSystem.icebuff = jsonparse['icebuff']
+  $PokemonSystem.ch_metronome = jsonparse['ch_metronome']
+  $PokemonSystem.ch_letdownplayer = jsonparse['ch_letdownplayer']
+  $PokemonSystem.ch_letdown = jsonparse['ch_letdown']
+  $PokemonSystem.ch_berserker = jsonparse['ch_berserker']
+  $PokemonSystem.dexspriteselect = jsonparse['dexspriteselect']
+  $PokemonSystem.speedvalue = jsonparse['speedvalue']
+  $PokemonSystem.speedtoggle = jsonparse['speedtoggle']
+  $PokemonSystem.speedvaluedef = jsonparse['speedvaluedef']
+  $PokemonSystem.speeduplimit = jsonparse['speeduplimit']
+  $PokemonSystem.shiny_cache = jsonparse['shiny_cache']
+  $PokemonSystem.skipcaughtprompt = jsonparse['skipcaughtprompt']
+  $PokemonSystem.skipcaughtnickname = jsonparse['skipcaughtnickname']
+  $PokemonSystem.levelcapbehavior = jsonparse['levelcapbehavior']
+  $game_variables[VAR_FUSION_ICON_STYLE] = jsonparse['var_fusion_icon_style']
+  $game_variables[VAR_DEFAULT_BATTLE_TYPE] = jsonparse['var_default_battle_type']
+  $game_switches[AUTOSAVE_ENABLED_SWITCH] = jsonparse['autosave_enabled_switch']
+  $game_switches[AUTOSAVE_HEALING_VAR] = jsonparse['autosave_healing_var']
+  $game_switches[AUTOSAVE_CATCH_SWITCH] = jsonparse['autosave_catch_switch']
+  $game_switches[AUTOSAVE_WIN_SWITCH] = jsonparse['autosave_win_switch']
+  $game_switches[AUTOSAVE_STEPS_SWITCH] = jsonparse['autosave_steps_switch']
+  if $game_system.playing_bgm != nil
+    playingBGM = $game_system.getPlayingBGM
+    $game_system.bgm_pause
+    $game_system.bgm_resume(playingBGM)
+  end
+  if $game_system.playing_bgs != nil
+    $game_system.playing_bgs.volume = $PokemonSystem.sevolume
+    playingBGS = $game_system.getPlayingBGS
+    $game_system.bgs_pause
+    $game_system.bgs_resume(playingBGS)
+  end
+  MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed($PokemonSystem.textspeed))
+  MessageConfig.pbSetSpeechFrame("Graphics/Windowskins/" + Settings::SPEECH_WINDOWSKINS[$PokemonSystem.textskin])
+  pbSetResizeFactor($PokemonSystem.screensize)
+  if $PokemonSystem.kurayfonts == 0
+    # MessageConfig::FONT_SIZE = 29
+    # MessageConfig::NARROW_FONT_SIZE = 29
+    MessageConfig.pbGetSystemFontSizeset(29)
+    MessageConfig.pbGetSmallFontSizeset(25)
+    MessageConfig.pbGetNarrowFontSizeset(29)
+    MessageConfig.pbSetSystemFontName("Power Green")
+    MessageConfig.pbSetSmallFontName("Power Green Small")
+    MessageConfig.pbSetNarrowFontName("Power Green Narrow")
+    MessageConfig.pbGetSystemFontSizeset(29)
+    MessageConfig.pbGetSmallFontSizeset(25)
+    MessageConfig.pbGetNarrowFontSizeset(29)
+  elsif $PokemonSystem.kurayfonts == 1
+    # MessageConfig::FONT_SIZE = 26
+    # MessageConfig::NARROW_FONT_SIZE = 26
+    MessageConfig.pbGetSystemFontSizeset(26)
+    MessageConfig.pbGetSmallFontSizeset(25)
+    MessageConfig.pbGetNarrowFontSizeset(26)
+    MessageConfig.pbSetSystemFontName("Power Red and Green")
+    MessageConfig.pbSetSmallFontName("Power Green Small")
+    MessageConfig.pbSetNarrowFontName("Power Green Small")
+  elsif $PokemonSystem.kurayfonts == 2
+    MessageConfig.pbGetSystemFontSizeset(29)
+    MessageConfig.pbGetSmallFontSizeset(25)
+    MessageConfig.pbGetNarrowFontSizeset(29)
+    MessageConfig.pbSetSystemFontName("Power Clear")
+    MessageConfig.pbSetSmallFontName("Power Clear")
+    MessageConfig.pbSetNarrowFontName("Power Clear")
+  elsif $PokemonSystem.kurayfonts == 3
+    MessageConfig.pbGetSystemFontSizeset(29)
+    MessageConfig.pbGetSmallFontSizeset(25)
+    MessageConfig.pbGetNarrowFontSizeset(29)
+    MessageConfig.pbSetSystemFontName("Power Red and Blue")
+    MessageConfig.pbSetSmallFontName("Power Red and Blue")
+    MessageConfig.pbSetNarrowFontName("Power Red and Blue")
+  end
+
+
+end
+
+def to_json(*options)
+  current = as_json(*options)
+  return current
+end
+
+def convertjsonver(jsonparse)
+  if jsonparse.key?('json_version')
+    json_version = jsonparse['json_version']
+    case json_version
+    when '0.1'
+      return 1
+    when '0.2'
+      return 2
+    when '0.3'
+      return 3
+    when '0.4'
+      return 4
+    when '0.5'
+      return 5
+    when '0.6'
+      return 6
+    when '0.7'
+      return 7
+    end
+  else
+    return 0
   end
 end
 
@@ -529,6 +830,41 @@ class ButtonOption < Option
 end
 
 #===============================================================================
+#
+#===============================================================================
+class ButtonsOption < Option
+  include PropertyMixin
+  attr_reader :name
+  attr_reader :values
+
+  def initialize(name, options, selectProc, description = "")
+    super(description)
+    @name = name
+    @values = options
+    @selectProc = selectProc
+    @index = 0
+  end
+
+  def next(current)
+    @index = current + 1
+    @index = @values.length - 1 if @index > @values.length - 1
+    # @selectProc.call(index)
+    return @index
+  end
+
+  def prev(current)
+    @index = current - 1
+    @index = 0 if @index < 0
+    # @selectProc.call(index)
+    return @index
+  end
+
+  def activate
+    @selectProc.call(@index)
+  end
+end
+
+#===============================================================================
 # Main options list
 #===============================================================================
 class Window_PokemonOption < Window_DrawableCommand
@@ -603,7 +939,7 @@ class Window_PokemonOption < Window_DrawableCommand
     pbDrawShadowText(self.contents, rect.x, rect.y, optionwidth, rect.height, optionname,
                      @nameBaseColor, @nameShadowColor)
     return if index == @options.length
-    if @options[index].is_a?(EnumOption)
+    if @options[index].is_a?(EnumOption) || @options[index].is_a?(ButtonsOption)
       if @options[index].values.length > 1
         totalwidth = 0
         for value in @options[index].values
@@ -675,7 +1011,7 @@ class Window_PokemonOption < Window_DrawableCommand
         @mustUpdateOptions = true
         @mustUpdateDescription = true
       elsif Input.trigger?(Input::USE)
-        if @options[self.index].is_a?(ButtonOption)
+        if @options[self.index].is_a?(ButtonOption) || @options[self.index].is_a?(ButtonsOption)
           @options[self.index].activate
           dorefresh = true
           @mustUpdateOptions = true
@@ -770,215 +1106,32 @@ class PokemonOption_Scene
   def pbGetOptions(inloadscreen = false)
     options = []
 
-    options << ButtonOption.new(_INTL("### GLOBAL ###"),
-      proc {}
+    options << ButtonOption.new(_INTL("PIF Settings"),
+                              proc {
+                                @vanilla_menu = true
+                                openVanilla()
+                              }, "Customize PIF features"
     )
-
-    options << SliderOption.new(_INTL("Music Volume"), 0, 100, 5,
-                                proc { $PokemonSystem.bgmvolume },
-                                proc { |value|
-                                  if $PokemonSystem.bgmvolume != value
-                                    $PokemonSystem.bgmvolume = value
-                                    if $game_system.playing_bgm != nil && !inloadscreen
-                                      playingBGM = $game_system.getPlayingBGM
-                                      $game_system.bgm_pause
-                                      $game_system.bgm_resume(playingBGM)
-                                    end
-                                  end
-                                }, "Sets the volume for background music"
-    )
-
-    options << SliderOption.new(_INTL("SE Volume"), 0, 100, 5,
-                                proc { $PokemonSystem.sevolume },
-                                proc { |value|
-                                  if $PokemonSystem.sevolume != value
-                                    $PokemonSystem.sevolume = value
-                                    if $game_system.playing_bgs != nil
-                                      $game_system.playing_bgs.volume = value
-                                      playingBGS = $game_system.getPlayingBGS
-                                      $game_system.bgs_pause
-                                      $game_system.bgs_resume(playingBGS)
-                                    end
-                                    pbPlayCursorSE
-                                  end
-                                }, "Sets the volume for sound effects"
-    )
-
-    options << EnumOption.new(_INTL("Default Movement"), [_INTL("Walking"), _INTL("Running")],
-                              proc { $PokemonSystem.runstyle },
-                              proc { |value| $PokemonSystem.runstyle = value },
-                              ["Default to walking when not holding the Run key",
-                               "Default to running when not holding the Run key"]
-    )
-    options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast")],
-                              proc { $PokemonSystem.textspeed },
-                              proc { |value|
-                                $PokemonSystem.textspeed = value
-                                MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
-                              }, "Sets the speed at which the text is displayed"
-    )
-
-    # if $game_switches && ($game_switches[SWITCH_NEW_GAME_PLUS] || $game_switches[SWITCH_BEAT_THE_LEAGUE]) #beat the league
-    #   options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast"), _INTL("Instant")],
-    #                             proc { $PokemonSystem.textspeed },
-    #                             proc { |value|
-    #                               $PokemonSystem.textspeed = value
-    #                               MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
-    #                             }, "Sets the speed at which the text is displayed"
-    #   )
-    # else
-    #   options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast")],
-    #                             proc { $PokemonSystem.textspeed },
-    #                             proc { |value|
-    #                               $PokemonSystem.textspeed = value
-    #                               MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
-    #                             }, "Sets the speed at which the text is displayed"
-    #   )
-    # end
-    options <<
-      EnumOption.new(_INTL("Download sprites"), [_INTL("On"), _INTL("Off")],
-                     proc { $PokemonSystem.download_sprites},
-                     proc { |value|
-                       $PokemonSystem.download_sprites = value
-                     },
-                     "Automatically download custom sprites from the internet"
-      )
-
-    options << EnumOption.new(_INTL("Battle Effects"), [_INTL("On"), _INTL("Off")],
-    proc { $PokemonSystem.battlescene },
-    proc { |value| $PokemonSystem.battlescene = value },
-    "Display move animations in battles"
-    )
-
-    options << NumberOption.new(_INTL("Speech Frame"), 1, Settings::SPEECH_WINDOWSKINS.length,
-                                proc { $PokemonSystem.textskin },
-                                proc { |value|
-                                  $PokemonSystem.textskin = value
-                                  MessageConfig.pbSetSpeechFrame("Graphics/Windowskins/" + Settings::SPEECH_WINDOWSKINS[value])
-                                }
-    )
-
-    options << EnumOption.new(_INTL("Text Entry"), [_INTL("Cursor"), _INTL("Keyboard")],
-                              proc { $PokemonSystem.textinput },
-                              proc { |value| $PokemonSystem.textinput = value },
-                              ["Enter text by selecting letters on the screen",
-                               "Enter text by typing on the keyboard"]
-    )
-
-    options << EnumOption.new(_INTL("Screen Size"), [_INTL("S"), _INTL("M"), _INTL("L"), _INTL("XL"), _INTL("Full")],
-                              proc { [$PokemonSystem.screensize, 4].min },
-                              proc { |value|
-                                if $PokemonSystem.screensize != value
-                                  $PokemonSystem.screensize = value
-                                  pbSetResizeFactor($PokemonSystem.screensize)
-                                end
-                              }, "Sets the size of the screen"
-    )
-    options << EnumOption.new(_INTL("Quick Field Moves"), [_INTL("Off"), _INTL("On")],
-                              proc { $PokemonSystem.quicksurf },
-                              proc { |value| $PokemonSystem.quicksurf = value },
-                              "Use Field Moves quicker"
-    )
-
-    options << EnumOption.new(_INTL("Dex Sprite Select"), [_INTL("Off"), _INTL("On")],
-                              proc { $PokemonSystem.dexspriteselect },
-                              proc { |value| $PokemonSystem.dexspriteselect = value },
-                              ["Not used",
-                              "Each new pokemon/fusion prompts a sprite selection"]
-    )
-
-    if $scene && $scene.is_a?(Scene_Map)
-      options.concat(pbGetInGameOptions())
-    end
-
-    options << ButtonOption.new(_INTL("Kuray's PIF Revamp Settings"),
+    options << ButtonOption.new(_INTL("KIF Settings"),
                               proc {
                                 @kuray_menu = true
                                 openKurayMenu()
                               }, "Customize modded features"
     )
-    return options
-  end
-
-  def pbGetInGameOptions()
-    options = []
-    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
-      proc {}
-    )
-
-    if $game_switches
-      options <<
-        EnumOption.new(_INTL("Autosave"), [_INTL("On"), _INTL("Off")],
-                       proc { $game_switches[AUTOSAVE_ENABLED_SWITCH] ? 0 : 1 },
-                       proc { |value|
-                         if !$game_switches[AUTOSAVE_ENABLED_SWITCH] && value == 0
-                           @autosave_menu = true
-                           openAutosaveMenu()
-                         end
-                         $game_switches[AUTOSAVE_ENABLED_SWITCH] = value == 0
-                       },
-                       "Automatically saves when healing at Pokémon centers"
-        )
-    end
-
-    if $game_switches && ($game_switches[SWITCH_NEW_GAME_PLUS] || $game_switches[SWITCH_BEAT_THE_LEAGUE]) #beat the league
-      options <<
-        EnumOption.new(_INTL("Battle type"), [_INTL("1v1"), _INTL("2v2"), _INTL("3v3")],
-                       proc { $PokemonSystem.battle_type },
-                       proc { |value|
-                         if value == 0
-                           $game_variables[VAR_DEFAULT_BATTLE_TYPE] = [1, 1]
-                         elsif value == 1
-                           $game_variables[VAR_DEFAULT_BATTLE_TYPE] = [2, 2]
-                         elsif value == 2
-                           $game_variables[VAR_DEFAULT_BATTLE_TYPE] = [3, 3]
-                         else
-                           $game_variables[VAR_DEFAULT_BATTLE_TYPE] = [1, 1]
-                         end
-                         $PokemonSystem.battle_type = value
-                       }, "Sets the number of Pokémon sent out in battles (when possible)"
-        )
-    end
-
-    # options <<
-    #   EnumOption.new(_INTL("Double Wild"), [_INTL("Off"), _INTL("On")],
-    #                   proc { $PokemonSystem.force_double_wild },
-    #                   proc { |value|
-    #                     if value == 0
-    #                       $PokemonSystem.force_double_wild = 0
-    #                     elsif value == 1
-    #                       $PokemonSystem.force_double_wild = 1
-    #                     end
-    #                     $PokemonSystem.force_double_wild = value
-    #                   }, "Double wild or nah ?"
-    # )
-
-
-    options << EnumOption.new(_INTL("Battle Style"), [_INTL("Switch"), _INTL("Set")],
-                              proc { $PokemonSystem.battlestyle },
-                              proc { |value| $PokemonSystem.battlestyle = value },
-                              ["Prompts to switch Pokémon before the opponent sends out the next one",
-                              "No prompt to switch Pokémon before the opponent sends the next one"]
-    )
-
-    # NumberOption.new(_INTL("Menu Frame"),1,Settings::MENU_WINDOWSKINS.length,
-    #   proc { $PokemonSystem.frame },
-    #   proc { |value|
-    #     $PokemonSystem.frame = value
-    #     MessageConfig.pbSetSystemFrame("Graphics/Windowskins/" + Settings::MENU_WINDOWSKINS[value])
-    #   }
-    # ),
-    if $game_variables
-      options << EnumOption.new(_INTL("Fusion icons"), [_INTL("Combined"), _INTL("DNA")],
-                                proc { $game_variables[VAR_FUSION_ICON_STYLE] },
-                                proc { |value| $game_variables[VAR_FUSION_ICON_STYLE] = value },
-                                ["Combines both Pokémon's party icons",
-                                 "Uses the same party icon for all fusions"]
+    if $scene && $scene.is_a?(Scene_Map)
+      options << ButtonOption.new(_INTL("Save & Load Options"),
+                                proc {
+                                  @saveload_menu = true
+                                  openSLMenu()
+                                }, "Save / Load options"
       )
     end
-
     return options
   end
+
+  # def pbGetInGameOptions()
+  #   options = []
+  # end
 
   def openKurayMenu()
     return if !@kuray_menu
@@ -988,6 +1141,26 @@ class PokemonOption_Scene
       screen.pbStartScreen
     }
     @kuray_menu = false
+  end
+
+  def openVanilla()
+    return if !@vanilla_menu
+    pbFadeOutIn {
+      scene = VanillaOptSc_1.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @vanilla_menu = false
+  end
+
+  def openSLMenu()
+    return if !@saveload_menu
+    pbFadeOutIn {
+      scene = SLOptionsScene.new
+      screen = PokemonOptionScreen.new(scene)
+      screen.pbStartScreen
+    }
+    @saveload_menu = false
   end
 
   def pbAddOnOptions(options)
@@ -1087,7 +1260,7 @@ class KurayOptionsScene < PokemonOption_Scene
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
     end
     @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
-      _INTL("Kuray IF settings"),0,0,Graphics.width,64,@viewport)
+      _INTL("KIF Settings"),0,0,Graphics.width,64,@viewport)
     @sprites["textbox"].text=_INTL("Customize modded features")
 
 
@@ -1230,6 +1403,330 @@ class KurayOptionsScene < PokemonOption_Scene
   end
 end
 
+#===============================================================================
+#
+#===============================================================================
+class SLOptionsScene < PokemonOption_Scene
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = Color.new(200, 130, 200)
+    @sprites["option"].nameShadowColor = Color.new(115, 75, 115)
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Save & Load Options"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Save / Load options")
+
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbLoadKO(index=1)
+    # pbPlayCursorSE
+    if File.exists?(RTP.getSaveFolder + "\\Options_" + index.to_s + ".kro")
+      data = File.read(RTP.getSaveFolder + "\\Options_" + index.to_s + ".kro")
+      load_json(eval(data))
+      pbMessage(_INTL("Loaded options from Preset {1}.", $PokemonSystem.optionsnames[index]))
+    else
+      pbPlayBuzzerSE
+      pbMessage(_INTL("No options found in {1}.", $PokemonSystem.optionsnames[index]))
+    end
+    return
+  end
+
+  def pbSaveKO(index=1)
+    # pbPlayCursorSE
+    File.open(RTP.getSaveFolder + "\\Options_" + index.to_s + ".kro", 'w') { |f| f.write(to_json()) }
+    pbMessage(_INTL("Saved current options into Preset {1}.", $PokemonSystem.optionsnames[index]))
+    return
+  end
+
+  def pbRenKO(index=1)
+    $PokemonSystem.optionsnames[index] = pbEnterText("Enter name for Preset", 0, 12, $PokemonSystem.optionsnames[index])
+    refreshOption(index)
+    return
+  end
+  
+  def createButtonsOption(index)
+    ButtonsOption.new(_INTL($PokemonSystem.optionsnames[index]), [_INTL("Load"), _INTL("Save"), _INTL("Name")],
+      proc {
+        |value|
+        if value == 0
+          pbLoadKO(index)
+        elsif value == 1
+          pbSaveKO(index)
+        elsif value == 2
+          pbRenKO(index)
+        end
+      }, ["Load " + $PokemonSystem.optionsnames[index], "Save " + $PokemonSystem.optionsnames[index], "Rename " + $PokemonSystem.optionsnames[index]]
+    )
+  end
+  
+  def refreshOption(index)
+    @PokemonOptions[index] = createButtonsOption(index)
+    @sprites["option"].refresh
+  end
+  
+  def pbGetOptions(inloadscreen = false)
+    options = []
+    12.times do |i|
+      options << createButtonsOption(i)
+    end
+    return options
+  end
+
+  # def pbGetInGameOptions()
+  #   options = []
+  #   return options
+  # end
+end
+
+#===============================================================================
+# VANILLA
+#===============================================================================
+class VanillaOptSc_1 < PokemonOption_Scene
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = Color.new(130, 130, 130)
+    @sprites["option"].nameShadowColor = Color.new(75, 75, 75)
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("PIF Settings"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Customize PIF features")
+
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbGetOptions(inloadscreen = false)
+    options = []
+
+    options << ButtonOption.new(_INTL("### GLOBAL ###"),
+      proc {}
+    )
+
+    options << SliderOption.new(_INTL("Music Volume"), 0, 100, 5,
+                                proc { $PokemonSystem.bgmvolume },
+                                proc { |value|
+                                  if $PokemonSystem.bgmvolume != value
+                                    $PokemonSystem.bgmvolume = value
+                                    if $game_system.playing_bgm != nil && !inloadscreen
+                                      playingBGM = $game_system.getPlayingBGM
+                                      $game_system.bgm_pause
+                                      $game_system.bgm_resume(playingBGM)
+                                    end
+                                  end
+                                }, "Sets the volume for background music"
+    )
+
+    options << SliderOption.new(_INTL("SE Volume"), 0, 100, 5,
+                                proc { $PokemonSystem.sevolume },
+                                proc { |value|
+                                  if $PokemonSystem.sevolume != value
+                                    $PokemonSystem.sevolume = value
+                                    if $game_system.playing_bgs != nil
+                                      $game_system.playing_bgs.volume = value
+                                      playingBGS = $game_system.getPlayingBGS
+                                      $game_system.bgs_pause
+                                      $game_system.bgs_resume(playingBGS)
+                                    end
+                                    pbPlayCursorSE
+                                  end
+                                }, "Sets the volume for sound effects"
+    )
+
+    options << EnumOption.new(_INTL("Default Movement"), [_INTL("Walking"), _INTL("Running")],
+                              proc { $PokemonSystem.runstyle },
+                              proc { |value| $PokemonSystem.runstyle = value },
+                              ["Default to walking when not holding the Run key",
+                               "Default to running when not holding the Run key"]
+    )
+    options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast")],
+                              proc { $PokemonSystem.textspeed },
+                              proc { |value|
+                                $PokemonSystem.textspeed = value
+                                MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
+                              }, "Sets the speed at which the text is displayed"
+    )
+
+    # if $game_switches && ($game_switches[SWITCH_NEW_GAME_PLUS] || $game_switches[SWITCH_BEAT_THE_LEAGUE]) #beat the league
+    #   options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast"), _INTL("Instant")],
+    #                             proc { $PokemonSystem.textspeed },
+    #                             proc { |value|
+    #                               $PokemonSystem.textspeed = value
+    #                               MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
+    #                             }, "Sets the speed at which the text is displayed"
+    #   )
+    # else
+    #   options << EnumOption.new(_INTL("Text Speed"), [_INTL("Normal"), _INTL("Fast")],
+    #                             proc { $PokemonSystem.textspeed },
+    #                             proc { |value|
+    #                               $PokemonSystem.textspeed = value
+    #                               MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
+    #                             }, "Sets the speed at which the text is displayed"
+    #   )
+    # end
+    options <<
+      EnumOption.new(_INTL("Download sprites"), [_INTL("On"), _INTL("Off")],
+                     proc { $PokemonSystem.download_sprites},
+                     proc { |value|
+                       $PokemonSystem.download_sprites = value
+                     },
+                     "Automatically download custom sprites from the internet"
+      )
+
+    options << EnumOption.new(_INTL("Battle Effects"), [_INTL("On"), _INTL("Off")],
+    proc { $PokemonSystem.battlescene },
+    proc { |value| $PokemonSystem.battlescene = value },
+    "Display move animations in battles"
+    )
+
+    options << NumberOption.new(_INTL("Speech Frame"), 1, Settings::SPEECH_WINDOWSKINS.length,
+                                proc { $PokemonSystem.textskin },
+                                proc { |value|
+                                  $PokemonSystem.textskin = value
+                                  MessageConfig.pbSetSpeechFrame("Graphics/Windowskins/" + Settings::SPEECH_WINDOWSKINS[value])
+                                }
+    )
+
+    options << EnumOption.new(_INTL("Text Entry"), [_INTL("Cursor"), _INTL("Keyboard")],
+                              proc { $PokemonSystem.textinput },
+                              proc { |value| $PokemonSystem.textinput = value },
+                              ["Enter text by selecting letters on the screen",
+                               "Enter text by typing on the keyboard"]
+    )
+
+    options << EnumOption.new(_INTL("Screen Size"), [_INTL("S"), _INTL("M"), _INTL("L"), _INTL("XL"), _INTL("Full")],
+                              proc { [$PokemonSystem.screensize, 4].min },
+                              proc { |value|
+                                if $PokemonSystem.screensize != value
+                                  $PokemonSystem.screensize = value
+                                  pbSetResizeFactor($PokemonSystem.screensize)
+                                end
+                              }, "Sets the size of the screen"
+    )
+    options << EnumOption.new(_INTL("Quick Field Moves"), [_INTL("Off"), _INTL("On")],
+                              proc { $PokemonSystem.quicksurf },
+                              proc { |value| $PokemonSystem.quicksurf = value },
+                              "Use Field Moves quicker"
+    )
+
+    options << EnumOption.new(_INTL("Dex Sprite Select"), [_INTL("Off"), _INTL("On")],
+                              proc { $PokemonSystem.dexspriteselect },
+                              proc { |value| $PokemonSystem.dexspriteselect = value },
+                              ["Not used",
+                              "Each new pokemon/fusion prompts a sprite selection"]
+    )
+
+    if $scene && $scene.is_a?(Scene_Map)
+      options.concat(pbGetInGameOptions())
+    end
+    return options
+  end
+
+  def pbGetInGameOptions()
+    options = []
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
+      proc {}
+    )
+
+    if $game_switches
+      options <<
+        EnumOption.new(_INTL("Autosave"), [_INTL("On"), _INTL("Off")],
+                       proc { $game_switches[AUTOSAVE_ENABLED_SWITCH] ? 0 : 1 },
+                       proc { |value|
+                         if !$game_switches[AUTOSAVE_ENABLED_SWITCH] && value == 0
+                           @autosave_menu = true
+                           openAutosaveMenu()
+                         end
+                         $game_switches[AUTOSAVE_ENABLED_SWITCH] = value == 0
+                       },
+                       "Automatically saves when healing at Pokémon centers"
+        )
+    end
+
+    if $game_switches && ($game_switches[SWITCH_NEW_GAME_PLUS] || $game_switches[SWITCH_BEAT_THE_LEAGUE]) #beat the league
+      options <<
+        EnumOption.new(_INTL("Battle type"), [_INTL("1v1"), _INTL("2v2"), _INTL("3v3")],
+                       proc { $PokemonSystem.battle_type },
+                       proc { |value|
+                         if value == 0
+                           $game_variables[VAR_DEFAULT_BATTLE_TYPE] = [1, 1]
+                         elsif value == 1
+                           $game_variables[VAR_DEFAULT_BATTLE_TYPE] = [2, 2]
+                         elsif value == 2
+                           $game_variables[VAR_DEFAULT_BATTLE_TYPE] = [3, 3]
+                         else
+                           $game_variables[VAR_DEFAULT_BATTLE_TYPE] = [1, 1]
+                         end
+                         $PokemonSystem.battle_type = value
+                       }, "Sets the number of Pokémon sent out in battles (when possible)"
+        )
+    end
+
+    # options <<
+    #   EnumOption.new(_INTL("Double Wild"), [_INTL("Off"), _INTL("On")],
+    #                   proc { $PokemonSystem.force_double_wild },
+    #                   proc { |value|
+    #                     if value == 0
+    #                       $PokemonSystem.force_double_wild = 0
+    #                     elsif value == 1
+    #                       $PokemonSystem.force_double_wild = 1
+    #                     end
+    #                     $PokemonSystem.force_double_wild = value
+    #                   }, "Double wild or nah ?"
+    # )
+
+
+    options << EnumOption.new(_INTL("Battle Style"), [_INTL("Switch"), _INTL("Set")],
+                              proc { $PokemonSystem.battlestyle },
+                              proc { |value| $PokemonSystem.battlestyle = value },
+                              ["Prompts to switch Pokémon before the opponent sends out the next one",
+                              "No prompt to switch Pokémon before the opponent sends the next one"]
+    )
+
+    # NumberOption.new(_INTL("Menu Frame"),1,Settings::MENU_WINDOWSKINS.length,
+    #   proc { $PokemonSystem.frame },
+    #   proc { |value|
+    #     $PokemonSystem.frame = value
+    #     MessageConfig.pbSetSystemFrame("Graphics/Windowskins/" + Settings::MENU_WINDOWSKINS[value])
+    #   }
+    # ),
+    if $game_variables
+      options << EnumOption.new(_INTL("Fusion icons"), [_INTL("Combined"), _INTL("DNA")],
+                                proc { $game_variables[VAR_FUSION_ICON_STYLE] },
+                                proc { |value| $game_variables[VAR_FUSION_ICON_STYLE] = value },
+                                ["Combines both Pokémon's party icons",
+                                 "Uses the same party icon for all fusions"]
+      )
+    end
+
+    return options
+  end
+end
 
 #===============================================================================
 # SHINIES
