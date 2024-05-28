@@ -91,7 +91,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Added a "Berserker" challenge *(all the stats of the enemy will raise, the frequency depends on the difficulty you've choosen on this challenge)* **| by REIZOD**
 - Ability to choose how the speed-up works *(choose between Toggling the speed-up value, or only speeding up when you hold the button)* **| by REIZOD**
 - Shiny Cache System *(optimizes performances when displaying shinies from KIF, also allows you to access all the shinies .png from the "Cache" folder)*, because of the massive performance boost, the cache is turned on by default. **| by REIZOD**
-- Create and Load options presets, to quickly change between game configurations!
-- Exempt boxes from the "Sort All Pokemons" feature.
-- Exempt boxes from the "Export All Pokemons" feature.
+- Create and Load options presets, to quickly change between game configurations! **| by REIZOD**
+- Exempt boxes from the "Sort All Pokemons" feature. **| by REIZOD**
+- Exempt boxes from the "Export All Pokemons" feature. **| by REIZOD**
 
