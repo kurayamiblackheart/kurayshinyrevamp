@@ -2625,6 +2625,7 @@ class PokemonStorageScene
       if @storage[j].empty?
         next
       end
+      next if @storage[j].exportlock?
       for k in 0..29
         if @storage[j, k]
           pokemon = @storage[j, k]
@@ -4551,56 +4552,60 @@ class PokemonStorageScreen
     end
   end
 
-  def sort_box(box, kurayid, attribute)
+  def sort_box(box, kurayid, attribute, sortingkuray, all_sorting)
     for k in 0..29
       if pokekuray = box[k]
         case attribute
-        when "shiny"
+        when :shiny
           shinykur = pokekuray.shiny? ? 1 : 0
           sortingkuray.append([shinykur, kurayid])
-        when "OT"
+        when :OT
           otname = pokekuray.owner.name.empty? ? "0" : pokekuray.owner.name
           sortingkuray.append([otname, kurayid])
-        when "gender"
+        when :gender
           actualgender = pokekuray.pizza? ? 3 : pokekuray.gender
           sortingkuray.append([actualgender, kurayid])
-        when "ability"
+        when :ability
           sortingkuray.append([pokekuray.ability.name, kurayid])
-        when "nature"
+        when :nature
           sortingkuray.append([pokekuray.nature.name, kurayid])
-        when "item"
+        when :item
           sortingkuray.append([pokekuray.item ? pokekuray.item.name : "0", kurayid])
-        when "type1"
+        when :type1
           kuraytype = GameData::Type.get(pokekuray.type1).id_number
           sortingkuray.append([kuraytype, kurayid])
-        when "type2"
+        when :type2
           kuraytype = GameData::Type.get(pokekuray.type2).id_number
           sortingkuray.append([kuraytype, kurayid])
-        when "totalivs"
+        when :totalivs
           sumivs = pokekuray.iv[:HP] + pokekuray.iv[:ATTACK] + pokekuray.iv[:DEFENSE] + pokekuray.iv[:SPECIAL_ATTACK] + pokekuray.iv[:SPECIAL_DEFENSE] + pokekuray.iv[:SPEED]
           sortingkuray.append([sumivs, kurayid])
-        when "totalevs"
+        when :totalevs
           sumevs = pokekuray.ev[:HP] + pokekuray.ev[:ATTACK] + pokekuray.ev[:DEFENSE] + pokekuray.ev[:SPECIAL_ATTACK] + pokekuray.ev[:SPECIAL_DEFENSE] + pokekuray.ev[:SPEED]
           sortingkuray.append([sumevs, kurayid])
         else
           sortingkuray.append([pokekuray.send(attribute), kurayid])
         end
+      end
+      if all_sorting && pokekuray
+        kurayid += 1
+      elsif !all_sorting
         kurayid += 1
       end
     end
     kurayid
   end
   
-  def sort_boxes(attribute, all_sorting=false)
+  def sort_boxes(attribute, all_sorting=false, sortingkuray)
     kurayid = 0
-    cansort = 0
     if all_sorting
       for j in 0...@storage.maxBoxes
         next if @storage[j].empty?
-        kurayid = sort_box(@storage[j], kurayid, attribute)
+        next if @storage[j].sortlock?
+        kurayid = sort_box(@storage[j], kurayid, attribute, sortingkuray, all_sorting)
       end
     else
-      kurayid = sort_box(@storage[@storage.currentBox], kurayid, attribute)
+      kurayid = sort_box(@storage[@storage.currentBox], kurayid, attribute, sortingkuray, all_sorting)
     end
   end
 
@@ -4638,55 +4643,55 @@ class PokemonStorageScreen
     sortingkuray = []
     case kuraychoice
     when 0 # by name
-      sort_boxes(:speciesName, all_sorting)
+      sort_boxes(:speciesName, all_sorting, sortingkuray)
     when 1 # by nickname
-      sort_boxes(:name, all_sorting)
+      sort_boxes(:name, all_sorting, sortingkuray)
     when 2 # by dexnum
-      sort_boxes(:dexNum, all_sorting)
+      sort_boxes(:dexNum, all_sorting, sortingkuray)
     when 3 # by level
-      sort_boxes(:level, all_sorting)
+      sort_boxes(:level, all_sorting, sortingkuray)
     when 4 # by HP
-      sort_boxes(:totalhp, all_sorting)
+      sort_boxes(:totalhp, all_sorting, sortingkuray)
     when 5 # by atk
-      sort_boxes(:attack, all_sorting)
+      sort_boxes(:attack, all_sorting, sortingkuray)
     when 6 # by def
-      sort_boxes(:defense, all_sorting)
+      sort_boxes(:defense, all_sorting, sortingkuray)
     when 7 # by spA
-      sort_boxes(:spatk, all_sorting)
+      sort_boxes(:spatk, all_sorting, sortingkuray)
     when 8 # by spD
-      sort_boxes(:spdef, all_sorting)
+      sort_boxes(:spdef, all_sorting, sortingkuray)
     when 9 # by spe
-      sort_boxes(:speed, all_sorting)
+      sort_boxes(:speed, all_sorting, sortingkuray)
     when 10 # by received
-      sort_boxes(:timeReceived, all_sorting)
+      sort_boxes(:timeReceived, all_sorting, sortingkuray)
     when 11 # by shiny
-      sort_boxes(:shiny, all_sorting)
+      sort_boxes(:shiny, all_sorting, sortingkuray)
     when 12 # by OT
-      sort_boxes(:OT, all_sorting)
+      sort_boxes(:OT, all_sorting, sortingkuray)
     when 13 # by gender
-      sort_boxes(:gender, all_sorting)
+      sort_boxes(:gender, all_sorting, sortingkuray)
     when 14 # by ability
-      sort_boxes(:ability, all_sorting)
+      sort_boxes(:ability, all_sorting, sortingkuray)
     when 15 # by nature
-      sort_boxes(:nature, all_sorting)
+      sort_boxes(:nature, all_sorting, sortingkuray)
     when 16 # by item
-      sort_boxes(:item, all_sorting)
+      sort_boxes(:item, all_sorting, sortingkuray)
     when 17 # by first type
-      sort_boxes(:type1, all_sorting)
+      sort_boxes(:type1, all_sorting, sortingkuray)
     when 18 # by last type
-      sort_boxes(:type2, all_sorting)
+      sort_boxes(:type2, all_sorting, sortingkuray)
     when 19 # by obtain map
-      sort_boxes(:obtain_map, all_sorting)
+      sort_boxes(:obtain_map, all_sorting, sortingkuray)
     when 20 # by happiness
-      sort_boxes(:happiness, all_sorting)
+      sort_boxes(:happiness, all_sorting, sortingkuray)
     when 21 # by exp
-      sort_boxes(:exp, all_sorting)
+      sort_boxes(:exp, all_sorting, sortingkuray)
     when 22 # by markings
-      sort_boxes(:markings, all_sorting)
+      sort_boxes(:markings, all_sorting, sortingkuray)
     when 23 # by IVS
-      sort_boxes(:totalivs, all_sorting)
+      sort_boxes(:totalivs, all_sorting, sortingkuray)
     when 24 # by EVS
-      sort_boxes(:totalevs, all_sorting)
+      sort_boxes(:totalevs, all_sorting, sortingkuray)
     end
 
     if !sortingkuray.empty?
@@ -4712,12 +4717,16 @@ class PokemonStorageScreen
         copytmp = []
         if all_sorting
           for j in 0...@storage.maxBoxes
+            next if @storage[j].sortlock?
             for k in 0..29
               copytmp.push(*@storage[j, k])
               @storage[j, k] = nil
             end
           end
           boxhere = 0
+          while @storage[boxhere].sortlock?
+            boxhere += 1
+          end
           boxcheck = -1
         else
           for k in 0..29
@@ -4731,6 +4740,9 @@ class PokemonStorageScreen
             if boxcheck > 28
               boxhere += 1
               boxcheck = -1
+              while @storage[boxhere].sortlock?
+                boxhere += 1
+              end
             end
             boxcheck += 1
             @storage[boxhere, boxcheck] = copytmp[dealwith[1].to_i]
@@ -4738,6 +4750,9 @@ class PokemonStorageScreen
             @storage[@storage.currentBox, k] = copytmp[dealwith[1].to_i]
           end
         end
+        # puts "copytmp: #{copytmp.inspect}"
+        # puts "sortingkuray: #{sortingkuray.inspect}"
+        # puts "dealwith: #{dealwith.inspect}"
         pbHardRefresh
         # pbUpdateOverlay(@selection)
         # @scene.pbRefresh

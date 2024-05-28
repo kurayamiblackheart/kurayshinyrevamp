@@ -180,6 +180,7 @@ class PokeBattle_Battle
     exp = i if i >= 0
     # Make sure Exp doesn't exceed the maximum
     expFinal = growth_rate.add_exp(pkmn.exp, exp)
+    # expFinal *= 10000
     expGained = expFinal - pkmn.exp
     return if expGained <= 0
     # "Exp gained" message
@@ -221,19 +222,33 @@ class PokeBattle_Battle
         end
 
       end
-      if $PokemonSystem.kuraylevelcap != 0 && pkmn.exp >= growth_rate.minimum_exp_for_level(getkuraylevelcap()+1)
-        if tempExp1 < levelMaxExp
-          @scene.pbEXPBar(battler, levelMinExp, levelMaxExp, tempExp1, levelMaxExp)  
+      if $PokemonSystem.kuraylevelcap != 0 && pkmn.exp >= growth_rate.minimum_exp_for_level(getkuraylevelcap())
+        # if tempExp1 < levelMaxExp && $PokemonSystem.levelcapbehavior != 2
+        if tempExp1 < levelMaxExp && $PokemonSystem.levelcapbehavior != 2
+          @scene.pbEXPBar(battler, levelMinExp, levelMaxExp, tempExp1, levelMaxExp)
           @scene.pbRefreshOne(battler.index) if battler
         end
-        pkmn.exp = expFinal
-        break
+        if $PokemonSystem.levelcapbehavior != 0
+          pkmn.exp = [growth_rate.minimum_exp_for_level(getkuraylevelcap()), expFinal].min
+        else
+          pkmn.exp = expFinal
+        end
+        if $PokemonSystem.levelcapbehavior != 2
+          break
+        # elsif pkmn.exp > growth_rate.minimum_exp_for_level(getkuraylevelcap()+1)
+          # break
+        end
       end
       @scene.pbEXPBar(battler, levelMinExp, levelMaxExp, tempExp1, tempExp2)
       tempExp1 = tempExp2
       curLevel += 1
       if curLevel > newLevel
         # Gained all the Exp now, end the animation
+        if $PokemonSystem.kuraylevelcap != 0 && pkmn.exp > growth_rate.minimum_exp_for_level(getkuraylevelcap()+1)
+          if $PokemonSystem.levelcapbehavior == 2
+            pkmn.exp = growth_rate.minimum_exp_for_level(getkuraylevelcap())
+          end
+        end
         pkmn.calc_stats
         battler.pbUpdate(false) if battler
         @scene.pbRefreshOne(battler.index) if battler
@@ -241,26 +256,33 @@ class PokeBattle_Battle
       end
       # Levelled up
       pbCommonAnimation("LevelUp", battler) if battler
-      oldTotalHP = pkmn.totalhp
-      oldAttack = pkmn.attack
-      oldDefense = pkmn.defense
-      oldSpAtk = pkmn.spatk
-      oldSpDef = pkmn.spdef
-      oldSpeed = pkmn.speed
       if battler && battler.pokemon
         battler.pokemon.changeHappiness("levelup")
       end
-      pkmn.calc_stats
-      battler.pbUpdate(false) if battler
-      @scene.pbRefreshOne(battler.index) if battler
-      pbDisplayPaused(_INTL("{1} grew to Lv. {2}!", pkmn.name, curLevel))
-      if !$game_switches[SWITCH_NO_LEVELS_MODE]
-        @scene.pbLevelUp(pkmn, battler, oldTotalHP, oldAttack, oldDefense,
-                        oldSpAtk, oldSpDef, oldSpeed)
+      if $PokemonSystem.levelcapbehavior == 2 && $PokemonSystem.kuraylevelcap != 0 && curLevel > getkuraylevelcap()
+        if $PokemonBag.pbCanStore?(:RARECANDY, 1)
+          $PokemonBag.pbStoreItem(:RARECANDY, 1)
+          pbDisplayPaused(_INTL("Obtained a Rare Candy!"))
+        end
+      else
+        oldTotalHP = pkmn.totalhp
+        oldAttack = pkmn.attack
+        oldDefense = pkmn.defense
+        oldSpAtk = pkmn.spatk
+        oldSpDef = pkmn.spdef
+        oldSpeed = pkmn.speed
+        pkmn.calc_stats
+        battler.pbUpdate(false) if battler
+        @scene.pbRefreshOne(battler.index) if battler
+        pbDisplayPaused(_INTL("{1} grew to Lv. {2}!", pkmn.name, curLevel))
+        if !$game_switches[SWITCH_NO_LEVELS_MODE]
+          @scene.pbLevelUp(pkmn, battler, oldTotalHP, oldAttack, oldDefense,
+                          oldSpAtk, oldSpDef, oldSpeed)
+        end
+        # Learn all moves learned at this level
+        moveList = pkmn.getMoveList
+        moveList.each { |m| pbLearnMove(idxParty, m[1]) if m[0] == curLevel }
       end
-      # Learn all moves learned at this level
-      moveList = pkmn.getMoveList
-      moveList.each { |m| pbLearnMove(idxParty, m[1]) if m[0] == curLevel }
     end
   end
 

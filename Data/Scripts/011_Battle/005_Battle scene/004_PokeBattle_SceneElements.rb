@@ -518,7 +518,8 @@ class PokemonDataBox < SpriteWrapper
       # Handle other cases if needed
       scaling_factor = default_scaling_factor
     end
-    if exp_fraction != 0 && @expBarBitmap.width != 0
+    # if exp_fraction != 0 && @expBarBitmap.width != 0
+    if !exp_fraction.nan? && !@expBarBitmap.width && exp_fraction != 0 && @expBarBitmap.width != 0
       width = exp_fraction * @expBarBitmap.width
       # Apply scaling by multiplying 'width' by the scaling factor
       width *= scaling_factor

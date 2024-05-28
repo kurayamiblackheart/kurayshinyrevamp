@@ -732,6 +732,11 @@ class Pokemon
       if this_level > levelcap
         this_level = levelcap
       end
+      if $PokemonSystem.levelcapbehavior == 1
+        @exp = [growth_rate.minimum_exp_for_level(getkuraylevelcap()), @exp].min
+      elsif $PokemonSystem.levelcapbehavior == 2
+        @exp = [growth_rate.minimum_exp_for_level(getkuraylevelcap()+1), @exp].min
+      end
     end
     base_stats = self.baseStats
     this_IV = self.calcIV
@@ -825,6 +830,10 @@ class Pokemon
     end
     @exp = growth_rate.minimum_exp_for_level(value)
     @level = value
+  end
+
+  def exp
+    return @exp
   end
 
   # Sets this Pokémon's Exp. Points.

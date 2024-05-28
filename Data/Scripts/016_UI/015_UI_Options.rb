@@ -134,6 +134,8 @@ class PokemonSystem
   attr_accessor :skipcaughtprompt
   attr_accessor :skipcaughtnickname
 
+  attr_accessor :levelcapbehavior
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -173,6 +175,7 @@ class PokemonSystem
     @kuray_no_evo = 0
     @shinyfusedye = 0
     @kuraylevelcap = 0
+    @levelcapbehavior = 0
     @kuraygambleodds = 100
     @kurayqol = 1
     @tutornet = 1 # DemICE
@@ -300,6 +303,7 @@ class PokemonSystem
     @kuray_no_evo = saved.kuray_no_evo if saved.kuray_no_evo
     @shinyfusedye = saved.shinyfusedye if saved.shinyfusedye
     @kuraylevelcap = saved.kuraylevelcap if saved.kuraylevelcap
+    @levelcapbehavior = saved.levelcapbehavior if saved.levelcapbehavior
     @kuraystreamerdream = saved.kuraystreamerdream if saved.kuraystreamerdream
     @kuraygambleodds = saved.kuraygambleodds if saved.kuraygambleodds
     @kurayqol = saved.kurayqol if saved.kurayqol
@@ -1422,6 +1426,13 @@ class KurayOptSc_2 < PokemonOption_Scene
                       "Easy Level Cap, for children",
                       "Normal Level Cap, for normal people",
                       "Hard Level Cap, for nerds"]
+    )
+    options << EnumOption.new(_INTL("Cap Behavior"), [_INTL("Smart"), _INTL("Lock"), _INTL("RC")],
+                      proc { $PokemonSystem.levelcapbehavior },
+                      proc { |value| $PokemonSystem.levelcapbehavior = value },
+                      ["The Pokemons can still earn exp.",
+                      "The Pokemon can't earn exp.",
+                      "Earn rare candies instead of going over the cap."]
     )
     options << EnumOption.new(_INTL("Self-Fusion Stat Boost"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.self_fusion_boost },
