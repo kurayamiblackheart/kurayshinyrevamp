@@ -53,10 +53,10 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Pokemons' Sprites as Icons *(in team and PC boxes)* **| by SYLVI**
 - Individual Custom Sprites *(can have 2 Eevees with different sprites, all sprites availables are being used giving more uniqueness to each Pokemon)* **| by REIZOD**
 - Kuray Shop *(buy items/HM/etc unobtainable otherwises (rare candie, masterball, transgender/mist stones, ...))* **| by REIZOD**
-- Self-Fusions boosts **| by REIZOD**
-~~- Blacklisting/Rarity/Re-roll/Reset systems for sprites | by REIZOD~~ *(Abandoned, will have to be re-done)*
+- Self-Fusions boosts **| by REIZOD** 
+- ~~Blacklisting/Rarity/Re-roll/Reset systems for sprites | by REIZOD~~ *(Abandoned, will have to be re-done)*
 - PC & Instant Heal from menu **| by REIZOD**
-~~- Per-Save File/Global feature system | by SYLVI~~ *(Not working)*
+- ~~Per-Save File/Global feature system | by SYLVI~~ *(Not working)*
 - Change Shiny Odds from options menu **| by REIZOD**
 - Pokemons added to Pokedex when catching/evolving fusions **| by TRAPSTARR**
 - Consumables Items recovered after battle **| by TRAPSTARR**
