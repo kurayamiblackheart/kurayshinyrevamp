@@ -31,11 +31,12 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Self-Battle *(battle your own Pokemons from your PC/"Battlers" folder/Team !)* **| by REIZOD, TRAPSTARR & DEMICE**
 - Shiny Finder.exe *(a program created by Reïzod which allows you to quickly see all the shiny possibilities of a .png sprite)* **| by REIZOD**
 - Auto-updater *(thanks to HungryPickle)*, the game will check for update by itself, and if there is an update, will ask you whether you want to update or not (when launching the game), if you press yes, it will update without you having to do anything, and it will automatically restart, all updated! **| By HUNGRYPICKLE**
+- Brought back the feature that allowed in PIF to breed fused Pokemons. Before PIF 6.0, it was possible to do this in the base game of PIF. Now it's KIF-exclusive. **| by REIZOD**
 
 # List of Optional Features (you can turn them ON/OFF and/or configure/customize them!)
 
 - Shiny Animations Toggle **| by REIZOD**
-- Shiny Revamp *(using a system built from scratch doing channels shifting on top of hue shifting for very complex color manipulations, **37 964 160 000 shiny combinations** on all sprites, also using black, grey and white as color. Two shinies are different now, you can have a Black Charmander and a Blue Charmander, generated Pokemons have their own shiny data!)* **| by REIZOD**
+- Shiny Revamp *(using a system built from scratch doing channels shifting on top of hue shifting for very complex color manipulations, **37 964 160 000 shiny combinations** on all sprites, also using black, grey and white as color. Two shinies are different now, you can have a Black Charmander and a Blue Charmander, generated Pokemons have their own shiny data!)* | *There's 3 modes to choose from, the default one has 360 possible shinies *(only uses hue shifting)*, the second one is the normal mode, with hue shifting and channels shifting, with 622 080 possible shinies, the third one is the most advanced color manipulations one, with over 37 billions possible shinies.* **| by REIZOD**
 - 1v1/2v2/3v3 Wild Battles **| by REIZOD**
 - 1v1/2v2/3v3 Trainer Battles **| by REIZOD**
 - Shiny Icons **| by REIZOD**
@@ -72,3 +73,11 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Option to enable/disable the prompt that asks you if you wish to nickname a newly obtained Pokemon **| by REIZOD**
 - Option to enable/disable the prompt that asks you if you wish to add a newly obtained Pokemon in your team or send it to PC **| by REIZOD**
 - Option to skip the intro cutscene when launching the game *(Open a batch console (you can do so by pressing WIN+R and entering "cmd" in the box), then execute this code: ``echo:Y>"%appdata%\kurayinfinitefusion\NoIntro.krs"``. Breakdown: The code will create a file named "NoIntro.krs" in your savefile directory. When this file exists, the intro cutscene will always be skipped at launch, launching the game faster.)* **| by REIZOD**
+- Ability to decompile and recompile the game entirely *(PIF does not allow you to decompile their database, but KIF allows you to do so)* - PLEASE, do not use this utility feature if you do not know what you're doing. It is available in the debug options menu. **| by REIZOD**
+- Brought back the feature that allowed in PIF to breed legendaries Pokemon, and any Pokemon, if the Pokemon that was unbreedable was the head in the fusion *(for example, a Mew head with a Pikachu head fusion, can breed if this feature is activated in the options)* before PIF 6.0, it was possible to do this in the base game of PIF. Now it's a KIF-exclusive option. **| by REIZOD**
+- Poison Overworld Config, allows you to make it so that Pokemons with certain abilities are immune to Poison in the Overworld *(can configure it so that they even heal from Overworld Poison, this feature is disabled by default)* **| by BlueWuppo**
+- Modern Hail feature *(optional)* **| by BlueWuppo**
+- Bug Type Buff feature *(optional)* **| by BlueWuppo**
+- Ice Type Buff feature *(optional)* **| by BlueWuppo**
+- Frostbite instead of Frozen feature *(optional)* **| by BlueWuppo**
+- Drowsy instead of Asleep feature *(optional)* **| by BlueWuppo**
