@@ -46,7 +46,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Choose/Re-roll Shiny Colors *(DEBUG only)* **| by REIZOD**
 - Shiny Dye Fusing **| by JUSTANOTHERU5ER**
 - Shiny Preview on Fusions, and Fusion Preview *(no black/green silhouettes)* **| by REIZOD**
-- Level Caps **| by REIZOD & HUNGRYPICKLE**
+- Robust Level Caps *(customizable system, from Smart Exp Points, to Locked Exp Points, to obtaining Rare Candies when exceeding the cap instead of levelling up)* **| by REIZOD & HUNGRYPICKLE**
 - Buy more PC boxes *(infinite)* **| by REIZOD**
 - Gamble to transform Pokemon into Shiny/Change its Shiny Colors **| by REIZOD**
 - Sort Pokemons in PC, sort a single box/all boxes *(options: Specie Name, Name, Dex Number, Level, HP, Atk, Def, SpA, SpD, Spe, Caught Date, Shiny, OT (Original Trainer's name), Gender, Ability, Nature, Held Item, First Type, Second Type, Caught Map (Map ID), Happiness, Exp, Markings, Total IVs (sum of IVs), Total EVs (sum of EVs))* **| by REIZOD**
@@ -91,4 +91,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Added a "Berserker" challenge *(all the stats of the enemy will raise, the frequency depends on the difficulty you've choosen on this challenge)* **| by REIZOD**
 - Ability to choose how the speed-up works *(choose between Toggling the speed-up value, or only speeding up when you hold the button)* **| by REIZOD**
 - Shiny Cache System *(optimizes performances when displaying shinies from KIF, also allows you to access all the shinies .png from the "Cache" folder)*, because of the massive performance boost, the cache is turned on by default. **| by REIZOD**
-- 
+- Create and Load options presets, to quickly change between game configurations!
+- Exempt boxes from the "Sort All Pokemons" feature.
+- Exempt boxes from the "Export All Pokemons" feature.
+
