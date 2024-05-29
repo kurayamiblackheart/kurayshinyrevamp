@@ -742,7 +742,8 @@ class Pokemon
     this_IV = self.calcIV
 
     if $game_switches[SWITCH_NO_LEVELS_MODE]
-      this_level = Settings::NO_LEVEL_MODE_LEVEL
+      # this_level = Settings::NO_LEVEL_MODE_LEVEL
+      this_level = adjust_level_for_base_stats_mode()
     end
 
     # Format stat multipliers due to nature
