@@ -378,6 +378,8 @@ class PokemonPauseMenu
         $game_temp.mart_prices[235] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         $game_temp.mart_prices[263] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         $game_temp.mart_prices[264] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
+        # 68 = Eviolite
+        $game_temp.mart_prices[68] = [4000, 2000]
         # allitems = [
         #   570, 604, 568, 569, 245, 247, 249, 246, 248, 250, 314, 371, 619, 618,
         #   114, 115, 116, 100
@@ -390,7 +392,8 @@ class PokemonPauseMenu
           657, 659,
           114, 115, 116, 100,
           194,
-          235, 263, 264
+          235, 263, 264,
+          68
         ]
         # allitems.push(568) if $game_switches[SWITCH_GOT_BADGE_8]
         pbFadeOutIn {
