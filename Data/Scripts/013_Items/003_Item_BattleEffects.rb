@@ -59,6 +59,10 @@ ItemHandlers::CanUseInBattle.addIf(proc { |item| GameData::Item.get(item).is_pok
         is_steal_ball = true
       end
     end
+    # Have to check if the variable exists beforehand, decided to say fuck it and separate it from the other if statement above.
+    if $PokemonSystem.nomoneylost && $PokemonSystem.nomoneylost == 1
+      is_steal_ball = false
+    end
     if battle.pbOpposingBattlerCount>1 && !(GameData::Item.get(item).is_snag_ball? && battle.trainerBattle?) && !is_steal_ball
       if battle.pbOpposingBattlerCount==2
         if $game_switches[SWITCH_SILVERBOSS_BATTLE]

@@ -166,6 +166,10 @@ module PokeBattle_BattleCommon
         is_steal_ball = true
       end
     end
+    # Have to check if the variable exists beforehand, decided to say fuck it and separate it from the other if statement above.
+    if $PokemonSystem.nomoneylost && $PokemonSystem.nomoneylost == 1
+      is_steal_ball = false
+    end
     if trainerBattle? && !(GameData::Item.get(ball).is_snag_ball? && battler.shadowPokemon?) && !is_steal_ball
       @scene.pbThrowAndDeflect(ball,1)
       pbDisplay(_INTL("The Trainer blocked your Poké Ball! Don't be a thief!"))
