@@ -297,6 +297,46 @@ class PokemonSystem
     @speedvaluedef = saved.speedvaluedef if saved.speedvaluedef
     @shiny_cache = saved.shiny_cache if saved.shiny_cache
 
+
+    MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed($PokemonSystem.textspeed))
+    MessageConfig.pbSetSpeechFrame("Graphics/Windowskins/" + Settings::SPEECH_WINDOWSKINS[$PokemonSystem.textskin])
+    pbSetResizeFactor($PokemonSystem.screensize)
+    if $PokemonSystem.kurayfonts == 0
+      # MessageConfig::FONT_SIZE = 29
+      # MessageConfig::NARROW_FONT_SIZE = 29
+      MessageConfig.pbGetSystemFontSizeset(29)
+      MessageConfig.pbGetSmallFontSizeset(25)
+      MessageConfig.pbGetNarrowFontSizeset(29)
+      MessageConfig.pbSetSystemFontName("Power Green")
+      MessageConfig.pbSetSmallFontName("Power Green Small")
+      MessageConfig.pbSetNarrowFontName("Power Green Narrow")
+      MessageConfig.pbGetSystemFontSizeset(29)
+      MessageConfig.pbGetSmallFontSizeset(25)
+      MessageConfig.pbGetNarrowFontSizeset(29)
+    elsif $PokemonSystem.kurayfonts == 1
+      # MessageConfig::FONT_SIZE = 26
+      # MessageConfig::NARROW_FONT_SIZE = 26
+      MessageConfig.pbGetSystemFontSizeset(26)
+      MessageConfig.pbGetSmallFontSizeset(25)
+      MessageConfig.pbGetNarrowFontSizeset(26)
+      MessageConfig.pbSetSystemFontName("Power Red and Green")
+      MessageConfig.pbSetSmallFontName("Power Green Small")
+      MessageConfig.pbSetNarrowFontName("Power Green Small")
+    elsif $PokemonSystem.kurayfonts == 2
+      MessageConfig.pbGetSystemFontSizeset(29)
+      MessageConfig.pbGetSmallFontSizeset(25)
+      MessageConfig.pbGetNarrowFontSizeset(29)
+      MessageConfig.pbSetSystemFontName("Power Clear")
+      MessageConfig.pbSetSmallFontName("Power Clear")
+      MessageConfig.pbSetNarrowFontName("Power Clear")
+    elsif $PokemonSystem.kurayfonts == 3
+      MessageConfig.pbGetSystemFontSizeset(29)
+      MessageConfig.pbGetSmallFontSizeset(25)
+      MessageConfig.pbGetNarrowFontSizeset(29)
+      MessageConfig.pbSetSystemFontName("Power Red and Blue")
+      MessageConfig.pbSetSmallFontName("Power Red and Blue")
+      MessageConfig.pbSetNarrowFontName("Power Red and Blue")
+    end
     # if saved.globalvalues
     #   @globalvalues = saved.globalvalues
     #   if saved.globalvalues != 0
@@ -1868,12 +1908,13 @@ class KurayOptSc_1 < PokemonOption_Scene
                       "Re-roll shiny color after each fusion/unfusion"]
     )
 
-    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("Ace"), _INTL("All")],
+    options << EnumOption.new(_INTL("Shiny Trainer Pokemon"), [_INTL("Off"), _INTL("Ace"), _INTL("All"), _INTL("Disabled")],
                       proc { $PokemonSystem.shiny_trainer_pkmn },
                       proc { |value| $PokemonSystem.shiny_trainer_pkmn = value },
                       ["Trainer pokemon will have their normal shiny rates",
                       "Draws the opposing trainers ace pokemon as shiny",
-                      "All trainers pokemon in their party will be shiny"]
+                      "All trainers pokemon in their party will be shiny",
+                      "Trainer pokemon will never be shiny"]
     )
     return options
   end
