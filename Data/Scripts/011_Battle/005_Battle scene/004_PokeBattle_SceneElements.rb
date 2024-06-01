@@ -417,8 +417,12 @@ class PokemonDataBox < SpriteWrapper
     end
     pbDrawTextPositions(self.bitmap,textPos)
     # Draw Pokémon's level
-    imagePos.push(["Graphics/Pictures/Battle/overlay_lv",@spriteBaseX+140,16]) if !$game_switches[SWITCH_NO_LEVELS_MODE]
-    pbDrawNumber(@battler.level,self.bitmap,@spriteBaseX+162,16) if !$game_switches[SWITCH_NO_LEVELS_MODE]
+    show_level = true
+    if $game_switches[SWITCH_NO_LEVELS_MODE] && ($PokemonSystem.showlevel_nolevelmode && $PokemonSystem.showlevel_nolevelmode == 0)
+      show_level = false
+    end
+    imagePos.push(["Graphics/Pictures/Battle/overlay_lv",@spriteBaseX+140,16]) if show_level
+    pbDrawNumber(@battler.level,self.bitmap,@spriteBaseX+162,16) if show_level
     # Draw shiny icon
     if @battler.shiny? || @battler.fakeshiny?
       shinyX = (@battler.opposes?(0)) ? 206 : -6   # Foe's/player's
