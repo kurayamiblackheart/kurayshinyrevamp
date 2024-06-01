@@ -54,7 +54,7 @@ ItemHandlers::CanUseInBattle.addIf(proc { |item| GameData::Item.get(item).is_pok
     #       this case, but only in trainer battles, and the trainer will deflect
     #       them if they are trying to catch a non-Shadow Pokémon.)
     is_steal_ball = false
-    if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0
+    if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0 && battle.trainerBattle?
       if GameData::Item.get(item).id_number == 623 || $PokemonSystem.rocketballsteal > 1
         is_steal_ball = true
       end

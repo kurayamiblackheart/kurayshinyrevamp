@@ -161,7 +161,7 @@ module PokeBattle_BattleCommon
     # Animation of opposing trainer blocking Poké Balls (unless it's a Snag Ball
     # at a Shadow Pokémon)
     is_steal_ball = false
-    if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0
+    if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0 && trainerBattle?
       if GameData::Item.get(ball).id_number == 623 || $PokemonSystem.rocketballsteal > 1
         is_steal_ball = true
       end
