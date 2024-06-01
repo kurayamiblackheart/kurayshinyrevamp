@@ -424,7 +424,6 @@ def as_json(options={})
     "autobattler" => $PokemonSystem.autobattler,
     "shinyodds" => $PokemonSystem.shinyodds,
     "unfusetraded" => $PokemonSystem.unfusetraded,
-    "nomoneylost" => $PokemonSystem.nomoneylost,
     "sb_maxing" => $PokemonSystem.sb_maxing,
     "sb_soullinked" => $PokemonSystem.sb_soullinked,
     "sb_randomizeteam" => $PokemonSystem.sb_randomizeteam,
@@ -536,7 +535,7 @@ def load_json(jsonparse)
   $PokemonSystem.autobattler = jsonparse['autobattler']
   $PokemonSystem.shinyodds = jsonparse['shinyodds']
   $PokemonSystem.unfusetraded = jsonparse['unfusetraded']
-  $PokemonSystem.nomoneylost = jsonparse['nomoneylost']
+  # $PokemonSystem.nomoneylost = jsonparse['nomoneylost']
   $PokemonSystem.sb_maxing = jsonparse['sb_maxing']
   $PokemonSystem.sb_soullinked = jsonparse['sb_soullinked']
   $PokemonSystem.sb_randomizeteam = jsonparse['sb_randomizeteam']
