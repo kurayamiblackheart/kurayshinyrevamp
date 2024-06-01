@@ -138,6 +138,10 @@ class PokemonSystem
 
   attr_accessor :optionsnames
 
+  attr_accessor :noevsmode
+  attr_accessor :maxivsmode
+  attr_accessor :showlevel_nolevelmode
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -249,6 +253,10 @@ class PokemonSystem
     @speedvaluedef = 0
     @skipcaughtnickname = 0#0 = false, 1 = true
     @skipcaughtprompt = 0#0 = false, 1 = true
+
+    @noevsmode = 0
+    @maxivsmode = 0
+    @showlevel_nolevelmode = 0
   end
 
   def load_bootup_data(saved)
@@ -358,12 +366,15 @@ class PokemonSystem
     # End of Challenges
     @skipcaughtnickname = saved.skipcaughtnickname if saved.skipcaughtnickname
     @skipcaughtprompt = saved.skipcaughtprompt if saved.skipcaughtprompt
+    @noevsmode = saved.noevsmode if saved.noevsmode
+    @maxivsmode = saved.maxivsmode if saved.maxivsmode
+    @showlevel_nolevelmode = saved.showlevel_nolevelmode if saved.showlevel_nolevelmode
   end
 end
 
 def as_json(options={})
   {
-    "json_version" => "0.1",
+    "json_version" => "0.2",
     "textspeed" => $PokemonSystem.textspeed,
     "battlescene" => $PokemonSystem.battlescene,
     "frame" => $PokemonSystem.frame,
@@ -466,7 +477,10 @@ def as_json(options={})
     "autosave_healing_var" => $game_switches[AUTOSAVE_HEALING_VAR],
     "autosave_catch_switch" => $game_switches[AUTOSAVE_CATCH_SWITCH],
     "autosave_win_switch" => $game_switches[AUTOSAVE_WIN_SWITCH],
-    "autosave_steps_switch" => $game_switches[AUTOSAVE_STEPS_SWITCH]
+    "autosave_steps_switch" => $game_switches[AUTOSAVE_STEPS_SWITCH],
+    "noevsmode" => $PokemonSystem.noevsmode,
+    "maxivsmode" => $PokemonSystem.maxivsmode,
+    "showlevel_nolevelmode" => $PokemonSystem.showlevel_nolevelmode
   }
 end
 
@@ -626,6 +640,14 @@ def load_json(jsonparse)
     MessageConfig.pbSetNarrowFontName("Power Red and Blue")
   end
 
+  $PokemonSystem.noevsmode = 0
+  $PokemonSystem.maxivsmode = 0
+  $PokemonSystem.showlevel_nolevelmode = 0
+  if json_ver >= 2
+    $PokemonSystem.noevsmode = jsonparse['noevsmode']
+    $PokemonSystem.maxivsmode = jsonparse['maxivsmode']
+    $PokemonSystem.showlevel_nolevelmode = jsonparse['showlevel_nolevelmode']
+  end
 
 end
 
@@ -2083,6 +2105,24 @@ class KurayOptSc_2 < PokemonOption_Scene
     proc { |value| $PokemonSystem.skipcaughtnickname = value },
     ["Prompts you to nickname newly caught pokemon.",
     "Never prompts to nickname newly caught pokemon."]
+    )
+    options << EnumOption.new(_INTL("Show Lv. in BSM"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.showlevel_nolevelmode },
+    proc { |value| $PokemonSystem.showlevel_nolevelmode = value },
+    ["Base Stats Mode hides the level of Pokemons in battle.",
+    "Base Stats Mode shows the level of Pokemons in battle (level don't reflect stats!)."]
+    )
+    options << EnumOption.new(_INTL("No-EVs Mode"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.noevsmode },
+    proc { |value| $PokemonSystem.noevsmode = value },
+    ["Pokemon EVs exist.",
+    "Pokemon EVs are disabled."]
+    )
+    options << EnumOption.new(_INTL("Max IVs Mode"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.maxivsmode },
+    proc { |value| $PokemonSystem.maxivsmode = value },
+    ["Disabled.",
+    "Pokemon IVs are always at max."]
     )
 
     return options

@@ -802,10 +802,15 @@ class Pokemon
     # Calculate stats
     stats = {}
     GameData::Stat.each_main do |s|
-      if s.id == :HP
-        stats[s.id] = calcHP((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], @ev[s.id])
+      if $PokemonSystem.noevsmode && $PokemonSystem.noevsmode > 0
+        ev_use = 0
       else
-        stats[s.id] = calcStat((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], @ev[s.id], nature_mod[s.id])
+        ev_use = @ev[s.id]
+      end
+      if s.id == :HP
+        stats[s.id] = calcHP((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], ev_use)
+      else
+        stats[s.id] = calcStat((base_stats[s.id]*kurayboost).round, this_level, this_IV[s.id], ev_use, nature_mod[s.id])
       end
     end
     #End KurayX
@@ -1874,7 +1879,11 @@ class Pokemon
     this_ivs = self.iv
     ret = {}
     GameData::Stat.each_main do |s|
-      ret[s.id] = (@ivMaxed[s.id]) ? IV_STAT_LIMIT : this_ivs[s.id]
+      if $PokemonSystem.maxivsmode && $PokemonSystem.maxivsmode > 0
+        ret[s.id] = IV_STAT_LIMIT
+      else
+        ret[s.id] = (@ivMaxed[s.id]) ? IV_STAT_LIMIT : this_ivs[s.id]
+      end
     end
     return ret
   end

@@ -138,7 +138,8 @@ end
 #===============================================================================
 class PokeBattle_Move_109 < PokeBattle_Move
   def pbEffectGeneral(user)
-    if user.pbOwnedByPlayer?
+    # if user.pbOwnedByPlayer?
+    if user.pbOwnedByPlayerSerious?
       @battle.field.effects[PBEffects::PayDay] += 5 * user.level
     end
     @battle.pbDisplay(_INTL("Coins were scattered everywhere!"))
