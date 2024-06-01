@@ -811,7 +811,7 @@ class Pokemon
     #End KurayX
     hpDiff = @totalhp - @hp
     #@totalhp = stats[:HP]
-    @level = this_level
+    @level = this_level unless $game_switches[SWITCH_NO_LEVELS_MODE]
     @totalhp = adjustHPForWonderGuard(stats)
     calculated_hp = @totalhp - hpDiff
     @hp = calculated_hp > 0 ? calculated_hp : 0
@@ -1896,6 +1896,8 @@ class Pokemon
     if this_level > Settings::MAXIMUM_LEVEL
       this_level = Settings::MAXIMUM_LEVEL
     end
+    # should fix lv / exp issue
+    # @exp = growth_rate.minimum_exp_for_level(this_level)
     return this_level
   end
 

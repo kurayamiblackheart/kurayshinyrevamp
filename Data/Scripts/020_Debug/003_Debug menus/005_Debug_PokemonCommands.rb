@@ -208,6 +208,8 @@ PokemonDebugMenuCommands.register("setlevel", {
          _INTL("Set the Pokémon's level (max. {1}).", params.maxNumber), params) { screen.pbUpdate }
       if level != pkmn.level
         pkmn.level = level
+        # should fix lv / exp issue
+        # pkmn.exp = pkmn.growth_rate.minimum_exp_for_level(pkmn.level)
         pkmn.calc_stats
         screen.pbRefreshSingle(pkmnid)
       end
