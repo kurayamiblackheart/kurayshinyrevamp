@@ -1037,7 +1037,10 @@ def pbSweetScent
   end
   viewport.dispose
   enctype = $PokemonEncounters.encounter_type
-  if enctype || !$PokemonEncounters.encounter_possible_here? ||
+  # puts enctype.inspect
+  # puts $PokemonEncounters.encounter_possible_here?.inspect
+  # puts pbEncounter(enctype).inspect
+  if !enctype || !$PokemonEncounters.encounter_possible_here? ||
     !pbEncounter(enctype)
     pbMessage(_INTL("There appears to be nothing here..."))
   end
