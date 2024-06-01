@@ -2110,7 +2110,7 @@ class KurayOptSc_2 < PokemonOption_Scene
     proc { $PokemonSystem.showlevel_nolevelmode },
     proc { |value| $PokemonSystem.showlevel_nolevelmode = value },
     ["Base Stats Mode hides the level of Pokemons in battle.",
-    "Base Stats Mode shows the level of Pokemons in battle (level don't reflect stats!)."]
+    "Base Stats Mode shows the level of Pokemons (level don't reflect stats!)."]
     )
     options << EnumOption.new(_INTL("No-EVs Mode"), [_INTL("Off"), _INTL("On")],
     proc { $PokemonSystem.noevsmode },
