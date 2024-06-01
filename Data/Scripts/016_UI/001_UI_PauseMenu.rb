@@ -380,6 +380,8 @@ class PokemonPauseMenu
         $game_temp.mart_prices[264] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         # 68 = Eviolite
         $game_temp.mart_prices[68] = [4000, 2000]
+        # 623 = Rocket Ball
+        $game_temp.mart_prices[623] = [1000, 500]
         # allitems = [
         #   570, 604, 568, 569, 245, 247, 249, 246, 248, 250, 314, 371, 619, 618,
         #   114, 115, 116, 100
@@ -396,6 +398,7 @@ class PokemonPauseMenu
           68
         ]
         # allitems.push(568) if $game_switches[SWITCH_GOT_BADGE_8]
+        allitems.push(623) if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0
         pbFadeOutIn {
           scene = PokemonMart_Scene.new
           screen = PokemonMartScreen.new(scene,allitems)

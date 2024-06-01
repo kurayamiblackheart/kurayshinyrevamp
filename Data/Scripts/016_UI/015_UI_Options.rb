@@ -142,6 +142,8 @@ class PokemonSystem
   attr_accessor :maxivsmode
   attr_accessor :showlevel_nolevelmode
 
+  attr_accessor :rocketballsteal
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -257,6 +259,7 @@ class PokemonSystem
     @noevsmode = 0
     @maxivsmode = 0
     @showlevel_nolevelmode = 0
+    @rocketballsteal = 0
   end
 
   def load_bootup_data(saved)
@@ -369,12 +372,13 @@ class PokemonSystem
     @noevsmode = saved.noevsmode if saved.noevsmode
     @maxivsmode = saved.maxivsmode if saved.maxivsmode
     @showlevel_nolevelmode = saved.showlevel_nolevelmode if saved.showlevel_nolevelmode
+    @rocketballsteal = saved.rocketballsteal if saved.rocketballsteal
   end
 end
 
 def as_json(options={})
   {
-    "json_version" => "0.2",
+    "json_version" => "0.3",
     "textspeed" => $PokemonSystem.textspeed,
     "battlescene" => $PokemonSystem.battlescene,
     "frame" => $PokemonSystem.frame,
@@ -480,7 +484,8 @@ def as_json(options={})
     "autosave_steps_switch" => $game_switches[AUTOSAVE_STEPS_SWITCH],
     "noevsmode" => $PokemonSystem.noevsmode,
     "maxivsmode" => $PokemonSystem.maxivsmode,
-    "showlevel_nolevelmode" => $PokemonSystem.showlevel_nolevelmode
+    "showlevel_nolevelmode" => $PokemonSystem.showlevel_nolevelmode,
+    "rocketballsteal" => $PokemonSystem.rocketballsteal
   }
 end
 
@@ -643,10 +648,14 @@ def load_json(jsonparse)
   $PokemonSystem.noevsmode = 0
   $PokemonSystem.maxivsmode = 0
   $PokemonSystem.showlevel_nolevelmode = 0
+  $PokemonSystem.rocketballsteal = 0
   if json_ver >= 2
     $PokemonSystem.noevsmode = jsonparse['noevsmode']
     $PokemonSystem.maxivsmode = jsonparse['maxivsmode']
     $PokemonSystem.showlevel_nolevelmode = jsonparse['showlevel_nolevelmode']
+  end
+  if json_ver >= 3
+    $PokemonSystem.rocketballsteal = jsonparse['rocketballsteal']
   end
 
 end
@@ -2123,6 +2132,13 @@ class KurayOptSc_2 < PokemonOption_Scene
     proc { |value| $PokemonSystem.maxivsmode = value },
     ["Disabled.",
     "Pokemon IVs are always at max."]
+    )
+    options << EnumOption.new(_INTL("Rocket Mode"), [_INTL("Off"), _INTL("On"), _INTL("All Balls")],
+    proc { $PokemonSystem.rocketballsteal },
+    proc { |value| $PokemonSystem.rocketballsteal = value },
+    ["Rocket Balls don't steal Pokemons.",
+    "Rocket Balls can steal Pokemons.",
+    "Every Balls can steal Pokemons."]
     )
 
     return options

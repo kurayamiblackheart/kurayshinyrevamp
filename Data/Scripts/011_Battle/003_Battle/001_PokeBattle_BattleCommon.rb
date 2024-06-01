@@ -160,7 +160,13 @@ module PokeBattle_BattleCommon
     end
     # Animation of opposing trainer blocking Poké Balls (unless it's a Snag Ball
     # at a Shadow Pokémon)
-    if trainerBattle? && !(GameData::Item.get(ball).is_snag_ball? && battler.shadowPokemon?)
+    is_steal_ball = false
+    if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0
+      if GameData::Item.get(ball).id_number == 623 || $PokemonSystem.rocketballsteal > 1
+        is_steal_ball = true
+      end
+    end
+    if trainerBattle? && !(GameData::Item.get(ball).is_snag_ball? && battler.shadowPokemon?) && !is_steal_ball
       @scene.pbThrowAndDeflect(ball,1)
       pbDisplay(_INTL("The Trainer blocked your Poké Ball! Don't be a thief!"))
       return
@@ -209,7 +215,7 @@ module PokeBattle_BattleCommon
         @decision = (trainerBattle?) ? 1 : 4   # Battle ended by win/capture
       end
       # Modify the Pokémon's properties because of the capture
-      if GameData::Item.get(ball).is_snag_ball?
+      if GameData::Item.get(ball).is_snag_ball? && is_steal_ball
         pkmn.owner = Pokemon::Owner.new_from_trainer(pbPlayer)
       end
       BallHandlers.onCatch(ball,self,pkmn)
