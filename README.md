@@ -94,4 +94,6 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Create and Load options presets, to quickly change between game configurations! **| by REIZOD**
 - Exempt boxes from the "Sort All Pokemons" feature. **| by REIZOD**
 - Exempt boxes from the "Export All Pokemons" feature. **| by REIZOD**
-
+- No-EVs Mode: This mode disable EVs, forcing all Pokemons to have 0 EVs *(it is non-destructive, so if you disable it again, the EVs your Pokemons had beforehand will be saved, this mode simply ignores the EVs of the Pokemons during stats calculations, it applies retroactively to every Pokemons, including enemies, it will also show "0" as EVs in the Pokemons' summaries)*. **| by REIZOD**
+- Max IVs Mode: This mode forces all Pokemons to have 31 IVs *(it is also non-destructive, it does not overwrite the real IVs of Pokemons, it just ignores their real IVs and use the value "31" in all calculations regarding IVs as long as the mode is activated, it applies retroactively and to enemies as well, just like the No-EVs Mode)*. **| by REIZOD**
+- Added an option to display the level of the Pokemons in battle when using No Level Mode aka Base Stats Mode (warning: the levels of the Pokemons do not impact their stats in this mode!), that option may be helpful for moves such as Seismic Toss, etc. **| by REIZOD**
