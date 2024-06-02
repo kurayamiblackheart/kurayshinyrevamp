@@ -144,6 +144,8 @@ class PokemonSystem
 
   attr_accessor :rocketballsteal
 
+  attr_accessor :trainerexpboost
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -260,6 +262,7 @@ class PokemonSystem
     @maxivsmode = 0
     @showlevel_nolevelmode = 0
     @rocketballsteal = 0
+    @trainerexpboost = 50
   end
 
   def load_bootup_data(saved)
@@ -413,12 +416,13 @@ class PokemonSystem
     @maxivsmode = saved.maxivsmode if saved.maxivsmode
     @showlevel_nolevelmode = saved.showlevel_nolevelmode if saved.showlevel_nolevelmode
     @rocketballsteal = saved.rocketballsteal if saved.rocketballsteal
+    @trainerexpboost = saved.trainerexpboost if saved.trainerexpboost
   end
 end
 
 def as_json(options={})
   {
-    "json_version" => "0.3",
+    "json_version" => "0.4",
     "textspeed" => $PokemonSystem.textspeed,
     "battlescene" => $PokemonSystem.battlescene,
     "frame" => $PokemonSystem.frame,
@@ -524,7 +528,8 @@ def as_json(options={})
     "noevsmode" => $PokemonSystem.noevsmode,
     "maxivsmode" => $PokemonSystem.maxivsmode,
     "showlevel_nolevelmode" => $PokemonSystem.showlevel_nolevelmode,
-    "rocketballsteal" => $PokemonSystem.rocketballsteal
+    "rocketballsteal" => $PokemonSystem.rocketballsteal,
+    "trainerexpboost" => $PokemonSystem.trainerexpboost
   }
 end
 
@@ -688,6 +693,7 @@ def load_json(jsonparse)
   $PokemonSystem.maxivsmode = 0
   $PokemonSystem.showlevel_nolevelmode = 0
   $PokemonSystem.rocketballsteal = 0
+  $PokemonSystem.trainerexpboost = 50
   if json_ver >= 2
     $PokemonSystem.noevsmode = jsonparse['noevsmode']
     $PokemonSystem.maxivsmode = jsonparse['maxivsmode']
@@ -695,6 +701,9 @@ def load_json(jsonparse)
   end
   if json_ver >= 3
     $PokemonSystem.rocketballsteal = jsonparse['rocketballsteal']
+  end
+  if json_ver >= 4
+    $PokemonSystem.trainerexpboost = jsonparse['trainerexpboost']
   end
 
 end
@@ -2179,6 +2188,11 @@ class KurayOptSc_2 < PokemonOption_Scene
     ["Rocket Balls don't steal Pokemons.",
     "Rocket Balls can steal Pokemons.",
     "Every Balls can steal Pokemons."]
+    )
+    options << SliderOption.new(_INTL("Trainer Exp. Boost"), 0, 1000, 50,
+                      proc { $PokemonSystem.trainerexpboost },
+                      proc { |value| $PokemonSystem.trainerexpboost = value },
+                      "+x% | Boosts exp. gained in trainer battles (Default: +50%)"
     )
 
     return options

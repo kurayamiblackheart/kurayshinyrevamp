@@ -148,7 +148,14 @@ class PokeBattle_Battle
     end
     return if exp <= 0
     # Pokémon gain more Exp from trainer battles
-    exp = (exp * 1.5).floor if trainerBattle?
+    if !$PokemonSystem.trainerexpboost
+      k_expmult = 1.5
+    else
+      k_expmult = (100 + $PokemonSystem.trainerexpboost)/100.0
+    end
+    puts "k_expmult: #{k_expmult}"
+    # exp = (exp * 1.5).floor if trainerBattle?
+    exp = (exp * k_expmult).floor if trainerBattle?
     # Scale the gained Exp based on the gainer's level (or not)
     if Settings::SCALED_EXP_FORMULA
       exp /= 5
