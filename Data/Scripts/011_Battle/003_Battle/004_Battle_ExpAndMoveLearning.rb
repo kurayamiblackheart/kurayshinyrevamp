@@ -153,7 +153,7 @@ class PokeBattle_Battle
     else
       k_expmult = (100 + $PokemonSystem.trainerexpboost)/100.0
     end
-    puts "k_expmult: #{k_expmult}"
+    # puts "k_expmult: #{k_expmult}"
     # exp = (exp * 1.5).floor if trainerBattle?
     exp = (exp * k_expmult).floor if trainerBattle?
     # Scale the gained Exp based on the gainer's level (or not)
