@@ -18,7 +18,7 @@ def masscopy(src_dir, dst_dir):
     result = subprocess.run(['robocopy', src_dir, dst_dir, '/E', '/IS'])
 
     # Check the return code
-    if result.returncode > 1:
+    if result.returncode > 3:
         raise subprocess.CalledProcessError(result.returncode, result.args)
 
 # def copy_file(src_file, dst_dir_path):
