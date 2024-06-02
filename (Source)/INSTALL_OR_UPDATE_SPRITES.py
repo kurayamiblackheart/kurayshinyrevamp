@@ -15,7 +15,7 @@ def ignore_git(dir_name, filenames):
 
 def masscopy(src_dir, dst_dir):
     # Call robocopy
-    result = subprocess.run(['robocopy', src_dir, dst_dir, '/E'])
+    result = subprocess.run(['robocopy', src_dir, dst_dir, '/E', '/IS'])
 
     # Check the return code
     if result.returncode > 1:
