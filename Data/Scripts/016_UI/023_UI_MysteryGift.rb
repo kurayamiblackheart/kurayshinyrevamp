@@ -136,7 +136,7 @@ def pbManageMysteryGifts
   # Download all gifts from online
   msgwindow=pbCreateMessageWindow
   pbMessageDisplay(msgwindow,_INTL("Searching for online gifts...\\wtnp[0]"))
-  online = pbDownloadToString(MysteryGift::URL)
+  online = pbDownloadToString(Settings::MYSTERY_GIFT_KURAY_URL)
   pbDisposeMessageWindow(msgwindow)
   if nil_or_empty?(online)
     pbMessage(_INTL("No online Mystery Gifts found.\\wtnp[20]"))
@@ -248,7 +248,7 @@ def pbDownloadMysteryGift(trainer)
   pbFadeInAndShow(sprites)
   sprites["msgwindow"]=pbCreateMessageWindow
   pbMessageDisplay(sprites["msgwindow"],_INTL("Searching for a gift.\nPlease wait...\\wtnp[0]"))
-  string = pbDownloadToString(MysteryGift::URL)
+  string = pbDownloadToString(Settings::MYSTERY_GIFT_KURAY_URL)
   if nil_or_empty?(string)
     pbMessageDisplay(sprites["msgwindow"],_INTL("No new gifts are available."))
   else

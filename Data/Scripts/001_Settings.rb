@@ -39,6 +39,10 @@ module Settings
 
   # HTTP_CONFIGS_FILE_PATH = "Data/Scripts/RemoteUrls.rb"
   HTTP_CONFIGS_FILE_PATH = "Data/Scripts/DownloadedSettings.rb"
+
+  MYSTERY_GIFT_KURAY_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/Scripts/Gifts.txt"
+  MYSTERY_GIFT_KURAY_PATH = "MysteryGift.txt"
+
   # MIGHT_NOT_NEED84x
   # LEVEL_CAPS=[12,22,26,35,38,45,51,54,58,62,63,64,64,65,67,68]
 
