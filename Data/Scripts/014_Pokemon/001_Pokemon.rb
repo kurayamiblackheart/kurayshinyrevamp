@@ -727,7 +727,7 @@ class Pokemon
   # Recalculates this Pokémon's stats.
   # @param value [Integer] (between 1 and the maximum level) calc stats at this level instead
   def calc_stats(this_level = self.level_simple)
-    if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2 || self.imported?) # obtained from trade
+    if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2 || @obtain_method == 4 || self.imported?) # obtained from trade
       levelcap = getkuraylevelcap()
       if this_level > levelcap
         this_level = levelcap
@@ -2035,6 +2035,8 @@ class Pokemon
     if jsonparse.key?('json_version')
       json_version = jsonparse['json_version']
       case json_version
+      when '0.0'
+        return -1
       when '0.1'
         return 1
       when '0.2'
@@ -2091,77 +2093,79 @@ class Pokemon
     @imported = true
     jsonload1(jsonparse)
     @species = jsonparse['species']
-    @form = jsonparse['form']
-    @forced_form = jsonparse['forced_form']
-    @time_form_set = jsonparse['time_form_set']
-    @exp = jsonparse['exp']
-    @level = jsonparse['level']
-    @steps_to_hatch = jsonparse['steps_to_hatch']
-    @heal_status = jsonparse['heal_status']
-    @gender = jsonparse['gender']
-    @shiny = jsonparse['shiny']
-    @kuraygender = jsonparse['kuraygender']
-    @shinyValue = jsonparse['shinyValue']
-    @veryunique = jsonparse['veryunique']
-    @kuraycustomfile = jsonparse['kuraycustomfile']
-    @oldkuraycustomfile = jsonparse['oldkuraycustomfile']
-    @shinyR = jsonparse['shinyR']
-    @shinyG = jsonparse['shinyG']
-    @shinyB = jsonparse['shinyB']
-    @ability = jsonparse['ability']
-    @ability2 = jsonparse['ability2']
-    @ability_index = jsonparse['ability_index']
-    @ability2_index = jsonparse['ability2_index']
-    @nature = jsonparse['nature']
-    @nature_for_stats = jsonparse['nature_for_stats']
-    @item = jsonparse['item']
-    @mail = jsonparse['mail']
-    @cool = jsonparse['cool']
-    @beauty = jsonparse['beauty']
-    @cute = jsonparse['cute']
-    @smart = jsonparse['smart']
-    @tough = jsonparse['tough']
-    @sheen = jsonparse['sheen']
-    @pokerus = jsonparse['pokerus']
-    @name = jsonparse['name']
-    @happiness = jsonparse['happiness']
-    @poke_ball = jsonparse['poke_ball']
-    @markings = jsonparse['markings']
-    @iv = jsonparse['iv']
-    @ivMaxed = jsonparse['ivMaxed']
-    @ev = jsonparse['ev']
-    @hiddenPowerType = jsonparse['hiddenPowerType']
-    @glitter = jsonparse['glitter']
-    @obtain_method = jsonparse['obtain_method']
-    @obtain_map = jsonparse['obtain_map']
-    @obtain_level = jsonparse['obtain_level']
-    @obtain_text = jsonparse['obtain_text']
-    @hatched_map = jsonparse['hatched_map']
-    @timeReceived = jsonparse['timeReceived']
-    @timeEggHatched = jsonparse['timeEggHatched']
-    @fused = jsonparse['fused']
-    @personalID = jsonparse['personalID']
-    @hp = jsonparse['hp']
-    @totalhp = jsonparse['totalhp']
-    @first_moves = jsonparse['first_moves']
-    @owner.load_json(jsonparse['owner'])
-    @ribbons = jsonparse['ribbons']
-    @head_shiny = jsonparse['head_shiny']
-    @body_shiny = jsonparse['body_shiny']
-    @head_shinyhue = jsonparse['head_shinyhue']
-    @head_shinyr = jsonparse['head_shinyr']
-    @head_shinyg = jsonparse['head_shinyg']
-    @head_shinyb = jsonparse['head_shinyb']
-    @body_shinyhue = jsonparse['body_shinyhue']
-    @body_shinyr = jsonparse['body_shinyr']
-    @body_shinyg = jsonparse['body_shinyg']
-    @body_shinyb = jsonparse['body_shinyb']
-    @kuray_no_evo = jsonparse['kuray_no_evo']
-    # jsonparse['moves'].split('},')
-    @moves = []
-    jsonparse['moves'].each_with_index { |m, i| @moves.push(Pokemon::Move.new(m['id'])) }
-    jsonparse['moves'].each_with_index { |m, i| @moves[i].load_json(m) }
-
+    json_ver = convertjsonver(jsonparse)
+    if json_ver >= 0
+      @form = jsonparse['form']
+      @forced_form = jsonparse['forced_form']
+      @time_form_set = jsonparse['time_form_set']
+      @exp = jsonparse['exp']
+      @level = jsonparse['level']
+      @steps_to_hatch = jsonparse['steps_to_hatch']
+      @heal_status = jsonparse['heal_status']
+      @gender = jsonparse['gender']
+      @shiny = jsonparse['shiny']
+      @kuraygender = jsonparse['kuraygender']
+      @shinyValue = jsonparse['shinyValue']
+      @veryunique = jsonparse['veryunique']
+      @kuraycustomfile = jsonparse['kuraycustomfile']
+      @oldkuraycustomfile = jsonparse['oldkuraycustomfile']
+      @shinyR = jsonparse['shinyR']
+      @shinyG = jsonparse['shinyG']
+      @shinyB = jsonparse['shinyB']
+      @ability = jsonparse['ability']
+      @ability2 = jsonparse['ability2']
+      @ability_index = jsonparse['ability_index']
+      @ability2_index = jsonparse['ability2_index']
+      @nature = jsonparse['nature']
+      @nature_for_stats = jsonparse['nature_for_stats']
+      @item = jsonparse['item']
+      @mail = jsonparse['mail']
+      @cool = jsonparse['cool']
+      @beauty = jsonparse['beauty']
+      @cute = jsonparse['cute']
+      @smart = jsonparse['smart']
+      @tough = jsonparse['tough']
+      @sheen = jsonparse['sheen']
+      @pokerus = jsonparse['pokerus']
+      @name = jsonparse['name']
+      @happiness = jsonparse['happiness']
+      @poke_ball = jsonparse['poke_ball']
+      @markings = jsonparse['markings']
+      @iv = jsonparse['iv']
+      @ivMaxed = jsonparse['ivMaxed']
+      @ev = jsonparse['ev']
+      @hiddenPowerType = jsonparse['hiddenPowerType']
+      @glitter = jsonparse['glitter']
+      @obtain_method = jsonparse['obtain_method']
+      @obtain_map = jsonparse['obtain_map']
+      @obtain_level = jsonparse['obtain_level']
+      @obtain_text = jsonparse['obtain_text']
+      @hatched_map = jsonparse['hatched_map']
+      @timeReceived = jsonparse['timeReceived']
+      @timeEggHatched = jsonparse['timeEggHatched']
+      @fused = jsonparse['fused']
+      @personalID = jsonparse['personalID']
+      @hp = jsonparse['hp']
+      @totalhp = jsonparse['totalhp']
+      @first_moves = jsonparse['first_moves']
+      @owner.load_json(jsonparse['owner'])
+      @ribbons = jsonparse['ribbons']
+      @head_shiny = jsonparse['head_shiny']
+      @body_shiny = jsonparse['body_shiny']
+      @head_shinyhue = jsonparse['head_shinyhue']
+      @head_shinyr = jsonparse['head_shinyr']
+      @head_shinyg = jsonparse['head_shinyg']
+      @head_shinyb = jsonparse['head_shinyb']
+      @body_shinyhue = jsonparse['body_shinyhue']
+      @body_shinyr = jsonparse['body_shinyr']
+      @body_shinyg = jsonparse['body_shinyg']
+      @body_shinyb = jsonparse['body_shinyb']
+      @kuray_no_evo = jsonparse['kuray_no_evo']
+      # jsonparse['moves'].split('},')
+      @moves = []
+      jsonparse['moves'].each_with_index { |m, i| @moves.push(Pokemon::Move.new(m['id'])) }
+      jsonparse['moves'].each_with_index { |m, i| @moves[i].load_json(m) }
+    end
 
     # type handling changed
     # jsonload2(jsonparse)

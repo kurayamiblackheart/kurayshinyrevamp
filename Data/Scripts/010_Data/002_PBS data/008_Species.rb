@@ -181,6 +181,7 @@ module GameData
       @shadow_x = hash[:shadow_x] || 0
       @shadow_size = hash[:shadow_size] || 2
       @alwaysUseGeneratedSprite=false
+      # puts "Species #{@id} #{@species} #{@form} #{@real_name}"
     end
 
     # #KurayX

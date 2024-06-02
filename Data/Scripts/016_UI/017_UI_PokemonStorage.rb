@@ -90,6 +90,10 @@ class PokemonBoxIcon < IconSprite
     else
       if dex_number >= Settings::ZAPMOLCUNO_NB
         specialPath = getSpecialIconName(dex_number)
+        if !pbResolveBitmap(specialPath)
+          specialPath = sprintf("Graphics/Battlers/special/000")
+        end
+        # puts specialPath.inspect
         return pbResolveBitmap(specialPath)
         head_id=nil
       else
@@ -158,7 +162,19 @@ class PokemonBoxIcon < IconSprite
       return sprintf(base_path +"343.344.345")
     when Settings::ZAPMOLCUNO_NB + 25 #sinnohboss right
       return sprintf(base_path +"invisible")
+    when Settings::ZAPMOLCUNO_NB + 25 #cardboard
+      return sprintf(base_path +"invisible")
+    when Settings::ZAPMOLCUNO_NB + 26 #cardboard
+      return sprintf(base_path + "cardboard")
+    when Settings::ZAPMOLCUNO_NB + 27 #Triple regi
+      return sprintf(base_path + "447.448.449")
     else
+      # puts dexNum.inspect
+      if dexNum > Settings::KURAY_CUSTOM_POKEMONS
+        # testddd = sprintf(base_path + "k_%03d", dexNum-Settings::KURAY_CUSTOM_POKEMONS)
+        # puts testddd.inspect
+        return sprintf(base_path + "k_%03d", dexNum-Settings::KURAY_CUSTOM_POKEMONS)
+      end
       return sprintf(base_path + "000")
     end
   end

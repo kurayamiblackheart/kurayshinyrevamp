@@ -122,6 +122,7 @@ def pbChooseSpeciesList(default = nil)
   #
   defaultNumber = default == nil ? 1 : getDexNumberForSpecies(default)
   params = ChooseNumberParams.new
+  # params.setRange(1,PBSpecies.maxValue)
   params.setRange(1,PBSpecies.maxValue)
   params.setInitialValue(defaultNumber)
   dexNum = pbMessageChooseNumber("dex number?",params)

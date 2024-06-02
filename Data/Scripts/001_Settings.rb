@@ -77,6 +77,8 @@ module Settings
   HARD_MODE_LEVEL_MODIFIER = 1.1
 
   ZAPMOLCUNO_NB = 999999#176821
+  KURAY_CUSTOM_POKEMONS = 9999999#Custom unfuseable pokemons
+
   MAPS_WITHOUT_SURF_MUSIC = [762]
 
   WONDERTRADE_BASE_URL = "http://localhost:8080"

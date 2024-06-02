@@ -70,6 +70,9 @@ def pbLoadPokemonBitmapSpecies(pokemon, species, back = false, scale = POKEMONSP
     bitmapFileName = pbResolveBitmap(bitmapFileName)
   elsif pokemon.species >= ZAPMOLCUNO_NB #zapmolcuno
     bitmapFileName = getSpecialSpriteName(pokemon.species) #sprintf("Graphics/Battlers/special/144.145.146")
+    if !pbResolveBitmap(bitmapFileName)
+      bitmapFileName = sprintf("Graphics/Battlers/special/000")
+    end
     bitmapFileName = pbResolveBitmap(bitmapFileName)
   else
     #edited here

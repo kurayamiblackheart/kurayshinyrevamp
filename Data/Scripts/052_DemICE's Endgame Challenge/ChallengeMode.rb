@@ -379,6 +379,48 @@ class PokeBattle_Move_0C0 < PokeBattle_Move
 
 module GameData
 	
+	def self.check_existence(moves, tutor_moves, egg_moves, abilities, hidden_abilities, type1, type2, wild_item_common, wild_item_uncommon, wild_item_rare)
+		self.check_existence_moves(moves,1)
+		self.check_existence_moves(tutor_moves,1)
+		self.check_existence_moves(egg_moves,1)
+		self.check_existence_moves(abilities,2)
+		self.check_existence_moves(hidden_abilities,2)
+		if wild_item_common && !GameData::Item.exists?(wild_item_common)
+			puts "Item #{wild_item_common} does not exist"
+		end
+		if wild_item_uncommon && !GameData::Item.exists?(wild_item_uncommon)
+			puts "Item #{wild_item_uncommon} does not exist"
+		end
+		if wild_item_rare && !GameData::Item.exists?(wild_item_rare)
+			puts "Item #{wild_item_rare} does not exist"
+		end
+		if type1 && !GameData::Type.exists?(type1)
+			puts "Type #{type1} does not exist"
+		end
+		if type2 && !GameData::Type.exists?(type2)
+			puts "Type #{type2} does not exist"
+		end
+	end
+
+	def self.check_existence_moves(moves, typecheck=1)
+		moves.each do |move|
+			if typecheck == 1
+				if move[1].is_a?(Symbol)
+					if !GameData::Move.exists?(move[1])
+						puts "Move #{move[1]} does not exist"
+					end
+				end
+			else
+				if move.is_a?(Symbol)
+					if typecheck == 1 && !GameData::Move.exists?(move)
+				 		puts "Move #{move} does not exist"
+					elsif typecheck == 2 && !GameData::Ability.exists?(move)
+						puts "Ability #{move} does not exist"
+					end
+				end
+			end
+		end
+	end
 	#=============================================================================
 	# A bulk loader method for all data stored in .dat files in the Data folder.
 	#=============================================================================
@@ -400,6 +442,69 @@ module GameData
 		TrainerChallenge.load
 		Metadata.load
 		MapMetadata.load
+
+		# Custom Pokemon
+		id_mon = 0
+
+		id_mon += 1
+		id = "KURAY" + sprintf("%03d", id_mon)
+		name = "Zangfox"
+		type1 = :DARK
+		type2 = :FIGHTING
+		moves = [[1,:SCRATCH],[1,:LEER],[5,:QUICKATTACK],[8,:FURYCUTTER],[12,:HONECLAWS],[15,:AERIALACE],[19,:SLASH],[22,:REVENGE],[26,:CRUSHCLAW],[29,:FALSESWIPE],[33,:FACADE],[36,:DARKPULSE],[40,:XSCISSOR],[43,:TAUNT],[47,:SWORDSDANCE],[50,:CLOSECOMBAT]]
+		tutor_moves = [:AERIALACE,:ATTRACT,:BLIZZARD,:BODYSLAM,:BRICKBREAK,:CAPTIVATE,:CONFIDE,:COUNTER,:DEFENSECURL,:DIG,:DOUBLEEDGE,:DOUBLETEAM,:DYNAMICPUNCH,:EMBARGO,:ENDEAVOR,:ENDURE,:FACADE,:FALSESWIPE,:FIREBLAST,:FIREPUNCH,:FLAMETHROWER,:FLING,:FOCUSBLAST,:FOCUSPUNCH,:FRUSTRATION,:FURYCUTTER,:GIGADRAIN,:HEADBUTT,:HIDDENPOWER,:HONECLAWS,:ICEBEAM,:ICEPUNCH,:ICYWIND,:INCINERATE,:IRONTAIL,:KNOCKOFF,:LASTRESORT,:LOWKICK,:MEGAKICK,:MEGAPUNCH,:MIMIC,:MUDSLAP,:NATURALGIFT,:PAYBACK,:POISONJAB,:POWERUPPUNCH,:PROTECT,:RAINDANCE,:REST,:RETALIATE,:RETURN,:ROAR,:ROCKCLIMB,:ROCKSLIDE,:ROCKSMASH,:ROCKTOMB,:ROLLOUT,:ROUND,:SECRETPOWER,:SEISMICTOSS,:SHADOWBALL,:SHADOWCLAW,:SHOCKWAVE,:SLEEPTALK,:SNORE,:SOLARBEAM,:STRENGTH,:SUBSTITUTE,:SUNNYDAY,:SWAGGER,:SWIFT,:SWORDSDANCE,:TAUNT,:THIEF,:THROATCHOP,:THUNDER,:THUNDERBOLT,:THUNDERPUNCH,:THUNDERWAVE,:WATERPULSE,:WORKUP,:XSCISSOR]
+		egg_moves = [:BELLYDRUM,:COUNTER,:CURSE,:DISABLE,:DOUBLEHIT,:DOUBLEKICK,:FEINT,:FINALGAMBIT,:FLAIL,:FURYSWIPES,:METALCLAW,:NIGHTSLASH,:QUICKGUARD]
+		abilities = [:IMMUNITY]
+		hidden_abilities = [:TOXICBOOST]
+		wild_item_common = nil
+		wild_item_uncommon = :QUICKCLAW
+		wild_item_rare = nil
+		height = 1.3*10
+		weight = 40.3*10
+		self.check_existence(moves, tutor_moves, egg_moves, abilities, hidden_abilities, type1, type2, wild_item_common, wild_item_uncommon, wild_item_rare)
+		Species.register({
+			:id              => id.to_sym,
+			# :species         => "KURAYZANGRATH".to_sym,
+			:id_number       => Settings::KURAY_CUSTOM_POKEMONS+id_mon,
+			:name            => name,
+			:form_name       => nil,
+			:category        => "Paradox",
+			:pokedex_entry   => "A mysterious outsider from another dimension. It somehow managed to find its way here.",
+			:type1           => type1,
+			:type2           => type2,
+			:base_stats      => {:HP => 73, :ATTACK => 125, :DEFENSE => 60, :SPECIAL_ATTACK => 90, :SPECIAL_DEFENSE => 55, :SPEED => 60},
+			:evs             => {:HP => 0, :ATTACK => 2, :DEFENSE => 0, :SPECIAL_ATTACK => 0, :SPECIAL_DEFENSE => 0, :SPEED => 0},
+			:base_exp        => 160,
+			:growth_rate     => :Erratic,
+			:gender_ratio    => :Female50Percent,
+			:catch_rate      => 80,
+			:happiness       => 50,
+			:moves           => moves,
+			:tutor_moves     => tutor_moves,
+			:egg_moves       => egg_moves,
+			:abilities       => abilities,
+			:hidden_abilities => hidden_abilities,
+			:wild_item_common => wild_item_common,
+			:wild_item_uncommon => wild_item_uncommon,
+			:wild_item_rare  => wild_item_rare,
+			:egg_groups      => [:Undiscovered],
+			:hatch_steps     => 5120,
+			:evolutions      => [],
+			:height          => height,
+			:weight          => weight,
+			:color           => :Red,
+			:shape           => :BipedalTail,
+			:habitat         => :Grassland,
+			:generation      => 99,
+			:back_sprite_x   => 0,
+			:back_sprite_y   => 0,
+			:front_sprite_x  => 0,
+			:front_sprite_y  => 0,
+			:front_sprite_altitude => 0,
+			:shadow_x        => 0,
+			:shadow_size     => 2
+		})
+		puts "Loaded custom Pokemon: #{id.to_sym} - #{name}"
 	end
 	
 	class TrainerType
