@@ -867,7 +867,11 @@ end
 
 def promptCaughtPokemonAction(pokemon)
   pickedOption = false
-  return pbStorePokemon(pokemon) if !$Trainer.party_full?
+  if ($PokemonGlobal.pokemonSelectionOriginalParty!=nil)
+    return pbStorePokemon(pokemon) if !($PokemonGlobal.pokemonSelectionOriginalParty.length >= Settings::MAX_PARTY_SIZE)
+  else
+    return pbStorePokemon(pokemon) if !$Trainer.party_full?
+  end
   
   if $PokemonSystem.skipcaughtprompt == 1
     return pbStorePokemon(pokemon)
@@ -902,7 +906,12 @@ def swapCaughtPokemon(caughtPokemon)
                   })
   index = pbGet(1)
   return false if index == -1
-  $PokemonStorage.pbStoreCaught($Trainer.party[index])
+  if ($PokemonGlobal.pokemonSelectionOriginalParty!=nil)
+    $PokemonStorage.pbStoreCaught($PokemonGlobal.pokemonSelectionOriginalParty[index])
+  else  
+    $PokemonStorage.pbStoreCaught($Trainer.party[index])
+  end
+  # $PokemonStorage.pbStoreCaught($Trainer.party[index])
   pbRemovePokemonAt(index)
   pbStorePokemon(caughtPokemon)
   return true

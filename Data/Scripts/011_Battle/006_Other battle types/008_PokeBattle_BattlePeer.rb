@@ -23,7 +23,11 @@ end
 #===============================================================================
 class PokeBattle_RealBattlePeer
   def pbStorePokemon(player,pkmn)
-    if !player.party_full?
+    if $PokemonGlobal.pokemonSelectionOriginalParty!=nil && !($PokemonGlobal.pokemonSelectionOriginalParty.length >= Settings::MAX_PARTY_SIZE)
+      $PokemonGlobal.pokemonSelectionOriginalParty.push(pkmn)
+      return -1
+    end
+    if !player.party_full? && $PokemonGlobal.pokemonSelectionOriginalParty==nil
       player.party[player.party.length] = pkmn
       return -1
     end

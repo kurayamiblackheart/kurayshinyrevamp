@@ -17,7 +17,9 @@ module PokeBattle_BattleCommon
     storedBox  = @peer.pbStorePokemon(pbPlayer,pkmn)
     if storedBox<0
       pbDisplayPaused(_INTL("{1} has been added to your party.",pkmn.name))
-      @initialItems[0][pbPlayer.party.length-1] = pkmn.item_id if @initialItems
+      if $PokemonGlobal.pokemonSelectionOriginalParty==nil
+        @initialItems[0][pbPlayer.party.length-1] = pkmn.item_id if @initialItems
+      end
       return
     end
     # Messages saying the Pokémon was stored in a PC box

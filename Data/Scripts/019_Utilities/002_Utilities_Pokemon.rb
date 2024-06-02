@@ -22,7 +22,7 @@ def pbStorePokemon(pkmn)
     return
   end
   pkmn.record_first_moves
-  if $Trainer.party_full?
+  if ($Trainer.party_full? && $PokemonGlobal.pokemonSelectionOriginalParty==nil) || ($PokemonGlobal.pokemonSelectionOriginalParty!=nil && $PokemonGlobal.pokemonSelectionOriginalParty.length >= Settings::MAX_PARTY_SIZE)
     oldcurbox = $PokemonStorage.currentBox
     storedbox = $PokemonStorage.pbStoreCaught(pkmn)
     curboxname = $PokemonStorage[oldcurbox].name
@@ -45,7 +45,11 @@ def pbStorePokemon(pkmn)
       pbMessage(_INTL("It was stored in box \"{1}.\"", boxname))
     end
   else
-    $Trainer.party[$Trainer.party.length] = pkmn
+    if $PokemonGlobal.pokemonSelectionOriginalParty!=nil
+      $PokemonGlobal.pokemonSelectionOriginalParty.push(pkmn)
+    else
+      $Trainer.party[$Trainer.party.length] = pkmn
+    end
   end
 end
 

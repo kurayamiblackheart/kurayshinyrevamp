@@ -226,6 +226,18 @@ def kurayRNGforChannels
   # change Cyan/Magenta/Yellow to 20%
 end
 
+def tempTeam_remove_pokemon_at_index(index)
+  return false if index < 0 || index >= $PokemonGlobal.pokemonSelectionOriginalParty.length
+  have_able = false
+  $PokemonGlobal.pokemonSelectionOriginalParty.each_with_index do |pkmn, i|
+    have_able = true if i != index && pkmn.able?
+    break if have_able
+  end
+  return false if !have_able
+  $PokemonGlobal.pokemonSelectionOriginalParty.delete_at(index)
+  return true
+end
+
 def kurayPlayerBlackList(dex_number, filename)
   if dex_number <= Settings::NB_POKEMON
     #Check for non fusions
