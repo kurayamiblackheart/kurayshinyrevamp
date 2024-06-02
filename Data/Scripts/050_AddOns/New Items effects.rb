@@ -1645,19 +1645,24 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
       if pokemon.shiny?
         pokemon.shiny = false
         if pokemon.body_shinyhue == nil && pokemon.head_shinyhue == nil
-          if rand(2) == 0
             pokemon.head_shinyhue=pokemon.shinyValue?
             pokemon.head_shinyr=pokemon.shinyR?
             pokemon.head_shinyg=pokemon.shinyG?
             pokemon.head_shinyb=pokemon.shinyB?
             pokemon.head_shinykrs=pokemon.shinyKRS?.clone
-          else
-            pokemon.body_shinyhue=pokemon.shinyValue?
-            pokemon.body_shinyr=pokemon.shinyR?
-            pokemon.body_shinyg=pokemon.shinyG?
-            pokemon.body_shinyb=pokemon.shinyB?
-            pokemon.body_shinykrs=pokemon.shinyKRS?.clone
-          end
+          # if rand(2) == 0
+          #   pokemon.head_shinyhue=pokemon.shinyValue?
+          #   pokemon.head_shinyr=pokemon.shinyR?
+          #   pokemon.head_shinyg=pokemon.shinyG?
+          #   pokemon.head_shinyb=pokemon.shinyB?
+          #   pokemon.head_shinykrs=pokemon.shinyKRS?.clone
+          # else
+          #   pokemon.body_shinyhue=pokemon.shinyValue?
+          #   pokemon.body_shinyr=pokemon.shinyR?
+          #   pokemon.body_shinyg=pokemon.shinyG?
+          #   pokemon.body_shinyb=pokemon.shinyB?
+          #   pokemon.body_shinykrs=pokemon.shinyKRS?.clone
+          # end
         end
         if pokemon.bodyShiny? && pokemon.headShiny?
           pokemon.shiny = true
@@ -1700,24 +1705,39 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
           poke2.natural_shiny = true if pokemon.natural_shiny && !pokemon.debug_shiny
         else
           #shiny was obtained already fused
-          if rand(2) == 0
-            pokemon.shiny = true
-            #KurayX
-            # pokemon.shinyValue=pokemon.body_shinyhue?
-            # pokemon.shinyR=pokemon.body_shinyr?
-            # pokemon.shinyG=pokemon.body_shinyg?
-            # pokemon.shinyB=pokemon.body_shinyb?
-            #####
-          else
-            poke2.shiny = true
-            #KurayX - KURAYX_ABOUT_SHINIES
-            poke2.shinyValue=pokemon.shinyValue?
-            poke2.shinyR=pokemon.shinyR?
-            poke2.shinyG=pokemon.shinyG?
-            poke2.shinyB=pokemon.shinyB?
-            poke2.shinyKRS=pokemon.shinyKRS?.clone
-            #####
-          end
+          # if rand(2) == 0
+          #   pokemon.shiny = true
+          #   #KurayX
+          #   # pokemon.shinyValue=pokemon.body_shinyhue?
+          #   # pokemon.shinyR=pokemon.body_shinyr?
+          #   # pokemon.shinyG=pokemon.body_shinyg?
+          #   # pokemon.shinyB=pokemon.body_shinyb?
+          #   #####
+          # else
+          #   poke2.shiny = true
+          #   #KurayX - KURAYX_ABOUT_SHINIES
+          #   poke2.shinyValue=pokemon.shinyValue?
+          #   poke2.shinyR=pokemon.shinyR?
+          #   poke2.shinyG=pokemon.shinyG?
+          #   poke2.shinyB=pokemon.shinyB?
+          #   poke2.shinyKRS=pokemon.shinyKRS?.clone
+          #   #####
+          # end
+          poke2.shiny = true
+          #KurayX - KURAYX_ABOUT_SHINIES
+          poke2.shinyValue=pokemon.shinyValue?
+          poke2.shinyR=pokemon.shinyR?
+          poke2.shinyG=pokemon.shinyG?
+          poke2.shinyB=pokemon.shinyB?
+          poke2.shinyKRS=pokemon.shinyKRS?.clone
+          
+          # It wasn't shiny (it was obtained already fused) - so the body should re-roll its shiny value
+          newvalue = rand(0..360) - 180
+          pokemon.shinyValue=newvalue
+          pokemon.shinyR=kurayRNGforChannels
+          pokemon.shinyG=kurayRNGforChannels
+          pokemon.shinyB=kurayRNGforChannels
+          pokemon.shinyKRS=kurayKRSmake
         end
       end
 
