@@ -3,6 +3,7 @@ import subprocess
 import time
 import shutil
 import stat
+import concurrent.futures
 
 def ignore_git(dir_name, filenames):
     return ['.git']
@@ -13,19 +14,42 @@ def ignore_git(dir_name, filenames):
 #     return
 
 def masscopy(src_dir, dst_dir):
-    # Copy the directory and its contents, ignoring .git
-    for dirpath, dirs, files in os.walk(src_dir):
-        dst_dir_path = dirpath.replace(src_dir, dst_dir, 1)
-        if not os.path.exists(dst_dir_path):
-            os.makedirs(dst_dir_path)
-        for file_ in files:
-            src_file = os.path.join(dirpath, file_)
-            dst_file = os.path.join(dst_dir_path, file_)
-            if os.path.exists(dst_file):
-                os.chmod(dst_file, stat.S_IWRITE)  # Change the permission of destination file
-                os.remove(dst_file)
-            shutil.copy2(src_file, dst_dir_path)
+    # Call robocopy
+    subprocess.run(['robocopy', src_dir, dst_dir, '/E'], check=True)
     return
+
+# def copy_file(src_file, dst_dir_path):
+#     dst_file = os.path.join(dst_dir_path, os.path.basename(src_file))
+#     if os.path.exists(dst_file):
+#         os.chmod(dst_file, stat.S_IWRITE)  # Change the permission of destination file
+#         os.remove(dst_file)
+#     shutil.copy2(src_file, dst_dir_path)
+
+# def masscopy(src_dir, dst_dir):
+#     # Copy the directory and its contents, ignoring .git
+#     with concurrent.futures.ThreadPoolExecutor() as executor:
+#         for dirpath, dirs, files in os.walk(src_dir):
+#             dst_dir_path = dirpath.replace(src_dir, dst_dir, 1)
+#             if not os.path.exists(dst_dir_path):
+#                 os.makedirs(dst_dir_path)
+#             for file_ in files:
+#                 src_file = os.path.join(dirpath, file_)
+#                 executor.submit(copy_file, src_file, dst_dir_path)
+
+# def masscopy(src_dir, dst_dir):
+#     # Copy the directory and its contents, ignoring .git
+#     for dirpath, dirs, files in os.walk(src_dir):
+#         dst_dir_path = dirpath.replace(src_dir, dst_dir, 1)
+#         if not os.path.exists(dst_dir_path):
+#             os.makedirs(dst_dir_path)
+#         for file_ in files:
+#             src_file = os.path.join(dirpath, file_)
+#             dst_file = os.path.join(dst_dir_path, file_)
+#             if os.path.exists(dst_file):
+#                 os.chmod(dst_file, stat.S_IWRITE)  # Change the permission of destination file
+#                 os.remove(dst_file)
+#             shutil.copy2(src_file, dst_dir_path)
+#     return
 
 print("This will make your game preloaded by installing/updating all the sprites.")
 print("Using this tool requires a stable internet connection.")
