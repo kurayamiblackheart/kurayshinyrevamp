@@ -424,7 +424,7 @@ class PokemonSystem
   end
 end
 
-def as_json(options={})
+def options_as_json(options={})
   {
     "json_version" => "0.5",
     "textspeed" => $PokemonSystem.textspeed,
@@ -538,8 +538,8 @@ def as_json(options={})
   }
 end
 
-def load_json(jsonparse)
-  json_ver = convertjsonver(jsonparse)
+def options_load_json(jsonparse)
+  json_ver = options_convertjsonver(jsonparse)
   $PokemonSystem.textspeed = jsonparse['textspeed']
   $PokemonSystem.battlescene = jsonparse['battlescene']
   $PokemonSystem.frame = jsonparse['frame']
@@ -716,12 +716,12 @@ def load_json(jsonparse)
 
 end
 
-def to_json(*options)
-  current = as_json(*options)
+def options_to_json(*options)
+  current = options_as_json(*options)
   return current
 end
 
-def convertjsonver(jsonparse)
+def options_convertjsonver(jsonparse)
   if jsonparse.key?('json_version')
     json_version = jsonparse['json_version']
     case json_version
@@ -1523,7 +1523,7 @@ class SLOptionsScene < PokemonOption_Scene
     # pbPlayCursorSE
     if File.exists?(RTP.getSaveFolder + "\\Options_" + index.to_s + ".kro")
       data = File.read(RTP.getSaveFolder + "\\Options_" + index.to_s + ".kro")
-      load_json(eval(data))
+      options_load_json(eval(data))
       pbMessage(_INTL("Loaded options from Preset {1}.", $PokemonSystem.optionsnames[index]))
     else
       pbPlayBuzzerSE
@@ -1534,7 +1534,7 @@ class SLOptionsScene < PokemonOption_Scene
 
   def pbSaveKO(index=1)
     # pbPlayCursorSE
-    File.open(RTP.getSaveFolder + "\\Options_" + index.to_s + ".kro", 'w') { |f| f.write(to_json()) }
+    File.open(RTP.getSaveFolder + "\\Options_" + index.to_s + ".kro", 'w') { |f| f.write(options_to_json()) }
     pbMessage(_INTL("Saved current options into Preset {1}.", $PokemonSystem.optionsnames[index]))
     return
   end
