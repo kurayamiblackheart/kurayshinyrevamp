@@ -443,6 +443,9 @@ module GameData
 		Metadata.load
 		MapMetadata.load
 
+		puts "New Pokemons skipped."
+		return#skip new pokemons for now
+
 		# Custom Pokemon
 		id_mon = 0
 

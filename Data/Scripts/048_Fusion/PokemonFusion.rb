@@ -869,6 +869,8 @@ class PokemonFusionScene
 
 
       #exp
+      @pokemon1.head_gender = @pokemon2.gender
+      @pokemon1.head_nickname = @pokemon2.nicknamed?
       @pokemon1.exp_when_fused_head = @pokemon2.exp
       @pokemon1.exp_when_fused_body = @pokemon1.exp
       @pokemon1.exp_gained_since_fused = 0

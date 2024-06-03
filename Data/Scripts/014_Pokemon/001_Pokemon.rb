@@ -50,6 +50,8 @@ class Pokemon
   attr_accessor :body_shinyb
   attr_accessor :head_shinykrs
   attr_accessor :body_shinykrs
+  attr_accessor :head_gender
+  attr_accessor :head_nickname
   #KurayX - KURAYX_ABOUT_SHINIES
   attr_accessor :shinyValue
   attr_accessor :shinyR
@@ -415,6 +417,7 @@ class Pokemon
       return @shinyB
     end
   end
+
 
   ############
   #KurayX##### - KURAYX_ABOUT_SHINIES
@@ -1072,6 +1075,46 @@ class Pokemon
     return @gender
   end
 
+  def predict_gender(ratio)
+    case ratio
+    when :AlwaysMale then
+      outcome_ratio = 0
+    when :AlwaysFemale then
+      outcome_ratio = 1
+    when :Genderless then
+      outcome_ratio = 2
+    else
+      female_chance = GameData::GenderRatio.get(ratio).female_chance
+      outcome_ratio = ((@personalID & 0xFF) < female_chance) ? 1 : 0
+    end
+  return outcome_ratio
+  end
+
+  def head_nickname?
+    if @head_nickname
+      return @head_nickname
+    else
+      return nil
+    end
+  end
+
+  def head_nickname=(value)
+    @head_nickname = value
+  end
+
+  def head_gender?
+    if @head_gender
+      return @head_gender
+    else
+      # @head_gender=predict_gender(@species_data.head_pokemon.species_data.gender_ratio)
+      return nil
+    end
+  end
+
+  def head_gender=(value)
+    @head_gender = value
+  end
+
   # Sets this Pokémon's gender to a particular gender (if possible).
   # @param value [0, 1] new gender (0 = male, 1 = female)
   def gender=(value)
@@ -1092,6 +1135,10 @@ class Pokemon
   #KurayX
   def forceGenderless
     @gender = 2
+  end
+
+  def force_gender=(value)
+    @gender = value
   end
 
   # Makes this Pokémon male.
@@ -1941,7 +1988,7 @@ class Pokemon
   #KurayX
   def as_json(options={})
     {
-      "json_version" => "0.6",
+      "json_version" => "0.7",
       "species" => @species,
       "form" => @form,
       "forced_form" => @forced_form,
@@ -1999,17 +2046,19 @@ class Pokemon
       "totalhp" => @totalhp,
       "first_moves" => @first_moves.clone,
       "owner" => @owner.as_json,
+      "head_gender" => @head_gender,
+      "head_nickname" => @head_nickname,
       "head_shiny" => @head_shiny,
-      "body_shiny" => @body_shiny,
       "head_shinyhue" => @head_shinyhue,
-      "body_shinyhue" => @body_shinyhue,
       "head_shinyr" => @head_shinyr,
-      "body_shinyr" => @body_shinyr,
       "head_shinyg" => @head_shinyg,
-      "body_shinyg" => @body_shinyg,
       "head_shinyb" => @head_shinyb,
-      "body_shinyb" => @body_shinyb,
       "head_shinykrs" => @head_shinykrs.clone,
+      "body_shiny" => @body_shiny,
+      "body_shinyhue" => @body_shinyhue,
+      "body_shinyr" => @body_shinyr,
+      "body_shinyg" => @body_shinyg,
+      "body_shinyb" => @body_shinyb,
       "body_shinykrs" => @body_shinykrs.clone,
       "kuray_no_evo" => @kuray_no_evo,
       "ribbons" => @ribbons.clone,
@@ -2051,6 +2100,8 @@ class Pokemon
         return 6
       when '0.7'
         return 7
+      when '0.8'
+        return 8
       end
     else
       return 0
@@ -2075,6 +2126,10 @@ class Pokemon
       @type1kuray = jsonparse['type1kuray']
       @type2kuray = jsonparse['type2kuray']
       @typeoverwrite = jsonparse['typeoverwrite']
+    end
+    if json_ver > 6#V.7
+      @head_gender = jsonparse['head_gender']
+      @head_nickname = jsonparse['head_nickname']
     end
   end
 

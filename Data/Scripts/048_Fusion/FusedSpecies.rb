@@ -357,7 +357,11 @@ module GameData
     #TODO
     # ################## UNFINISHED ####################
     def calculate_gender
-      return :Genderless
+      # We want to give a random gender based on the possibilities of the head and the body.
+      # We return randomly either @head_pokemon.gender_ratio or @body_pokemon.gender_ratio, turning both of them into an array of 2 values before returning one of the value at random.
+      # return [@head_pokemon.gender_ratio, @body_pokemon.gender_ratio].sample
+      return @body_pokemon.gender_ratio
+      # return :Genderless
     end
 
     #############################  UTIL METHODS ###############################

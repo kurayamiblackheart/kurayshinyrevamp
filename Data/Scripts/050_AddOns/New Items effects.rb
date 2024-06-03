@@ -1636,11 +1636,18 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
       poke2.shinyValue=pokemon.shinyValue
       #
 
+      # poke1 = body
+      # poke2 = head
+
       pokemon.exp_gained_since_fused = 0
       pokemon.exp_when_fused_head = nil
       pokemon.exp_when_fused_body = nil
       pokemon.kuraycustomfile = nil
       poke2.kuraycustomfile = nil
+      poke2.name = pokemon.name unless !pokemon.nicknamed? 
+      poke2.force_gender = pokemon.head_gender?
+      # @pokemon1.head_gender = @pokemon2.gender
+      # @pokemon1.head_nickname = @pokemon2.nicknamed?
 
       if pokemon.shiny?
         pokemon.shiny = false
