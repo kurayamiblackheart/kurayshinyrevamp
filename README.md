@@ -33,6 +33,8 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Auto-updater *(thanks to HungryPickle)*, the game will check for update by itself, and if there is an update, will ask you whether you want to update or not (when launching the game), if you press yes, it will update without you having to do anything, and it will automatically restart, all updated! **| By HUNGRYPICKLE**
 - Brought back the feature that allowed in PIF to breed fused Pokemons. Before PIF 6.0, it was possible to do this in the base game of PIF. Now it's KIF-exclusive. **| by REIZOD**
 - A tool that allows you to install all the sprites *(autogen and custom)* from PIF's gitlab servers, so that you can have all the sprites that have been made for the game locally on your computer! Running this tool may take a few hours, please only run it overnight, or when you can let it run for a long time. There's more than 200 000 small sprites involved, so it takes a while to move them and organize them on the computer. You can also manually access those sprites from the gitlab servers yourself by following those links: https://gitlab.com/pokemoninfinitefusion/autogen-fusion-sprites *(autogen)* & https://gitlab.com/pokemoninfinitefusion/customsprites *(custom)* **| by REIZOD**
+- Mystery Gift *(KIF distributes mystery gifts, to be informed on ongoing distributions and their passwords, please join the Discord server)* **| by REIZOD**
+- Patches a lot of PIF bugs, making the game more stable.
 
 # List of Optional Features (you can turn them ON/OFF and/or configure/customize them!)
 
@@ -65,7 +67,7 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - Configurable ExpAll redistribution. **| by HUNGRYPICKLE**
 - Types Icons in-battle *(various sets of icons to choose from)* **| by TRAPSTARR & MIRASEIN & FAIRYGODMOTHER**
 - Auto-Battle **| by REIZOD & TRAPSTARR**
-- Trainers use Shinies **| by TRAPSTARR**
+- Trainers use Shinies *(can be configured so that the Trainers can have shinies constantly, or only for their Ace, or never, if the feature is activated, the Shiny Wild odds will make it possible for the trainers to have random shinies as well. This feature goes well with the Rocket Mode, which allows you to catch trainers' Pokemons)* **| by TRAPSTARR**
 - Damage Variance deactivatable **| by DEMICE**
 - Option to unfuse traded Pokemons *(can be turned ON/OFF in the Options Menu)* **| by REIZOD**
 - Quicksave Feature **| by DEMICE**
@@ -97,3 +99,5 @@ This Github allows you to see the game (open-source), but also to contribute to 
 - No-EVs Mode: This mode disable EVs, forcing all Pokemons to have 0 EVs *(it is non-destructive, so if you disable it again, the EVs your Pokemons had beforehand will be saved, this mode simply ignores the EVs of the Pokemons during stats calculations, it applies retroactively to every Pokemons, including enemies, it will also show "0" as EVs in the Pokemons' summaries)*. **| by REIZOD**
 - Max IVs Mode: This mode forces all Pokemons to have 31 IVs *(it is also non-destructive, it does not overwrite the real IVs of Pokemons, it just ignores their real IVs and use the value "31" in all calculations regarding IVs as long as the mode is activated, it applies retroactively and to enemies as well, just like the No-EVs Mode)*. **| by REIZOD**
 - Added an option to display the level of the Pokemons in battle when using No Level Mode aka Base Stats Mode (warning: the levels of the Pokemons do not impact their stats in this mode!), that option may be helpful for moves such as Seismic Toss, etc. **| by REIZOD**
+- Added a Rocket Mode, which is disabled by default. If enabled, you can catch the Pokemons of other trainers. You can configure it to work only on Rocket Ball or for every balls. If activated, Rocket Balls will appear in the Kuray Shop right at the start of the game. **| by REIZOD**
+- Added a Trainer Exp. Boost modifier. By default in PIF/KIF, the exp. boost from defeating a trainer's Pokemon is +50%. You can change that boost now. **| by REIZOD**
