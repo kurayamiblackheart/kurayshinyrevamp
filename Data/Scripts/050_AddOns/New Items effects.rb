@@ -1586,8 +1586,9 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
     return false
   end
 
-  pokemon.spriteform_body=nil
-  pokemon.spriteform_head=nil
+  # Don't think this is a good idea - if player cancel or there's an error, that data will be lost
+  # pokemon.spriteform_body=nil
+  # pokemon.spriteform_head=nil
 
   bodyPoke = getBasePokemonID(pokemon.species_data.id_number, true)
   headPoke = getBasePokemonID(pokemon.species_data.id_number, false)
@@ -1636,9 +1637,11 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
       poke2.shinyValue=pokemon.shinyValue
       #
 
-      # poke1 = body
+      # pokemon = body
       # poke2 = head
 
+      pokemon.spriteform_body=nil
+      pokemon.spriteform_head=nil
       pokemon.exp_gained_since_fused = 0
       pokemon.exp_when_fused_head = nil
       pokemon.exp_when_fused_body = nil

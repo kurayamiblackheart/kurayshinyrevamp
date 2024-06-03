@@ -93,6 +93,8 @@ class PokemonSystem
   attr_accessor :importlvl
   attr_accessor :importdevolve
 
+  attr_accessor :importegg
+
   attr_accessor :nopngexport
   attr_accessor :nopngimport
 
@@ -206,6 +208,7 @@ class PokemonSystem
     @sb_randomizesize = 5
     @sb_battlesize = 5
     @importlvl = 0
+    @importegg = 0
     @importdevolve = 0
     @sb_select = 1
     @sb_playerfolder = 0
@@ -385,6 +388,7 @@ class PokemonSystem
     @sb_stat_tracker = saved.sb_stat_tracker if saved.sb_stat_tracker
     @unfusetraded = saved.unfusetraded if saved.unfusetraded
     @importlvl = saved.importlvl if saved.importlvl
+    @importegg = saved.importegg if saved.importegg
     @importdevolve = saved.importdevolve if saved.importdevolve
     @importnodelete = saved.importnodelete if saved.importnodelete
     @exportdelete = saved.exportdelete if saved.exportdelete
@@ -422,7 +426,7 @@ end
 
 def as_json(options={})
   {
-    "json_version" => "0.4",
+    "json_version" => "0.5",
     "textspeed" => $PokemonSystem.textspeed,
     "battlescene" => $PokemonSystem.battlescene,
     "frame" => $PokemonSystem.frame,
@@ -489,6 +493,7 @@ def as_json(options={})
     "exportdelete" => $PokemonSystem.exportdelete,
     "savefolder" => $PokemonSystem.savefolder,
     "importlvl" => $PokemonSystem.importlvl,
+    "importegg" => $PokemonSystem.importegg,
     "importdevolve" => $PokemonSystem.importdevolve,
     "nopngexport" => $PokemonSystem.nopngexport,
     "nopngimport" => $PokemonSystem.nopngimport,
@@ -704,6 +709,9 @@ def load_json(jsonparse)
   end
   if json_ver >= 4
     $PokemonSystem.trainerexpboost = jsonparse['trainerexpboost']
+  end
+  if json_ver >= 5
+    $PokemonSystem.importegg = jsonparse['importegg']
   end
 
 end
@@ -2698,6 +2706,12 @@ class KurayOptSc_5 < PokemonOption_Scene
                       proc { |value| $PokemonSystem.importdevolve = value },
                       ["Imported Pokemons remain intact.",
                       "Imported Pokemons are de-evolved into babies."]
+    )
+    options << EnumOption.new(_INTL("Import as Egg"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.importegg },
+                      proc { |value| $PokemonSystem.importegg = value },
+                      ["Imported Pokemons remain intact.",
+                      "Imported Pokemons are turned into eggs."]
     )
     options << EnumOption.new(_INTL("Import Without Deletion"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.importnodelete },

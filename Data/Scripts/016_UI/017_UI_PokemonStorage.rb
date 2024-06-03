@@ -2724,6 +2724,10 @@ class PokemonStorageScene
     importname = directory_name + "/" + "CarpFill.json"
     if File.file?(importname)
       importunevo = false
+      importegg = false
+      if $PokemonSystem.importegg && $PokemonSystem.importegg == 1
+        importegg = true
+      end
       importlevel = 0
       if $PokemonSystem.importlvl
         if $PokemonSystem.importlvl == 1
@@ -2749,6 +2753,13 @@ class PokemonStorageScene
       end
       if importlevel != 0
         pokemon.level = importlevel
+        # pokemon.calc_stats
+      end
+      if importegg
+        pokemon.name           = _INTL("Egg")
+        pokemon.steps_to_hatch = pokemon.species_data.hatch_steps
+        pokemon.hatched_map    = 0
+        pokemon.obtain_method  = 1
       end
       # pokemon.calc_stats
       relta = 0
@@ -2808,6 +2819,10 @@ class PokemonStorageScene
     importname = directory_name + "/" + "Exported.json"
     if File.file?(importname)
       importunevo = false
+      importegg = false
+      if $PokemonSystem.importegg && $PokemonSystem.importegg == 1
+        importegg = true
+      end
       importlevel = 0
       if $PokemonSystem.importlvl
         if $PokemonSystem.importlvl == 1
@@ -2840,6 +2855,13 @@ class PokemonStorageScene
       end
       if importlevel != 0
         pokemon.level = importlevel
+        # pokemon.calc_stats
+      end
+      if importegg
+        pokemon.name           = _INTL("Egg")
+        pokemon.steps_to_hatch = pokemon.species_data.hatch_steps
+        pokemon.hatched_map    = 0
+        pokemon.obtain_method  = 1
       end
       # pokemon.calc_stats
       @storage.pbImportKuray(selected[0], selected[1], pokemon)
@@ -5313,6 +5335,10 @@ class PokemonStorageScreen
           pbDisplay(_INTL("No Pokemon to Import!"))
         else
           importunevo = false
+          importegg = false
+          if $PokemonSystem.importegg && $PokemonSystem.importegg == 1
+            importegg = true
+          end
           importlevel = 0
           if $PokemonSystem.importlvl
             if $PokemonSystem.importlvl == 1
@@ -5341,6 +5367,13 @@ class PokemonStorageScreen
             end
             if importlevel != 0
               pokemon.level = importlevel
+              # pokemon.calc_stats
+            end
+            if importegg
+              pokemon.name           = _INTL("Egg")
+              pokemon.steps_to_hatch = pokemon.species_data.hatch_steps
+              pokemon.hatched_map    = 0
+              pokemon.obtain_method  = 1
             end
             # pokemon.calc_stats
             while @storage[x, y]
@@ -5431,6 +5464,10 @@ class PokemonStorageScreen
           pbDisplay(_INTL("No Pokemon to Import!"))
         else
           importunevo = false
+          importegg = false
+          if $PokemonSystem.importegg && $PokemonSystem.importegg == 1
+            importegg = true
+          end
           importlevel = 0
           if $PokemonSystem.importlvl
             if $PokemonSystem.importlvl == 1
@@ -5459,6 +5496,13 @@ class PokemonStorageScreen
           end
           if importlevel != 0
             pokemon.level = importlevel
+            # pokemon.calc_stats
+          end
+          if importegg
+            pokemon.name           = _INTL("Egg")
+            pokemon.steps_to_hatch = pokemon.species_data.hatch_steps
+            pokemon.hatched_map    = 0
+            pokemon.obtain_method  = 1
           end
           # pokemon.calc_stats
           while @storage[x, y]
