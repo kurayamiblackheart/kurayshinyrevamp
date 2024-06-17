@@ -1,0 +1,4562 @@
+﻿# See the documentation on the wiki to learn how to edit this file.
+#-------------------------------
+[LASS,Mimi]
+LoseText = "..."
+Pokemon = PIDGEY,4
+#-------------------------------
+[YOUNGSTER,Pat]
+LoseText = "..."
+Pokemon = B16H21,7
+#-------------------------------
+[YOUNGSTER,Sean]
+LoseText = "..."
+Pokemon = B14H11,8
+    Moves = HARDEN
+#-------------------------------
+[YOUNGSTER,Mustafa]
+LoseText = "..."
+Pokemon = PIDGEY,4
+Pokemon = B10H19,4
+#-------------------------------
+[TEAMROCKET_M,Walter]
+LoseText = "..."
+Pokemon = GRIMER,22
+    Item = POISONBARB
+    Ball = ROCKETBALL
+Pokemon = B108H93,26
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Jared]
+LoseText = "..."
+Pokemon = RATICATE,22
+    Moves = TRANSFORM,HYPERFANG,CRUNCH,SCARYFACE
+    Ball = ROCKETBALL
+Pokemon = B61H42,26
+    Ball = ROCKETBALL
+#-------------------------------
+[CHANNELER,Hope]
+LoseText = "..."
+Pokemon = B92H1,33
+#-------------------------------
+[CHANNELER,Margaret]
+LoseText = "..."
+Pokemon = B92H4,33
+#-------------------------------
+[CHANNELER,Deborah]
+LoseText = "..."
+Pokemon = B92H7,33
+#-------------------------------
+[HAUNTEDGIRL,Laurel]
+LoseText = "..."
+Pokemon = GASTLY,32
+Pokemon = B64H92,32
+#-------------------------------
+[CHANNELER,Carrietta]
+LoseText = "..."
+Pokemon = B52H92,32
+#-------------------------------
+[CHANNELER,Morgan]
+LoseText = "..."
+Pokemon = B20H92,34
+#-------------------------------
+[CHANNELER,Ruth]
+LoseText = "..."
+Pokemon = B93H96,33
+#-------------------------------
+[HAUNTEDGIRL_YOUNG,Regan]
+LoseText = "..."
+Pokemon = B102H92,33
+#-------------------------------
+[CHANNELER,Karina]
+LoseText = "..."
+Pokemon = B93H42,32
+#-------------------------------
+[HAUNTEDGIRL,Carol Anne]
+LoseText = "..."
+Pokemon = B42H93,34
+#-------------------------------
+[CHANNELER,Angelica]
+LoseText = "..."
+Pokemon = GASTLY,32
+Pokemon = GASTLY,33
+Pokemon = B200H92,33
+#-------------------------------
+[HAUNTEDGIRL_YOUNG,Jennifer]
+LoseText = "..."
+Pokemon = B94H36,31
+#-------------------------------
+[CHANNELER,Emilia]
+LoseText = "..."
+Pokemon = B51H93,34
+#-------------------------------
+[HAUNTEDGIRL,???]
+LoseText = "..."
+Pokemon = B105H94,40
+    Moves = SHADOWBONE,BONECLUB,THRASH,MEANLOOK
+#-------------------------------
+[HAUNTEDGIRL,???,1]
+LoseText = "..."
+Pokemon = B373H421,65
+#-------------------------------
+[HAUNTEDGIRL,???,2]
+LoseText = "..."
+Pokemon = B94H421,65
+#-------------------------------
+[HAUNTEDGIRL,???,3]
+LoseText = "..."
+Pokemon = B367H421,65
+#-------------------------------
+[HAUNTEDGIRL,???,4]
+LoseText = "..."
+Pokemon = B424H439,65
+#-------------------------------
+[HAUNTEDGIRL,???,5]
+LoseText = "..."
+Pokemon = B424H373,65
+#-------------------------------
+[HAUNTEDGIRL,???,6]
+LoseText = "..."
+Pokemon = B429H196,65
+#-------------------------------
+[HAUNTEDGIRL,???,7]
+LoseText = "..."
+Pokemon = B429H200,65
+#-------------------------------
+[HAUNTEDGIRL,???,8]
+LoseText = "..."
+Pokemon = B429H124,65
+#-------------------------------
+[HAUNTEDGIRL,???,9]
+LoseText = "..."
+Pokemon = B426H362,65
+#-------------------------------
+[LASS,Julia]
+LoseText = "..."
+Pokemon = DITTO,23
+Pokemon = B35H40,23
+#-------------------------------
+[GAMBLER,Rich]
+LoseText = "..."
+Pokemon = VULPIX,25
+Pokemon = B58H39,25
+#-------------------------------
+[SUPERNERD,Glenn]
+LoseText = "..."
+Pokemon = GRIMER,23
+Pokemon = GRIMER,23
+Pokemon = B100H137,23
+#-------------------------------
+[TWINS,Eli & Anne]
+LoseText = "..."
+Pokemon = B35H54,23
+Pokemon = B39H79,23
+#-------------------------------
+[POKEMONBREEDER,Megan]
+LoseText = "..."
+Pokemon = B16H37,20
+Pokemon = B19H81,20
+Pokemon = B32H90,20
+Pokemon = B52H104,20
+Pokemon = B25H64,20
+#-------------------------------
+[BEAUTY,Andrea]
+LoseText = "..."
+Pokemon = B52H126,23
+Pokemon = B52H125,23
+Pokemon = B52H124,23
+#-------------------------------
+[SUPERNERD,Leslie]
+LoseText = "..."
+Pokemon = B109H143,27
+#-------------------------------
+[LASS,Paige]
+LoseText = "..."
+Pokemon = NIDORINO,24
+Pokemon = B30H5,24
+#-------------------------------
+[BIKER,Jaren]
+LoseText = "..."
+Pokemon = B88H66,25
+Pokemon = B88H56,25
+#-------------------------------
+[BIKER,Johnny]
+LoseText = "..."
+Pokemon = B58H104,28
+#-------------------------------
+[ROUGHNECK,Ricardo]
+LoseText = "..."
+Pokemon = FARFETCHD,23
+Pokemon = KOFFING,23
+Pokemon = B88H8,24
+#-------------------------------
+[SUPERNERD,Aidan]
+LoseText = "..."
+Pokemon = B100H47,23
+Pokemon = B109H47,23
+Pokemon = B81H47,23
+#-------------------------------
+[GAMBLER,Stan]
+LoseText = "..."
+Pokemon = POLIWAG,23
+Pokemon = POLIWAG,23
+Pokemon = B12H61,25
+#-------------------------------
+[SOCIALITE,Edna]
+LoseText = "..."
+Pokemon = B136H44,29
+#-------------------------------
+[PAINTER,Frederique]
+LoseText = "..."
+Pokemon = GOLDEEN,25
+Pokemon = B2H27,25
+#-------------------------------
+[LASS,Lina]
+LoseText = "..."
+Pokemon = B77H84,28
+#-------------------------------
+[TEACHER,France]
+LoseText = "..."
+Pokemon = CLEFAIRY,26
+Pokemon = B122H52,26
+#-------------------------------
+[PRESCHOOLER_M,Max]
+LoseText = "..."
+Pokemon = EEVEE,25
+Pokemon = B132H46,26
+    Moves = TRANSFORM
+#-------------------------------
+[PRESCHOOLER_M,William]
+LoseText = "..."
+Pokemon = B116H86,28
+#-------------------------------
+[PRESCHOOLER_F,Lea]
+LoseText = "..."
+Pokemon = HORSEA,23
+Pokemon = JIGGLYPUFF,23
+Pokemon = B137H25,23
+#-------------------------------
+[FISHERMAN,Ned]
+LoseText = "..."
+Pokemon = GOLDEEN,22
+Pokemon = POLIWAG,22
+Pokemon = B118H100,22
+#-------------------------------
+[FISHERMAN,Hank]
+LoseText = "..."
+Pokemon = B129H130,27
+#-------------------------------
+[FISHERMAN,Chip]
+LoseText = "..."
+Pokemon = TENTACOOL,24
+Pokemon = B118H104,24
+#-------------------------------
+[FISHERMAN,Elliot]
+LoseText = "..."
+Pokemon = SHELLDER,26
+Pokemon = B90H80,28
+#-------------------------------
+[YOUNGCOUPLE,Gia & Jes]
+LoseText = "..."
+Pokemon = KRABBY,29
+Pokemon = KRABBY,29
+Pokemon = B30H99,31
+Pokemon = B33H99,31
+#-------------------------------
+[ENGINEER,Luca]
+LoseText = "..."
+Pokemon = VOLTORB,31
+Pokemon = B26H90,31
+#-------------------------------
+[FISHERMAN,Andrew]
+LoseText = "..."
+Pokemon = MAGIKARP,25
+Pokemon = B129H11,25
+Pokemon = B129H14,25
+Pokemon = B129H132,25
+Pokemon = B129H10,25
+Pokemon = B129H13,25
+#-------------------------------
+[CAMPER,Justin]
+LoseText = "..."
+Pokemon = B29H33,29
+Pokemon = B30H32,29
+#-------------------------------
+[TUBER_F,Emily]
+LoseText = "..."
+Pokemon = B211H194,36
+    Moves = MINIMIZE,DIVE,AQUAJET,YAWN
+#-------------------------------
+[PICNICKER,Alma]
+LoseText = "..."
+Pokemon = GROWLITHE,33
+Pokemon = POLIWHIRL,33
+Pokemon = B133H116,33
+#-------------------------------
+[BIRDKEEPER,Sebastian]
+LoseText = "..."
+Pokemon = PIDGEY,34
+Pokemon = B17H83,34
+#-------------------------------
+[SWIMMER_F,Susie]
+LoseText = "..."
+Pokemon = HORSEA,26
+Pokemon = STARYU,26
+Pokemon = B61H25,26
+#-------------------------------
+[BEAUTY,Lola]
+LoseText = "..."
+Pokemon = CLEFAIRY,34
+Pokemon = B140H52,34
+#-------------------------------
+[SWIMMER_F,Valerie]
+LoseText = "..."
+Pokemon = POLIWAG,35
+Pokemon = B60H108,34
+#-------------------------------
+[PICNICKER,Gwen]
+LoseText = "..."
+Pokemon = ABRA,32
+Pokemon = MEOWTH,32
+Pokemon = B17H30,32
+#-------------------------------
+[BIRDKEEPER,Perry]
+LoseText = "..."
+Pokemon = PIDGEY,30
+Pokemon = PIDGEY,30
+Pokemon = SPEAROW,30
+Pokemon = B21H25,30
+#-------------------------------
+[BEAUTY,Pamela]
+LoseText = "..."
+Pokemon = B64H39,37
+#-------------------------------
+[BLACKBELT,Joshua]
+LoseText = "..."
+Pokemon = B132H25,28
+    Moves = TRANSFORM
+Pokemon = B132H1,28
+    Moves = TRANSFORM
+Pokemon = B132H4,28
+    Moves = TRANSFORM
+Pokemon = B132H7,28
+    Moves = TRANSFORM
+#-------------------------------
+[BLACKBELT,Henry]
+LoseText = "..."
+Pokemon = B34H122,31
+Pokemon = B31H99,31
+Pokemon = B119H99,31
+#-------------------------------
+[BIKER,Jared]
+LoseText = "..."
+Pokemon = B106H13,32
+Pokemon = B106H110,32
+#-------------------------------
+[BIRDKEEPER,James]
+LoseText = "..."
+Pokemon = B17H2,34
+Pokemon = B22H5,34
+#-------------------------------
+[FISHERMAN,Wallace]
+LoseText = "..."
+Pokemon = SHELLDER,32
+Pokemon = STARYU,32
+Pokemon = B79H26,32
+#-------------------------------
+[CLOWN,Pagliacci]
+LoseText = "..."
+Pokemon = B127H122,31
+Pokemon = B55H123,31
+#-------------------------------
+[NURSE,Maria]
+LoseText = "..."
+Pokemon = CLEFAIRY,31
+Pokemon = JIGGLYPUFF,31
+Pokemon = B113H40,34
+#-------------------------------
+[BIRDKEEPER,Carter]
+LoseText = "..."
+Pokemon = PIDGEOTTO,33
+Pokemon = DODUO,33
+Pokemon = B17H108,33
+#-------------------------------
+[BIRDKEEPER,Mitch]
+LoseText = "..."
+Pokemon = PIDGEY,31
+Pokemon = SPEAROW,31
+Pokemon = B16H77,31
+Pokemon = B22H136,31
+#-------------------------------
+[BIRDKEEPER,Marlon]
+LoseText = "..."
+Pokemon = SPEAROW,33
+Pokemon = DODUO,33
+Pokemon = B22H7,33
+#-------------------------------
+[BIRDKEEPER,Beck]
+LoseText = "..."
+Pokemon = B22H16,34
+Pokemon = B17H21,34
+#-------------------------------
+[BIRDKEEPER,Donald]
+LoseText = "..."
+Pokemon = B68H83,38
+#-------------------------------
+[BIRDKEEPER,Benny]
+LoseText = "..."
+Pokemon = SPEAROW,32
+Pokemon = B73H21,32
+#-------------------------------
+[BIKER,Gerald]
+LoseText = "..."
+Pokemon = KOFFING,33
+Pokemon = B89H70,33
+#-------------------------------
+[BIKER,Malik]
+LoseText = "..."
+Pokemon = GRIMER,33
+Pokemon = B95H109,33
+#-------------------------------
+[BIKER,Isaac]
+LoseText = "..."
+Pokemon = GRIMER,32
+Pokemon = KOFFING,32
+Pokemon = B88H86,32
+#-------------------------------
+[BIKER,Lukas]
+LoseText = "..."
+Pokemon = B109H44,31
+Pokemon = B109H43,31
+Pokemon = B109H45,33
+#-------------------------------
+[TWINS,Kiri & Jan]
+LoseText = "..."
+Pokemon = B7H4,34
+Pokemon = B1H7,34
+Pokemon = B4H1,34
+#-------------------------------
+[CLOWN,Sol]
+LoseText = "..."
+Pokemon = B123H25,34
+Pokemon = B122H26,34
+#-------------------------------
+[CRUSHKIN,Ron & Mya]
+LoseText = "..."
+Pokemon = B107H8,34
+Pokemon = B106H5,34
+#-------------------------------
+[NURSE,Celia]
+LoseText = "..."
+Pokemon = B103H35,38
+#-------------------------------
+[ROUGHNECK,Ernest]
+LoseText = "..."
+Pokemon = GRIMER,30
+Pokemon = WEEZING,30
+Pokemon = B109H82,30
+#-------------------------------
+[BIKER,Alex]
+LoseText = "..."
+Pokemon = GRIMER,33
+Pokemon = B110H139,33
+#-------------------------------
+[BEAUTY,Grace]
+LoseText = "..."
+Pokemon = WIGGLYTUFF,34
+Pokemon = B17H143,34
+#-------------------------------
+[BEAUTY,Olivia]
+LoseText = "..."
+Pokemon = BULBASAUR,34
+Pokemon = B2H110,34
+#-------------------------------
+[PICNICKER,Kindra]
+LoseText = "..."
+Pokemon = B234H64,33
+#-------------------------------
+[BIRDKEEPER,Chester]
+LoseText = "..."
+Pokemon = B147H85,30
+Pokemon = B85H148,34
+Pokemon = B147H83,30
+#-------------------------------
+[AROMALADY,Yazmin]
+LoseText = "..."
+Pokemon = BELLSPROUT,33
+Pokemon = GLOOM,33
+Pokemon = B114H182,33
+#-------------------------------
+[CRUSHGIRL,Tania]
+LoseText = "..."
+Pokemon = B62H42,38
+#-------------------------------
+[COOLTRAINER_F2,Jessica]
+LoseText = "..."
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+#-------------------------------
+[COOLTRAINER_M2,Matthew]
+LoseText = "..."
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+#-------------------------------
+[COOLTRAINER_F2,Laurie]
+LoseText = "..."
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+#-------------------------------
+[COOLTRAINER_M2,Alex]
+LoseText = "..."
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+Pokemon = BULBASAUR,25
+#-------------------------------
+[COOLTRAINER_F2,Skyler]
+LoseText = "..."
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+#-------------------------------
+[COOLTRAINER_M2,Alberto]
+LoseText = "..."
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+#-------------------------------
+[COOLTRAINER_F2,Heather]
+LoseText = "..."
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+#-------------------------------
+[COOLTRAINER_M2,Patrick]
+LoseText = "..."
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+Pokemon = BULBASAUR,50
+#-------------------------------
+[COOLTRAINER_F2,Melissa]
+LoseText = "..."
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+#-------------------------------
+[COOLTRAINER_M2,Joe]
+LoseText = "..."
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+#-------------------------------
+[COOLTRAINER_F2,Kim]
+LoseText = "..."
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+#-------------------------------
+[COOLTRAINER_M2,Stephen]
+LoseText = "..."
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+Pokemon = BULBASAUR,100
+#-------------------------------
+[CAMPER,Liam]
+LoseText = "..."
+Pokemon = B10H74,7
+Pokemon = B74H27,7
+    Moves = POISONSTING,SANDATTACK,DEFENSECURL,ROCKPOLISH
+#-------------------------------
+[LASS,Myriam]
+LoseText = "..."
+Pokemon = B29H74,9
+#-------------------------------
+[LASS,Janice]
+LoseText = "..."
+Pokemon = SPEAROW,10
+Pokemon = B29H25,12
+#-------------------------------
+[BUGCATCHER,Colton]
+LoseText = "..."
+Pokemon = METAPOD,10
+Pokemon = B23H10,10
+Pokemon = B23H13,10
+#-------------------------------
+[BUGCATCHER,Greg]
+LoseText = "..."
+Pokemon = CATERPIE,9
+Pokemon = B10H21,9
+Pokemon = B13H21,9
+#-------------------------------
+[BUGCATCHER_F,Sally]
+LoseText = "..."
+Pokemon = B13H52,10
+#-------------------------------
+[BUGCATCHER,James]
+LoseText = "..."
+Pokemon = CATERPIE,8
+Pokemon = B46H10,11
+#-------------------------------
+[YOUNGSTER,Calvin]
+LoseText = "..."
+Pokemon = B163H60,12
+#-------------------------------
+[LASS,Robin]
+LoseText = "..."
+Pokemon = B39H25,11
+#-------------------------------
+[YOUNGSTER,Ben]
+LoseText = "..."
+Pokemon = B19H16,11
+#-------------------------------
+[BURGLAR,Jamal]
+LoseText = "..."
+Pokemon = VULPIX,34
+Pokemon = B26H52,34
+#-------------------------------
+[CUEBALL,Isaiah]
+LoseText = "..."
+Pokemon = MACHOP,34
+Pokemon = B67H25,34
+#-------------------------------
+[BIKER,Virgil]
+LoseText = "..."
+Pokemon = KOFFING,33
+Pokemon = B72H109,33
+Pokemon = B73H110,33
+#-------------------------------
+[BIKER,Charles]
+LoseText = "..."
+Pokemon = KOFFING,33
+Pokemon = B5H110,35
+#-------------------------------
+[CUEBALL,Raul]
+LoseText = "..."
+Pokemon = MANKEY,34
+Pokemon = B57H202,34
+#-------------------------------
+[BIKER,Billy]
+LoseText = "..."
+Pokemon = B89H36,37
+#-------------------------------
+[CUEBALL,Zeek]
+LoseText = "..."
+Pokemon = B67H80,37
+#-------------------------------
+[CUEBALL,Corey]
+LoseText = "..."
+Pokemon = MACHOKE,33
+Pokemon = B57H121,33
+#-------------------------------
+[BIKER,Jaxon]
+LoseText = "..."
+Pokemon = GRIMER,34
+Pokemon = B110H44,34
+#-------------------------------
+[BIKER,Maurice]
+LoseText = "..."
+Pokemon = B28H171,35
+#-------------------------------
+[AROMALADY,Miranda]
+LoseText = "..."
+Pokemon = WEEPINBELL,36
+    Item = SITRUSBERRY
+Pokemon = B47H123,36
+    Item = OCCABERRY
+#-------------------------------
+[FARMER,Craig]
+LoseText = "..."
+Pokemon = B88H83,54
+#-------------------------------
+[FARMER,Dwight]
+LoseText = "..."
+Pokemon = EXEGGCUTE,34
+Pokemon = B128H241,38
+#-------------------------------
+[CAMPER,Michael]
+LoseText = "..."
+Pokemon = DODUO,36
+Pokemon = B190H108,36
+#-------------------------------
+[SWIMMER_M,Richard]
+LoseText = "..."
+Pokemon = CHINCHOU,36
+Pokemon = B72H90,36
+#-------------------------------
+[SWIMMER_M,Reece]
+LoseText = "..."
+Pokemon = GOLDEEN,34
+Pokemon = HORSEA,34
+Pokemon = B222H120,34
+#-------------------------------
+[SWIMMER_M,Tony]
+LoseText = "..."
+Pokemon = B120H100,39
+#-------------------------------
+[SWIMMER_M,David]
+LoseText = "..."
+Pokemon = GOLDEEN,34
+Pokemon = GOLDEEN,34
+Pokemon = B119H90,34
+#-------------------------------
+[SWIMMER_M,Matthew]
+LoseText = "..."
+Pokemon = B91H61,39
+#-------------------------------
+[SWIMMER_M,Axel]
+LoseText = "..."
+Pokemon = STARYU,34
+Pokemon = HORSEA,34
+Pokemon = B73H120,34
+#-------------------------------
+[SWIMMER_F,Alice]
+LoseText = "..."
+Pokemon = KRABBY,36
+Pokemon = B75H230,36
+#-------------------------------
+[SWIMMER_F,Anya]
+LoseText = "..."
+Pokemon = B80H117,39
+#-------------------------------
+[SWIMMER_F,Connie]
+LoseText = "..."
+Pokemon = B120H2,35
+Pokemon = B120H5,35
+Pokemon = B120H8,35
+#-------------------------------
+[SWIMMER_F,Ariel]
+LoseText = "..."
+Pokemon = KRABBY,36
+Pokemon = B119H25,38
+#-------------------------------
+[FISHERMAN,Wade]
+LoseText = "..."
+Pokemon = B117H111,41
+Pokemon = B30H121,41
+#-------------------------------
+[FISHERMAN,Ronald]
+LoseText = "..."
+Pokemon = SHELLDER,36
+Pokemon = SHELLDER,36
+Pokemon = B91H224,42
+#-------------------------------
+[SWIMMER_M,Spencer]
+LoseText = "..."
+Pokemon = STARYU,41
+Pokemon = B226H211,41
+#-------------------------------
+[FISHERMAN,Claude]
+LoseText = "..."
+Pokemon = TENTACOOL,41
+Pokemon = B91H73,41
+#-------------------------------
+[SWIMMER_F,Sammie]
+LoseText = "..."
+Pokemon = B139H121,45
+#-------------------------------
+[SWIMMER_M,Jerome]
+LoseText = "..."
+Pokemon = WARTORTLE,39
+Pokemon = B99H121,42
+#-------------------------------
+[PYROMANIAC,Julio]
+LoseText = "..."
+Pokemon = B109H101,41
+    Moves = SELFDESTRUCT
+Pokemon = B109H101,41
+    Moves = SELFDESTRUCT
+Pokemon = B109H101,41
+    Moves = SELFDESTRUCT
+Pokemon = B101H82,43
+    Moves = EXPLOSION
+#-------------------------------
+[SCIENTIST,Frisk]
+LoseText = "..."
+Pokemon = B63H4,51
+Pokemon = B91H92,46
+#-------------------------------
+[SCIENTIST,Johnson]
+LoseText = "..."
+Pokemon = B61H101,43
+Pokemon = B61H110,44
+#-------------------------------
+[BURGLAR,Arnie]
+LoseText = "..."
+Pokemon = CHARMANDER,45
+Pokemon = B5H108,42
+#-------------------------------
+[BURGLAR,Simon]
+LoseText = "..."
+Pokemon = B82H58,45
+    Moves = THUNDERBOLT,MAGNETRISE,HEATWAVE,ROAR
+    Item = CHARCOAL
+#-------------------------------
+[SCIENTIST,Braydon]
+LoseText = "..."
+Pokemon = B43H81,38
+Pokemon = B44H82,41
+Pokemon = B45H82,44
+#-------------------------------
+[BURGLAR,Lewis]
+LoseText = "..."
+Pokemon = GROWLITHE,43
+Pokemon = B77H30,43
+#-------------------------------
+[SCIENTIST,Ivan]
+LoseText = "..."
+Pokemon = MAGNEMITE,37
+Pokemon = B93H101,43
+#-------------------------------
+[SCIENTIST,Jimi]
+LoseText = "..."
+Pokemon = B55H101,46
+#-------------------------------
+[BURGLAR,Quinn]
+LoseText = "..."
+Pokemon = VULPIX,39
+Pokemon = VULPIX,39
+Pokemon = B38H57,41
+#-------------------------------
+[SUPERNERD,Erik]
+LoseText = "..."
+Pokemon = B37H47,39
+Pokemon = B37H47,39
+Pokemon = B38H47,41
+#-------------------------------
+[SUPERNERD,Avery]
+LoseText = "..."
+Pokemon = B4H25,36
+Pokemon = B5H25,40
+Pokemon = B6H25,43
+#-------------------------------
+[BURGLAR,Ramon]
+LoseText = "..."
+Pokemon = B5H2,45
+#-------------------------------
+[SUPERNERD,Derek]
+LoseText = "..."
+Pokemon = B51H51,45
+#-------------------------------
+[BURGLAR,Dusty]
+LoseText = "..."
+Pokemon = B58H37,43
+Pokemon = B37H4,43
+#-------------------------------
+[SUPERNERD,Zac]
+LoseText = "..."
+Pokemon = B37H58,43
+Pokemon = B58H4,43
+#-------------------------------
+[BUGCATCHER,Rick]
+LoseText = "..."
+Pokemon = WEEDLE,6
+Pokemon = B41H10,6
+#-------------------------------
+[BUGCATCHER_F,Lana]
+LoseText = "..."
+Pokemon = B16H10,8
+#-------------------------------
+[BUGCATCHER,Jim]
+LoseText = "..."
+Pokemon = CATERPIE,7
+Pokemon = CATERPIE,7
+Pokemon = B29H13,7
+#-------------------------------
+[LASS,Crissy]
+LoseText = "..."
+Pokemon = SANDSHREW,31
+Pokemon = B208H46,31
+Pokemon = B28H212,31
+#-------------------------------
+[COOLTRAINER_F,Jasper]
+LoseText = "..."
+Pokemon = SEEL,35
+Pokemon = SEEL,35
+Pokemon = SEADRA,35
+#-------------------------------
+[FISHERMAN,Hermes]
+LoseText = "..."
+Pokemon = B73H55,38
+#-------------------------------
+[CRUSHGIRL,Penelope]
+LoseText = "..."
+Pokemon = B106H87,34
+Pokemon = B107H87,34
+#-------------------------------
+[CRUSHGIRL,Trinity]
+LoseText = "..."
+Pokemon = SHELLDER,33
+Pokemon = POLIWHIRL,33
+Pokemon = B91H68,33
+#-------------------------------
+[BLACKBELT,Mitch]
+LoseText = "..."
+Pokemon = MACHOKE,34
+Pokemon = B232H57,34
+#-------------------------------
+[SWIMMER_M,Larry]
+LoseText = "..."
+Pokemon = SEADRA,34
+Pokemon = B119H117,34
+#-------------------------------
+[SWIMMER_F,Britney]
+LoseText = "..."
+Pokemon = TENTACOOL,34
+Pokemon = B83H8,34
+#-------------------------------
+[SWIMMER_F,Melissa]
+LoseText = "..."
+Pokemon = B73H122,38
+#-------------------------------
+[HIKER,Lenny]
+LoseText = "..."
+Pokemon = B95H208,23
+#-------------------------------
+[HIKER,Oliver]
+LoseText = "..."
+Pokemon = GEODUDE,20
+Pokemon = B75H74,20
+Pokemon = B95H20,20
+#-------------------------------
+[HIKER,Lucas]
+LoseText = "..."
+Pokemon = GEODUDE,21
+Pokemon = B75H111,21
+#-------------------------------
+[PICNICKER,Leah]
+LoseText = "..."
+Pokemon = ZUBAT,24
+Pokemon = B109H35,22
+#-------------------------------
+[PICNICKER,Ariana]
+LoseText = "..."
+Pokemon = RATTATA,19
+Pokemon = B16H109,19
+Pokemon = RATTATA,19
+#-------------------------------
+[PICNICKER,Dana]
+LoseText = "..."
+Pokemon = MEOWTH,20
+Pokemon = PIDGEOTTO,20
+Pokemon = B43H93,20
+#-------------------------------
+[COOLTRAINER_F,Laura]
+LoseText = "..."
+Pokemon = B108H90,24
+Pokemon = B67H127,24
+#-------------------------------
+[COOLTRAINER_F,Laura,1]
+LoseText = "..."
+Pokemon = B108H90,24
+Pokemon = B67H127,24
+Pokemon = B115H61,22
+Pokemon = B123H92,22
+Pokemon = B128H58,22
+Pokemon = B33H111,22
+#-------------------------------
+[POKEMANIAC,Ashton]
+LoseText = "..."
+Pokemon = SLOWPOKE,23
+Pokemon = B104H67,23
+#-------------------------------
+[POKEMANIAC,Winston]
+LoseText = "..."
+Pokemon = B79H126,25
+#-------------------------------
+[PAINTER,Maya]
+LoseText = "..."
+Pokemon = ODDISH,21
+Pokemon = B1H44,21
+Pokemon = B52H39,21
+#-------------------------------
+[POKEMANIAC,Steve]
+LoseText = "..."
+Pokemon = MANKEY,22
+Pokemon = B5H104,22
+#-------------------------------
+[HIKER,Allen]
+LoseText = "..."
+Pokemon = B74H22,25
+#-------------------------------
+[HIKER,Pat]
+LoseText = "..."
+Pokemon = MANKEY,20
+Pokemon = B66H109,20
+#-------------------------------
+[PICNICKER,Sofia]
+LoseText = "..."
+Pokemon = JIGGLYPUFF,21
+Pokemon = SQUIRTLE,21
+Pokemon = B52H83,21
+#-------------------------------
+[HIKER,Dudley]
+LoseText = "..."
+Pokemon = GEODUDE,21
+Pokemon = GEODUDE,21
+Pokemon = B75H28,21
+#-------------------------------
+[POKEMANIAC,Cooper]
+LoseText = "..."
+Pokemon = SLOWPOKE,20
+Pokemon = B75H61,20
+Pokemon = B79H102,20
+#-------------------------------
+[BUGCATCHER,Cale]
+LoseText = "..."
+Pokemon = WEEDLE,10
+Pokemon = KAKUNA,10
+Pokemon = B41H11,10
+Pokemon = B46H74,10
+#-------------------------------
+[LASS,Ali]
+LoseText = "..."
+Pokemon = ABRA,12
+Pokemon = B21H16,12
+Pokemon = B43H56,12
+#-------------------------------
+[YOUNGSTER,Timmy]
+LoseText = "..."
+Pokemon = EKANS,14
+Pokemon = B27H52,14
+#-------------------------------
+[LASS,Reli]
+LoseText = "..."
+Pokemon = RATTATA,14
+Pokemon = B100H109,14
+#-------------------------------
+[CAMPER,Ethan]
+LoseText = "..."
+Pokemon = B56H41,18
+#-------------------------------
+[CAMPER,Shane]
+LoseText = "..."
+Pokemon = B29H63,16
+Pokemon = B32H63,16
+#-------------------------------
+[TEAMROCKET_M,Elvis]
+LoseText = "..."
+Pokemon = EKANS,15
+    Ball = ROCKETBALL
+Pokemon = B41H109,15
+    Ball = ROCKETBALL
+#-------------------------------
+[SAILOR,Trevor]
+LoseText = "..."
+Pokemon = TENTACOOL,16
+Pokemon = B66H116,17
+#-------------------------------
+[SAILOR,Edmond]
+LoseText = "..."
+Pokemon = MACHOP,18
+Pokemon = B90H52,18
+#-------------------------------
+[GENTLEMAN,Thomas]
+LoseText = "..."
+Pokemon = B58H52,20
+#-------------------------------
+[GENTLEMAN,Arthur]
+LoseText = "..."
+Pokemon = VULPIX,18
+Pokemon = B29H58,19
+#-------------------------------
+[LASS,Ann]
+LoseText = "..."
+Pokemon = NIDORANfE,17
+Pokemon = B17H118,18
+#-------------------------------
+[YOUNGSTER,Tyler]
+LoseText = "..."
+Pokemon = B32H66,21
+#-------------------------------
+[FISHERMAN,Dale]
+LoseText = "..."
+Pokemon = GOLDEEN,16
+Pokemon = B129H118,17
+Pokemon = B72H129,17
+#-------------------------------
+[GENTLEMAN,Brooks]
+LoseText = "..."
+Pokemon = B25H86,23
+#-------------------------------
+[LASS,Dawn]
+LoseText = "..."
+Pokemon = RATTATA,18
+Pokemon = B25H81,18
+#-------------------------------
+[GENTLEMAN,Lamar]
+LoseText = "..."
+Pokemon = B79H58,17
+Pokemon = B77H100,17
+#-------------------------------
+[SAILOR,Duncan]
+LoseText = "..."
+Pokemon = HORSEA,17
+Pokemon = TENTACOOL,17
+Pokemon = B90H41,17
+#-------------------------------
+[SAILOR,Leonard]
+LoseText = "..."
+Pokemon = B88H90,21
+#-------------------------------
+[SAILOR,Dylan]
+LoseText = "..."
+Pokemon = HORSEA,17
+Pokemon = HORSEA,17
+Pokemon = B23H116,17
+#-------------------------------
+[SAILOR,Huey]
+LoseText = "..."
+Pokemon = STARYU,18
+Pokemon = B72H100,18
+#-------------------------------
+[FISHERMAN,Barny]
+LoseText = "..."
+Pokemon = KRABBY,17
+Pokemon = SHELLDER,17
+Pokemon = B120H46,17
+#-------------------------------
+[SAILOR,Philip]
+LoseText = "..."
+Pokemon = B66H61,21
+#-------------------------------
+[COOLTRAINER_M,Jerry]
+LoseText = "..."
+Pokemon = B24H120,25
+#-------------------------------
+[COOLTRAINER_M,Jerry,1]
+LoseText = "..."
+Pokemon = B24H121,32
+Pokemon = B91H97,32
+#-------------------------------
+[HIKER,Franklin]
+LoseText = "..."
+Pokemon = SANDSHREW,15
+Pokemon = B23H74,15
+#-------------------------------
+[HIKER,Wayne]
+LoseText = "..."
+Pokemon = B95H43,17
+#-------------------------------
+[YOUNGSTER,Joey]
+LoseText = "..."
+Pokemon = B19H19,17
+#-------------------------------
+[YOUNGSTER,Dan]
+LoseText = "..."
+Pokemon = B79H46,15
+Pokemon = B21H60,15
+#-------------------------------
+[PICNICKER,Kelsey]
+LoseText = "..."
+Pokemon = B29H32,15
+Pokemon = B32H29,15
+#-------------------------------
+[HIKER,Nob]
+LoseText = "..."
+Pokemon = GEODUDE,13
+Pokemon = GEODUDE,13
+Pokemon = GEODUDE,13
+Pokemon = B66H25,13
+#-------------------------------
+[CAMPER,Flint]
+LoseText = "..."
+Pokemon = B23H48,14
+Pokemon = B27H48,14
+#-------------------------------
+[YOUNGSTER,Chad]
+LoseText = "..."
+Pokemon = B19H1,14
+Pokemon = B23H96,14
+#-------------------------------
+[LASS,Haley]
+LoseText = "..."
+Pokemon = ODDISH,13
+Pokemon = PIDGEY,13
+Pokemon = B46H43,15
+#-------------------------------
+[BLACKBELT,Hitoshi]
+LoseText = "..."
+Pokemon = B56H52,34
+Pokemon = B127H56,34
+Pokemon = B67H56,34
+#-------------------------------
+[CRUSHGIRL,Yoshimi]
+LoseText = "..."
+Pokemon = B67H81,39
+#-------------------------------
+[BLACKBELT,Hideki]
+LoseText = "..."
+Pokemon = B66H83,38
+Pokemon = B67H111,38
+#-------------------------------
+[CRUSHGIRL,Lucy]
+LoseText = "..."
+Pokemon = B57H214,35
+Pokemon = B62H75,38
+#-------------------------------
+[BLACKBELT,Koichi]
+LoseText = "..."
+Pokemon = B107H106,45
+Pokemon = B106H237,45
+Pokemon = B237H107,45
+#-------------------------------
+[COOLTRAINER_F,Jen]
+LoseText = "..."
+Pokemon = B80H101,50
+#-------------------------------
+[POKEMONBREEDER,Maude]
+LoseText = "..."
+Pokemon = TOGEPI,12
+Pokemon = TOGEPI,12
+Pokemon = B239H240,15
+#-------------------------------
+[SOCIALITE,Mathilda]
+LoseText = "..."
+Pokemon = B37H54,16
+#-------------------------------
+[PICNICKER,Alicia]
+LoseText = "..."
+Pokemon = ODDISH,18
+Pokemon = ODDISH,18
+Pokemon = B69H70,18
+#-------------------------------
+[HIKER,Jeremy]
+LoseText = "..."
+Pokemon = GEODUDE,20
+Pokemon = B95H56,20
+#-------------------------------
+[CAMPER,Chris]
+LoseText = "..."
+Pokemon = B58H79,21
+Pokemon = B4H54,21
+#-------------------------------
+[BUGCATCHER,Brent]
+LoseText = "..."
+Pokemon = B15H12,19
+Pokemon = B12H15,19
+#-------------------------------
+[BUGCATCHER,Conner]
+LoseText = "..."
+Pokemon = VENONAT,20
+Pokemon = VENONAT,20
+Pokemon = B48H96,22
+#-------------------------------
+[CAMPER,Drew]
+LoseText = "..."
+Pokemon = PIKACHU,19
+Pokemon = PIDGEY,19
+Pokemon = PIDGEY,19
+Pokemon = B63H27,19
+#-------------------------------
+[HIKER,Alan]
+LoseText = "..."
+Pokemon = GEODUDE,21
+Pokemon = B95H23,21
+#-------------------------------
+[HIKER,Brice]
+LoseText = "..."
+Pokemon = DIGLETT,18
+Pokemon = DIGLETT,18
+Pokemon = B75H129,20
+#-------------------------------
+[PICNICKER,Caitlin]
+LoseText = "..."
+Pokemon = B52H66,23
+#-------------------------------
+[BEAUTY,Heidi]
+LoseText = "..."
+Pokemon = PIKACHU,20
+Pokemon = B213H39,20
+#-------------------------------
+[BUGCATCHER,Kent]
+LoseText = "..."
+Pokemon = WEEDLE,11
+Pokemon = B14H41,11
+#-------------------------------
+[LASS,Iris]
+LoseText = "..."
+Pokemon = B35H39,14
+#-------------------------------
+[SUPERNERD,Jovan]
+LoseText = "..."
+Pokemon = B100H81,11
+Pokemon = B74H100,11
+#-------------------------------
+[BUGCATCHER,Robby]
+LoseText = "..."
+Pokemon = B10H41,12
+Pokemon = B11H41,12
+#-------------------------------
+[LASS,Miriam]
+LoseText = "..."
+Pokemon = B43H44,14
+#-------------------------------
+[YOUNGSTER,Josh]
+LoseText = "..."
+Pokemon = RATTATA,10
+Pokemon = RATTATA,10
+Pokemon = B27H29,10
+#-------------------------------
+[HIKER,Marcos]
+LoseText = "..."
+Pokemon = GEODUDE,10
+Pokemon = GEODUDE,10
+Pokemon = B95H10,12
+#-------------------------------
+[TEAMROCKET_M,Jerry]
+LoseText = "..."
+Pokemon = ZUBAT,11
+    Ball = ROCKETBALL
+Pokemon = ZUBAT,11
+    Ball = ROCKETBALL
+Pokemon = B23H41,11
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Francis]
+LoseText = "..."
+Pokemon = ZUBAT,10
+    Ball = ROCKETBALL
+Pokemon = B14H41,13
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Samantha]
+LoseText = "..."
+Pokemon = RATTATA,13
+    Ball = ROCKETBALL
+Pokemon = B29H23,13
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Giorgio]
+LoseText = "..."
+Pokemon = EKANS,13
+    Ball = ROCKETBALL
+Pokemon = B19H46,13
+    Ball = ROCKETBALL
+#-------------------------------
+[SUPERNERD,Miguel]
+LoseText = "..."
+Pokemon = B88H109,16
+#-------------------------------
+[TWINS,Day & Dani]
+LoseText = "..."
+Pokemon = B79H25,16
+Pokemon = B54H25,16
+#-------------------------------
+[CAMPER,Ricky]
+LoseText = "..."
+Pokemon = B7H21,20
+#-------------------------------
+[PICNICKER,Nancy]
+LoseText = "..."
+Pokemon = RATTATA,16
+Pokemon = B23H25,16
+#-------------------------------
+[BUGCATCHER,Elijah]
+LoseText = "..."
+Pokemon = B12H35,20
+#-------------------------------
+[PICNICKER,Isabelle]
+LoseText = "..."
+Pokemon = PIDGEY,16
+Pokemon = PIDGEY,16
+Pokemon = B16H27,16
+#-------------------------------
+[CAMPER,Jeff]
+LoseText = "..."
+Pokemon = SPEAROW,16
+Pokemon = B20H43,16
+#-------------------------------
+[YOUNGSTER,Eddie]
+LoseText = "..."
+Pokemon = B50H102,21
+#-------------------------------
+[GAMBLER,Hugo]
+LoseText = "..."
+Pokemon = POLIWAG,17
+Pokemon = B60H43,18
+#-------------------------------
+[ENGINEER,Bernie]
+LoseText = "..."
+Pokemon = B27H81,21
+#-------------------------------
+[YOUNGSTER,Dave]
+LoseText = "..."
+Pokemon = EKANS,18
+Pokemon = B33H66,18
+#-------------------------------
+[GAMBLER,Darian]
+LoseText = "..."
+Pokemon = B37H58,21
+#-------------------------------
+[ENGINEER,Braxton]
+LoseText = "..."
+Pokemon = MAGNEMITE,18
+Pokemon = MAGNEMITE,18
+Pokemon = B50H81,20
+#-------------------------------
+[GAMBLER,Jasper]
+LoseText = "..."
+Pokemon = MANKEY,18
+Pokemon = B43H48,18
+#-------------------------------
+[GAMBLER,Dirk]
+LoseText = "..."
+Pokemon = ODDISH,18
+Pokemon = B100H39,18
+#-------------------------------
+[BEAUTY,Tamia]
+LoseText = "..."
+Pokemon = B10H69,31
+Pokemon = B15H70,33
+#-------------------------------
+[LASS,Kay]
+LoseText = "..."
+Pokemon = B84H70,35
+#-------------------------------
+[BEAUTY,Bridget]
+LoseText = "..."
+Pokemon = B43H69,32
+Pokemon = B44H69,32
+Pokemon = B44H70,32
+#-------------------------------
+[PICNICKER,Tina]
+LoseText = "..."
+Pokemon = B1H69,34
+Pokemon = B2H70,34
+#-------------------------------
+[BEAUTY,Lori]
+LoseText = "..."
+Pokemon = B102H43,36
+#-------------------------------
+[LASS,Lisa]
+LoseText = "..."
+Pokemon = B43H25,30
+Pokemon = B70H25,34
+#-------------------------------
+[COOLTRAINER_F,Mary]
+LoseText = "..."
+Pokemon = B16H43,32
+Pokemon = B83H44,34
+#-------------------------------
+[PICNICKER,Martine]
+LoseText = "..."
+Pokemon = B58H43,34
+#-------------------------------
+[SAILOR,Dwayne]
+LoseText = "..."
+Pokemon = B86H25,20
+#-------------------------------
+[ENGINEER,Baily]
+LoseText = "..."
+Pokemon = B43H100,21
+Pokemon = B69H100,21
+#-------------------------------
+[GENTLEMAN,Tucker]
+LoseText = "..."
+Pokemon = B66H81,23
+#-------------------------------
+[JUGGLER,Kayden]
+LoseText = "..."
+Pokemon = B96H20,36
+#-------------------------------
+[JUGGLER,Nate]
+LoseText = "..."
+Pokemon = B41H23,34
+Pokemon = B24H88,36
+#-------------------------------
+[JUGGLER,Kirk]
+LoseText = "..."
+Pokemon = B48H41,32
+Pokemon = B108H48,35
+#-------------------------------
+[TAMER,Edgar]
+LoseText = "..."
+Pokemon = B27H30,32
+Pokemon = B111H33,34
+#-------------------------------
+[TAMER,Phil]
+LoseText = "..."
+Pokemon = B46H48,35
+Pokemon = B42H47,35
+#-------------------------------
+[JUGGLER,Shawn]
+LoseText = "..."
+Pokemon = B40H109,36
+#-------------------------------
+[ENGINEER,Cole]
+LoseText = "..."
+Pokemon = B24H28,44
+Pokemon = B128H111,44
+#-------------------------------
+[BLACKBELT,Kiyo]
+LoseText = "..."
+Pokemon = B67H105,48
+    Item = BLACKBELT
+#-------------------------------
+[ENGINEER,Jason]
+LoseText = "..."
+Pokemon = B111H53,48
+#-------------------------------
+[BLACKBELT,Atsushi]
+LoseText = "..."
+Pokemon = B66H104,46
+Pokemon = B221H121,46
+#-------------------------------
+[COOLTRAINER_M,Samuel]
+LoseText = "..."
+Pokemon = B28H33,44
+Pokemon = B111H28,44
+Pokemon = B34H104,44
+#-------------------------------
+[BLACKBELT,Takashi]
+LoseText = "..."
+Pokemon = MACHOP,44
+Pokemon = B67H55,44
+Pokemon = B34H67,44
+#-------------------------------
+[COOLTRAINER_M,Yuji]
+LoseText = "..."
+Pokemon = B28H55,42
+Pokemon = B95H135,42
+Pokemon = B105H108,42
+Pokemon = B75H127,44
+#-------------------------------
+[COOLTRAINER_F,Justine]
+LoseText = "..."
+Pokemon = B111H70,43
+Pokemon = B105H105,43
+Pokemon = B31H20,43
+#-------------------------------
+[SWIMMER_M,Luis]
+LoseText = "..."
+Pokemon = B98H90,16
+Pokemon = B116H23,16
+#-------------------------------
+[PICNICKER,Diana]
+LoseText = "..."
+Pokemon = B50H120,19
+#-------------------------------
+[SAGE,Ping]
+LoseText = "..."
+Pokemon = B309H311,56
+Pokemon = B302H311,56
+#-------------------------------
+[CHANNELER,Grace]
+LoseText = "..."
+Pokemon = B93H200,54
+Pokemon = B97H255,57
+#-------------------------------
+[CHANNELER,Martha]
+LoseText = "..."
+Pokemon = B312H300,62
+#-------------------------------
+[SAGE,Takao]
+LoseText = "..."
+Pokemon = B328H153,63
+#-------------------------------
+[SAGE,Jeffrey]
+LoseText = "..."
+Pokemon = B92H328,53
+Pokemon = B92H328,53
+Pokemon = B93H328,57
+#-------------------------------
+[PLAYER,Martin]
+LoseText = "..."
+Pokemon = B37H272,56
+Pokemon = B38H272,59
+    Moves = AURORABEAM,FAIRYWIND,WILLOWISP,CONFUSERAY
+    AbilityIndex = 0
+#-------------------------------
+[PLAYER,Sidney]
+LoseText = "..."
+Pokemon = B208H221,62
+#-------------------------------
+[PLAYER,Maurice]
+LoseText = "..."
+Pokemon = B241H124,57
+Pokemon = B128H124,57
+#-------------------------------
+[PLAYER,Wayne]
+LoseText = "..."
+Pokemon = B332H272,62
+#-------------------------------
+[BIRDKEEPER,Abe]
+LoseText = "..."
+Pokemon = B22H200,53
+Pokemon = B22H190,53
+#-------------------------------
+[BIRDKEEPER,Rod]
+LoseText = "..."
+Pokemon = B17H106,51
+Pokemon = B17H107,51
+Pokemon = B17H237,51
+#-------------------------------
+[BIRDKEEPER,Carl]
+LoseText = "..."
+Pokemon = B12H113,53
+Pokemon = B169H15,53
+#-------------------------------
+[BEAUTY,Victoria]
+LoseText = "..."
+Pokemon = B20H17,44
+Pokemon = B20H169,44
+Pokemon = B20H166,44
+#-------------------------------
+[LASS,Samantha]
+LoseText = "..."
+Pokemon = B53H38,46
+Pokemon = B53H59,46
+#-------------------------------
+[BEAUTY,Jane]
+LoseText = "..."
+Pokemon = B128H210,49
+#-------------------------------
+[LASS,Bridget]
+LoseText = "..."
+Pokemon = B40H35,45
+Pokemon = B113H40,41
+Pokemon = B40H176,45
+#-------------------------------
+[BUGCATCHER_F,Charlotte]
+LoseText = "..."
+Pokemon = B168H12,47
+Pokemon = B168H220,47
+#-------------------------------
+[BUGCATCHER,Bugsy]
+LoseText = "..."
+Pokemon = B127H123,51
+#-------------------------------
+[BUGCATCHER,Josh]
+LoseText = "..."
+Pokemon = B47H182,49
+Pokemon = B47H152,49
+#-------------------------------
+[BUGCATCHER,Albert]
+LoseText = "..."
+Pokemon = B166H57,49
+Pokemon = B67H166,49
+#-------------------------------
+[COOLTRAINER_M,Paul]
+LoseText = "..."
+Pokemon = B147H153,54
+Pokemon = B147H156,54
+Pokemon = B147H159,54
+#-------------------------------
+[COOLTRAINER_F,Francine]
+LoseText = "..."
+Pokemon = B148H117,59
+#-------------------------------
+[COOLTRAINER_M,Cody]
+LoseText = "..."
+Pokemon = B117H5,57
+Pokemon = B117H156,57
+#-------------------------------
+[COOLTRAINER_M,Mike]
+LoseText = "..."
+Pokemon = B149H11,62
+    Moves = IRONDEFENSE,ROOST,THUNDERWAVE,WRAP
+    Item = EVIOLITE
+#-------------------------------
+[COOLTRAINER_F,Lola]
+LoseText = "..."
+Pokemon = B180H147,55
+Pokemon = B148H181,57
+#-------------------------------
+[COOLTRAINER_F2,Jeanette]
+LoseText = "..."
+Pokemon = B123H15,45
+Pokemon = BELLSPROUT,77
+    Moves = WRINGOUT,MAGICALLEAF,DOUBLETEAM,SYNTHESIS
+#-------------------------------
+[TEAMROCKET_M,Phillip]
+LoseText = "..."
+Pokemon = B88H42,26
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Paul]
+LoseText = "..."
+Pokemon = B109H33,26
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Joffrey]
+LoseText = "..."
+Pokemon = KOFFING,21
+    Ball = ROCKETBALL
+Pokemon = B42H20,23
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Virginia]
+LoseText = "..."
+Pokemon = KOFFING,26
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Lionel]
+LoseText = "..."
+Pokemon = B20H70,22
+    Ball = ROCKETBALL
+Pokemon = B88H44,22
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Richard]
+LoseText = "..."
+Pokemon = KOFFING,22
+    Ball = ROCKETBALL
+Pokemon = B88H81,22
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Kaitlin]
+LoseText = "..."
+Pokemon = B100H132,26
+    Moves = TRANSFORM,CHARGEBEAM,LIGHTSCREEN,SONICBOOM
+    AbilityIndex = 0
+    Ball = ROCKETBALL
+Pokemon = B89H42,25
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Omar]
+LoseText = "..."
+Pokemon = B17H109,26
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Max]
+LoseText = "..."
+Pokemon = B110H100,25
+    Ball = ROCKETBALL
+#-------------------------------
+[ELITEFOUR_Lance,Lance]
+LoseText = "..."
+Pokemon = DRAGONITE,50
+Pokemon = AERODACTYL,50
+Pokemon = GYARADOS,50
+#-------------------------------
+[ELITEFOUR_Lance,Lance,1]
+LoseText = "..."
+Pokemon = DRAGONITE,40
+Pokemon = AERODACTYL,40
+Pokemon = GYARADOS,40
+#-------------------------------
+[TEAMROCKET_M,Dennis]
+LoseText = "..."
+Pokemon = B84H20,38
+    Ball = ROCKETBALL
+Pokemon = B24H42,38
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Cyrus]
+LoseText = "..."
+Pokemon = B110H20,39
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Sam]
+LoseText = "..."
+Pokemon = B51H24,39
+    Ball = ROCKETBALL
+#-------------------------------
+[WORKER,Jay]
+LoseText = "..."
+Pokemon = B74H56,18
+Pokemon = B75H15,22
+#-------------------------------
+[WORKER,Dave]
+LoseText = "..."
+Pokemon = B66H56,18
+Pokemon = B67H50,22
+#-------------------------------
+[SUPERNERD,Miguel,1]
+LoseText = "..."
+Pokemon = B88H109,18
+Pokemon = OMANYTE,20
+#-------------------------------
+[SUPERNERD,Miguel,2]
+LoseText = "..."
+Pokemon = B88H109,18
+Pokemon = KABUTO,20
+#-------------------------------
+[SUPERNERD,Miguel,3]
+LoseText = "..."
+Pokemon = B89H110,24
+Pokemon = B301H140,26
+#-------------------------------
+[SUPERNERD,Miguel,4]
+LoseText = "..."
+Pokemon = B89H110,24
+Pokemon = B303H140,26
+#-------------------------------
+[SUPERNERD,Miguel,5]
+LoseText = "..."
+Pokemon = B89H110,24
+Pokemon = B301H138,26
+#-------------------------------
+[SUPERNERD,Miguel,6]
+LoseText = "..."
+Pokemon = B89H110,24
+Pokemon = B303H138,26
+#-------------------------------
+[SUPERNERD,Miguel,7]
+LoseText = "..."
+Pokemon = B139H141,51
+Pokemon = B302H304,53
+Pokemon = B308H306,53
+Pokemon = B426H462,53
+Pokemon = B142H142,55
+#-------------------------------
+[TEAMROCKET_M,Doug]
+LoseText = "..."
+Pokemon = B15H81,28
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Chad]
+LoseText = "..."
+Pokemon = GOLBAT,24
+    Ball = ROCKETBALL
+Pokemon = EKANS,24
+    Ball = ROCKETBALL
+Pokemon = B88H116,25
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Stephan]
+LoseText = "..."
+Pokemon = B24H53,30
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Romeo]
+LoseText = "..."
+Pokemon = DROWZEE,29
+    Ball = ROCKETBALL
+Pokemon = KOFFING,29
+    Ball = ROCKETBALL
+Pokemon = B67H72,31
+    Ball = ROCKETBALL
+#-------------------------------
+[ROCKETBOSS,Giovanni]
+Items = MAXPOTION
+LoseText = "..."
+Pokemon = B95H24,32
+    Ball = ULTRABALL
+Pokemon = B131H111,32
+    Ball = ULTRABALL
+Pokemon = B115H93,35
+    Ball = ULTRABALL
+#-------------------------------
+[ROCKETBOSS,Giovanni,4]
+Items = MAXPOTION
+LoseText = "..."
+Pokemon = B33H57,45
+    Ball = ULTRABALL
+Pokemon = B131H112,45
+    Ball = ULTRABALL
+Pokemon = B115H94,47
+    Ball = ULTRABALL
+Pokemon = B31H28,51
+    Ball = ULTRABALL
+#-------------------------------
+[LEADER_Brock,Brock]
+LoseText = "..."
+Pokemon = B16H74,9
+    Moves = GUST,SANDATTACK,ROCKTOMB,ROCKPOLISH
+    AbilityIndex = 0
+Pokemon = B95H50,12
+    Moves = ROCKTOMB,BIND,DIG,RAGE
+#-------------------------------
+[LEADER_Brock,Brock,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B76H18,68
+    Item = HARDSTONE
+Pokemon = B208H95,70
+    Item = HARDSTONE
+Pokemon = B304H300,71
+    Item = HARDSTONE
+Pokemon = B139H270,68
+    Item = HARDSTONE
+Pokemon = B141H212,71
+    Item = HARDSTONE
+Pokemon = B308H142,70
+    Item = HARDSTONE
+#-------------------------------
+[LEADER_Misty,Misty]
+Items = SUPERPOTION
+LoseText = "..."
+Pokemon = B118H39,19
+    Moves = WATERPULSE,DISARMINGVOICE,SING,HORNATTACK
+    AbilityIndex = 1
+    Item = MYSTICWATER
+Pokemon = B120H43,22
+    Moves = WATERPULSE,RECOVER,MEGADRAIN,STUNSPORE
+    AbilityIndex = 3
+    Item = MYSTICWATER
+#-------------------------------
+[LEADER_Misty,Misty,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B119H40,68
+    Item = MYSTICWATER
+Pokemon = B195H99,68
+    Item = MYSTICWATER
+Pokemon = B295H121,71
+    Item = MYSTICWATER
+Pokemon = B131H160,70
+    Item = MYSTICWATER
+Pokemon = B171H55,68
+    Item = MYSTICWATER
+Pokemon = B130H299,71
+    Item = MYSTICWATER
+#-------------------------------
+[LEADER_Surge,Lt. Surge]
+Items = SUPERPOTION,SUPERPOTION
+LoseText = "..."
+Pokemon = B98H100,24
+    Moves = METALCLAW,BUBBLE,LIGHTSCREEN,SPARK
+    AbilityIndex = 1
+    Item = MAGNET
+Pokemon = B50H25,24
+    Moves = SANDATTACK,MUDSLAP,QUICKATTACK,THUNDERSHOCK
+    AbilityIndex = 1
+    Item = MAGNET
+Pokemon = B125H26,26
+    Moves = THUNDERPUNCH,THUNDERWAVE,QUICKATTACK,DOUBLETEAM
+    AbilityIndex = 0
+    Item = SITRUSBERRY
+#-------------------------------
+[LEADER_Surge,Lt. Surge,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B26H135,68
+    Item = MAGNET
+Pokemon = B99H101,68
+    Item = MAGNET
+Pokemon = B18H26,70
+    Item = MAGNET
+Pokemon = B263H275,71
+    Item = MAGNET
+Pokemon = B267H265,71
+    Item = MAGNET
+Pokemon = B254H181,70
+    Item = MAGNET
+#-------------------------------
+[LEADER_Erika,Erika]
+Items = HYPERPOTION
+LoseText = "..."
+Pokemon = B84H103,33
+    Moves = PLUCK,FURYATTACK,SEEDBOMB,HYPNOSIS
+    AbilityIndex = 1
+    Item = MIRACLESEED
+Pokemon = B57H114,33
+    Moves = ANCIENTPOWER,SEISMICTOSS,MEGADRAIN,SLEEPPOWDER
+    AbilityIndex = 0
+    Item = MIRACLESEED
+Pokemon = B71H45,35
+    Moves = SYNTHESIS,SUNNYDAY,SOLARBEAM,POISONPOWDER
+    AbilityIndex = 4
+    Item = SITRUSBERRY
+#-------------------------------
+[LEADER_Erika,Erika,2]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B189H182,68
+    Item = MIRACLESEED
+Pokemon = B73H71,70
+    Item = MIRACLESEED
+Pokemon = B266H103,68
+    Item = MIRACLESEED
+Pokemon = B3H208,71
+    Item = MIRACLESEED
+Pokemon = B154H203,71
+    Item = MIRACLESEED
+Pokemon = B45H192,70
+    Item = MIRACLESEED
+#-------------------------------
+[LEADER_Erika,Erika,1]
+LoseText = "..."
+Pokemon = B114H70,30
+    Moves = RAZORLEAF,SLEEPPOWDER,POISONPOWDER,CONSTRICT
+Pokemon = B102H44,30
+    Moves = LEECHSEED,REFLECT,BARRAGE,MEGADRAIN
+Pokemon = IVYSAUR,30
+#-------------------------------
+[LEADER_Koga,Koga]
+Items = HYPERPOTION
+LoseText = "..."
+Pokemon = B88H49,35
+    Moves = SIGNALBEAM,SLUDGEBOMB,FLING,DISABLE
+    AbilityIndex = 1
+    Item = POISONBARB
+Pokemon = B109H81,36
+    Moves = SLUDGEBOMB,SELFDESTRUCT,SONICBOOM,SUPERSONIC
+    AbilityIndex = 0
+    Item = POISONBARB
+Pokemon = B123H15,36
+    Moves = AGILITY,PINMISSILE,POISONJAB,TOXICSPIKES
+    AbilityIndex = 0
+    Item = POISONBARB
+Pokemon = B89H113,38
+    Moves = TOXIC,DOUBLETEAM,TAKEDOWN,ACIDARMOR
+    AbilityIndex = 1
+    Item = BLACKSLUDGE
+#-------------------------------
+[LEADER_Koga,Koga,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B110H94,68
+    Item = POISONBARB
+Pokemon = B169H73,70
+    Item = POISONBARB
+Pokemon = B49H15,70
+    Item = POISONBARB
+Pokemon = B89H287,71
+    Item = POISONBARB
+Pokemon = B34H168,70
+    Item = POISONBARB
+Pokemon = B24H195,68
+    Item = POISONBARB
+#-------------------------------
+[LEADER_Sabrina,Sabrina]
+Items = MAXPOTION,MAXPOTION
+LoseText = "..."
+Pokemon = B122H97,41
+    Moves = NASTYPLOT,BATONPASS,HYPNOSIS,PSYCHIC
+    AbilityIndex = 0
+    Item = TWISTEDSPOON
+Pokemon = B197H196,41
+    Moves = MOONLIGHT,FUTURESIGHT,DARKPULSE,LIGHTSCREEN
+    AbilityIndex = 0
+    Item = TWISTEDSPOON
+Pokemon = B80H65,42
+    Moves = PSYCHOCUT,SURF,RECOVER,AMNESIA
+    AbilityIndex = 0
+    Item = TWISTEDSPOON
+Pokemon = B65H94,45
+    Moves = DESTINYBOND,SHADOWBALL,PSYCHOCUT,CALMMIND
+    AbilityIndex = 1
+    Item = TWISTEDSPOON
+#-------------------------------
+[LEADER_Sabrina,Sabrina,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B97H122,68
+    Item = TWISTEDSPOON
+Pokemon = B12H65,68
+    Item = TWISTEDSPOON
+Pokemon = B310H288,71
+    Item = TWISTEDSPOON
+Pokemon = B293H263,70
+    Item = TWISTEDSPOON
+Pokemon = B65H94,71
+    Item = TWISTEDSPOON
+Pokemon = B296H196,70
+    Item = TWISTEDSPOON
+#-------------------------------
+[LEADER_Blaine,Blaine]
+Items = FULLRESTORE
+LoseText = "..."
+Pokemon = B78H44,47
+    Moves = SUNNYDAY,SOLARBEAM,FLAMETHROWER,TOXIC
+    AbilityIndex = 1
+    Item = CHARCOAL
+Pokemon = B59H38,47
+    Moves = ROAR,FIREFANG,CONFUSERAY,THUNDERFANG
+    AbilityIndex = 0
+    Item = CHARCOAL
+Pokemon = B112H126,49
+    Moves = FIREPUNCH,DRILLRUN,CONFUSERAY,HAMMERARM
+    AbilityIndex = 0
+    Item = PASSHOBERRY
+Pokemon = B142H6,51
+    Moves = CRUNCH,SKYDROP,FIREBLAST,HYPERBEAM
+    AbilityIndex = 0
+    Item = CHARCOAL
+#-------------------------------
+[LEADER_Blaine,Blaine,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B89H219,68
+    Item = CHARCOAL
+Pokemon = B78H119,68
+    Item = CHARCOAL
+Pokemon = B142H6,71
+    Item = CHARCOAL
+Pokemon = B59H229,70
+    Item = CHARCOAL
+Pokemon = B281H157,70
+    Item = CHARCOAL
+Pokemon = B268H302,71
+    Item = CHARCOAL
+#-------------------------------
+[LEADER_Giovanni,Giovanni]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B131H265,50
+    Moves = SURF,BULLDOZE,SANDSTORM,SING
+    AbilityIndex = 1
+    Item = SOFTSAND
+    Ball = ULTRABALL
+Pokemon = B51H125,50
+    Moves = BULLDOZE,LIGHTSCREEN,THUNDERWAVE,DISCHARGE
+    AbilityIndex = 0
+    Item = SOFTSAND
+    Ball = ULTRABALL
+Pokemon = B68H76,52
+    Moves = EARTHQUAKE,DYNAMICPUNCH,COUNTER,SCARYFACE
+    AbilityIndex = 0
+    Item = SOFTSAND
+    Ball = ULTRABALL
+Pokemon = B248H273,54
+    Moves = EARTHQUAKE,THRASH,MEGAHORN,POISONJAB
+    AbilityIndex = 1
+    Item = SOFTSAND
+    Ball = ULTRABALL
+Pokemon = B143H112,54
+    Moves = EARTHQUAKE,REST,SNORE,HORNDRILL
+    AbilityIndex = 0
+    Item = SOFTSAND
+    Ball = ULTRABALL
+#-------------------------------
+[LEADER_Giovanni,Giovanni,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B131H265,72
+    Moves = SURF,BULLDOZE,SANDSTORM,SING
+    Item = SOFTSAND
+    Ball = ULTRABALL
+Pokemon = B51H125,73
+    Moves = BULLDOZE,LIGHTSCREEN,THUNDERWAVE,DISCHARGE
+    Item = SOFTSAND
+    Ball = ULTRABALL
+Pokemon = B68H76,74
+    Moves = EARTHQUAKE,DYNAMICPUNCH,COUNTER,SCARYFACE
+    Item = SOFTSAND
+    Ball = ULTRABALL
+Pokemon = B248H273,72
+    Moves = EARTHQUAKE,THRASH,MEGAHORN,POISONJAB
+    Item = SOFTSAND
+    Ball = ULTRABALL
+Pokemon = B143H112,75
+    Moves = EARTHQUAKE,REST,SNORE,HORNDRILL
+    Item = SOFTSAND
+    Ball = ULTRABALL
+Pokemon = B299H248,75
+    Item = SOFTSAND
+    Ball = ULTRABALL
+#-------------------------------
+[ELITEFOUR_Lorelei,Lorelei]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B87H268,54
+    Moves = BUBBLEBEAM,FLAMETHROWER,HAIL,PROTECT
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+Pokemon = B80H274,54
+    Moves = HAIL,SLACKOFF,TAKEDOWN,ICEFANG
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+Pokemon = B91H73,53
+    Moves = SPIKES,STEALTHROCK,WATERPULSE,ICICLECRASH
+    AbilityIndex = 0
+    Item = NEVERMELTICE
+Pokemon = B266H124,57
+    Moves = LEECHSEED,DRAININGKISS,SLEEPPOWDER,ICEPUNCH
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+Pokemon = B131H262,57
+    Moves = PERISHSONG,NIGHTSLASH,SURF,EMBARGO
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+#-------------------------------
+[ELITEFOUR_Lorelei,Lorelei,1]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B87H268,72
+    Moves = BUBBLEBEAM,FLAMETHROWER,HAIL,PROTECT
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+Pokemon = B80H274,72
+    Moves = HAIL,SLACKOFF,TAKEDOWN,ICEFANG
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+Pokemon = B91H73,71
+    Moves = SPIKES,STEALTHROCK,WATERPULSE,ICICLECRASH
+    AbilityIndex = 0
+    Item = NEVERMELTICE
+Pokemon = B266H124,74
+    Moves = LEECHSEED,DRAININGKISS,SLEEPPOWDER,ICEPUNCH
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+Pokemon = B131H262,74
+    Moves = PERISHSONG,NIGHTSLASH,SURF,EMBARGO
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+#-------------------------------
+[ELITEFOUR_Lorelei,Lorelei,2]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B87H268,82
+    Moves = BUBBLEBEAM,FLAMETHROWER,HAIL,PROTECT
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+Pokemon = B80H274,82
+    Moves = HAIL,SLACKOFF,TAKEDOWN,ICEFANG
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+Pokemon = B91H73,81
+    Moves = SPIKES,STEALTHROCK,WATERPULSE,ICICLECRASH
+    AbilityIndex = 0
+    Item = NEVERMELTICE
+Pokemon = B266H124,84
+    Moves = LEECHSEED,DRAININGKISS,SLEEPPOWDER,ICEPUNCH
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+Pokemon = B131H262,84
+    Moves = PERISHSONG,NIGHTSLASH,SURF,EMBARGO
+    AbilityIndex = 1
+    Item = NEVERMELTICE
+#-------------------------------
+[ELITEFOUR_Bruno,Bruno]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B267H68,53
+    Moves = THUNDERPUNCH,CROSSCHOP,DISCHARGE,FOCUSENERGY
+    AbilityIndex = 1
+    Item = BLACKBELT
+Pokemon = B214H212,57
+    Moves = XSCISSOR,SWORDSDANCE,CLOSECOMBAT,AGILITY
+    AbilityIndex = 1
+    Item = BLACKBELT
+Pokemon = B107H105,54
+    Moves = DYNAMICPUNCH,BONEMERANG,DOUBLETEAM,COUNTER
+    AbilityIndex = 0
+    Item = BLACKBELT
+Pokemon = B68H208,53
+    Moves = SANDSTORM,IRONTAIL,SUBMISSION,CRUNCH
+    AbilityIndex = 1
+    Item = BLACKBELT
+Pokemon = B95H263,57
+    Moves = ZAPCANNON,MAGNETRISE,LOCKON,IRONTAIL
+    AbilityIndex = 1
+    Item = BLACKBELT
+#-------------------------------
+[ELITEFOUR_Bruno,Bruno,1]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B267H68,72
+    Moves = THUNDERPUNCH,CROSSCHOP,DISCHARGE,FOCUSENERGY
+    AbilityIndex = 1
+    Item = BLACKBELT
+Pokemon = B214H212,74
+    Moves = XSCISSOR,SWORDSDANCE,CLOSECOMBAT,AGILITY
+    AbilityIndex = 1
+    Item = BLACKBELT
+Pokemon = B107H105,72
+    Moves = DYNAMICPUNCH,BONEMERANG,DOUBLETEAM,COUNTER
+    AbilityIndex = 0
+    Item = BLACKBELT
+Pokemon = B68H208,73
+    Moves = SANDSTORM,IRONTAIL,SUBMISSION,CRUNCH
+    AbilityIndex = 1
+    Item = BLACKBELT
+Pokemon = B95H263,75
+    Moves = ZAPCANNON,MAGNETRISE,LOCKON,IRONTAIL
+    AbilityIndex = 1
+    Item = BLACKBELT
+#-------------------------------
+[ELITEFOUR_Bruno,Bruno,2]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B267H68,82
+    Moves = THUNDERPUNCH,CROSSCHOP,DISCHARGE,FOCUSENERGY
+    AbilityIndex = 1
+    Item = BLACKBELT
+Pokemon = B214H212,84
+    Moves = XSCISSOR,SWORDSDANCE,CLOSECOMBAT,AGILITY
+    AbilityIndex = 1
+    Item = BLACKBELT
+Pokemon = B107H105,82
+    Moves = DYNAMICPUNCH,BONEMERANG,DOUBLETEAM,COUNTER
+    AbilityIndex = 0
+    Item = BLACKBELT
+Pokemon = B68H208,83
+    Moves = SANDSTORM,IRONTAIL,SUBMISSION,CRUNCH
+    AbilityIndex = 1
+    Item = BLACKBELT
+Pokemon = B95H263,85
+    Moves = ZAPCANNON,MAGNETRISE,LOCKON,IRONTAIL
+    AbilityIndex = 1
+    Item = BLACKBELT
+#-------------------------------
+[ELITEFOUR_Agatha,Agatha]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B169H255,57
+    Moves = WINGATTACK,SHADOWBALL,CONFUSERAY,MEANLOOK
+    AbilityIndex = 1
+    Item = SPELLTAG
+Pokemon = B229H94,55
+    Moves = INFERNO,SPITE,DESTINYBOND,SHADOWBALL
+    AbilityIndex = 0
+    Item = SPELLTAG
+Pokemon = B93H197,55
+    Moves = GUARDSWAP,DARKPULSE,MOONLIGHT,NIGHTSHADE
+    AbilityIndex = 0
+    Item = SPELLTAG
+Pokemon = B94H143,58
+    Moves = REST,CURSE,BODYSLAM,SHADOWPUNCH
+    AbilityIndex = 2
+    Item = SPELLTAG
+Pokemon = B94H202,55
+    Moves = DESTINYBOND,COUNTER,MIRRORCOAT,CURSE
+    AbilityIndex = 1
+    Item = SPELLTAG
+#-------------------------------
+[ELITEFOUR_Agatha,Agatha,1]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B169H255,72
+    Moves = WINGATTACK,SHADOWBALL,CONFUSERAY,MEANLOOK
+    AbilityIndex = 1
+    Item = SPELLTAG
+Pokemon = B229H94,74
+    Moves = INFERNO,SPITE,DESTINYBOND,SHADOWBALL
+    AbilityIndex = 0
+    Item = SPELLTAG
+Pokemon = B93H197,75
+    Moves = GUARDSWAP,DARKPULSE,MOONLIGHT,NIGHTSHADE
+    AbilityIndex = 0
+    Item = SPELLTAG
+Pokemon = B94H143,74
+    Moves = REST,CURSE,BODYSLAM,SHADOWPUNCH
+    AbilityIndex = 2
+    Item = SPELLTAG
+Pokemon = B94H202,72
+    Moves = DESTINYBOND,COUNTER,MIRRORCOAT,CURSE
+    AbilityIndex = 1
+    Item = SPELLTAG
+#-------------------------------
+[ELITEFOUR_Agatha,Agatha,2]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B169H255,82
+    Moves = WINGATTACK,SHADOWBALL,CONFUSERAY,MEANLOOK
+    AbilityIndex = 1
+    Item = SPELLTAG
+Pokemon = B229H94,84
+    Moves = INFERNO,SPITE,DESTINYBOND,SHADOWBALL
+    AbilityIndex = 0
+    Item = SPELLTAG
+Pokemon = B93H197,85
+    Moves = GUARDSWAP,DARKPULSE,MOONLIGHT,NIGHTSHADE
+    AbilityIndex = 0
+    Item = SPELLTAG
+Pokemon = B94H143,84
+    Moves = REST,CURSE,BODYSLAM,SHADOWPUNCH
+    AbilityIndex = 2
+    Item = SPELLTAG
+Pokemon = B94H202,82
+    Moves = DESTINYBOND,COUNTER,MIRRORCOAT,CURSE
+    AbilityIndex = 1
+    Item = SPELLTAG
+#-------------------------------
+[ELITEFOUR_Lance,Lance,2]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B130H148,55
+    Moves = OUTRAGE,THUNDERWAVE,HYDROPUMP,RAINDANCE
+    AbilityIndex = 1
+    Item = DRAGONFANG
+Pokemon = B230H233,54
+    Moves = TRIATTACK,DRAGONDANCE,DRAGONPULSE,RECOVER
+    AbilityIndex = 1
+    Item = DRAGONFANG
+Pokemon = B142H248,59
+    Moves = BRAVEBIRD,HEADSMASH,AGILITY,DRAGONRUSH
+    AbilityIndex = 0
+    Item = DRAGONFANG
+Pokemon = B148H157,57
+    Moves = FIREBLAST,DRAGONTAIL,DRAGONDANCE,WILLOWISP
+    AbilityIndex = 1
+    Item = DRAGONFANG
+Pokemon = B149H269,58
+    Moves = MOONBLAST,OUTRAGE,ANCIENTPOWER,AIRSLASH
+    AbilityIndex = 1
+    Item = DRAGONFANG
+#-------------------------------
+[ELITEFOUR_Lance,Lance,3]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B130H148,72
+    Moves = OUTRAGE,THUNDERWAVE,HYDROPUMP,RAINDANCE
+    AbilityIndex = 1
+    Item = DRAGONFANG
+Pokemon = B230H233,72
+    Moves = TRIATTACK,DRAGONDANCE,DRAGONPULSE,RECOVER
+    AbilityIndex = 1
+    Item = DRAGONFANG
+Pokemon = B142H248,76
+    Moves = BRAVEBIRD,HEADSMASH,AGILITY,DRAGONRUSH
+    AbilityIndex = 0
+    Item = DRAGONFANG
+Pokemon = B148H157,74
+    Moves = FIREBLAST,DRAGONTAIL,DRAGONDANCE,WILLOWISP
+    AbilityIndex = 1
+    Item = DRAGONFANG
+Pokemon = B149H269,74
+    Moves = MOONBLAST,OUTRAGE,ANCIENTPOWER,AIRSLASH
+    AbilityIndex = 1
+    Item = DRAGONFANG
+#-------------------------------
+[ELITEFOUR_Lance,Lance,4]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B130H148,82
+    Moves = OUTRAGE,THUNDERWAVE,HYDROPUMP,RAINDANCE
+    AbilityIndex = 1
+    Item = DRAGONFANG
+Pokemon = B230H233,82
+    Moves = TRIATTACK,DRAGONDANCE,DRAGONPULSE,RECOVER
+    AbilityIndex = 1
+    Item = DRAGONFANG
+Pokemon = B142H248,86
+    Moves = BRAVEBIRD,HEADSMASH,AGILITY,DRAGONRUSH
+    AbilityIndex = 0
+    Item = DRAGONFANG
+Pokemon = B148H157,84
+    Moves = FIREBLAST,DRAGONTAIL,DRAGONDANCE,WILLOWISP
+    AbilityIndex = 1
+    Item = DRAGONFANG
+Pokemon = B149H269,84
+    Moves = MOONBLAST,OUTRAGE,ANCIENTPOWER,AIRSLASH
+    AbilityIndex = 1
+    Item = DRAGONFANG
+#-------------------------------
+[CHAMPION,Blue]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B18H34,59
+    Moves = EARTHQUAKE,WINGATTACK,DOUBLETEAM,SWORDSDANCE
+    AbilityIndex = 1
+    Item = LAXINCENSE
+Pokemon = B103H128,59
+    Moves = ZENHEADBUTT,GIGAIMPACT,SCARYFACE,SWAGGER
+    AbilityIndex = 2
+    Item = KINGSROCK
+Pokemon = B268H265,60
+    Moves = FIREBLAST,DRILLRUN,WILLOWISP,STONEEDGE
+    AbilityIndex = 1
+    Item = ABSORBBULB
+Pokemon = B130H267,61
+    Moves = RAINDANCE,THUNDERPUNCH,WATERFALL,DRAGONDANCE
+    AbilityIndex = 2
+    Item = DAMPROCK
+Pokemon = B65H121,58
+    Moves = PSYCHIC,REFLECT,SURF,COSMICPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = MEW,62
+    Moves = HYDROCANNON,FLAREBLITZ,PROTECT,FLY
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[CHAMPION,Blue,3]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B18H34,75
+    Moves = EARTHQUAKE,WINGATTACK,DOUBLETEAM,SWORDSDANCE
+    AbilityIndex = 1
+    Item = LAXINCENSE
+Pokemon = B103H128,75
+    Moves = ZENHEADBUTT,GIGAIMPACT,SCARYFACE,SWAGGER
+    AbilityIndex = 2
+    Item = KINGSROCK
+Pokemon = B268H265,76
+    Moves = FIREBLAST,DRILLRUN,WILLOWISP,STONEEDGE
+    AbilityIndex = 1
+    Item = ABSORBBULB
+Pokemon = B130H267,75
+    Moves = RAINDANCE,THUNDERPUNCH,WATERFALL,DRAGONDANCE
+    AbilityIndex = 2
+    Item = DAMPROCK
+Pokemon = B65H121,76
+    Moves = PSYCHIC,REFLECT,SURF,COSMICPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = MEW,82
+    Moves = HYDROCANNON,FLAREBLITZ,PROTECT,FLY
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[CHAMPION,Blue,6]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B18H34,85
+    Moves = EARTHQUAKE,WINGATTACK,DOUBLETEAM,SWORDSDANCE
+    AbilityIndex = 1
+    Item = LAXINCENSE
+Pokemon = B103H128,85
+    Moves = ZENHEADBUTT,GIGAIMPACT,SCARYFACE,SWAGGER
+    AbilityIndex = 2
+    Item = KINGSROCK
+Pokemon = B268H265,86
+    Moves = FIREBLAST,DRILLRUN,WILLOWISP,STONEEDGE
+    AbilityIndex = 1
+    Item = ABSORBBULB
+Pokemon = B130H267,85
+    Moves = RAINDANCE,THUNDERPUNCH,WATERFALL,DRAGONDANCE
+    AbilityIndex = 2
+    Item = DAMPROCK
+Pokemon = B65H121,86
+    Moves = PSYCHIC,REFLECT,SURF,COSMICPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = MEW,92
+    Moves = HYDROCANNON,FLAREBLITZ,PROTECT,FLY
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[CHAMPION,Blue,1]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B18H34,59
+    Moves = EARTHQUAKE,WINGATTACK,DOUBLETEAM,SWORDSDANCE
+    AbilityIndex = 1
+    Item = LAXINCENSE
+Pokemon = B103H128,59
+    Moves = ZENHEADBUTT,GIGAIMPACT,SCARYFACE,SWAGGER
+    AbilityIndex = 2
+    Item = KINGSROCK
+Pokemon = B268H265,59
+    Moves = FIREBLAST,DRILLRUN,WILLOWISP,STONEEDGE
+    AbilityIndex = 1
+    Item = ABSORBBULB
+Pokemon = B130H267,61
+    Moves = RAINDANCE,THUNDERPUNCH,WATERFALL,DRAGONDANCE
+    AbilityIndex = 2
+    Item = DAMPROCK
+Pokemon = B65H121,58
+    Moves = PSYCHIC,REFLECT,SURF,COSMICPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = MEW,64
+    Moves = POWERWHIP,HYDROCANNON,SLEEPPOWDER,PROTECT
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[CHAMPION,Blue,4]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B18H34,75
+    Moves = EARTHQUAKE,WINGATTACK,DOUBLETEAM,SWORDSDANCE
+    AbilityIndex = 1
+    Item = LAXINCENSE
+Pokemon = B103H128,75
+    Moves = ZENHEADBUTT,GIGAIMPACT,SCARYFACE,SWAGGER
+    AbilityIndex = 2
+    Item = KINGSROCK
+Pokemon = B268H265,76
+    Moves = FIREBLAST,DRILLRUN,WILLOWISP,STONEEDGE
+    AbilityIndex = 1
+    Item = ABSORBBULB
+Pokemon = B130H267,75
+    Moves = RAINDANCE,THUNDERPUNCH,WATERFALL,DRAGONDANCE
+    AbilityIndex = 2
+    Item = DAMPROCK
+Pokemon = B65H121,76
+    Moves = PSYCHIC,REFLECT,SURF,COSMICPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = MEW,82
+    Moves = POWERWHIP,HYDROCANNON,SLEEPPOWDER,PROTECT
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[CHAMPION,Blue,7]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B18H34,85
+    Moves = EARTHQUAKE,WINGATTACK,DOUBLETEAM,SWORDSDANCE
+    AbilityIndex = 1
+    Item = LAXINCENSE
+Pokemon = B103H128,85
+    Moves = ZENHEADBUTT,GIGAIMPACT,SCARYFACE,SWAGGER
+    AbilityIndex = 2
+    Item = KINGSROCK
+Pokemon = B268H265,86
+    Moves = FIREBLAST,DRILLRUN,WILLOWISP,STONEEDGE
+    AbilityIndex = 1
+    Item = ABSORBBULB
+Pokemon = B130H267,85
+    Moves = RAINDANCE,THUNDERPUNCH,WATERFALL,DRAGONDANCE
+    AbilityIndex = 2
+    Item = DAMPROCK
+Pokemon = B65H121,86
+    Moves = PSYCHIC,REFLECT,SURF,COSMICPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = MEW,92
+    Moves = POWERWHIP,HYDROCANNON,SLEEPPOWDER,PROTECT
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[CHAMPION,Blue,2]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B18H34,59
+    Moves = EARTHQUAKE,WINGATTACK,DOUBLETEAM,SWORDSDANCE
+    AbilityIndex = 1
+    Item = LAXINCENSE
+Pokemon = B103H128,59
+    Moves = ZENHEADBUTT,GIGAIMPACT,SCARYFACE,SWAGGER
+    AbilityIndex = 2
+    Item = KINGSROCK
+Pokemon = B268H265,60
+    Moves = FIREBLAST,DRILLRUN,WILLOWISP,STONEEDGE
+    AbilityIndex = 1
+    Item = ABSORBBULB
+Pokemon = B130H267,61
+    Moves = RAINDANCE,THUNDERPUNCH,WATERFALL,DRAGONDANCE
+    AbilityIndex = 2
+    Item = DAMPROCK
+Pokemon = B65H121,58
+    Moves = PSYCHIC,REFLECT,SURF,COSMICPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = MEW,64
+    Moves = SLEEPPOWDER,POWERWHIP,FLAREBLITZ,FLY
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[CHAMPION,Blue,5]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B18H34,75
+    Moves = EARTHQUAKE,WINGATTACK,DOUBLETEAM,SWORDSDANCE
+    AbilityIndex = 1
+    Item = LAXINCENSE
+Pokemon = B103H128,75
+    Moves = ZENHEADBUTT,GIGAIMPACT,SCARYFACE,SWAGGER
+    AbilityIndex = 2
+    Item = KINGSROCK
+Pokemon = B268H265,76
+    Moves = FIREBLAST,DRILLRUN,WILLOWISP,STONEEDGE
+    AbilityIndex = 1
+    Item = ABSORBBULB
+Pokemon = B130H267,75
+    Moves = RAINDANCE,THUNDERPUNCH,WATERFALL,DRAGONDANCE
+    AbilityIndex = 2
+    Item = DAMPROCK
+Pokemon = B65H121,76
+    Moves = PSYCHIC,REFLECT,SURF,COSMICPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = MEW,82
+    Moves = SLEEPPOWDER,POWERWHIP,FLAREBLITZ,FLY
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[CHAMPION,Blue,8]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B18H34,85
+    Moves = EARTHQUAKE,WINGATTACK,DOUBLETEAM,SWORDSDANCE
+    AbilityIndex = 1
+    Item = LAXINCENSE
+Pokemon = B103H128,85
+    Moves = ZENHEADBUTT,GIGAIMPACT,SCARYFACE,SWAGGER
+    AbilityIndex = 2
+    Item = KINGSROCK
+Pokemon = B268H265,86
+    Moves = FIREBLAST,DRILLRUN,WILLOWISP,STONEEDGE
+    AbilityIndex = 1
+    Item = ABSORBBULB
+Pokemon = B130H267,85
+    Moves = RAINDANCE,THUNDERPUNCH,WATERFALL,DRAGONDANCE
+    AbilityIndex = 2
+    Item = DAMPROCK
+Pokemon = B65H121,86
+    Moves = PSYCHIC,REFLECT,SURF,COSMICPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = MEW,92
+    Moves = SLEEPPOWDER,POWERWHIP,FLAREBLITZ,FLY
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[LEADER_Whitney,Whitney]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B210H108,55
+    Moves = PLAYROUGH,LICK,CHIPAWAY,CHARM
+    Item = SILKSCARF
+Pokemon = B171H203,55
+    Moves = SPARK,DOUBLEHIT,POWERSWAP,AQUARING
+    AbilityIndex = 0
+    Item = SILKSCARF
+Pokemon = B115H206,56
+    Moves = DOUBLEHIT,COIL,DIG,DIZZYPUNCH
+    AbilityIndex = 2
+    Item = SILKSCARF
+Pokemon = B128H190,56
+    Moves = TICKLE,TAKEDOWN,WORKUP,REST
+    Item = LUMBERRY
+Pokemon = B241H113,58
+    Moves = METRONOME,REFRESH,ROLLOUT,MILKDRINK
+    Item = EVIOLITE
+#-------------------------------
+[LEADER_Whitney,Whitney,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B210H108,82
+    Moves = PLAYROUGH,LICK,CHIPAWAY,CHARM
+    Item = SILKSCARF
+Pokemon = B171H203,82
+    Moves = SPARK,DOUBLEHIT,POWERSWAP,AQUARING
+    AbilityIndex = 0
+    Item = SILKSCARF
+Pokemon = B115H206,84
+    Moves = DOUBLEHIT,COIL,DIG,DIZZYPUNCH
+    AbilityIndex = 2
+    Item = SILKSCARF
+Pokemon = B128H254,84
+    Moves = TICKLE,DOUBLEHIT,WORKUP,REST
+    Item = LUMBERRY
+Pokemon = B241H113,85
+    Moves = METRONOME,REFRESH,ROLLOUT,MILKDRINK
+    Item = EVIOLITE
+Pokemon = B309H299,85
+    AbilityIndex = 1
+    Item = SILKSCARF
+#-------------------------------
+[LEADER_Kurt,Kurt]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B168H15,56
+    Moves = SPIDERWEB,TWINEEDLE,SHADOWSNEAK,QUIVERDANCE
+    Item = SILVERPOWDER
+Pokemon = B91H205,56
+    Moves = IRONDEFENSE,SPIKECANNON,EXPLOSION,BUGBITE
+    AbilityIndex = 0
+    Item = SILVERPOWDER
+Pokemon = B212H80,58
+    Moves = RECOVER,PSYCHUP,XSCISSOR,IRONDEFENSE
+    Item = SILVERPOWDER
+Pokemon = B230H270,58
+    Moves = DRAGONPULSE,SUPERSONIC,UTURN,DOUBLETEAM
+    Item = SILVERPOWDER
+Pokemon = B213H242,62
+    Moves = POWERTRICK,MINIMIZE,BUGBITE,SOFTBOILED
+    Item = LEFTOVERS
+#-------------------------------
+[LEADER_Kurt,Kurt,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B168H15,82
+    Moves = SPIDERWEB,TWINEEDLE,SHADOWSNEAK,QUIVERDANCE
+    Item = SILVERPOWDER
+Pokemon = B91H205,85
+    Moves = IRONDEFENSE,SPIKECANNON,EXPLOSION,BUGBITE
+    AbilityIndex = 0
+    Item = SILVERPOWDER
+Pokemon = B212H80,84
+    Moves = RECOVER,PSYCHUP,XSCISSOR,IRONDEFENSE
+    Item = SILVERPOWDER
+Pokemon = B230H270,82
+    Moves = DRAGONPULSE,SUPERSONIC,UTURN,DOUBLETEAM
+    Item = SILVERPOWDER
+Pokemon = B213H242,85
+    Moves = POWERTRICK,MINIMIZE,BUGBITE,SOFTBOILED
+    Item = SILVERPOWDER
+Pokemon = B300H304,84
+    Item = SILVERPOWDER
+#-------------------------------
+[LEADER_Falkner,Falkner]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B164H178,58
+    Moves = LUCKYCHANT,PSYCHIC,REFLECT,AIRSLASH
+    AbilityIndex = 0
+    Item = SHARPBEAK
+Pokemon = B256H210,58
+    Moves = ROAR,FAIRYWIND,NIGHTSLASH,FEATHERDANCE
+    AbilityIndex = 3
+    Item = SHARPBEAK
+Pokemon = B229H227,60
+    Moves = FLAMETHROWER,FEINTATTACK,STEELWING,DEFOG
+    AbilityIndex = 1
+    Item = AIRBALLOON
+Pokemon = B269H105,61
+    Moves = BONERUSH,FOCUSENERGY,AIRSLASH,PROTECT
+    AbilityIndex = 3
+    Item = SHARPBEAK
+Pokemon = B18H217,63
+    Moves = WINGATTACK,FURYSWIPES,REST,SCARYFACE
+    AbilityIndex = 1
+    Item = SHARPBEAK
+#-------------------------------
+[LEADER_Falkner,Falkner,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B164H178,82
+    Moves = LUCKYCHANT,PSYCHIC,REFLECT,AIRSLASH
+    AbilityIndex = 0
+    Item = SHARPBEAK
+Pokemon = B256H210,82
+    Moves = ROAR,FAIRYWIND,NIGHTSLASH,FEATHERDANCE
+    AbilityIndex = 3
+    Item = SHARPBEAK
+Pokemon = B229H227,84
+    Moves = FLAMETHROWER,FEINTATTACK,STEELWING,DEFOG
+    AbilityIndex = 1
+    Item = SHARPBEAK
+Pokemon = B269H105,84
+    Moves = BONERUSH,FOCUSENERGY,AIRSLASH,PROTECT
+    AbilityIndex = 3
+    Item = SHARPBEAK
+Pokemon = B18H217,85
+    Moves = WINGATTACK,FURYSWIPES,REST,SCARYFACE
+    AbilityIndex = 1
+    Item = SHARPBEAK
+Pokemon = B142H313,85
+    Item = SHARPBEAK
+#-------------------------------
+[LEADER_Clair,Clair]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B130H160,62
+    Moves = CRUNCH,FIREFANG,SCREECH,AQUATAIL
+    AbilityIndex = 0
+    Item = DRAGONFANG
+Pokemon = B148H232,62
+    Moves = THUNDERWAVE,DRAGONPULSE,MAGNITUDE,AQUARING
+    AbilityIndex = 0
+    Item = DRAGONFANG
+Pokemon = B230H272,63
+    Moves = ICEBEAM,MIRRORCOAT,SMOKESCREEN,TWISTER
+    AbilityIndex = 3
+    Item = DRAGONFANG
+Pokemon = B6H168,63
+    Moves = SPIDERWEB,FLAREBLITZ,PINMISSILE,OUTRAGE
+    AbilityIndex = 2
+    Item = DRAGONFANG
+Pokemon = B142H299,66
+    Moves = DUALCHOP,DRAGONDANCE,IRONHEAD,CRUNCH
+    AbilityIndex = 0
+    Item = DRAGONFANG
+#-------------------------------
+[LEADER_Clair,Clair,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B130H160,82
+    Moves = CRUNCH,FIREFANG,SCREECH,AQUATAIL
+    AbilityIndex = 0
+    Item = DRAGONFANG
+Pokemon = B148H232,82
+    Moves = THUNDERWAVE,DRAGONPULSE,MAGNITUDE,AQUARING
+    AbilityIndex = 0
+    Item = DRAGONFANG
+Pokemon = B230H272,84
+    Moves = ICEBEAM,MIRRORCOAT,SMOKESCREEN,TWISTER
+    AbilityIndex = 3
+    Item = DRAGONFANG
+Pokemon = B6H168,84
+    Moves = SPIDERWEB,FLAREBLITZ,PINMISSILE,OUTRAGE
+    AbilityIndex = 2
+    Item = DRAGONFANG
+Pokemon = B142H299,85
+    Moves = DUALCHOP,DRAGONDANCE,IRONHEAD,CRUNCH
+    AbilityIndex = 0
+    Item = DRAGONFANG
+Pokemon = B278H149,85
+    Item = DRAGONFANG
+#-------------------------------
+[LEADER_Morty,Morty]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B338H94,65
+    Moves = MEANLOOK,PURSUIT,SHADOWBALL,CURSE
+    AbilityIndex = 0
+    Item = SPELLTAG
+Pokemon = B289H262,63
+    Moves = GRUDGE,NIGHTSLASH,HEALBLOCK,SHADOWSNEAK
+    AbilityIndex = 0
+    Item = FOCUSSASH
+Pokemon = B295H36,65
+    Moves = CURSE,ATTRACT,MINIMIZE,OMINOUSWIND
+    AbilityIndex = 1
+    Item = SPELLTAG
+Pokemon = B329H143,64
+    Moves = SWORDSDANCE,KINGSSHIELD,BODYSLAM,SHADOWPUNCH
+    AbilityIndex = 1
+    Item = LEFTOVERS
+Pokemon = B313H107,67
+    Moves = DRAINPUNCH,SHADOWCLAW,BULKUP,THUNDERPUNCH
+    AbilityIndex = 1
+    Item = BIGROOT
+#-------------------------------
+[LEADER_Morty,Morty,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B338H94,84
+    Moves = MEANLOOK,PURSUIT,SHADOWBALL,CURSE
+    AbilityIndex = 0
+    Item = SPELLTAG
+Pokemon = B289H262,82
+    Moves = GRUDGE,NIGHTSLASH,HEALBLOCK,SHADOWSNEAK
+    AbilityIndex = 0
+    Item = FOCUSSASH
+Pokemon = B295H36,84
+    Moves = CURSE,ATTRACT,MINIMIZE,OMINOUSWIND
+    AbilityIndex = 1
+    Item = SPELLTAG
+Pokemon = B313H329,84
+    Moves = SWORDSDANCE,KINGSSHIELD,MEANLOOK,SHADOWPUNCH
+    AbilityIndex = 1
+    Item = SPELLTAG
+Pokemon = B313H107,84
+    Moves = DRAINPUNCH,SHADOWCLAW,BULKUP,THUNDERPUNCH
+    AbilityIndex = 1
+    Item = BIGROOT
+Pokemon = B94H94,85
+    Moves = SHADOWBALL,ENERGYBALL,DESTINYBOND,SUCKERPUNCH
+    AbilityIndex = 0
+    Item = SPELLTAG
+#-------------------------------
+[LEADER_Pryce,Pryce]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B199H87,65
+    Moves = NASTYPLOT,BATONPASS,SAFEGUARD,ICESHARD
+    AbilityIndex = 0
+    Item = LEFTOVERS
+Pokemon = B308H274,64
+    Moves = HAIL,PROTECT,IRONDEFENSE,EARTHQUAKE
+    AbilityIndex = 1
+    Item = ICYROCK
+Pokemon = B262H321,65
+    Moves = CLOSECOMBAT,FLAREBLITZ,ICEPUNCH,NIGHTSLASH
+    AbilityIndex = 0
+    Item = NEVERMELTICE
+Pokemon = B91H326,65
+    Moves = ICICLESPEAR,SPIKECANNON,IRONDEFENSE,REST
+    AbilityIndex = 3
+    Item = ROCKYHELMET
+Pokemon = B314H124,65
+    Moves = PSYCHIC,BLIZZARD,SURF,FAKETEARS
+    AbilityIndex = 0
+    Item = WISEGLASSES
+#-------------------------------
+[LEADER_Pryce,Pryce,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B199H87,84
+    Moves = NASTYPLOT,BATONPASS,SAFEGUARD,ICESHARD
+    AbilityIndex = 0
+    Item = LEFTOVERS
+Pokemon = B308H274,84
+    Moves = HAIL,PROTECT,IRONDEFENSE,EARTHQUAKE
+    AbilityIndex = 1
+    Item = ICYROCK
+Pokemon = B262H321,85
+    Moves = CLOSECOMBAT,FLAREBLITZ,ICEPUNCH,NIGHTSLASH
+    AbilityIndex = 0
+    Item = NEVERMELTICE
+Pokemon = B91H326,85
+    Moves = ICICLESPEAR,SPIKECANNON,IRONDEFENSE,REST
+    AbilityIndex = 3
+    Item = ROCKYHELMET
+Pokemon = B314H124,85
+    Moves = PSYCHIC,BLIZZARD,SURF,FAKETEARS
+    AbilityIndex = 0
+    Item = WISEGLASSES
+Pokemon = B101H131,86
+    Moves = PERISHSONG,SHEERCOLD,MIRRORCOAT,PROTECT
+    AbilityIndex = 0
+    Item = AIRBALLOON
+#-------------------------------
+[LEADER_Jasmine,Jasmine]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B85H227,66
+    Moves = STEELWING,WHIRLWIND,AIRSLASH,SPIKES
+    AbilityIndex = 1
+    Item = METALCOAT
+Pokemon = B112H293,67
+    Moves = STONEEDGE,MAGNETRISE,METEORMASH,IRONDEFENSE
+    AbilityIndex = 1
+    Item = EVIOLITE
+Pokemon = B9H263,66
+    Moves = IRONDEFENSE,HYDROCANNON,LOCKON,MIRRORSHOT
+    AbilityIndex = 1
+    Item = ZOOMLENS
+Pokemon = B331H212,67
+    Moves = SWORDSDANCE,NIGHTSLASH,XSCISSOR,FOCUSENERGY
+    AbilityIndex = 0
+    Item = RAZORCLAW
+Pokemon = B208H333,68
+    Moves = EARTHQUAKE,DOUBLEEDGE,HEAVYSLAM,HEADSMASH
+    AbilityIndex = 0
+    Item = METALCOAT
+#-------------------------------
+[LEADER_Jasmine,Jasmine,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B85H227,84
+    Moves = STEELWING,WHIRLWIND,AIRSLASH,SPIKES
+    AbilityIndex = 1
+    Item = METALCOAT
+Pokemon = B112H293,84
+    Moves = STONEEDGE,MAGNETRISE,METEORMASH,IRONDEFENSE
+    AbilityIndex = 1
+    Item = EVIOLITE
+Pokemon = B9H263,85
+    Moves = IRONDEFENSE,HYDROCANNON,LOCKON,MIRRORSHOT
+    AbilityIndex = 1
+    Item = ZOOMLENS
+Pokemon = B331H212,84
+    Moves = SWORDSDANCE,NIGHTSLASH,XSCISSOR,FOCUSENERGY
+    AbilityIndex = 0
+    Item = RAZORCLAW
+Pokemon = B208H333,86
+    Moves = EARTHQUAKE,DOUBLEEDGE,HEAVYSLAM,HEADSMASH
+    AbilityIndex = 0
+    Item = METALCOAT
+Pokemon = B268H329,85
+    Moves = FIREPUNCH,SACREDSWORD,AERIALACE,THUNDERPUNCH
+    AbilityIndex = 1
+    Item = METALCOAT
+#-------------------------------
+[LEADER_Chuck,Chuck]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B68H141,62
+    Moves = DYNAMICPUNCH,WATERFALL,STONEEDGE,SLASH
+    AbilityIndex = 3
+    Item = MUSCLEBAND
+Pokemon = B321H281,62
+    Moves = CLOSECOMBAT,BLAZEKICK,BRAVEBIRD,TAUNT
+    AbilityIndex = 0
+    Item = EXPERTBELT
+Pokemon = B57H62,64
+    Moves = CIRCLETHROW,BELLYDRUM,CLOSECOMBAT,THRASH
+    AbilityIndex = 3
+    Item = EXPERTBELT
+Pokemon = B334H296,63
+    Moves = AURASPHERE,DRAGONPULSE,DETECT,EARTHPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = B143H107,64
+    Moves = REST,DIZZYPUNCH,SKYUPPERCUT,COUNTER
+    AbilityIndex = 1
+    Item = LEFTOVERS
+#-------------------------------
+[LEADER_Chuck,Chuck,1]
+Items = FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B68H141,82
+    Moves = DYNAMICPUNCH,WATERFALL,STONEEDGE,SLASH
+    AbilityIndex = 3
+    Item = MUSCLEBAND
+Pokemon = B321H281,82
+    Moves = CLOSECOMBAT,BLAZEKICK,BRAVEBIRD,TAUNT
+    AbilityIndex = 0
+    Item = EXPERTBELT
+Pokemon = B57H62,84
+    Moves = CIRCLETHROW,BELLYDRUM,CLOSECOMBAT,THRASH
+    AbilityIndex = 3
+    Item = EXPERTBELT
+Pokemon = B334H296,83
+    Moves = AURASPHERE,DRAGONPULSE,DETECT,EARTHPOWER
+    AbilityIndex = 1
+    Item = WISEGLASSES
+Pokemon = B143H107,84
+    Moves = REST,DIZZYPUNCH,SKYUPPERCUT,COUNTER
+    AbilityIndex = 1
+    Item = LEFTOVERS
+Pokemon = B288H273,83
+    Moves = SWORDSDANCE,LEAFBLADE,SKYUPPERCUT,DOUBLETEAM
+    AbilityIndex = 2
+    Item = RAZORCLAW
+#-------------------------------
+[RIVAL1,Blue]
+LoseText = "..."
+Pokemon = MEW,5
+#-------------------------------
+[RIVAL1,Blue,1]
+LoseText = "..."
+Pokemon = MEW,5
+#-------------------------------
+[RIVAL1,Blue,2]
+LoseText = "..."
+Pokemon = MEW,5
+#-------------------------------
+[RIVAL1,Blue,3]
+LoseText = "..."
+Pokemon = B16H32,7
+Pokemon = MEW,8
+#-------------------------------
+[RIVAL1,Blue,4]
+LoseText = "..."
+Pokemon = B16H32,7
+Pokemon = MEW,8
+#-------------------------------
+[RIVAL1,Blue,5]
+LoseText = "..."
+Pokemon = B16H32,7
+Pokemon = MEW,8
+#-------------------------------
+[RIVAL1,Blue,6]
+Items = SUPERPOTION
+LoseText = "..."
+Pokemon = B17H33,18
+Pokemon = ABRA,15
+Pokemon = B19H56,16
+Pokemon = MEW,19
+    Moves = SCARYFACE,WATERGUN,EMBER,SLASH
+#-------------------------------
+[RIVAL1,Blue,7]
+Items = SUPERPOTION
+LoseText = "..."
+Pokemon = B17H33,18
+Pokemon = ABRA,15
+Pokemon = B19H56,16
+Pokemon = MEW,19
+    Moves = WITHDRAW,WATERGUN,RAZORLEAF,TAKEDOWN
+#-------------------------------
+[RIVAL1,Blue,8]
+Items = SUPERPOTION
+LoseText = "..."
+Pokemon = B17H33,18
+Pokemon = ABRA,15
+Pokemon = B19H56,16
+Pokemon = MEW,19
+    Moves = RAZORLEAF,EMBER,BITE,SLEEPPOWDER
+#-------------------------------
+[RIVAL1,Blue,9]
+Items = SUPERPOTION
+LoseText = "..."
+Pokemon = B17H33,22
+Pokemon = B20H56,20
+Pokemon = B64H120,18
+Pokemon = MEW,22
+#-------------------------------
+[RIVAL1,Blue,10]
+Items = SUPERPOTION
+LoseText = "..."
+Pokemon = B17H33,22
+Pokemon = B20H56,20
+Pokemon = B64H120,18
+Pokemon = MEW,22
+#-------------------------------
+[RIVAL1,Blue,11]
+Items = SUPERPOTION
+LoseText = "..."
+Pokemon = B17H33,22
+Pokemon = B20H56,20
+Pokemon = B64H120,18
+Pokemon = MEW,22
+#-------------------------------
+[RIVAL1,Blue,12]
+Items = SUPERPOTION,SUPERPOTION
+LoseText = "..."
+Pokemon = B17H34,25
+Pokemon = GYARADOS,23
+Pokemon = B64H120,22
+Pokemon = MEW,25
+#-------------------------------
+[RIVAL1,Blue,13]
+Items = SUPERPOTION,SUPERPOTION
+LoseText = "..."
+Pokemon = B17H34,25
+Pokemon = GYARADOS,23
+Pokemon = B64H120,22
+Pokemon = MEW,25
+#-------------------------------
+[RIVAL1,Blue,14]
+Items = SUPERPOTION,SUPERPOTION
+LoseText = "..."
+Pokemon = B17H104,25
+Pokemon = GYARADOS,23
+Pokemon = B64H120,22
+Pokemon = MEW,25
+#-------------------------------
+[RIVAL1,Blue,15]
+Items = SUPERPOTION,SUPERPOTION
+LoseText = "..."
+Pokemon = B18H34,36
+Pokemon = TAUROS,39
+Pokemon = B130H125,37
+Pokemon = B65H120,36
+Pokemon = MEW,41
+#-------------------------------
+[RIVAL1,Blue,16]
+Items = SUPERPOTION,SUPERPOTION
+LoseText = "..."
+Pokemon = B18H34,36
+Pokemon = TAUROS,39
+Pokemon = B130H125,37
+Pokemon = B65H120,36
+Pokemon = MEW,41
+#-------------------------------
+[RIVAL1,Blue,17]
+Items = SUPERPOTION,SUPERPOTION
+LoseText = "..."
+Pokemon = B18H34,36
+Pokemon = TAUROS,39
+Pokemon = B130H125,37
+Pokemon = B65H120,36
+Pokemon = MEW,41
+#-------------------------------
+[RIVAL1,Blue,18]
+LoseText = "..."
+Pokemon = B18H34,44
+Pokemon = TAUROS,45
+Pokemon = B130H125,42
+Pokemon = B64H120,42
+Pokemon = MEW,45
+#-------------------------------
+[RIVAL1,Blue,19]
+LoseText = "..."
+Pokemon = B18H34,44
+Pokemon = TAUROS,45
+Pokemon = B130H125,42
+Pokemon = B65H120,42
+Pokemon = MEW,45
+#-------------------------------
+[RIVAL1,Blue,20]
+LoseText = "..."
+Pokemon = B18H34,44
+Pokemon = TAUROS,45
+Pokemon = B130H125,42
+Pokemon = B65H120,42
+Pokemon = MEW,45
+#-------------------------------
+[RIVAL1,Blue,21]
+LoseText = "..."
+Pokemon = B18H34,47
+Pokemon = B102H128,45
+Pokemon = B111H126,45
+Pokemon = B130H125,47
+Pokemon = B65H121,50
+Pokemon = MEW,53
+#-------------------------------
+[RIVAL1,Blue,22]
+LoseText = "..."
+Pokemon = B18H34,47
+Pokemon = B102H128,45
+Pokemon = B111H126,45
+Pokemon = B130H125,47
+Pokemon = B65H121,50
+Pokemon = MEW,53
+#-------------------------------
+[RIVAL1,Blue,23]
+LoseText = "..."
+Pokemon = B18H34,47
+Pokemon = B102H128,45
+Pokemon = B111H126,45
+Pokemon = B130H125,47
+Pokemon = B65H121,50
+Pokemon = MEW,53
+#-------------------------------
+[MR_FUJI,Fuji]
+LoseText = "..."
+Pokemon = DODUO,20
+Pokemon = NIDORINO,20
+#-------------------------------
+[TEAMROCKET_M,Sergio]
+LoseText = "..."
+Pokemon = ZUBAT,17
+    Ball = ROCKETBALL
+Pokemon = B147H19,18
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Marcel]
+LoseText = "..."
+Pokemon = KOFFING,15
+    Ball = ROCKETBALL
+Pokemon = B23H108,15
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Achraf]
+LoseText = "..."
+Pokemon = B140H81,20
+    Ball = ROCKETBALL
+#-------------------------------
+[ROCKETBOSS,Giovanni,1]
+LoseText = "..."
+Pokemon = MEWTWO,70
+    Moves = PSYCHIC,SHADOWBALL,AURASPHERE,RECOVER
+    AbilityIndex = 2
+    Ball = ROCKETBALL
+#-------------------------------
+[ROBOT,R.E.D.]
+LoseText = "..."
+Pokemon = B132H242,100
+    Moves = TOXIC,COSMICPOWER,SOFTBOILED,TRANSFORM
+    AbilityIndex = 0
+    Item = LEFTOVERS
+#-------------------------------
+[ROBOT,G.R.E.E.N.]
+LoseText = "..."
+Pokemon = B299H94,100
+    Moves = SWITCHEROO,DISABLE,RECOVER
+    AbilityIndex = 4
+    Item = CHOICESCARF
+#-------------------------------
+[ROBOT,Y.E.L.L.O.W.]
+LoseText = "..."
+Pokemon = B309H184,100
+    Moves = HYDROCANNON,GIGAIMPACT,CLOSECOMBAT,EARTHQUAKE
+    AbilityIndex = 4
+    Item = CHOICEBAND
+#-------------------------------
+[ROBOT,B.L.U.E.]
+LoseText = "..."
+Pokemon = B296H289,100
+    Moves = ENDEAVOR,VACUUMWAVE,SHADOWSNEAK
+    AbilityIndex = 1
+    Item = FOCUSSASH
+#-------------------------------
+[ROBOT,RED_2]
+LoseText = "..."
+Pokemon = B232H235,1
+    Moves = ENDEAVOR,BULLETPUNCH
+    AbilityIndex = 0
+    Item = SHELLBELL
+#-------------------------------
+[ROBOT,RED_3]
+LoseText = "..."
+Pokemon = B208H113,50
+    Moves = IRONTAIL,MINIMIZE,SOFTBOILED,SHELLSMASH
+    AbilityIndex = 1
+    Item = EVIOLITE
+#-------------------------------
+[PSYCHIC_M,Cameron]
+LoseText = "..."
+Pokemon = B79H96,38
+Pokemon = B79H64,38
+Pokemon = B80H67,38
+#-------------------------------
+[PSYCHIC_F,Enya]
+LoseText = "..."
+Pokemon = B64H122,43
+#-------------------------------
+[CHANNELER,Stacy]
+LoseText = "..."
+Pokemon = B93H67,39
+Pokemon = B93H57,39
+#-------------------------------
+[PSYCHIC_M,Preston]
+LoseText = "..."
+Pokemon = B80H87,43
+#-------------------------------
+[CHANNELER,Amanda]
+LoseText = "..."
+Pokemon = B92H65,39
+Pokemon = B63H94,39
+#-------------------------------
+[PSYCHIC_M,Johan]
+LoseText = "..."
+Pokemon = B64H70,38
+Pokemon = B122H61,38
+Pokemon = B77H79,38
+#-------------------------------
+[ROCKETBOSS,Giovanni,2]
+LoseText = "..."
+Pokemon = B144H150,45
+    Moves = ICEBEAM,PSYCHIC,GUARDSWAP,LIGHTSCREEN
+Pokemon = B146H150,45
+    Moves = FLAMETHROWER,PSYCHIC,SKYATTACK,POWERSWAP
+Pokemon = B145H150,45
+    Moves = THUNDERBOLT,PSYCHIC,DRILLPECK,AGILITY
+#-------------------------------
+[ROCKETBOSS,Giovanni,3]
+Items = FULLHEAL
+LoseText = "..."
+Pokemon = BIRDBOSS,50
+    Moves = TRIATTACK,DRILLPECK,SKYATTACK,HAZE
+    AbilityIndex = 2
+    Item = ZOOMLENS
+    Ball = MASTERBALL
+#-------------------------------
+[ROCKETBOSS,Giovanni,5]
+Items = FULLHEAL,FULLHEAL,FULLHEAL
+LoseText = "..."
+Pokemon = BIRDBOSS_3,50
+    Moves = HAZE,REFLECT,ICEBEAM,ROOST
+    AbilityIndex = 0
+    Item = CHARTIBERRY
+    Ball = INVISIBALL
+Pokemon = BIRDBOSS_2,50
+    Moves = TAILWIND,SAFEGUARD,FLAMETHROWER,ROOST
+    AbilityIndex = 0
+    Item = CHARTIBERRY
+    Ball = MASTERBALL
+Pokemon = BIRDBOSS_1,50
+    Moves = LIGHTSCREEN,THUNDERBOLT,DRILLPECK,ROOST
+    AbilityIndex = 0
+    Item = CHARTIBERRY
+    Ball = INVISIBALL
+#-------------------------------
+[TEAMROCKET_M,Greg]
+LoseText = "..."
+Pokemon = ZUBAT,30
+    Ball = ROCKETBALL
+Pokemon = MAGNEMITE,30
+    Ball = ROCKETBALL
+Pokemon = B42H25,30
+    Ball = ROCKETBALL
+#-------------------------------
+[SCIENTIST,Jerry]
+LoseText = "..."
+Pokemon = B81H58,30
+Pokemon = B100H37,30
+Pokemon = B82H88,30
+#-------------------------------
+[TEAMROCKET_M,Sebastian]
+LoseText = "..."
+Pokemon = DROWZEE,34
+    Ball = ROCKETBALL
+Pokemon = B41H110,34
+    Ball = ROCKETBALL
+#-------------------------------
+[SCIENTIST,Connor]
+LoseText = "..."
+Pokemon = B88H74,31
+Pokemon = B109H75,31
+Pokemon = B95H110,31
+#-------------------------------
+[TEAMROCKET_F,Madison]
+LoseText = "..."
+Pokemon = RATICATE,33
+    Ball = ROCKETBALL
+Pokemon = RATICATE,33
+    Ball = ROCKETBALL
+Pokemon = B17H97,33
+    Ball = ROCKETBALL
+#-------------------------------
+[SCIENTIST,Jose]
+LoseText = "..."
+Pokemon = B110H109,34
+Pokemon = B101H42,34
+#-------------------------------
+[TEAMROCKET_M,Jimi]
+LoseText = "..."
+Pokemon = EKANS,33
+    Ball = ROCKETBALL
+Pokemon = GOLBAT,33
+    Ball = ROCKETBALL
+Pokemon = B22H104,33
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Sylvia]
+LoseText = "..."
+Pokemon = DROWZEE,34
+    Ball = ROCKETBALL
+Pokemon = B66H122,34
+    Ball = ROCKETBALL
+#-------------------------------
+[SCIENTIST,Rodney]
+LoseText = "..."
+Pokemon = B101H97,38
+#-------------------------------
+[TEAMROCKET_M,Ricky]
+LoseText = "..."
+Pokemon = B97H85,38
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Julian]
+LoseText = "..."
+Pokemon = B67H24,38
+    Ball = ROCKETBALL
+#-------------------------------
+[JUGGLER,Jim]
+LoseText = "..."
+Pokemon = FARFETCHD,34
+Pokemon = B122H70,34
+#-------------------------------
+[SCIENTIST,Beau]
+LoseText = "..."
+Pokemon = B52H81,34
+Pokemon = B82H53,34
+#-------------------------------
+[TEAMROCKET_F,Marianne]
+LoseText = "..."
+Pokemon = GOLBAT,34
+    Ball = ROCKETBALL
+Pokemon = B83H67,34
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Jasmine]
+LoseText = "..."
+Pokemon = ZUBAT,33
+    Ball = ROCKETBALL
+Pokemon = ZUBAT,33
+    Ball = ROCKETBALL
+Pokemon = B113H42,33
+    Ball = ROCKETBALL
+#-------------------------------
+[SCIENTIST,Taylor]
+LoseText = "..."
+Pokemon = B100H133,31
+Pokemon = B134H100,31
+Pokemon = B135H100,31
+Pokemon = B136H100,31
+#-------------------------------
+[TEAMROCKET_M,Mark]
+LoseText = "..."
+Pokemon = RATICATE,34
+    Ball = ROCKETBALL
+Pokemon = B104H22,34
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Emanuel]
+LoseText = "..."
+Pokemon = RATICATE,31
+    Ball = ROCKETBALL
+Pokemon = GOLBAT,31
+    Ball = ROCKETBALL
+Pokemon = B72H19,31
+    Ball = ROCKETBALL
+Pokemon = GOLBAT,31
+    Ball = ROCKETBALL
+#-------------------------------
+[SCIENTIST,Joshua]
+LoseText = "..."
+Pokemon = B2H101,34
+Pokemon = B8H89,34
+#-------------------------------
+[SCIENTIST,Emmanuel]
+LoseText = "..."
+Pokemon = B137H81,36
+#-------------------------------
+[SCIENTIST,John]
+LoseText = "..."
+Pokemon = B142H5,38
+#-------------------------------
+[TEAMROCKET_F,Selena]
+LoseText = "..."
+Pokemon = DROWZEE,31
+    Ball = ROCKETBALL
+Pokemon = GRIMER,31
+    Ball = ROCKETBALL
+Pokemon = B66H106,31
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Amadeus]
+LoseText = "..."
+Pokemon = RATICATE,34
+    Ball = ROCKETBALL
+Pokemon = B57H111,34
+    Ball = ROCKETBALL
+#-------------------------------
+[SCIENTIST,Travis]
+LoseText = "..."
+Pokemon = B68H67,38
+#-------------------------------
+[TEAMROCKET_M,Pierce]
+LoseText = "..."
+Pokemon = RATTATA,34
+    Ball = ROCKETBALL
+Pokemon = ZUBAT,34
+    Ball = ROCKETBALL
+Pokemon = EKANS,34
+    Ball = ROCKETBALL
+Pokemon = B15H20,34
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Scott]
+LoseText = "..."
+Pokemon = B57H12,38
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Felicity]
+LoseText = "..."
+Pokemon = GOLBAT,36
+    Ball = ROCKETBALL
+Pokemon = DROWZEE,36
+    Ball = ROCKETBALL
+Pokemon = B105H101,36
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Larry]
+LoseText = "..."
+Pokemon = WEEZING,38
+    Ball = ROCKETBALL
+Pokemon = B101H73,37
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,James]
+LoseText = "..."
+Pokemon = B71H110,38
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Jessie]
+LoseText = "..."
+Pokemon = B24H108,38
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Donald]
+LoseText = "..."
+Pokemon = B115H42,44
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Svetlana]
+LoseText = "..."
+Pokemon = B20H76,44
+    Ball = ROCKETBALL
+#-------------------------------
+[ROCKETEXEC_F,Kelly]
+LoseText = "..."
+Pokemon = B89H126,45
+    Ball = ROCKETBALL
+Pokemon = B89H125,45
+    Ball = ROCKETBALL
+Pokemon = B145H144,50
+    Ball = MASTERBALL
+#-------------------------------
+[ROCKETEXEC_F,Kelly,1]
+LoseText = "..."
+Pokemon = B89H125,45
+    Ball = ROCKETBALL
+Pokemon = B89H124,45
+    Ball = ROCKETBALL
+Pokemon = B144H146,50
+    Ball = MASTERBALL
+#-------------------------------
+[ROCKETEXEC_F,Kelly,2]
+LoseText = "..."
+Pokemon = B89H124,45
+    Ball = ROCKETBALL
+Pokemon = B89H126,45
+    Ball = ROCKETBALL
+Pokemon = B146H145,50
+    Ball = MASTERBALL
+#-------------------------------
+[MYSTICALMAN,Eusine]
+LoseText = "..."
+Pokemon = B132H52,49
+    Moves = TRANSFORM
+#-------------------------------
+[MYSTICALMAN,Eusine,1]
+LoseText = "..."
+Pokemon = B132H52,54
+    Moves = TRANSFORM
+#-------------------------------
+[WORKER,Angus]
+LoseText = "..."
+Pokemon = HERACROSS,37
+Pokemon = B217H202,39
+#-------------------------------
+[WORKER,Silvio]
+LoseText = "..."
+Pokemon = DUGTRIO,37
+Pokemon = B26H180,39
+#-------------------------------
+[WORKER,Hermann]
+LoseText = "..."
+Pokemon = MAGNETON,38
+Pokemon = MAGNETON,38
+Pokemon = B205H82,38
+#-------------------------------
+[WORKER,John]
+LoseText = "..."
+Pokemon = B137H233,44
+#-------------------------------
+[WORKER,Felix]
+LoseText = "..."
+Pokemon = MACHOP,39
+Pokemon = MACHOKE,39
+Pokemon = B67H212,39
+#-------------------------------
+[WORKER,Kevin]
+LoseText = "..."
+Pokemon = ELECTRODE,42
+Pokemon = B210H82,42
+#-------------------------------
+[WORKER,Mark]
+LoseText = "..."
+Pokemon = MACHOKE,42
+Pokemon = B205H106,44
+#-------------------------------
+[TEAMROCKET_F,Sarah]
+LoseText = "..."
+Pokemon = WEEZING,39
+    Ball = ROCKETBALL
+Pokemon = B110H166,45
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Rike]
+LoseText = "..."
+Pokemon = ARBOK,41
+    Ball = ROCKETBALL
+Pokemon = B202H42,42
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Joel]
+LoseText = "..."
+Pokemon = RATICATE,42
+    Ball = ROCKETBALL
+Pokemon = B20H162,42
+    Ball = ROCKETBALL
+#-------------------------------
+[ROCKETEXEC_M,Archer]
+LoseText = "..."
+Pokemon = B57H228,44
+    Ball = ROCKETBALL
+Pokemon = B168H110,44
+    Ball = ROCKETBALL
+Pokemon = B229H208,44
+    Ball = ROCKETBALL
+#-------------------------------
+[FISHERMAN,Scott]
+LoseText = "..."
+Pokemon = SEAKING,41
+Pokemon = SEAKING,41
+Pokemon = B211H82,45
+#-------------------------------
+[PSYCHIC_M,Richard]
+LoseText = "..."
+Pokemon = B197H196,47
+#-------------------------------
+[COOLTRAINER_F,Joyce]
+LoseText = "..."
+Pokemon = PIKACHU,47
+Pokemon = B9H212,45
+#-------------------------------
+[COOLTRAINER_M,Gaven]
+LoseText = "..."
+Pokemon = B185H71,43
+Pokemon = B99H85,43
+Pokemon = B136H203,43
+#-------------------------------
+[COOLTRAINER_M,Jake]
+LoseText = "..."
+Pokemon = PARASECT,44
+Pokemon = B55H224,44
+#-------------------------------
+[COOLTRAINER_F,Beth]
+LoseText = "..."
+Pokemon = B78H219,47
+#-------------------------------
+[COOLTRAINER_F,Karina]
+LoseText = "..."
+Pokemon = VULPIX,43
+Pokemon = B126H77,43
+Pokemon = B203H78,44
+#-------------------------------
+[COOLTRAINER_F,Jenny]
+LoseText = "..."
+Pokemon = B9H3,50
+#-------------------------------
+[COOLTRAINER_F,Megan]
+LoseText = "..."
+Pokemon = B1H152,42
+Pokemon = B2H153,42
+Pokemon = B3H154,42
+#-------------------------------
+[BIRDKEEPER,Jose]
+LoseText = "..."
+Pokemon = B227H83,45
+#-------------------------------
+[PSYCHIC_M,Gilbert]
+LoseText = "..."
+Pokemon = STARMIE,40
+Pokemon = B102H201,40
+Pokemon = B112H203,40
+#-------------------------------
+[COOLTRAINER_F,Reena]
+LoseText = "..."
+Pokemon = B91H121,41
+Pokemon = B91H121,41
+Pokemon = B31H241,41
+#-------------------------------
+[BLACKBELT,Daisuke]
+LoseText = "..."
+Pokemon = MACHOKE,44
+Pokemon = B66H164,42
+Pokemon = B67H64,44
+#-------------------------------
+[COOLTRAINER_F,Naomi]
+LoseText = "..."
+Pokemon = PERSIAN,46
+Pokemon = B38H229,46
+#-------------------------------
+[TAMER,Vincent]
+LoseText = "..."
+Pokemon = B122H270,49
+#-------------------------------
+[COOLTRAINER_F,Caroline]
+LoseText = "..."
+Pokemon = PARAS,42
+Pokemon = B47H199,47
+#-------------------------------
+[COOLTRAINER_F,Lindsay]
+LoseText = "..."
+Pokemon = BELLSPROUT,40
+Pokemon = B188H70,43
+Pokemon = B182H71,46
+#-------------------------------
+[COOLTRAINER_M,Rolando]
+LoseText = "..."
+Pokemon = B5H156,44
+Pokemon = B8H159,44
+Pokemon = B2H153,44
+#-------------------------------
+[COOLTRAINER_M,Spencer]
+LoseText = "..."
+Pokemon = RATICATE,40
+Pokemon = B6H227,47
+#-------------------------------
+[JUGGLER,Nelson]
+LoseText = "..."
+Pokemon = DROWZEE,43
+Pokemon = KADABRA,43
+Pokemon = B97H178,42
+Pokemon = B196H64,42
+#-------------------------------
+[COOLTRAINER_M,George]
+LoseText = "..."
+Pokemon = EXEGGUTOR,44
+Pokemon = B28H215,44
+Pokemon = B91H202,44
+#-------------------------------
+[COOLTRAINER_M,Darryl]
+LoseText = "..."
+Pokemon = B101H121,45
+Pokemon = B59H135,45
+#-------------------------------
+[COOLTRAINER_M,Dawson]
+LoseText = "..."
+Pokemon = B128H5,44
+Pokemon = B131H186,44
+Pokemon = B108H51,44
+#-------------------------------
+[COOLTRAINER_M,Josh]
+LoseText = "..."
+Pokemon = B143H97,46
+#-------------------------------
+[COOLTRAINER_F,Alexa]
+LoseText = "..."
+Pokemon = B25H106,42
+Pokemon = B40H107,42
+Pokemon = B242H237,42
+#-------------------------------
+[COOLTRAINER_F,Rike]
+LoseText = "..."
+Pokemon = SKARMORY,45
+Pokemon = B53H87,45
+#-------------------------------
+[COOLTRAINER_M,Kirill]
+LoseText = "..."
+Pokemon = B233H230,48
+#-------------------------------
+[COOLTRAINER_M,Ryan]
+LoseText = "..."
+Pokemon = B242H71,45
+#-------------------------------
+[HIKER,Oscar]
+LoseText = "..."
+Pokemon = SANDSLASH,43
+Pokemon = B75H76,44
+Pokemon = DONPHAN,44
+#-------------------------------
+[HIKER,Wilfried]
+LoseText = "..."
+Pokemon = GRAVELER,43
+Pokemon = B208H95,45
+#-------------------------------
+[YOUNGCOUPLE,Nick & Aude]
+LoseText = "..."
+Pokemon = B34H31,46
+Pokemon = B31H34,46
+#-------------------------------
+[TAMER,Danny]
+LoseText = "..."
+Pokemon = B197H196,46
+Pokemon = B148H247,46
+#-------------------------------
+[COOLTRAINER_M,Mario]
+LoseText = "..."
+Pokemon = B207H42,43
+Pokemon = B203H28,43
+Pokemon = B171H12,43
+#-------------------------------
+[COOLTRAINER_F,Sabrina]
+LoseText = "..."
+Pokemon = B226H17,43
+Pokemon = B224H39,45
+#-------------------------------
+[COOLTRAINER_M,Patrice]
+LoseText = "..."
+Pokemon = B59H15,44
+Pokemon = B237H71,44
+Pokemon = B185H51,44
+#-------------------------------
+[COOLTRAINER_F,Marieh]
+LoseText = "..."
+Pokemon = B136H76,45
+Pokemon = B68H37,47
+#-------------------------------
+[COOLTRAINER_F,Clarence]
+LoseText = "..."
+Pokemon = B139H40,44
+Pokemon = B143H38,45
+#-------------------------------
+[YOUNGCOUPLE,Phil & Anna]
+LoseText = "..."
+Pokemon = B210H184,36
+Pokemon = B184H180,36
+#-------------------------------
+[POLICE,Hamilton]
+LoseText = "..."
+Pokemon = GRANBULL,41
+Pokemon = B59H97,42
+#-------------------------------
+[BURGLAR,Brandon]
+LoseText = "..."
+Pokemon = GRANBULL,36
+Pokemon = B179H260,38
+#-------------------------------
+[PICNICKER,Gina]
+LoseText = "..."
+Pokemon = SKIPLOOM,30
+Pokemon = JUMPLUFF,36
+Pokemon = B3H192,38
+#-------------------------------
+[YOUNGSTER,Ian]
+LoseText = "..."
+Pokemon = DUGTRIO,36
+Pokemon = B57H189,38
+#-------------------------------
+[CAMPER,Todd]
+LoseText = "..."
+Pokemon = GRAVELER,33
+Pokemon = GOLDUCK,33
+Pokemon = B55H219,38
+#-------------------------------
+[COOLTRAINER_F,Jenn]
+LoseText = "..."
+Pokemon = B120H201,36
+Pokemon = B121H200,41
+#-------------------------------
+[COOLTRAINER_F,Irene]
+LoseText = "..."
+Pokemon = B118H168,36
+Pokemon = B119H169,41
+#-------------------------------
+[COOLTRAINER_F,Kate]
+LoseText = "..."
+Pokemon = B90H188,36
+Pokemon = B91H185,41
+#-------------------------------
+[PICNICKER,Kim]
+LoseText = "..."
+Pokemon = B38H26,39
+#-------------------------------
+[CAMPER,Elliot]
+LoseText = "..."
+Pokemon = SANDSLASH,36
+Pokemon = B36H184,38
+#-------------------------------
+[PICNICKER,Brooke]
+LoseText = "..."
+Pokemon = B31H122,38
+#-------------------------------
+[JUGGLER,Irwin]
+LoseText = "..."
+Pokemon = B100H133,25
+Pokemon = B100H134,35
+Pokemon = B100H135,35
+Pokemon = B100H136,35
+Pokemon = B100H196,35
+Pokemon = B100H197,35
+#-------------------------------
+[PYROMANIAC,Walt]
+LoseText = "..."
+Pokemon = MAGMAR,34
+Pokemon = B268H126,40
+#-------------------------------
+[BURGLAR,Dickson]
+LoseText = "..."
+Pokemon = B228H198,36
+Pokemon = CROBAT,38
+#-------------------------------
+[BUGCATCHER,Arnie]
+LoseText = "..."
+Pokemon = B49H234,43
+#-------------------------------
+[BIRDKEEPER,Bryan]
+LoseText = "..."
+Pokemon = PIDGEOTTO,35
+Pokemon = B18H176,37
+#-------------------------------
+[PSYCHIC_M,Mark]
+LoseText = "..."
+Pokemon = KADABRA,35
+Pokemon = KADABRA,35
+Pokemon = B65H185,38
+#-------------------------------
+[GENTLEMAN,Nick]
+LoseText = "..."
+Pokemon = XATU,36
+Pokemon = B266H270,41
+#-------------------------------
+[BEAUTY,Berverly]
+LoseText = "..."
+Pokemon = B210H123,41
+#-------------------------------
+[YOUNGSTER,Jack]
+LoseText = "..."
+Pokemon = VILEPLUME,38
+Pokemon = B101H114,35
+#-------------------------------
+[TAMER,William]
+LoseText = "..."
+Pokemon = B127H26,42
+#-------------------------------
+[PRESCHOOLER_F,Krise]
+LoseText = "..."
+Pokemon = GLOOM,34
+Pokemon = B105H15,38
+#-------------------------------
+[LASS,Shauna]
+LoseText = "..."
+Pokemon = SKIPLOOM,31
+Pokemon = SKIPLOOM,31
+Pokemon = B153H113,37
+#-------------------------------
+[ROUGHNECK,Craig]
+LoseText = "..."
+Pokemon = B123H210,50
+#-------------------------------
+[BLACKBELT,Peter]
+LoseText = "..."
+Pokemon = B106H234,45
+Pokemon = B67H168,50
+    Moves = REVENGE,FORESIGHT,SPIDERWEB,LOWKICK
+    AbilityIndex = 0
+#-------------------------------
+[HIKER,Daniel]
+LoseText = "..."
+Pokemon = ONIX,45
+Pokemon = B95H205,45
+#-------------------------------
+[HIKER,Russel]
+LoseText = "..."
+Pokemon = GRAVELER,43
+Pokemon = GRAVELER,43
+Pokemon = B76H206,45
+#-------------------------------
+[PYROMANIAC,Bill]
+LoseText = "..."
+Pokemon = KOFFING,44
+Pokemon = B110H126,46
+#-------------------------------
+[PYROMANIAC,Ray]
+LoseText = "..."
+Pokemon = B38H164,48
+#-------------------------------
+[POKEMANIAC,Larry]
+LoseText = "..."
+Pokemon = B91H199,47
+#-------------------------------
+[HIKER,Leonard]
+LoseText = "..."
+Pokemon = MACHOKE,44
+Pokemon = B75H166,46
+#-------------------------------
+[HIKER,Phillip]
+LoseText = "..."
+Pokemon = GRAVELER,44
+Pokemon = GRAVELER,44
+Pokemon = B76H75,45
+#-------------------------------
+[POKEMANIAC,Andrew]
+LoseText = "..."
+Pokemon = MAROWAK,44
+Pokemon = B105H216,45
+#-------------------------------
+[POKEMANIAC,Calvin]
+LoseText = "..."
+Pokemon = B115H217,49
+#-------------------------------
+[COOLTRAINER_M,Nick]
+LoseText = "..."
+Pokemon = B156H6,46
+Pokemon = B153H3,46
+Pokemon = B159H9,46
+#-------------------------------
+[COOLTRAINER_F,Gwen]
+LoseText = "..."
+Pokemon = EEVEE,45
+Pokemon = B272H134,43
+Pokemon = B271H136,43
+Pokemon = B135H196,43
+#-------------------------------
+[COOLTRAINER_F,Emma]
+LoseText = "..."
+Pokemon = B199H62,47
+#-------------------------------
+[COOLTRAINER_F,Amelia]
+LoseText = "..."
+Pokemon = B80H189,47
+#-------------------------------
+[WORKER,Steve]
+LoseText = "..."
+Pokemon = GRAVELER,52
+Pokemon = GRAVELER,52
+Pokemon = B42H202,52
+#-------------------------------
+[WORKER,Danny]
+LoseText = "..."
+Pokemon = GOLBAT,53
+Pokemon = B185H24,53
+#-------------------------------
+[WORKER,Mathias]
+LoseText = "..."
+Pokemon = B213H139,56
+#-------------------------------
+[FISHERMAN,Ralph]
+LoseText = "..."
+Pokemon = B96H160,49
+#-------------------------------
+[FISHERMAN,Henry]
+LoseText = "..."
+Pokemon = POLIWRATH,46
+Pokemon = POLITOED,46
+#-------------------------------
+[FISHERMAN,Justin]
+LoseText = "..."
+Pokemon = MAGIKARP,5
+Pokemon = B6H129,45
+Pokemon = B9H129,45
+Pokemon = B3H129,45
+#-------------------------------
+[BIRDKEEPER,Peter]
+LoseText = "..."
+Pokemon = NOCTOWL,44
+Pokemon = B17H115,48
+#-------------------------------
+[BURGLAR,Roland]
+LoseText = "..."
+Pokemon = PINECO,33
+    Moves = SELFDESTRUCT
+Pokemon = PINECO,33
+    Moves = SELFDESTRUCT
+Pokemon = B205H101,55
+    Moves = EXPLOSION
+#-------------------------------
+[YOUNGCOUPLE,Jan & Pete]
+LoseText = "..."
+Pokemon = B125H126,45
+Pokemon = JYNX,45
+#-------------------------------
+[PRESCHOOLER_M,Albert]
+LoseText = "..."
+Pokemon = RATICATE,41
+Pokemon = B169H224,45
+#-------------------------------
+[BEAUTY,Liz]
+LoseText = "..."
+Pokemon = B31H7,49
+#-------------------------------
+[COOLTRAINER_M,Harrisson]
+LoseText = "..."
+Pokemon = B222H270,54
+    Moves = RECOVER,SONICBOOM,LUCKYCHANT,AIRSLASH
+    AbilityIndex = 2
+    Item = STARPIECE
+#-------------------------------
+[COOLTRAINER_F,Korrina]
+LoseText = "..."
+Pokemon = B270H154,47
+#-------------------------------
+[BIRDKEEPER,Spencer]
+LoseText = "..."
+Pokemon = FARFETCHD,44
+Pokemon = B22H198,48
+#-------------------------------
+[HIKER,Martin]
+LoseText = "..."
+Pokemon = GRAVELER,44
+Pokemon = B208H71,46
+#-------------------------------
+[YOUNGSTER,Joe]
+LoseText = "..."
+Pokemon = B20H206,51
+#-------------------------------
+[YOUNGSTER,Mikey]
+LoseText = "..."
+Pokemon = PIDGEOTTO,48
+Pokemon = B164H17,48
+#-------------------------------
+[BUGCATCHER,Don]
+LoseText = "..."
+Pokemon = SCYTHER,49
+Pokemon = B127H214,48
+#-------------------------------
+[LASS,Charline]
+LoseText = "..."
+Pokemon = B200H25,54
+#-------------------------------
+[BEAUTY,Callie]
+LoseText = "..."
+Pokemon = CLEFABLE,49
+Pokemon = B184H40,49
+#-------------------------------
+[BEAUTY,Kassandra]
+LoseText = "..."
+Pokemon = WIGGLYTUFF,49
+Pokemon = B36H26,49
+#-------------------------------
+[PSYCHIC_M,Greg]
+LoseText = "..."
+Pokemon = B326H97,54
+#-------------------------------
+[FISHERMAN,Wilton]
+LoseText = "..."
+Pokemon = B60H118,49
+Pokemon = B119H61,53
+#-------------------------------
+[FISHERMAN,Edgar]
+LoseText = "..."
+Pokemon = REMORAID,42
+Pokemon = REMORAID,42
+Pokemon = B131H119,54
+#-------------------------------
+[KIMONOGIRL,Naoko]
+LoseText = "..."
+Pokemon = B134H271,60
+#-------------------------------
+[KIMONOGIRL,Sayo]
+LoseText = "..."
+Pokemon = B136H272,60
+#-------------------------------
+[KIMONOGIRL,Zuki]
+LoseText = "..."
+Pokemon = B135H339,60
+#-------------------------------
+[KIMONOGIRL,Miki]
+LoseText = "..."
+Pokemon = B196H197,60
+#-------------------------------
+[COOLTRAINER_M,Colby]
+LoseText = "..."
+Pokemon = KINGLER,51
+Pokemon = POLIWHIRL,51
+Pokemon = B73H130,51
+Pokemon = B9H232,51
+#-------------------------------
+[COOLTRAINER_F,Stacey]
+LoseText = "..."
+Pokemon = B124H186,60
+#-------------------------------
+[COOLTRAINER_F,Brooke]
+LoseText = "..."
+Pokemon = B268H240,58
+Pokemon = B267H239,58
+#-------------------------------
+[YOUNGSTER,Bill]
+Items = POTION
+LoseText = "..."
+Pokemon = RATTATA,71
+#-------------------------------
+[COOLTRAINER_F,Alyssa]
+LoseText = "..."
+Pokemon = B321H324,56
+Pokemon = B324H318,56
+Pokemon = B318H321,56
+#-------------------------------
+[FISHERMAN,Chris]
+LoseText = "..."
+Pokemon = B211H91,58
+#-------------------------------
+[POKEMANIAC,Shane]
+LoseText = "..."
+Pokemon = B31H327,55
+Pokemon = B34H327,55
+#-------------------------------
+[HIKER,Benjamin]
+LoseText = "..."
+Pokemon = DUGTRIO,53
+Pokemon = GOLEM,53
+Pokemon = B51H254,55
+#-------------------------------
+[SWIMMER_F,Abigail]
+LoseText = "..."
+Pokemon = PSYDUCK,35
+Pokemon = PSYDUCK,35
+Pokemon = B55H24,36
+#-------------------------------
+[CRUSHGIRL,Celine]
+LoseText = "..."
+Pokemon = B76H237,38
+#-------------------------------
+[BLACKBELT,Hugh]
+LoseText = "..."
+Pokemon = MACHOP,37
+Pokemon = B210H67,37
+#-------------------------------
+[CRUSHGIRL,Sharon]
+LoseText = "..."
+Pokemon = MANKEY,37
+Pokemon = B224H57,37
+#-------------------------------
+[SWIMMER_M,Finn]
+LoseText = "..."
+Pokemon = B121H211,48
+#-------------------------------
+[SWIMMER_F,Maria]
+LoseText = "..."
+Pokemon = SEADRA,47
+Pokemon = B8H117,47
+#-------------------------------
+[CRUSHGIRL,Jocelyn]
+LoseText = "..."
+Pokemon = HITMONCHAN,46
+Pokemon = B287H107,46
+#-------------------------------
+[POKEMONRANGER_M,Logan]
+LoseText = "..."
+Pokemon = EXEGGCUTE,45
+Pokemon = B103H226,47
+#-------------------------------
+[POKEMONRANGER_F,Beth]
+LoseText = "..."
+Pokemon = WEEPINBELL,44
+Pokemon = GLOOM,44
+Pokemon = B182H135,46
+#-------------------------------
+[POKEMONRANGER_M,Richard]
+LoseText = "..."
+Pokemon = RHYHORN,45
+Pokemon = B262H117,47
+#-------------------------------
+[SWIMMER_M,Garett]
+LoseText = "..."
+Pokemon = SHELLDER,45
+Pokemon = B91H325,45
+#-------------------------------
+[CRUSHGIRL,Kia]
+LoseText = "..."
+Pokemon = B68H119,49
+#-------------------------------
+[BLACKBELT,Mike]
+LoseText = "..."
+Pokemon = MACHOKE,46
+Pokemon = B99H57,47
+#-------------------------------
+[SWIMMER_F,Sandra]
+LoseText = "..."
+Pokemon = TENTACOOL,52
+Pokemon = B318H224,54
+#-------------------------------
+[SWIMMER_M,Raphael]
+LoseText = "..."
+Pokemon = GRAVELER,49
+Pokemon = TENTACRUEL,49
+Pokemon = B176H127,53
+#-------------------------------
+[SWIMMER_F,Eva]
+LoseText = "..."
+Pokemon = CORSOLA,51
+Pokemon = B119H314,55
+#-------------------------------
+[FISHERMAN,Tommy]
+LoseText = "..."
+Pokemon = GOLDEEN,51
+Pokemon = GOLDEEN,51
+Pokemon = B86H298,54
+#-------------------------------
+[POKEMONRANGER_M,Steve]
+LoseText = "..."
+Pokemon = B7H316,54
+Pokemon = B6H301,53
+Pokemon = B4H336,53
+Pokemon = B158H159,57
+#-------------------------------
+[POKEMONRANGER_F,Jane]
+LoseText = "..."
+Pokemon = B56H320,54
+Pokemon = B56H232,54
+Pokemon = B215H262,54
+#-------------------------------
+[POKEMONRANGER_M,Osman]
+LoseText = "..."
+Pokemon = B56H316,58
+#-------------------------------
+[POKEMONRANGER_F,Selena]
+LoseText = "..."
+Pokemon = B211H121,56
+Pokemon = B317H15,56
+#-------------------------------
+[TEAMROCKET_M,Teddy]
+LoseText = "..."
+Pokemon = MACHOP,56
+    Ball = ROCKETBALL
+Pokemon = MACHOP,56
+    Ball = ROCKETBALL
+Pokemon = B67H312,56
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Brad]
+LoseText = "..."
+Pokemon = B73H97,61
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Cass]
+LoseText = "..."
+Pokemon = HOUNDOUR,59
+    Ball = ROCKETBALL
+Pokemon = B228H215,59
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_F,Cindy]
+LoseText = "..."
+Pokemon = B64H49,61
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMROCKET_M,Freddy]
+LoseText = "..."
+Pokemon = B124H272,61
+    Ball = ROCKETBALL
+#-------------------------------
+[ROCKETEXEC_F,Ariana]
+Items = MAXPOTION
+LoseText = "..."
+Pokemon = B45H266,65
+    Ball = ROCKETBALL
+Pokemon = B256H227,65
+    Ball = ROCKETBALL
+Pokemon = B229H24,65
+    Ball = ROCKETBALL
+#-------------------------------
+[TEAMPLASMA_F,Lara]
+LoseText = "..."
+Pokemon = MAGNETON,60
+Pokemon = B89H337,63
+#-------------------------------
+[TEAMPLASMA_M,Terry]
+LoseText = "..."
+Pokemon = PAWNIARD,59
+Pokemon = PAWNIARD,59
+Pokemon = B310H331,62
+#-------------------------------
+[TEAMPLASMA_M,Adrian]
+Items = FULLRESTORE
+LoseText = "..."
+Pokemon = B68H331,67
+#-------------------------------
+[SKIER_F,Roxanne]
+LoseText = "..."
+Pokemon = B124H255,56
+#-------------------------------
+[SKIER_F,Clarissa]
+LoseText = "..."
+Pokemon = SEEL,51
+Pokemon = B221H87,53
+#-------------------------------
+[SKIER_F,Jill]
+LoseText = "..."
+Pokemon = SNEASEL,49
+Pokemon = B28H262,54
+#-------------------------------
+[HIKER,Bjorn]
+LoseText = "..."
+Pokemon = B274H326,55
+#-------------------------------
+[HIKER,Douglas]
+LoseText = "..."
+Pokemon = SWINUB,44
+Pokemon = SWINUB,44
+Pokemon = B308H221,52
+#-------------------------------
+[SKIER_F,Lexie]
+LoseText = "..."
+Pokemon = B37H225,47
+Pokemon = B38H225,54
+#-------------------------------
+[POKEMONTRAINER_Gold,Gold]
+Items = FULLRESTORE,FULLRESTORE,FULLRESTORE,FULLRESTORE
+LoseText = "..."
+Pokemon = B213H185,76
+    Moves = POWERSPLIT,COUNTER,ROLLOUT,TOXIC
+    AbilityIndex = 0
+    Item = ROCKYHELMET
+Pokemon = B197H269,78
+    Moves = MOONLIGHT,BITE,MOONBLAST,BODYSLAM
+    AbilityIndex = 1
+    Item = LEFTOVERS
+Pokemon = B243H160,77
+    Moves = THUNDER,WATERPULSE,RAINDANCE,CALMMIND
+    AbilityIndex = 1
+    Item = MAGNET
+Pokemon = B245H157,77
+    Moves = HYDROPUMP,FLAMETHROWER,AURORABEAM,MIST
+    AbilityIndex = 1
+    Item = MYSTICWATER
+Pokemon = B244H154,77
+    Moves = FIREBLAST,SUNNYDAY,SOLARBEAM,SYNTHESIS
+    AbilityIndex = 1
+    Item = CHARCOAL
+Pokemon = B130H149,79
+    Moves = EXTREMESPEED,WATERFALL,DRAGONTAIL,TWISTER
+    AbilityIndex = 0
+    Item = LUSTROUSORB
+#-------------------------------
+[COOLTRAINER_F,lounge_member]
+LoseText = "..."
+Pokemon = DIALGA,25
+Pokemon = PALKIA,25
+Pokemon = GIRATINA,25
+#-------------------------------
+[COOLTRAINER_F,lounge_member_single]
+LoseText = "..."
+Pokemon = DIALGA,25
+#-------------------------------
+[RIVAL1,Blue,24]
+LoseText = "..."
+Pokemon = B248H59,69
+    Moves = THRASH,FIREFANG,CRUNCH,ROAR
+    AbilityIndex = 0
+    Item = SMOOTHROCK
+Pokemon = B142H329,69
+    Moves = STEELWING,DRAGONDANCE,TAILWIND,KINGSSHIELD
+    AbilityIndex = 1
+    Item = METALCOAT
+Pokemon = B65H255,69
+    Moves = CALMMIND,MYSTICALFIRE,TRICKROOM,PSYCHIC
+    AbilityIndex = 0
+    Item = WISEGLASSES
+Pokemon = B18H169,68
+    Moves = WHIRLWIND,CROSSPOISON,UTURN,AIRSLASH
+    AbilityIndex = 1
+    Item = RAZORFANG
+Pokemon = MEW,72
+    Item = LEFTOVERS
+#-------------------------------
+[CHAMPION_Sinnoh,Cynthia]
+LoseText = "..."
+Pokemon = B295H275,71
+    Moves = CURSE,RECOVER,SHADOWBALL,TRIATTACK
+    AbilityIndex = 1
+    Item = SITRUSBERRY
+Pokemon = B272H269,71
+    Moves = DAZZLINGGLEAM,ICEBEAM,LIGHTSCREEN,THUNDERWAVE
+    AbilityIndex = 1
+    Item = LEFTOVERS
+Pokemon = B135H335,71
+    Moves = THUNDER,MIRRORCOAT,SCALD,RAINDANCE
+    AbilityIndex = 0
+    Item = DAMPROCK
+Pokemon = B273H352,72
+    Moves = AERIALACE,MAGICALLEAF,ROCKBLAST,POISONFANG
+    AbilityIndex = 5
+    Item = EXPERTBELT
+Pokemon = B299H134,73
+    Moves = EARTHQUAKE,DRAGONCLAW,AQUATAIL,SWORDSDANCE
+    AbilityIndex = 1
+    Item = RINDOBERRY

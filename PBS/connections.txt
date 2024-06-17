@@ -1,0 +1,166 @@
+﻿# See the documentation on the wiki to learn how to edit this file.
+#-------------------------------
+# Cerulean City (1) - connection (390)
+1,W,14,390,E,0
+# Cerulean City (1) - Route 5 (12)
+1,S,0,12,N,5
+# Route 4 (106) - Cerulean City (1)
+106,E,27,1,W,0
+# Route 24 (8) - Cerulean City (1)
+8,S,0,1,N,0
+# Route 24 (8) - connection (390)
+8,W,59,390,E,0
+# Route 24 (8) - Route 9 (495)
+8,E,44,495,W,0
+# Route 24 (8) - Route 4 (106)
+8,W,18,106,E,0
+# Route 25 (9) - Route 24 (8)
+9,W,0,8,E,2
+# Route 25 (9) - Route 5 (12)
+9,W,73,12,E,0
+# Cerulean Cape (10) - Route 25 (9)
+10,W,1,9,E,0
+# Cerulean Cape (10) - Route 23 (143)
+10,N,0,143,S,9
+# Cerulean Cape (10) - Route 9 (351)
+10,S,6,351,N,0
+# Route 5 (12) - connection (390)
+12,N,0,390,S,15
+# Route 5 (12) - Route 9 (495)
+12,E,0,495,W,31
+# Vermillion City (19) - Route 6 (16)
+19,N,1,16,S,0
+# Vermillion City (19) - Route 11 (155)
+19,E,0,155,W,5
+# Viridian River (40) - Route 1 (78)
+40,W,41,78,E,0
+# Viridian City (79) - Viridian River (40)
+79,E,9,40,W,0
+# Ruins of Abet (41) - Viridian River (40)
+41,S,0,40,N,35
+# Pallet Town (42) - Route 1 (78)
+42,N,0,78,S,0
+# Route 21 (59) - Pallet Town (42)
+59,N,0,42,S,1
+# Lavender Town (50) - Route 10 (154)
+50,N,0,154,S,11
+# Route 20 (58) - Route 19 (57)
+58,E,0,57,W,19
+# Cinnabar Island (98) - Route 20 (58)
+98,E,8,58,W,0
+# Cinnabar Island (98) - Route 21 (59)
+98,N,14,59,S,0
+# Celadon Sewers (446) - Celadon Sewers (72)
+446,E,25,72,W,0
+# Viridian City (79) - Route 1 (78)
+79,S,7,78,N,0
+# Viridian City (79) - Route 22 (171)
+79,W,19,171,E,0
+# Route 2 (86) - Viridian City (79)
+86,S,3,79,N,0
+# Route 2 (86) - Route 2 (90)
+86,N,1,90,S,0
+# Route 2 (90) - Pewter City (380)
+90,N,0,380,S,25
+# Pewter City (91) - Pewter City (93)
+91,W,0,93,E,0
+# Celadon City (95) - Route 7 (413)
+95,E,0,413,W,1
+# Route 16 (438) - Celadon City (95)
+438,E,0,95,W,7
+# Celadon University (428) - Celadon City (95)
+428,S,0,95,N,19
+# Route 29 (311) - New Bark Town (137)
+311,E,0,137,W,16
+# Route 27 (147) - New Bark Town (137)
+147,W,0,137,E,1
+# Crimson City (167) - Route 23 (143)
+167,E,31,143,W,0
+# Route 27 (147) - Route 26 (145)
+147,E,0,145,W,62
+# Route 17 (146) - Route 18 (517)
+146,E,56,517,W,0
+# Route 16 (438) - Route 17 (146)
+438,W,12,146,E,0
+# Route 9 (351) - Route 10 (154)
+351,S,0,154,N,10
+# Route 13 (437) - Route 12 (159)
+437,N,27,159,S,0
+# Underwater (162) - Underwater (220)
+162,S,0,220,N,27
+# Underwater (228) - Underwater (227)
+228,E,0,227,W,11
+# Violet City (230) - Route 32 (288)
+230,S,0,288,N,3
+# Violet City (230) - Route 36 (267)
+230,W,0,267,E,2
+# Route 34 (265) - Goldenrod City (237)
+265,N,0,237,S,17
+# Route 36 (267) - Route 35 (254)
+267,S,0,254,N,11
+# Route 30 (262) - Route 31 (261)
+262,N,0,261,S,33
+# Route 30 (262) - Cherrygrove City (310)
+262,S,0,310,N,8
+# Route 37 (586) - Route 36 (267)
+586,S,0,267,N,11
+# Route 33 (284) - Azalea Town (278)
+284,W,0,278,E,17
+# Route 29 (311) - Cherrygrove City (310)
+311,W,4,310,E,0
+# Route 9 (351) - Route 9 (495)
+351,W,8,495,E,0
+# Pewter City (380) - Route 3 (490)
+380,E,14,490,W,0
+# Route 13 (437) - Route 14 (440)
+437,S,0,440,N,11
+# Route 15 (444) - Route 14 (440)
+444,E,0,440,W,6
+# Fuchsia City (472) - Route 18 (517)
+472,W,9,517,E,0
+# Knot Island (526) - Treasure Beach (528)
+526,S,0,528,N,2
+# Kindle Road (559) - Knot Island (526)
+559,W,80,526,E,0
+# Kindle Road (559) - Treasure Beach (528)
+559,S,0,528,N,52
+# Kindle Road (559) - Mt. Ember (561)
+559,N,0,561,S,10
+# Kindle Road (559) - Boon Island (562)
+559,N,55,562,S,0
+# Kindle Road (559) - Kin Island (563)
+559,N,120,563,S,0
+# Kindle Road (559) - Brine Road (564)
+559,E,0,564,W,0
+# Deep Sea (570) - Kindle Road (559)
+570,W,0,559,E,45
+# Brine Road (564) - Mt. Ember (561)
+564,N,0,561,S,45
+# Kin Island (563) - Boon Island (562)
+563,W,10,562,E,0
+# Brine Road (564) - Boon Island (562)
+564,N,20,562,S,0
+# Kin Island (563) - Bond bridge (600)
+563,N,0,600,S,96
+# Brine Road (564) - Kin Island (563)
+564,N,85,563,S,0
+# Brine Road (564) - Water Labyrinth (594)
+564,S,86,594,N,0
+# Deep Sea (570) - Brine Road (564)
+570,N,0,564,S,0
+# Water Labyrinth (594) - Resort Gorgeous (566)
+594,N,62,566,S,0
+# Deep Sea (570) - Resort Gorgeous (566)
+570,N,148,566,S,0
+# Mahogany Town (631) - Route 42 (580)
+631,W,9,580,E,0
+# Chrono Island (603) - Water Labyrinth (594)
+603,N,0,594,S,56
+# Route 44 (692) - Mahogany Town (631)
+692,W,0,631,E,0
+# Route 43 (635) - Lake of Rage (638)
+635,N,0,638,S,8
+# Route 131 (794) - Sky Pillar (596)
+794,N,2,596,S,0
+# Pacifidlog Town (796) - Route 131 (794)
+796,E,0,794,W,6
