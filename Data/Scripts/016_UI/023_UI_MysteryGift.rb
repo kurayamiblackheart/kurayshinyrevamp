@@ -366,6 +366,7 @@ end
 # Collecting a Mystery Gift from the deliveryman.
 #===============================================================================
 def pbNextMysteryGiftID
+  $PokemonSystem.playerage_temp = $game_variables[99]
   for i in $Trainer.mystery_gifts
     return i[0] if i.length>1
   end
@@ -373,6 +374,9 @@ def pbNextMysteryGiftID
 end
 
 def pbReceiveMysteryGift(id)
+  if $PokemonSystem.playerage_temp
+    $game_variables[99] = $PokemonSystem.playerage_temp
+  end
   index=-1
   for i in 0...$Trainer.mystery_gifts.length
     if $Trainer.mystery_gifts[i][0]==id && $Trainer.mystery_gifts[i].length>1

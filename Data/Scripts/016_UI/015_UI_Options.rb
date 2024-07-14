@@ -150,6 +150,8 @@ class PokemonSystem
 
   attr_accessor :trainerexpboost
 
+  attr_accessor :playerage_temp
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -270,6 +272,7 @@ class PokemonSystem
     @showlevel_nolevelmode = 0
     @rocketballsteal = 0
     @trainerexpboost = 50
+    @playerage_temp = 0
   end
 
   def load_bootup_data(saved)
