@@ -167,6 +167,7 @@ class PokemonSystem
     @quicksurf = 0
     @download_sprites = 0
     @max_nb_sprites_download = 5
+    @on_mobile = 0
     @quicksave = 1
     # Vanilla Per-save file
     @battlestyle = 0 # Battle style (0=switch, 1=set)
@@ -286,6 +287,7 @@ class PokemonSystem
     @quicksurf = saved.quicksurf if saved.quicksurf
     @quicksave = saved.quicksave if saved.quicksave
     @download_sprites = saved.download_sprites if saved.download_sprites
+    @on_mobile = saved.on_mobile if saved.on_mobile
     # Modded
     @shiny_icons_kuray = saved.shiny_icons_kuray if saved.shiny_icons_kuray
     @kurayfusepreview = saved.kurayfusepreview if saved.kurayfusepreview
@@ -442,6 +444,7 @@ def options_as_json(options={})
     "textinput" => $PokemonSystem.textinput,
     "quicksurf" => $PokemonSystem.quicksurf,
     "download_sprites" => $PokemonSystem.download_sprites,
+    "on_mobile" => $PokemonSystem.on_mobile,
     "battlestyle" => $PokemonSystem.battlestyle,
     "battle_type" => $PokemonSystem.battle_type,
     "shiny_icons_kuray" => $PokemonSystem.shiny_icons_kuray,
@@ -555,6 +558,7 @@ def options_load_json(jsonparse)
   $PokemonSystem.textinput = jsonparse['textinput']
   $PokemonSystem.quicksurf = jsonparse['quicksurf']
   $PokemonSystem.download_sprites = jsonparse['download_sprites']
+  $PokemonSystem.on_mobile = jsonparse['on_mobile']
   $PokemonSystem.battlestyle = jsonparse['battlestyle']
   $PokemonSystem.battle_type = jsonparse['battle_type']
   $PokemonSystem.shiny_icons_kuray = jsonparse['shiny_icons_kuray']
@@ -1691,6 +1695,13 @@ class VanillaOptSc_1 < PokemonOption_Scene
                      "Automatically download custom sprites from the internet"
       )
 
+    options << EnumOption.new(_INTL("Device"), [_INTL("PC"), _INTL("Mobile")],
+                              proc { $PokemonSystem.on_mobile },
+                              proc { |value| $PokemonSystem.on_mobile = value },
+                              ["The intended device on which to play the game.",
+                                "Disables some options that aren't supported when playing on mobile."]
+    )
+
     options << EnumOption.new(_INTL("Battle Effects"), [_INTL("On"), _INTL("Off")],
     proc { $PokemonSystem.battlescene },
     proc { |value| $PokemonSystem.battlescene = value },
@@ -1800,6 +1811,17 @@ class VanillaOptSc_1 < PokemonOption_Scene
                               ["Prompts to switch Pokémon before the opponent sends out the next one",
                               "No prompt to switch Pokémon before the opponent sends the next one"]
     )
+    if $game_switches
+      options << EnumOption.new(_INTL("Difficulty"), [_INTL("Easy"), _INTL("Normal"), _INTL("Hard")],
+                                proc { $Trainer.selected_difficulty },
+                                proc { |value|
+                                  setDifficulty(value)
+                                  @manually_changed_difficulty=true
+                                }, ["All Pokémon in the team gain experience. Otherwise the same as Normal difficulty.",
+                                    "The default experience. Levels are similar to the official games.",
+                                    "Higher levels and smarter AI. All trainers have access to healing items."]
+      )
+    end
 
     # NumberOption.new(_INTL("Menu Frame"),1,Settings::MENU_WINDOWSKINS.length,
     #   proc { $PokemonSystem.frame },
@@ -1818,6 +1840,19 @@ class VanillaOptSc_1 < PokemonOption_Scene
     end
 
     return options
+  end
+
+  def pbEndScene
+    echoln "Selected Difficulty: #{$Trainer.selected_difficulty}, lowest difficutly: #{$Trainer.lowest_difficulty}" if $Trainer
+    if $Trainer && $Trainer.selected_difficulty < $Trainer.lowest_difficulty
+      $Trainer.lowest_difficulty = $Trainer.selected_difficulty
+      echoln "lowered difficulty (#{$Trainer.selected_difficulty})"
+      if @manually_changed_difficulty
+        pbMessage(_INTL("The savefile's lowest selected difficulty was changed to #{getDisplayDifficulty()}."))
+        @manually_changed_difficulty = false
+      end
+    end
+    super
   end
 end
 
