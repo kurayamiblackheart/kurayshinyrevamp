@@ -5,8 +5,8 @@
 #==============================================================================#
 module Settings
   # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
-  GAME_VERSION = '6.0.0'
-  IF_VERSION = "6.1.4"
+  GAME_VERSION = '6.2.3'
+  IF_VERSION = "6.2.3"
   GAME_VERSION_NUMBER = "0.17.2"
 
   POKERADAR_LIGHT_ANIMATION_RED_ID = 17
@@ -33,6 +33,23 @@ module Settings
   VERSION_FILE_PATH = "Data/VERSION"
   CUSTOM_SPRITES_FILE_PATH = "Data/CUSTOM_SPRITES"
   CUSTOM_DEX_ENTRIES_PATH = "Data/dex.json"
+
+  BACK_ITEM_ICON_PATH = "Graphics/Items/back.png"
+
+  PLAYER_GRAPHICS_FOLDER = "Graphics/Characters/player/"
+  PLAYER_HAT_FOLDER = 'hat'
+  PLAYER_HAIR_FOLDER = 'hair'
+  PLAYER_CLOTHES_FOLDER = 'clothes'
+  PLAYER_BALL_FOLDER = 'balls'
+  PLAYER_TEMP_OUTFIT_FALLBACK = 'temp'
+
+
+  HATS_DATA_PATH = "Data/hats_data.json"
+  HAIRSTYLE_DATA_PATH = "Data/hairstyles_data.json"
+  CLOTHES_DATA_PATH = "Data/clothes_data.json"
+
+  PLAYER_SURFBASE_FOLDER = 'surf_base/'
+  OW_SHINE_ANIMATION_ID=25
 
   # HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/Scripts/RemoteUrls.rb"
   HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/Scripts/RemoteUrls.rb"
@@ -85,6 +102,12 @@ module Settings
   WONDERTRADE_PUBLIC_KEY = "http://localhost:8080"
 
   MAX_NB_OUTFITS=99
+  DEFAULT_OUTFIT_MALE = "red"
+  DEFAULT_OUTFIT_FEMALE = "leaf"
+  STARTING_OUTFIT = "pikajamas"
+
+  OUTFIT_PREVIEW_PICTURE_ID=20
+
   # The generation that the battle system follows. Used throughout the battle
   # scripts, and also by some other settings which are used in and out of battle
   # (you can of course change those settings to suit your game).
@@ -122,6 +145,12 @@ module Settings
   # Whether a bred baby Pokémon can inherit egg moves from its mother. It can
   # always inherit egg moves from its father.
   BREEDING_CAN_INHERIT_EGG_MOVES_FROM_MOTHER = (MECHANICS_GENERATION >= 6)
+
+  KANTO_STARTERS = [:BULBASAUR, :CHARMANDER, :SQUIRTLE]
+  JOHTO_STARTERS = [:CHIKORITA, :CYNDAQUIL, :TOTODILE]
+  HOENN_STARTERS = [:TREECKO, :TORCHIC, :MUDKIP]
+  SINNOH_STARTERS = [:TURTWIG, :CHIMCHAR, :PIPLUP]
+
 
   #=============================================================================
 
@@ -358,11 +387,11 @@ module Settings
   #   * Name of BGM to play for that encounter (optional).
   #   * Roaming areas specifically for this Pokémon (optional).
   ROAMING_SPECIES = [
-    [:ENTEI, 50, 350, 1, "Legendary Birds"],
-    [:B245H243, 50, 341, 1, "Legendary Birds"],
-    [:LATIOS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING],
-    [:LATIAS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING],
-    [:FEEBAS, 15, 4, 3, "Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)",SEVII_ROAMING]
+    [:ENTEI, 50, 350, 1, "Legendary Birds",ROAMING_AREAS,:Sunny],
+    [:B245H243, 50, 341, 1, "Legendary Birds",ROAMING_AREAS,:Storm],
+    [:LATIOS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING,:StrongWinds],
+    [:LATIAS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING,:StrongWinds],
+    [:FEEBAS, 15, 4, 3, "Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)",SEVII_ROAMING,:Rain]
   ]
 
   #=============================================================================
