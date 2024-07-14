@@ -159,7 +159,6 @@ class Player < Trainer
     @surfing_pokemon = species
   end
 
-
   def skin_tone=(value)
     @skin_tone=value
     $scene.reset_player_sprite

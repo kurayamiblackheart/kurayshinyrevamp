@@ -7,7 +7,7 @@ module Settings
   # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
   GAME_VERSION = '6.2.3'
   IF_VERSION = "6.2.3"
-  GAME_VERSION_NUMBER = "0.18.0"
+  GAME_VERSION_NUMBER = "0.18.1"
 
   POKERADAR_LIGHT_ANIMATION_RED_ID = 17
   POKERADAR_LIGHT_ANIMATION_GREEN_ID = 18
