@@ -7,16 +7,20 @@ Kuray Infinite Fusion (KIF) is community-based and community-focused, it's made 
 The original Pokemon Infinite Fusion (PIF) has been created by Chardub/Frogman, using Pokemon Essential.
 
 Kuray Infinite Fusion (KIF) is standalone, which means, you do not need Pokemon Infinite Fusion (PIF), and you should NOT install KIF on top of a PIF game.
+
 Please remember that the backbone of KIF (which is PIF) is still being developed and maintained by Chardub/Frogman, if PIF dies, KIF is very likely to die as well.
 
 This Github allows you to see the game (open-source), but also to contribute to the development of this project with pull-requests, and download the latest release to stay up-to-date.
 
 # Official Links
 Kuray Infinite Fusion (KIF) Github: https://github.com/kurayamiblackheart/kurayshinyrevamp *(You are here!)*
+
 Pokemon Infinite Fusion (PIF) Github: https://github.com/infinitefusion/infinitefusion-e18
+
 Pokemon Essential Github: https://github.com/Maruno17/pokemon-essentials
 
 Kuray Infinite Fusion (KIF) Discord: https://discord.gg/UFxQkUZeyE
+
 Pokemon Infinite Fusion (PIF) Discord: https://discord.gg/infinitefusion
 
 -----------------------------------------------
