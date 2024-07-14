@@ -233,6 +233,7 @@ class AnimatedSprite < SpriteWrapper
   attr_reader :frameheight
   attr_reader :framecount
   attr_reader :animname
+  attr_reader :playing
 
   def initializeLong(animname, framecount, framewidth, frameheight, frameskip)
     @animname = pbBitmapName(animname)
@@ -335,6 +336,11 @@ class AnimatedSprite < SpriteWrapper
     @playing = false
   end
 
+  def reset
+    @frame=0
+    @realframes = 0
+  end
+
   def update
     super
     if @playing
@@ -390,6 +396,7 @@ class IconSprite < SpriteWrapper
     return if bitmap == nil
     @_iconbitmap = bitmap
     # for compatibility
+    #
     self.bitmap = @_iconbitmap ? @_iconbitmap.bitmap : nil
     self.src_rect = oldrc
   end

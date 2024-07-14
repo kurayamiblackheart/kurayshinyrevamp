@@ -342,23 +342,16 @@ def pbDive
       return false
     end
   end
-  if $PokemonSystem.quicksurf == 1
-    pbFadeOutIn {
-      $game_temp.player_new_map_id = map_metadata.dive_map_id
-      $game_temp.player_new_x = $game_player.x
-      $game_temp.player_new_y = $game_player.y
-      $game_temp.player_new_direction = $game_player.direction
-      $PokemonGlobal.surfing = false
-      $PokemonGlobal.diving = true
-      pbUpdateVehicle
-      $scene.transfer_player(false)
-      $game_map.autoplay
-      $game_map.refresh
-    }
-    return true
-  end
   if pbConfirmMessage(_INTL("The sea is deep here. Would you like to use Dive?"))
     speciesname = (movefinder) ? movefinder.name : $Trainer.name
+    if movefinder
+      $Trainer.surfing_pokemon= getSpecies(movefinder.species)
+
+      echoln movefinder.species
+      echoln getSpecies(movefinder.species)
+    else
+      $Trainer.surfing_pokemon=nil
+    end
     pbMessage(_INTL("{1} used {2}!", speciesname, GameData::Move.get(move).name))
     pbHiddenMoveAnimation(movefinder)
     pbFadeOutIn {
@@ -370,6 +363,7 @@ def pbDive
       $PokemonGlobal.diving = true
       pbUpdateVehicle
       $scene.transfer_player(false)
+      addWaterCausticsEffect()
       $game_map.autoplay
       $game_map.refresh
     }
@@ -440,7 +434,10 @@ def pbTransferUnderwater(mapid, x, y, direction = $game_player.direction)
     $game_temp.player_new_direction = direction
     $PokemonGlobal.diving = true
     $PokemonGlobal.surfing = false
-    $scene.transfer_player(false)
+    pbUpdateVehicle
+    $scene.transfer_player(false )
+    addWaterCausticsEffect()
+
     $game_map.autoplay
     $game_map.refresh
   }
@@ -857,7 +854,8 @@ def pbSurf
   if $PokemonSystem.quicksurf == 1
     surfbgm = GameData::Metadata.get.surf_BGM
     pbCueBGM(surfbgm, 0.5) if surfbgm
-    pbStartSurfing
+    surfingPoke = movefinder.species if movefinder
+    pbStartSurfing(surfingPoke)
     return true
   end
   if pbConfirmMessage(_INTL("The water is a deep blue...\nWould you like to surf on it?"))
@@ -867,14 +865,21 @@ def pbSurf
     pbHiddenMoveAnimation(movefinder)
     surfbgm = GameData::Metadata.get.surf_BGM
     pbCueBGM(surfbgm, 0.5) if surfbgm && !Settings::MAPS_WITHOUT_SURF_MUSIC.include?($game_map.map_id)
-    pbStartSurfing
+
+    surfingPoke = movefinder.species if movefinder
+    pbStartSurfing(surfingPoke)
     return true
   end
   return false
 end
 
-def pbStartSurfing
+def pbStartSurfing(speciesID=nil)
   pbCancelVehicles
+  if speciesID
+    $Trainer.surfing_pokemon=getSpecies(speciesID)
+  else
+    $Trainer.surfing_pokemon=nil
+  end
   $PokemonEncounters.reset_step_count
   $PokemonGlobal.surfing = true
   pbUpdateVehicle
@@ -1002,7 +1007,8 @@ HiddenMoveHandlers::UseMove.add(:SURF, proc { |move, pokemon|
   end
   surfbgm = GameData::Metadata.get.surf_BGM
   pbCueBGM(surfbgm, 0.5) if surfbgm
-  pbStartSurfing
+  surfingPoke = pokemon if pokemon
+  pbStartSurfing(surfingPoke)
   next true
 })
 

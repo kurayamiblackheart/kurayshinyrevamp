@@ -856,13 +856,13 @@ class PokemonBattlerSprite < RPG::Sprite
     @pkmn = pkmn
     @_iconBitmap.dispose if @_iconBitmap
     @_iconBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pkmn, back)
-    if @back
-      @_iconBitmap.scale_bitmap(Settings::BACKRPSPRITE_SCALE)
-    else
-      @_iconBitmap.scale_bitmap(Settings::FRONTSPRITE_SCALE)
-    end
+    scale =Settings::FRONTSPRITE_SCALE
+    scale = Settings::BACKRPSPRITE_SCALE if @back
+    @_iconBitmap.scale_bitmap(scale)
 
     self.bitmap = (@_iconBitmap) ? @_iconBitmap.bitmap : nil
+    add_hat_to_bitmap(self.bitmap,pkmn.hat,pkmn.hat_x,pkmn.hat_y,scale,self.mirror) if self.bitmap && pkmn.hat
+
     pbSetPosition
   end
 

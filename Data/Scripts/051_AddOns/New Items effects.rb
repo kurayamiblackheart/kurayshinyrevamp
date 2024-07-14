@@ -1050,52 +1050,52 @@ ItemHandlers::BattleUseOnPokemon.add(:BALMMUSHROOM, proc { |item, pokemon, battl
 })
 
 #TRACKER (for roaming legendaries)
-ItemHandlers::UseInField.add(:REVEALGLASS, proc { |item|
-  if Settings::ROAMING_SPECIES.length == 0
-    Kernel.pbMessage(_INTL("No roaming Pokémon defined."))
-  else
-    text = "\\l[8]"
-    min = $game_switches[350] ? 0 : 1
-    for i in min...Settings::ROAMING_SPECIES.length
-      poke = Settings::ROAMING_SPECIES[i]
-      next if poke == PBSPecies::FEEBAS
-      if $game_switches[poke[2]]
-        status = $PokemonGlobal.roamPokemon[i]
-        if status == true
-          if $PokemonGlobal.roamPokemonCaught[i]
-            text += _INTL("{1} has been caught.",
-                          PBSpecies.getName(getID(PBSpecies, poke[0])))
-          else
-            text += _INTL("{1} has been defeated.",
-                          PBSpecies.getName(getID(PBSpecies, poke[0])))
-          end
-        else
-          curmap = $PokemonGlobal.roamPosition[i]
-          if curmap
-            mapinfos = $RPGVX ? load_data("Data/MapInfos.rvdata") : load_data("Data/MapInfos.rxdata")
+# ItemHandlers::UseInField.add(:REVEALGLASS, proc { |item|
+#   if Settings::ROAMING_SPECIES.length == 0
+#     Kernel.pbMessage(_INTL("No roaming Pokémon defined."))
+#   else
+#     text = "\\l[8]"
+#     min = $game_switches[350] ? 0 : 1
+#     for i in min...Settings::ROAMING_SPECIES.length
+#       poke = Settings::ROAMING_SPECIES[i]
+#       next if poke == PBSPecies::FEEBAS
+#       if $game_switches[poke[2]]
+#         status = $PokemonGlobal.roamPokemon[i]
+#         if status == true
+#           if $PokemonGlobal.roamPokemonCaught[i]
+#             text += _INTL("{1} has been caught.",
+#                           PBSpecies.getName(getID(PBSpecies, poke[0])))
+#           else
+#             text += _INTL("{1} has been defeated.",
+#                           PBSpecies.getName(getID(PBSpecies, poke[0])))
+#           end
+#         else
+#           curmap = $PokemonGlobal.roamPosition[i]
+#           if curmap
+#             mapinfos = $RPGVX ? load_data("Data/MapInfos.rvdata") : load_data("Data/MapInfos.rxdata")
 
-            if curmap == $game_map.map_id
-              text += _INTL("Beep beep! {1} appears to be nearby!",
-                            PBSpecies.getName(getID(PBSpecies, poke[0])))
-            else
-              text += _INTL("{1} is roaming around {3}",
-                            PBSpecies.getName(getID(PBSpecies, poke[0])), curmap,
-                            mapinfos[curmap].name, (curmap == $game_map.map_id) ? _INTL("(this route!)") : "")
-            end
-          else
-            text += _INTL("{1} is roaming in an unknown area.",
-                          PBSpecies.getName(getID(PBSpecies, poke[0])), poke[1])
-          end
-        end
-      else
-        #text+=_INTL("{1} does not appear to be roaming.",
-        #   PBSpecies.getName(getID(PBSpecies,poke[0])),poke[1],poke[2])
-      end
-      text += "\n" if i < Settings::ROAMING_SPECIES.length - 1
-    end
-    Kernel.pbMessage(text)
-  end
-})
+#             if curmap == $game_map.map_id
+#               text += _INTL("Beep beep! {1} appears to be nearby!",
+#                             PBSpecies.getName(getID(PBSpecies, poke[0])))
+#             else
+#               text += _INTL("{1} is roaming around {3}",
+#                             PBSpecies.getName(getID(PBSpecies, poke[0])), curmap,
+#                             mapinfos[curmap].name, (curmap == $game_map.map_id) ? _INTL("(this route!)") : "")
+#             end
+#           else
+#             text += _INTL("{1} is roaming in an unknown area.",
+#                           PBSpecies.getName(getID(PBSpecies, poke[0])), poke[1])
+#           end
+#         end
+#       else
+#         #text+=_INTL("{1} does not appear to be roaming.",
+#         #   PBSpecies.getName(getID(PBSpecies,poke[0])),poke[1],poke[2])
+#       end
+#       text += "\n" if i < Settings::ROAMING_SPECIES.length - 1
+#     end
+#     Kernel.pbMessage(text)
+#   end
+# })
 
 ####EXP. ALL
 #Methodes relative a l'exp sont pas encore la et pas compatibles
@@ -2039,61 +2039,98 @@ ItemHandlers::UseInField.add(:DEVONSCOPE, proc { |item|
 #TRACKER (for roaming legendaries)
 ItemHandlers::UseInField.add(:REVEALGLASS, proc { |item|
   track_pokemon()
+  next true
 })
 ItemHandlers::UseFromBag.add(:REVEALGLASS, proc { |item|
   track_pokemon()
+  next true
 })
 
-def track_pokemon()
-  nbRoaming = 0
-  if Settings::ROAMING_SPECIES.length == 0
-    Kernel.pbMessage(_INTL("No roaming Pokémon defined."))
-  else
-    text = "\\l[8]"
-    min = $game_switches[350] ? 0 : 1
-    for i in min...Settings::ROAMING_SPECIES.length
-      poke = Settings::ROAMING_SPECIES[i]
-      next if poke[0] == :FEEBAS
-      if $game_switches[poke[2]]
-        status = $PokemonGlobal.roamPokemon[i]
-        if status == true
-          if $PokemonGlobal.roamPokemonCaught[i]
-            text += _INTL("{1} has been caught.",
-                          PBSpecies.getName(getID(PBSpecies, poke[0])))
-          else
-            text += _INTL("{1} has been defeated.",
-                          PBSpecies.getName(getID(PBSpecies, poke[0])))
-          end
-        else
-          nbRoaming += 1
-          curmap = $PokemonGlobal.roamPosition[i]
-          if curmap
-            mapinfos = $RPGVX ? load_data("Data/MapInfos.rvdata") : load_data("Data/MapInfos.rxdata")
 
-            if curmap == $game_map.map_id
-              text += _INTL("Beep beep! {1} appears to be nearby!",
-                            PBSpecies.getName(getID(PBSpecies, poke[0])))
-            else
-              text += _INTL("{1} is roaming around {3}",
-                            PBSpecies.getName(getID(PBSpecies, poke[0])), curmap,
-                            mapinfos[curmap].name, (curmap == $game_map.map_id) ? _INTL("(this route!)") : "")
-            end
-          else
-            text += _INTL("{1} is roaming in an unknown area.",
-                          PBSpecies.getName(getID(PBSpecies, poke[0])), poke[1])
-          end
-        end
-      else
-        #text+=_INTL("{1} does not appear to be roaming.",
-        #   PBSpecies.getName(getID(PBSpecies,poke[0])),poke[1],poke[2])
-      end
-      #text += "\n" if i < Settings::ROAMING_SPECIES.length - 1
-    end
-    if nbRoaming == 0
-      text = "No Pokémon appears to be roaming at this moment."
-    end
-    Kernel.pbMessage(text)
+def getAllCurrentlyRoamingPokemon
+  currently_roaming = []
+  Settings::ROAMING_SPECIES.each_with_index do |data, i|
+    next if !GameData::Species.exists?(data[0])
+    next if data[2] > 0 && !$game_switches[data[2]]   # Isn't roaming
+    next if $PokemonGlobal.roamPokemon[i] == true   # Roaming Pokémon has been caught
+    currently_roaming << i
   end
+  return currently_roaming
+end
+
+def track_pokemon()
+  currently_roaming = getAllCurrentlyRoamingPokemon()
+  echoln currently_roaming
+  weather_data = []
+  mapinfos = $RPGVX ? load_data("Data/MapInfos.rvdata") : load_data("Data/MapInfos.rxdata")
+  currently_roaming.each do |roamer_id|
+    map_id = $PokemonGlobal.roamPosition[roamer_id]
+    map_name = mapinfos[map_id].name
+    weather_type =  Settings::ROAMING_SPECIES[roamer_id][6]
+    case weather_type
+    when :Storm
+      forecast_msg = _INTL("An unusual \\c[6]thunderstorm\\c[0] has been detected around \\c[6]{1}",map_name)
+    when :StrongWinds
+      forecast_msg = _INTL("Unusually \\c[9]strong winds\\c[0] have been detected around \\c[9]{1}",map_name)
+    when :Sunny
+      forecast_msg = _INTL("Unusually \\c[10]harsh sunlight\\c[0] has been detected around \\c[10]{1}",map_name)
+    end
+    weather_data << forecast_msg if forecast_msg && !weather_data.include?(forecast_msg)
+  end
+  weather_data << _INTL("No unusual weather patterns have been detected.") if weather_data.empty?
+  weather_data.each do |message|
+    Kernel.pbMessage(message)
+  end
+
+  # nbRoaming = 0
+  # if Settings::ROAMING_SPECIES.length == 0
+  #   Kernel.pbMessage(_INTL("No roaming Pokémon defined."))
+  # else
+  #   text = "\\l[8]"
+  #   min = $game_switches[350] ? 0 : 1
+  #   for i in min...Settings::ROAMING_SPECIES.length
+  #     poke = Settings::ROAMING_SPECIES[i]
+  #     next if poke[0] == :FEEBAS
+  #     if $game_switches[poke[2]]
+  #       status = $PokemonGlobal.roamPokemon[i]
+  #       if status == true
+  #         if $PokemonGlobal.roamPokemonCaught[i]
+  #           text += _INTL("{1} has been caught.",
+  #                         PBSpecies.getName(getID(PBSpecies, poke[0])))
+  #         else
+  #           text += _INTL("{1} has been defeated.",
+  #                         PBSpecies.getName(getID(PBSpecies, poke[0])))
+  #         end
+  #       else
+  #         nbRoaming += 1
+  #         curmap = $PokemonGlobal.roamPosition[i]
+  #         if curmap
+  #           mapinfos = $RPGVX ? load_data("Data/MapInfos.rvdata") : load_data("Data/MapInfos.rxdata")
+  #
+  #           if curmap == $game_map.map_id
+  #             text += _INTL("Beep beep! {1} appears to be nearby!",
+  #                           PBSpecies.getName(getID(PBSpecies, poke[0])))
+  #           else
+  #             text += _INTL("{1} is roaming around {3}",
+  #                           PBSpecies.getName(getID(PBSpecies, poke[0])), curmap,
+  #                           mapinfos[curmap].name, (curmap == $game_map.map_id) ? _INTL("(this route!)") : "")
+  #           end
+  #         else
+  #           text += _INTL("{1} is roaming in an unknown area.",
+  #                         PBSpecies.getName(getID(PBSpecies, poke[0])), poke[1])
+  #         end
+  #       end
+  #     else
+  #       #text+=_INTL("{1} does not appear to be roaming.",
+  #       #   PBSpecies.getName(getID(PBSpecies,poke[0])),poke[1],poke[2])
+  #     end
+  #     #text += "\n" if i < Settings::ROAMING_SPECIES.length - 1
+  #   end
+  #   if nbRoaming == 0
+  #     text = "No Pokémon appears to be roaming at this moment."
+  #   end
+  #   Kernel.pbMessage(text)
+  # end
 end
 
 ####EXP. ALL

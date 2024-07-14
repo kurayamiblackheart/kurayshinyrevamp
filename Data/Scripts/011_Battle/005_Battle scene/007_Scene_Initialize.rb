@@ -189,23 +189,39 @@ class PokeBattle_Scene
   end
 
   def pbCreateTrainerBackSprite(idxTrainer, trainerType, numTrainers = 1)
-    if idxTrainer == 0 # Player's sprite
-      trainerFile = GameData::TrainerType.player_back_sprite_filename(trainerType)
-    else
-      # Partner trainer's sprite
-      trainerFile = GameData::TrainerType.back_sprite_filename(trainerType)
-    end
-    spriteX, spriteY = PokeBattle_SceneConstants.pbTrainerPosition(0, idxTrainer, numTrainers)
-    trainer = pbAddSprite("player_#{idxTrainer + 1}", spriteX, spriteY, trainerFile, @viewport)
-    return if !trainer.bitmap
-    # Alter position of sprite
-    trainer.z = 30 + idxTrainer
-    if trainer.bitmap.width > trainer.bitmap.height * 2
-      trainer.src_rect.x = 0
-      trainer.src_rect.width = trainer.bitmap.width / 5
-    end
-    trainer.ox = trainer.src_rect.width / 2
-    trainer.oy = trainer.bitmap.height
+    x = 100
+    y = 410
+
+    sprite = IconSprite.new(x,y,@viewport)
+    sprite.setBitmapDirectly(generate_front_trainer_sprite_bitmap())
+    sprite.zoom_x=2
+    sprite.zoom_y=2
+    sprite.z=100 + idxTrainer
+
+    sprite.mirror =true
+    @sprites["player_#{idxTrainer + 1}"] = sprite
+    return sprite
+
+    #trainer = pbAddSprite("player_#{idxTrainer + 1}", spriteX, spriteY, trainerFile, @viewport)
+    #
+    # if idxTrainer == 0 # Player's sprite
+    #   #trainerFile = GameData::TrainerType.player_back_sprite_filename(trainerType)
+    #   trainerFile = generate_front_trainer_sprite_bitmap()
+    # else
+    #   # Partner trainer's sprite
+    #   trainerFile = GameData::TrainerType.back_sprite_filename(trainerType)
+    # end
+    # spriteX, spriteY = PokeBattle_SceneConstants.pbTrainerPosition(0, idxTrainer, numTrainers)
+    # trainer = pbAddSprite("player_#{idxTrainer + 1}", spriteX, spriteY, trainerFile, @viewport)
+    # return if !trainer.bitmap
+    # # Alter position of sprite
+    # trainer.z = 30 + idxTrainer
+    # if trainer.bitmap.width > trainer.bitmap.height * 2
+    #   trainer.src_rect.x = 0
+    #   trainer.src_rect.width = trainer.bitmap.width / 5
+    # end
+    # trainer.ox = trainer.src_rect.width / 2
+    # trainer.oy = trainer.bitmap.height
   end
 
   def pbCreateTrainerFrontSprite(idxTrainer, trainerType, numTrainers = 1, sprite_override = nil)

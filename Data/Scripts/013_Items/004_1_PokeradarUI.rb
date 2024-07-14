@@ -10,6 +10,8 @@ class PokeRadar_UI
 
   ICON_LINE_END = 450
 
+  GRAPHICS_Z = 99998
+
 
   def initialize(seenPokemon = [], unseenPokemon = [], rarePokemon = [])
     @seen_pokemon = seenPokemon
@@ -17,7 +19,7 @@ class PokeRadar_UI
     @rare_pokemon = rarePokemon
 
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99
+    @viewport.z = GRAPHICS_Z
     @sprites = {}
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
     @sprites["background"].setBitmap("Graphics/Pictures/Pokeradar/banner")
@@ -89,7 +91,7 @@ class PokeRadar_UI
     @sprites[iconId].visible = true
     @sprites[iconId].x = @current_x
     @sprites[iconId].y = @current_y
-    @sprites[iconId].z = 100
+    @sprites[iconId].z = GRAPHICS_Z+1
 
     @current_x += ICON_MARGIN_X
     if @current_x >= ICON_LINE_END

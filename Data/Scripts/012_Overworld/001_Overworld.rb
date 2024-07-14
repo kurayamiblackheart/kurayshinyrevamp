@@ -329,18 +329,36 @@ Events.onMapChange += proc { |_sender, e|
   $game_screen.weather(new_weather[0], 9, 0) if rand(100) < new_weather[1]
 }
 
-Events.onMapChange += proc { |_sender, e|
-  next if !Settings::SEVII_ROAMING.include?($game_map.map_id)
-  new_map_ID = e[0]
-  new_map_metadata = GameData::MapMetadata.try_get(new_map_ID)
-  next if new_map_metadata && new_map_metadata.weather
-  feebas_map = $PokemonGlobal.roamPosition[4]
-  if $game_map.map_id == feebas_map
-    $game_screen.weather(:Rain, 4, 0)
-  else
-    $game_screen.weather(:None, 0, 0)
-  end
-}
+# Events.onMapChange += proc { |_sender, e|
+#   next if !Settings::SEVII_ROAMING.include?($game_map.map_id)
+#   new_map_ID = e[0]
+#   new_map_metadata = GameData::MapMetadata.try_get(new_map_ID)
+#   next if new_map_metadata && new_map_metadata.weather
+#   feebas_map = $PokemonGlobal.roamPosition[4]
+#   if $game_map.map_id == feebas_map
+#     $game_screen.weather(:Rain, 4, 0)
+#   else
+#     $game_screen.weather(:None, 0, 0)
+#   end
+# }
+
+#    [:ENTEI, 50, 350, 1, "Legendary Birds",ROAMING_AREAS,:Sunny],
+# Events.onMapChange += proc { |_sender, e|
+#   next if $game_screen.weather_type != :None
+#   currently_roaming = $PokemonGlobal.roamPosition.keys
+#   currently_roaming.each do |roamer_id|
+#     roamerOnCurrentMap = $PokemonGlobal.roamPosition[roamer_id] == $game_map.map_id
+#     echoln _INTL("{1} is on map {2}",roamer_id,$game_map.map_id)
+#     echoln $PokemonGlobal.roamPokemon
+#     if roamerOnCurrentMap
+#       next if $PokemonGlobal.roamPokemonCaught[roamer_id]
+#       weather = Settings::ROAMING_SPECIES[roamer_id][6]
+#       $game_screen.weather(weather, 4, 0)
+#       next
+#     end
+#
+#   end
+# }
 
 Events.onMapSceneChange += proc { |_sender, e|
   scene = e[0]

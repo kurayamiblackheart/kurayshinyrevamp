@@ -53,7 +53,16 @@ class PokemonSprite < SpriteWrapper
   def setPokemonBitmap(pokemon, back = false)
     @_iconbitmap.dispose if @_iconbitmap
     @_iconbitmap = (pokemon) ? GameData::Species.sprite_bitmap_from_pokemon(pokemon, back) : nil
-    self.bitmap = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
+    if @_iconbitmap
+      if  pokemon.hat
+        add_hat_to_bitmap(@_iconbitmap.bitmap,pokemon.hat,pokemon.hat_x,pokemon.hat_y)
+      else
+
+      end
+      self.bitmap = @_iconbitmap.bitmap
+    else
+      @_iconbitmap.bitmap=nil
+    end
     self.color = Color.new(0, 0, 0, 0)
     changeOrigin
   end

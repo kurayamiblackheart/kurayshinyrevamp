@@ -174,39 +174,12 @@ def getFossilsGuyTeam(level)
   return team
 end
 
-def find_last_outfit(player_sprite)
-  for i in 1..Settings::MAX_NB_OUTFITS
-    return i - 1 if !pbResolveBitmap("Graphics/Characters/" + player_sprite + "_" + i.to_s)
-  end
-  return 0
-end
-
-def changeToNextOutfit(incr = 1)
-  metadata = GameData::Metadata.get_player($Trainer.character_ID)
-  player_sprite = metadata[$game_player.charsetData[1]]
-
-  currentOutfit = $Trainer.outfit
-  currentOutfit = 0 if !currentOutfit
-
-  nextOutfit = currentOutfit + incr
-  nextOutfitName = "Graphics/Characters/" + player_sprite + "_" + nextOutfit.to_s
-  nextOutfitName = "Graphics/Characters/" + player_sprite if nextOutfit == 0
-  if !pbResolveBitmap(nextOutfitName)
-    if incr > 0
-      nextOutfit = 0
-    else
-      nextOutfit = find_last_outfit(player_sprite)
-    end
-  end
-  $Trainer.outfit = nextOutfit
-end
-
 def playPokeFluteAnimation
-  return if $Trainer.outfit != 0
-  $game_player.setDefaultCharName("players/pokeflute", 0, false)
-  Graphics.update
-  Input.update
-  pbUpdateSceneMap
+  # return if $Trainer.outfit != 0
+  # $game_player.setDefaultCharName("players/pokeflute", 0, false)
+  # Graphics.update
+  # Input.update
+  # pbUpdateSceneMap
 end
 
 def restoreDefaultCharacterSprite(charset_number=0)
@@ -218,6 +191,22 @@ def restoreDefaultCharacterSprite(charset_number=0)
   pbUpdateSceneMap
 end
 
+def setDifficulty(index)
+  $Trainer.selected_difficulty=index
+  case index
+  when 0  #EASY
+    $game_switches[SWITCH_GAME_DIFFICULTY_EASY] = true
+    $game_switches[SWITCH_GAME_DIFFICULTY_HARD] = false
+  when 1 #NORMAL
+    $game_switches[SWITCH_GAME_DIFFICULTY_EASY] = false
+    $game_switches[SWITCH_GAME_DIFFICULTY_HARD] = false
+  when 2 # HARD
+    $game_switches[SWITCH_GAME_DIFFICULTY_EASY] = false
+    $game_switches[SWITCH_GAME_DIFFICULTY_HARD] = true
+  end
+end
+
+  #Old menu for changing difficulty - unused
 def change_game_difficulty(down_only = false)
   message = "The game is currently on " + get_difficulty_text() + " difficulty."
   pbMessage(message)
@@ -719,6 +708,47 @@ def setForcedAltSprites(forcedSprites_map)
   $PokemonTemp.forced_alt_sprites = forcedSprites_map
 end
 
+
+def setupStartingOutfit()
+  $Trainer.hat=nil
+  $Trainer.clothes = Settings::STARTING_OUTFIT
+
+  gender = pbGet(VAR_TRAINER_GENDER)
+  if gender== GENDER_FEMALE
+    $Trainer.unlock_clothes(Settings::DEFAULT_OUTFIT_FEMALE,true)
+    $Trainer.unlock_hat(Settings::DEFAULT_OUTFIT_FEMALE,true)
+    $Trainer.hair ="3_" + Settings::DEFAULT_OUTFIT_FEMALE if !$Trainer.hair #when migrating old savefiles
+
+      #todo TEMP REMOVE WHEN CC IS OFFICIALLY IMPLEMENTED - put pajamas instead & other gender clothes are to be unlocked bu taalking to sibling
+    $Trainer.clothes=Settings::DEFAULT_OUTFIT_FEMALE
+    $Trainer.hat=Settings::DEFAULT_OUTFIT_FEMALE
+    $Trainer.unlock_clothes(Settings::DEFAULT_OUTFIT_MALE,true)
+    $Trainer.unlock_hat(Settings::DEFAULT_OUTFIT_MALE,true)
+      ##
+
+  elsif gender== GENDER_MALE
+    $Trainer.unlock_clothes(Settings::DEFAULT_OUTFIT_MALE,true)
+    $Trainer.unlock_hat(Settings::DEFAULT_OUTFIT_MALE,true)
+
+    echoln $Trainer.hair
+    $Trainer.hair = ("3_" +Settings::DEFAULT_OUTFIT_MALE) if !$Trainer.hair  #when migrating old savefiles
+    echoln $Trainer.hair
+
+
+    #todo TEMP REMOVE WHEN CC IS OFFICIALLY IMPLEMENTED - put pajamas instead & other gender clothes are to be unlocked bu taalking to sibling
+    $Trainer.clothes=Settings::DEFAULT_OUTFIT_MALE
+    $Trainer.hat=Settings::DEFAULT_OUTFIT_MALE
+    $Trainer.unlock_clothes(Settings::DEFAULT_OUTFIT_FEMALE,true)
+    $Trainer.unlock_hat(Settings::DEFAULT_OUTFIT_FEMALE,true)
+    ##
+
+  end
+  $Trainer.unlock_hair(Settings::DEFAULT_OUTFIT_MALE,true)
+  $Trainer.unlock_hair(Settings::DEFAULT_OUTFIT_FEMALE,true)
+  $Trainer.unlock_clothes(Settings::STARTING_OUTFIT,true)
+
+end
+
 def playMeloettaBandMusic()
   unlocked_members = []
   unlocked_members << :DRUM if $game_switches[SWITCH_BAND_DRUMMER]
@@ -914,6 +944,10 @@ def swapCaughtPokemon(caughtPokemon)
   # $PokemonStorage.pbStoreCaught($Trainer.party[index])
   pbRemovePokemonAt(index)
   pbStorePokemon(caughtPokemon)
+
+  tmp = $Trainer.party[index]
+  $Trainer.party[index] = $Trainer.party[-1]
+  $Trainer.party[-1] = tmp
   return true
 end
 
@@ -1021,6 +1055,23 @@ def calculateIvLineForShowdown(pokemon)
   return ivLine
 end
 
+def addWaterCausticsEffect(fog_name="caustic1",opacity=16)
+  $game_map.fog_name       = fog_name
+  $game_map.fog_hue        = 0
+  $game_map.fog_opacity    = opacity
+  #$game_map.fog_blend_type = @parameters[4]
+  $game_map.fog_zoom       =200
+  $game_map.fog_sx         = 2
+  $game_map.fog_sy         = 2
+
+  $game_map.setFog2(fog_name,-3,0,opacity,)
+end
+
+def stopWaterCausticsEffect()
+  $game_map.fog_opacity=0
+  $game_map.eraseFog2()
+end
+
 def openUrlInBrowser(url="")
   begin
   # Open the URL in the default web browser
@@ -1030,4 +1081,96 @@ def openUrlInBrowser(url="")
     pbMessage("The game could not open the link in the browser")
     pbMessage("The link has been copied to your clipboard instead")
   end
+end
+
+def isPostgame?()
+  return $game_switches[SWITCH_BEAT_THE_LEAGUE]
+end
+
+
+def obtainStarter(starterIndex=0)
+  if($game_switches[SWITCH_RANDOM_STARTERS])
+    starter=obtainRandomizedStarter(starterIndex)
+  else
+    startersList = Settings::KANTO_STARTERS
+    if $game_switches[SWITCH_JOHTO_STARTERS]
+      startersList = Settings::JOHTO_STARTERS
+    elsif $game_switches[SWITCH_HOENN_STARTERS]
+      startersList = Settings::HOENN_STARTERS
+    elsif $game_switches[SWITCH_SINNOH_STARTERS]
+      startersList = Settings::SINNOH_STARTERS
+    end
+    starter = startersList[starterIndex]
+  end
+  return GameData::Species.get(starter)
+end
+
+def setRivalStarter(starterIndex1,starterIndex2)
+  starter1 = obtainStarter(starterIndex1)
+  starter2 = obtainStarter(starterIndex2)
+
+  ensureRandomHashInitialized()
+  if $game_switches[SWITCH_RANDOM_WILD_TO_FUSION] #if fused starters, only take index 1
+    starter= obtainStarter(starterIndex1)
+  else
+    starter_body = starter1.id_number
+    starter_head = starter2.id_number
+    starter = getFusionSpecies(starter_body,starter_head).id_number
+  end
+  if $game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE]
+    starterSpecies = GameData::Species.get(starter)
+    starter = GameData::Species.get(starterSpecies.get_baby_species(false)).id_number
+  end
+  pbSet(VAR_RIVAL_STARTER,starter)
+  $game_switches[SWITCH_DEFINED_RIVAL_STARTER] = true
+  return starter
+end
+
+def ensureRandomHashInitialized()
+  if $PokemonGlobal.psuedoBSTHash == nil
+    psuedoHash = Hash.new
+    for i in 0..NB_POKEMON
+      psuedoHash[i] = i
+    end
+    $PokemonGlobal.psuedoBSTHash = psuedoHash
+  end
+end
+
+#Get difficulty for displaying in-game
+def getDisplayDifficulty
+  if $game_switches[SWITCH_GAME_DIFFICULTY_EASY] || $Trainer.lowest_difficulty <= 0
+    return getDisplayDifficultyFromIndex(0)
+  elsif $Trainer.lowest_difficulty <= 1
+    return getDisplayDifficultyFromIndex(1)
+  elsif $game_switches[SWITCH_GAME_DIFFICULTY_HARD]
+    return getDisplayDifficultyFromIndex(2)
+  else
+    return getDisplayDifficultyFromIndex(1)
+  end
+end
+
+def getDisplayDifficultyFromIndex(difficultyIndex)
+  return "Easy" if difficultyIndex ==0
+  return "Normal" if difficultyIndex ==1
+  return "Hard" if difficultyIndex ==2
+  return "???"
+end
+
+
+def getGameModeFromIndex(index)
+  return "Classic" if index ==0
+  return "Random" if index ==1
+  return "Remix" if index ==2
+  return "Expert" if index ==3
+  return "Species" if index == 4
+  return "Debug" if index ==5
+  return ""
+end
+
+
+
+
+#todo: implement
+def getMappedKeyFor(internalKey)
+
 end

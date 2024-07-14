@@ -172,6 +172,7 @@ class Pokemon
     if !@ability
       sp_data = species_data
       abil_index = ability_index
+      #echoln abil_index
       if abil_index >= 2 # Hidden ability
         @ability = sp_data.hidden_abilities[abil_index - 2]
         abil_index = (@personalID & 1) if !@ability
@@ -214,22 +215,16 @@ end
 
 class PokemonFusionScene
 
-  def pbChooseAbility(poke, hidden1 = false, hidden2 = false)
-    abilityList = poke.getAbilityList
-
-    if $game_switches[SWITCH_DOUBLE_ABILITIES]
-      abID1 = @pokemon1.ability
-      abID2 = @pokemon2.ability
-    else
-      abID1 = hidden1 ? abilityList[-2][0] : abilityList[0][0]
-      abID2 = hidden2 ? abilityList[-1][0] : abilityList[1][0]
-    end
+  def pbChooseAbility(ability1Id,ability2Id)
+    ability1 = GameData::Ability.get(ability1Id)
+    ability2 = GameData::Ability.get(ability2Id)
     availableNatures = []
     availableNatures << @pokemon1.nature
     availableNatures << @pokemon2.nature
 
-    setAbilityAndNatureAndNickname([GameData::Ability.get(abID1), GameData::Ability.get(abID2)], availableNatures)
+    setAbilityAndNatureAndNickname([ability1,ability2], availableNatures)
   end
+
 
   def setAbilityAndNatureAndNickname(abilitiesList, naturesList)
     clearUIForMoves
@@ -244,7 +239,13 @@ class PokemonFusionScene
       scene = FusionSelectOptionsScene.new(abilitiesList, naturesList, @pokemon1, @pokemon2)
       screen = PokemonOptionScreen.new(scene)
       screen.pbStartScreen
-      @pokemon1.ability = scene.selectedAbility
+
+      selectedAbility = scene.selectedAbility
+      @pokemon1.body_original_ability_index = @pokemon1.ability_index
+      @pokemon1.head_original_ability_index = @pokemon2.ability_index
+
+      @pokemon1.ability = selectedAbility
+      @pokemon1.ability_index = getAbilityIndexFromID(selectedAbility.id,@pokemon1)
     end
 
     @pokemon1.nature = scene.selectedNature

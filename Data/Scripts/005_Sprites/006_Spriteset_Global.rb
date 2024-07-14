@@ -4,7 +4,7 @@ class Spriteset_Global
   @@viewport2.z = 200
 
   def initialize
-    @playersprite = Sprite_Character.new(Spriteset_Map.viewport, $game_player)
+    @playersprite = Sprite_Player.new(Spriteset_Map.viewport, $game_player)
     @picture_sprites = []
     for i in 1..100
       @picture_sprites.push(Sprite_Picture.new(@@viewport2, $game_screen.pictures[i]))

@@ -47,6 +47,16 @@ class Scene_Credits
   # Start Editing
   CREDIT = <<_END_
 
+Kuray Infinite Fusion
+by Kurayami Blackheart (Reïzod)
+brought to you by all the programmers from the KurayHub community
+
+DemICE Endgame Challenge + Smart AI
+by DemICE
+
+Based on Pokemon Essential by Maruno
+Fork of Pokemon Infinite Fusion by Chardub (Frogman)
+
 Pokémon Infinite Fusion
 By Chardub (Frogman)
 
@@ -110,6 +120,7 @@ Knuckles
 UnworthyPie
 Doctor Miawoo
 Chardub
+TCGrunler#4583
 
 The following free ressources were also used 
 with their respective authors' consent:
@@ -211,6 +222,7 @@ _END_
 # Stop Editing
 
   def main
+    endCredits() if $PokemonSystem.on_mobile
     #-------------------------------
     # Animated Background Setup
     #-------------------------------
@@ -326,11 +338,15 @@ _END_
   # Check if the credits should be cancelled
   def cancel?
     if Input.trigger?(Input::USE) && $PokemonGlobal.creditsPlayed
-      $scene = Scene_Map.new
-      pbBGMFade(1.0)
+      endCredits
       return true
     end
     return false
+  end
+
+  def endCredits
+    $scene = Scene_Map.new
+    pbBGMFade(1.0)
   end
 
   # Checks if credits bitmap has reached its ending point

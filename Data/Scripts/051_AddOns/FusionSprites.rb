@@ -485,6 +485,13 @@ def list_main_sprites_letters(spriteName)
   all_sprites.each do |key, value|
     main_sprites << key if value == "main"
   end
+  
+  #add temp sprites if no main sprites found
+  if main_sprites.empty?
+    all_sprites.each do |key, value|
+      main_sprites << key if value == "temp"
+    end
+  end
   return main_sprites
 end
 

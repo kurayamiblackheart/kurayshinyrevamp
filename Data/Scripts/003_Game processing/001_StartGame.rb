@@ -107,6 +107,7 @@ module Game
     if ngp_storage != nil
       $PokemonStorage = ngp_clean_pc_data(ngp_storage, ngp_trainer.party)
     end
+    onStartingNewGame()
   end
 
   # Loads the game from the given save data and starts the map scene.
@@ -120,6 +121,7 @@ module Game
     $game_map.update
     $PokemonMap.updateMap
     $scene = Scene_Map.new
+    onLoadExistingGame()
   end
 
   # Loads and validates the map. Called when loading a saved game.

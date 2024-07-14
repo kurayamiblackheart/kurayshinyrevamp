@@ -219,6 +219,10 @@ def pbStartTrade(pokemonIndex,newpoke,nickname,trainerName,trainerGender=0,saveg
   Kernel.Autosave if savegame
 
   myPokemon = $Trainer.party[pokemonIndex]
+  heldItem = myPokemon.item
+  echoln heldItem
+  $PokemonBag.pbStoreItem(heldItem, 1) if heldItem
+
   opponent = NPCTrainer.new(trainerName,trainerGender)
   opponent.id = $Trainer.make_foreign_ID
   yourPokemon = nil

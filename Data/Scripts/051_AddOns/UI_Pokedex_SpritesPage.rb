@@ -154,6 +154,11 @@ class PokemonPokedexInfo_Scene
     @sprites["bgSelected_next"].visible = true if is_main_sprite(next_index) && @available.size > 1
   end
 
+  def isBaseSpritePath(path)
+    filename = File.basename(path).downcase
+    return filename.match?(/\A\d+\.png\Z/)
+  end
+
   def update_displayed
     @sprites["selectedSprite"].setBitmap(@available[@selected_index])
     nextIndex = @selected_index + 1
@@ -174,7 +179,10 @@ class PokemonPokedexInfo_Scene
 
     selected_bitmap = @sprites["selectedSprite"].getBitmap
     sprite_path = selected_bitmap.path
-    is_generated = sprite_path.start_with?(Settings::BATTLERS_FOLDER)
+    isBaseSprite = isBaseSpritePath(@available[@selected_index])
+    # is_generated = sprite_path.start_with?(Settings::BATTLERS_FOLDER)
+    is_generated = sprite_path.start_with?(Settings::BATTLERS_FOLDER) && !isBaseSprite
+    echoln is_generated
     showSpriteCredits(selected_bitmap.filename, is_generated)
     update_selected
   end
@@ -187,6 +195,7 @@ class PokemonPokedexInfo_Scene
     spritename = File.basename(filename, '.*')
 
     if !generated_sprite
+      echoln spritename
       discord_name = getSpriteCredits(spritename)
       discord_name = "Unknown artist" if !discord_name
     else

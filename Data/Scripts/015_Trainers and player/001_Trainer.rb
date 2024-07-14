@@ -9,6 +9,9 @@ class Trainer
   attr_accessor :party
   attr_accessor :quests
   attr_accessor :sprite_override
+  attr_accessor :lowest_difficulty
+  attr_accessor :selected_difficulty
+  attr_accessor :game_mode
 
   def inspect
     str = super.chop
@@ -229,6 +232,9 @@ class Trainer
     @language = pbGetLanguage
     @party = []
     @sprite_override = sprite_override
+    @lowest_difficulty=2  #On hard by default, lowered whenever the player selects another difficulty
+    @selected_difficulty=2  #On hard by default, lowered whenever the player selects another difficulty
+    @game_mode =0  #classic
   end
 end
 

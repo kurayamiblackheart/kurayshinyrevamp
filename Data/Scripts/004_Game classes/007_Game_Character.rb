@@ -370,7 +370,7 @@ class Game_Character
   end
 
   def force_move_route(move_route)
-    echoln screen_z() if self == $game_player
+    # echoln screen_z() if self == $game_player
     if @original_move_route == nil
       @original_move_route = @move_route
       @original_move_route_index = @move_route_index

@@ -839,6 +839,17 @@ PokemonDebugMenuCommands.register("setgender", {
   }
 })
 
+
+PokemonDebugMenuCommands.register("printInfo", {
+  "parent"      => "main",
+  "name"        => _INTL("Dump info"),
+  "always_show" => true,
+  "effect"      => proc { |pkmn, pkmnid, heldpoke, settingUpBattle, screen|
+    pkmn.print_all_attributes
+    next false
+  }
+})
+
 PokemonDebugMenuCommands.register("speciesform", {
   "parent"      => "main",
   "name"        => _INTL("Species/form..."),

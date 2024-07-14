@@ -43,6 +43,32 @@
 #   end
 # }
 
+def onLoadExistingGame()
+  migrateOldSavesToCharacterCustomization()
+
+
+end
+
+def onStartingNewGame() end
+
+def migrateOldSavesToCharacterCustomization()
+  if !$Trainer.unlocked_clothes
+    $Trainer.unlocked_clothes = [Settings::DEFAULT_OUTFIT_MALE,
+                                 Settings::DEFAULT_OUTFIT_FEMALE,
+                                 Settings::STARTING_OUTFIT]
+  end
+  if !$Trainer.unlocked_hats
+    $Trainer.unlocked_hats = [Settings::DEFAULT_OUTFIT_MALE, Settings::DEFAULT_OUTFIT_FEMALE]
+  end
+  if !$Trainer.unlocked_hairstyles
+    $Trainer.unlocked_hairstyles = [Settings::DEFAULT_OUTFIT_MALE, Settings::DEFAULT_OUTFIT_FEMALE]
+  end
+
+  if !$Trainer.clothes || !$Trainer.hair #|| !$Trainer.hat
+    setupStartingOutfit()
+  end
+end
+
 #===============================================================================
 #
 #===============================================================================
@@ -274,10 +300,10 @@ class PokemonLoadScreen
     begin
       save_data = SaveData.read_from_file(file_path)
     rescue
-      save_data =try_load_backup(file_path)
+      save_data = try_load_backup(file_path)
     end
     unless SaveData.valid?(save_data)
-      save_data =try_load_backup(file_path)
+      save_data = try_load_backup(file_path)
     end
     return save_data
   end
@@ -326,6 +352,23 @@ class PokemonLoadScreen
     end
   end
 
+  #So that the options menu is set on the correct difficulty on older saves
+  def ensureCorrectDifficulty()
+    $Trainer.selected_difficulty = 1 #normal
+    $Trainer.selected_difficulty = 0 if $game_switches[SWITCH_GAME_DIFFICULTY_EASY]
+    $Trainer.selected_difficulty = 2 if $game_switches[SWITCH_GAME_DIFFICULTY_HARD]
+    $Trainer.lowest_difficulty= $Trainer.selected_difficulty if !$Trainer.lowest_difficulty
+  end
+
+  def setGameMode()
+    $Trainer.game_mode = 0 #classic
+    $Trainer.game_mode = 2 if $game_switches[SWITCH_MODERN_MODE]
+    $Trainer.game_mode = 3 if $game_switches[SWITCH_EXPERT_MODE]
+    $Trainer.game_mode = 4 if $game_switches[SWITCH_SINGLE_POKEMON_MODE]
+    $Trainer.game_mode = 1 if $game_switches[SWITCH_RANDOMIZED_AT_LEAST_ONCE]
+    $Trainer.game_mode = 5 if $game_switches[ENABLED_DEBUG_MODE_AT_LEAST_ONCE]
+  end
+
   def promptEnableSpritesDownload
     message = "Some sprites appear to be missing from your game. \nWould you like the game to download sprites automatically while playing? (this requires an internet connection)"
     if pbConfirmMessage(message)
@@ -365,7 +408,6 @@ class PokemonLoadScreen
       pbMessage(_INTL("{1} new custom sprites were imported into the game", $game_temp.nb_imported_sprites.to_s))
     end
     checkEnableSpritesDownload
-
     $game_temp.nb_imported_sprites = nil
 
     copyKeybindings()
@@ -439,6 +481,8 @@ class PokemonLoadScreen
           @scene.pbEndScene
           Game.load(@save_data)
           $game_switches[SWITCH_V5_1] = true
+          ensureCorrectDifficulty()
+          setGameMode()
           $PokemonGlobal.alt_sprite_substitutions = {} if !$PokemonGlobal.alt_sprite_substitutions
           $PokemonGlobal.autogen_sprites_cache = {}
           return

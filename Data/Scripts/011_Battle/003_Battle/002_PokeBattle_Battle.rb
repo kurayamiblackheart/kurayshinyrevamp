@@ -714,11 +714,11 @@ class PokeBattle_Battle
         @field.weather = :None
         pbDisplay("The heavy rain has lifted!")
       end
-    when :StrongWinds
-      if !pbCheckGlobalAbility(:DELTASTREAM)
-        @field.weather = :None
-        pbDisplay("The mysterious air current has dissipated!")
-      end
+    # when :StrongWinds
+    #   if !pbCheckGlobalAbility(:DELTASTREAM)
+    #     @field.weather = :None
+    #     pbDisplay("The mysterious air current has dissipated!")
+    #   end
     end
     if @field.weather!=oldWeather
       # Check for form changes caused by the weather changing

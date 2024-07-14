@@ -238,6 +238,10 @@ class Scene_Map
     end
   end
 
+  def reset_player_sprite
+    @spritesetGlobal.playersprite.updateBitmap
+  end
+
   def reset_map(fadeout = false)
     $MapFactory.setup($game_map.map_id)
     $game_player.moveto($game_player.x, $game_player.y)

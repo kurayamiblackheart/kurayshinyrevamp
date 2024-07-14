@@ -121,7 +121,7 @@ QUESTS = [
   Quest.new(28, "Bad to the Bone!", "Find a Rare Bone using Rock Smash.", questBranchHotels, "BW (72)", "Saffron City", defaultQuestColor),
 
   #Cinnabar Island
-  Quest.new(29, "Powder metallurgy", "The scientist at the hotel wants you to find some Metal Powder.", questBranchHotels, "BW (82)", "Cinnabar Island", defaultQuestColor),
+  Quest.new(29, "The transformation Pokémon", "The scientist wants you to find some Quick Powder that can sometimes be found with wild Ditto in the mansion's basement.", questBranchHotels, "BW (82)", "Cinnabar Island", defaultQuestColor),
   Quest.new(30, "Diamonds and Pearls", "Find a Diamond Necklace to save the man's marriage.", questBranchHotels, "BW (71)", "Cinnabar Island", defaultQuestColor),
 
   #Goldenrod City
@@ -146,9 +146,9 @@ QUESTS = [
   Quest.new(41, "Unova Pokémon", "A woman wants you to show her a Pokémon native to the Unova region.", questBranchHotels, "BW (48)", "Kin Island", defaultQuestColor),
   Quest.new(42, "Stolen artifact", "Recover a stolen vase from a burglar in the Pokémon Mansion", questBranchHotels, "BW (21)", "Cinnabar Island", defaultQuestColor),
   Quest.new(43, "Fallen Meteor", "Investigate a crater near Bond Bridge.", questBranchHotels, "BW009", "Kin Island", defaultQuestColor),
-  Quest.new(44, "First Contact", "Find the missing pieces of a fallen alien spaceship", questBranchHotels, "BW (92)", "Bond Bridge", questBranchField),
-  Quest.new(45, "First Contact (Part 2)", "Ask the sailor at Cinnabar Island's harbour to take you to the uncharted island where the spaceship might be located", questBranchHotels, "BW (92)", "Bond Bridge", defaultQuestColor),
-  Quest.new(46, "The rarest fish", "A fisherman wants you to show him a Feebas. Apparently they can be fished around the Sevii Islands when it rains.", questBranchField, "BW056", "Kin Island", defaultQuestColor),
+  Quest.new(44, "First Contact", "Find the missing pieces of a fallen alien spaceship", questBranchHotels, "BW (92)", "Bond Bridge", specialQuestColor),
+  Quest.new(45, "First Contact (Part 2)", "Ask the sailor at Cinnabar Island's harbour to take you to the uncharted island where the spaceship might be located", questBranchHotels, "BW (92)", "Bond Bridge", specialQuestColor),
+  Quest.new(46, "The rarest fish", "A fisherman wants you to show him a Feebas. Apparently they can be fished around the Sevii Islands when it rains.", questBranchField, "BW056", "Kin Island", specialQuestColor),
 
   #Necrozma quest
   Quest.new(47, "Mysterious prisms", "You found a pedestal with a mysterious prism on it. There seems to be room for more prisms.", questBranchField, "BW_Sabrina", "Pokémon Tower", specialQuestColor),
@@ -169,7 +169,7 @@ QUESTS = [
   Quest.new(59, "A legendary band (Part 3)", "The drummer from a legendary Pokéband wants you to find its former bandmates. There are rumors about strange music that was heard around the region.", questBranchField, "band_drummer", "Saffron City", specialQuestColor),
   Quest.new(60, "A legendary band (Part 4)", "You assembled the full band! Come watch the show on Saturday night.", questBranchField, "BW117", "Saffron City", specialQuestColor),
 
-  Quest.new(61, "Mysterious Lunar feathers", "A mysterious entity asked you to collect Lunar Feather for them. It said that they will come at night to tell you where look. Whoever that may be...", questBranchField, "lunarFeather", "Lavender Town", specialQuestColor),
+  Quest.new(61, "Mysterious Lunar feathers", "A mysterious entity asked you to collect Lunar Feathers for them. It said that they will come at night to tell you where to look. Whoever that may be...", questBranchField, "lunarFeather", "Lavender Town", specialQuestColor),
 
   # attention: c'est un array et non un hash... l'id est en fait l'index, donc il est important de garder l'ordre
   #out of order quests
@@ -208,9 +208,10 @@ def isQuestAlreadyAccepted?(id)
   return false
 end
 
-def finishQuest(id)
-  pbMEPlay("Register phone")
-  Kernel.pbMessage("\\C[6]Quest completed!")
+def finishQuest(id, silent=false)
+  return if pbCompletedQuest?(id)
+  pbMEPlay("Register phone") if !silent
+  Kernel.pbMessage("\\C[6]Quest completed!") if !silent
 
   $game_variables[222] += 1 # karma
   $game_variables[97] -= 1 #nb. quests active

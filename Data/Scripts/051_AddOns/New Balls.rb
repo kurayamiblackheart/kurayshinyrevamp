@@ -30,8 +30,9 @@ next catchRate
 })
 BallHandlers::OnCatch.add(:ABILITYBALL,proc{|ball,battle,pokemon|
   species = getSpecies(dexNum(pokemon))
-  pokemon.ability= species.hidden_abilities[-1]
-  pokemon.ability_index = 2
+  ability = species.hidden_abilities[-1]
+  pokemon.ability = ability
+  pokemon.ability_index= getAbilityIndexFromID(ability,pokemon)
 })
 
 #VIRUS BALL 27  - give pokerus

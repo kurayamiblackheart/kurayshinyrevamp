@@ -18,6 +18,9 @@ def pbLoadTrainer(tr_type, tr_name, tr_version = 0)
   raise _INTL("Trainer type {1} does not exist.", tr_type) if !tr_type_data
   tr_type = tr_type_data.id
   trainer_data = getTrainersDataMode.try_get(tr_type, tr_name, tr_version)
+  if !trainer_data
+    trainer_data = GameData::Trainer.try_get(tr_type, tr_name, tr_version)
+  end
   return (trainer_data) ? trainer_data.to_trainer : nil
 end
 

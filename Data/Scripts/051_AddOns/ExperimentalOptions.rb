@@ -29,14 +29,32 @@ class ExperimentalOptionsScene < PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = [
-      EnumOption.new(_INTL("Base stats mode"), [_INTL("On"), _INTL("Off")],
+      EnumOption.new(_INTL("Expert mode (beta)"), [_INTL("On"), _INTL("Off")],
+                     proc {
+                       $game_switches[SWITCH_EXPERT_MODE] ? 0 : 1
+                     },
+                     proc { |value|
+                       $game_switches[SWITCH_EXPERT_MODE] = value == 0
+                     }, "Changes all of the trainer teams to make them as challenging as possible!"
+      ),
+      EnumOption.new(_INTL("No levels mode"), [_INTL("On"), _INTL("Off")],
                      proc {
                        $game_switches[SWITCH_NO_LEVELS_MODE] ? 0 : 1
                      },
                      proc { |value|
                        $game_switches[SWITCH_NO_LEVELS_MODE] = value == 0
                      }, "All Pokémon use their base stats, regardless of levels."
-      )#,
+      ),
+      EnumOption.new(_INTL("Reversed mode"), [_INTL("On"), _INTL("Off")],
+                     proc {
+                       $game_switches[SWITCH_REVERSED_MODE] ? 0 : 1
+                     },
+                     proc { |value|
+                       $game_switches[SWITCH_REVERSED_MODE] = value == 0
+                     }, "Inverts the fusions of all the trainers in the game."
+      )
+
+    #,
           # EnumOption.new(_INTL("Double abilities"), [_INTL("On"), _INTL("Off")],
           #                proc {
           #                  $game_switches[SWITCH_DOUBLE_ABILITIES] ? 0 : 1
@@ -49,7 +67,6 @@ class ExperimentalOptionsScene < PokemonOption_Scene
     ]
     return options
   end
-
 
 
 end

@@ -947,17 +947,23 @@ class PokemonFusionScene
       overlay.dispose
       #first check if hidden ability
       # getAbilityList format: [[:ABILITY, index],...]
-      hiddenAbility1 = @pokemon1.ability == @pokemon1.getAbilityList[-1][0]
-      hiddenAbility2 = @pokemon2.ability == @pokemon2.getAbilityList[-1][0]
+      # hiddenAbility1 = @pokemon1.ability == @pokemon1.getAbilityList[-1][0]
+      # hiddenAbility2 = @pokemon2.ability == @pokemon2.getAbilityList[-1][0]
+
+      # ability1 = @pokemon1.ability_index
+      # ability2 = @pokemon2.ability_index
 
       #change species
+      ability1 = @pokemon1.ability
+      ability2 = @pokemon2.ability
+
       @pokemon1.species = newSpecies
       if @pokemon2.egg? || @pokemon1.egg?
         @pokemon1.steps_to_hatch = @pokemon1.species_data.hatch_steps
       end
       @pokemon1.kuraycustomfilereset
       #@pokemon1.ability = pbChooseAbility(@pokemon1, hiddenAbility1, hiddenAbility2)
-      pbChooseAbility(@pokemon1, hiddenAbility1, hiddenAbility2)
+      pbChooseAbility(ability1,ability2)
 
       setFusionMoves(@pokemon1, @pokemon2, firstOptionSelected) if !noMoves
 

@@ -21,6 +21,10 @@ class Pokemon
   attr_accessor :exp_when_fused_body
   attr_accessor :exp_gained_since_fused
 
+  attr_accessor :hat
+  attr_accessor :hat_x
+  attr_accessor :hat_y
+
   # @return [Integer] the number of steps until this Pokémon hatches, 0 if this Pokémon is not an egg
   attr_accessor :steps_to_hatch
   # @return [Integer] the current HP
@@ -145,6 +149,67 @@ class Pokemon
 
   # S_CHANCE_VALIDATOR = 16
   S_CHANCE_VALIDATOR = 16
+
+  def print_all_attributes
+    echoln("Spriteform Body: #{@spriteform_body}")
+    echoln("Spriteform Head: #{@spriteform_head}")
+    echoln("Species: #{@species}")
+    echoln("Forced Form: #{@forced_form}")
+    echoln("Time Form Set: #{@time_form_set}")
+    echoln("Experience: #{@exp}")
+    echoln("EXP When Fused Head: #{@exp_when_fused_head}")
+    echoln("EXP When Fused Body: #{@exp_when_fused_body}")
+    echoln("EXP Gained Since Fused: #{@exp_gained_since_fused}")
+    echoln("Hat: #{@hat}")
+    echoln("Hat X: #{@hat_x}")
+    echoln("Hat Y: #{@hat_y}")
+    echoln("Steps to Hatch: #{@steps_to_hatch}")
+    echoln("HP: #{@hp}")
+    echoln("Status: #{@status}")
+    echoln("Status Count: #{@statusCount}")
+    echoln("Glitter: #{@glitter}")
+    echoln("Head Shiny: #{@head_shiny}")
+    echoln("Body Shiny: #{@body_shiny}")
+    echoln("Debug Shiny: #{@debug_shiny}")
+    echoln("Natural Shiny: #{@natural_shiny}")
+
+    echoln("Calculated ability: #{@ability}")
+    echoln("Abilities hash: #{getAbilityList()}")
+
+    echoln("Ability Index: #{@ability_index}")
+    echoln("Body Original Ability Index: #{@body_original_ability_index}")
+    echoln("Head Original Ability Index: #{@head_original_ability_index}")
+
+    move1, move2, move3, move4 = "", "", "", ""
+
+    move1 = @moves[0].id if @moves[0]
+    move2 = @moves[1].id if @moves[1]
+    move3 = @moves[2].id if @moves[2]
+    move4 = @moves[3].id if @moves[3]
+
+    echoln("Moves: #{move1} #{move2} #{move3} #{move4}")
+    echoln("First Moves: #{@first_moves}")
+    echoln("Ribbons: #{@ribbons}")
+    echoln("Cool: #{@cool}, Beauty: #{@beauty}, Cute: #{@cute}, Smart: #{@smart}, Tough: #{@tough}, Sheen: #{@sheen}")
+    echoln("Pokerus: #{@pokerus}")
+    echoln("Happiness: #{@happiness}")
+    echoln("Poke Ball: #{@poke_ball}")
+    echoln("Markings: #{@markings}")
+    echoln("IV: #{@iv}")
+    echoln("IV Maxed: #{@ivMaxed}")
+    echoln("EV: #{@ev}")
+    echoln("Total HP: #{@totalhp}, Attack: #{@attack}, Defense: #{@defense}, Sp. Attack: #{@spatk}, Sp. Defense: #{@spdef}, Speed: #{@speed}")
+    echoln("Owner: #{@owner}")
+    echoln("Obtain Method: #{@obtain_method}")
+    echoln("Obtain Map: #{@obtain_map}")
+    echoln("Obtain Text: #{@obtain_text}")
+    echoln("Obtain Level: #{@obtain_level}")
+    echoln("Hatched Map: #{@hatched_map}")
+    echoln("Fused: #{@fused}")
+    echoln("Personal ID: #{@personalID}")
+    echoln("Hidden Power Type: #{@hiddenPowerType}")
+    # Add other attribute print statements here
+  end
 
   def self.play_cry(species, form = 0, volume = 90, pitch = 100)
     GameData::Species.play_cry_from_species(species, form, volume, pitch)
@@ -1228,6 +1293,10 @@ class Pokemon
   def ability_index
     @ability_index = (@personalID & 1) if !@ability_index
     return @ability_index
+  end
+
+  def forced_ability
+    return @ability
   end
 
   # @return [GameData::Ability, nil] an Ability object corresponding to this Pokémon's ability
@@ -2372,6 +2441,11 @@ class Pokemon
     @type1kuray = nil
     @type2kuray = nil
     @typeoverwrite = false
+
+    @hat = nil
+    @hat_x = 0
+    @hat_y = 0
+
     calc_stats
     if @form == 0 && recheck_form
       f = MultipleForms.call("getFormOnCreation", self)

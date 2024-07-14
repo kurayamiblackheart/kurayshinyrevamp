@@ -81,6 +81,14 @@ class PokemonMartAdapter
   def removeItem(item)
     return $PokemonBag.pbDeleteItem(item)
   end
+
+  def getBaseColorOverride(item)
+    return nil
+  end
+
+  def getShadowColorOverride(item)
+    return nil
+  end
 end
 
 #===============================================================================
@@ -97,6 +105,14 @@ class BuyAdapter
 
   def getDisplayPrice(item)
     @adapter.getDisplayPrice(item, false)
+  end
+
+  def getBaseColorOverride(item)
+    return @adapter.getBaseColorOverride(item)
+  end
+
+  def getShadowColorOverride(item)
+    return @adapter.getShadowColorOverride(item)
   end
 
   def isSelling?
@@ -122,6 +138,14 @@ class SellAdapter
     else
       return ""
     end
+  end
+
+  def getBaseColorOverride(item)
+    return @adapter.getBaseColorOverride(item)
+  end
+
+  def getShadowColorOverride(item)
+    return @adapter.getShadowColorOverride(item)
   end
 
   def isSelling?
@@ -160,11 +184,18 @@ class Window_PokemonMart < Window_DrawableCommand
     else
       item = @stock[index]
       itemname = @adapter.getDisplayName(item)
+
+      baseColorOverride = @adapter.getBaseColorOverride(item)
+      shadowColorOverride = @adapter.getShadowColorOverride(item)
+
+      baseColor = baseColorOverride ? baseColorOverride : self.baseColor
+      shadowColor = shadowColorOverride ? shadowColorOverride : self.shadowColor
+
       qty = @adapter.getDisplayPrice(item)
       sizeQty = self.contents.text_size(qty).width
       xQty = rect.x + rect.width - sizeQty - 2 - 16
-      textpos.push([itemname, rect.x, ypos - 4, false, self.baseColor, self.shadowColor])
-      textpos.push([qty, xQty, ypos - 4, false, self.baseColor, self.shadowColor])
+      textpos.push([itemname, rect.x, ypos - 4, false, baseColor, shadowColor])
+      textpos.push([qty, xQty, ypos - 4, false, baseColor, shadowColor])
     end
     pbDrawTextPositions(self.contents, textpos)
   end
@@ -196,11 +227,19 @@ class PokemonMart_Scene
     @sprites["moneywindow"].text = _INTL("{2}:\r\n<r>{1}", @adapter.getMoneyString,@currency_name)
   end
 
+  def scroll_map()
+    pbScrollMap(6, 5, 5)
+  end
+
+  def scroll_back_map()
+    pbScrollMap(4, 5, 5)
+  end
+
   #KurayX Creating kuray shop
   def pbStartBuyOrSellScene(buying, stock, adapter)
     # Scroll right before showing screen
     if !$game_temp.fromkurayshop
-      pbScrollMap(6, 5, 5)
+      scroll_map()
     end
     # pbScrollMap(6, 5, 5)
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
@@ -302,10 +341,11 @@ class PokemonMart_Scene
   #KurayX Creating kuray shop
   def pbEndBuyScene
     pbDisposeSpriteHash(@sprites)
+    Kernel.pbClearText()
     @viewport.dispose
     # Scroll left after showing screen
     if !$game_temp.fromkurayshop
-      pbScrollMap(4, 5, 5)
+      scroll_back_map()
     end
   end
 
@@ -560,6 +600,7 @@ class PokemonMartScreen
     @scene.pbStartBuyScene(@stock,@adapter)
     item=nil
     loop do
+      pbWait(4)
       item=@scene.pbChooseBuyItem
       break if !item
       quantity=0

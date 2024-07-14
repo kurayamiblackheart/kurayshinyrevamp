@@ -51,6 +51,7 @@ class Spriteset_Map
     @panorama = AnimatedPlane.new(@@viewport0)
     @fog = AnimatedPlane.new(@@viewport1)
     @fog.z = 3000
+    @fog2=nil
     @character_sprites = []
     for i in @map.events.keys.sort
       sprite = Sprite_Character.new(@@viewport1,@map.events[i])
@@ -61,6 +62,18 @@ class Spriteset_Map
     update
   end
 
+  def setFog2(filename="010-Water04")
+    disposeFog2()
+    @fog2 = AnimatedPlane.new(@@viewport1)
+    @fog2.z = 3001
+    @fog2.setFog(filename)
+  end
+
+  def disposeFog2()
+    @fog2.dispose if @fog2
+    @fog2 =nil
+  end
+
   def dispose
     if $scene.is_a?(Scene_Map)
       $scene.map_renderer.remove_tileset(@map.tileset_name)
@@ -68,6 +81,7 @@ class Spriteset_Map
     end
     @panorama.dispose
     @fog.dispose
+    @fog2.dispose if @fog2
     for sprite in @character_sprites
       sprite.dispose
     end
@@ -116,8 +130,18 @@ class Spriteset_Map
     @fog.opacity    = @map.fog_opacity
     @fog.blend_type = @map.fog_blend_type
     @fog.tone       = @map.fog_tone
+
+    @fog2.ox         = tmox+@map.fog2_ox if @fog2
+    @fog2.oy         = tmoy+@map.fog2_oy if @fog2
+    @fog2.zoom_x     = @map.fog_zoom/100.0 if @fog2
+    @fog2.zoom_y     = @map.fog_zoom/100.0 if @fog2
+    @fog2.opacity    = @map.fog2_opacity if @fog2
+
+
     @panorama.update
     @fog.update
+    @fog2.update if @fog2
+
     for sprite in @character_sprites
       sprite.update
     end

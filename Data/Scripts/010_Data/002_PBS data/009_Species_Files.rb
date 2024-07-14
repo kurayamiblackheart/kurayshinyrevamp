@@ -136,6 +136,8 @@ module GameData
         new_ret.each { |bitmap| alter_bitmap_function.call(pkmn, bitmap) }
         ret = new_ret
       end
+      print "hat"
+      add_hat_to_bitmap(ret,pkmn.hat,pkmn.hat_x,pkmn.hat_y) if pkmn.hat
       return ret
     end
 

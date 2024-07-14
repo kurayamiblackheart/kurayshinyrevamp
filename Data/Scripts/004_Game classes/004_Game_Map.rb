@@ -19,17 +19,26 @@ class Game_Map
   attr_accessor :fog_opacity              # fog opacity level
   attr_accessor :fog_blend_type           # fog blending method
   attr_accessor :fog_zoom                 # fog zoom rate
+
   attr_accessor :fog_sx                   # fog sx
   attr_accessor :fog_sy                   # fog sy
   attr_accessor :fog_ox # fog x-coordinate starting point
   attr_accessor :fog_oy # fog y-coordinate starting point
   attr_reader   :fog_ox                   # fog x-coordinate starting point
   attr_reader   :fog_oy                   # fog y-coordinate starting point
+  
+  attr_accessor :fog2_ox # fog x-coordinate starting point
+  attr_accessor :fog2_oy # fog y-coordinate starting point
+  attr_accessor :fog2_sx # fog sx
+  attr_accessor :fog2_sy # fog sy
+  attr_accessor :fog2_opacity # fog sy
+
   attr_reader   :fog_tone                 # fog color tone
   attr_accessor :battleback_name          # battleback file name
   attr_reader   :display_x                # display x-coordinate * 128
   attr_reader   :display_y                # display y-coordinate * 128
   attr_accessor :need_refresh             # refresh request flag
+  attr_accessor :scroll_direction
 
   TILE_WIDTH  = 32
   TILE_HEIGHT = 32
@@ -51,6 +60,13 @@ class Game_Map
     updateTileset
     @fog_ox               = 0
     @fog_oy               = 0
+
+    @fog2_ox = 0
+    @fog2_oy = 0
+    @fog2_sx = 0
+    @fog2_sy = 0
+    @fog2_opacity = 0
+
     @fog_tone             = Tone.new(0, 0, 0, 0)
     @fog_tone_target      = Tone.new(0, 0, 0, 0)
     @fog_tone_duration    = 0
@@ -119,6 +135,22 @@ class Game_Map
       pbBGSPlay(@map.bgs)
     end
   end
+
+  def setFog2(filename,sx=0,sy=0,opacity=32)
+    @fog2_sx=sx
+    @fog2_sy=-sy
+    @fog2_opacity = opacity
+    $scene.spriteset.setFog2(filename)
+  end
+
+  def eraseFog2()
+    @fog2_sx=0
+    @fog2_sy=-0
+    @fog2_opacity = 0
+    $scene.spriteset.disposeFog2()
+  end
+
+
   #-----------------------------------------------------------------------------
   # * Plays background music
   #   Plays music called "[normal BGM]_n" if it's night time and it exists
@@ -441,6 +473,10 @@ class Game_Map
     # Update fog
     @fog_ox -= @fog_sx/8.0
     @fog_oy -= @fog_sy/8.0
+    
+    @fog2_ox -= @fog2_sx / 8.0 if @fog2_ox
+    @fog2_oy -= @fog2_sy / 8.0 if @fog2_oy
+
     if @fog_tone_duration>=1
       d = @fog_tone_duration
       target = @fog_tone_target

@@ -1084,6 +1084,10 @@ class AnimatedBitmap
     @bitmap.bitmap;
   end
 
+  def bitmap=(bitmap)
+    @bitmap.bitmap = bitmap;
+  end
+
   def currentIndex
     @bitmap.currentIndex;
   end

@@ -32,6 +32,16 @@ def pbRoamingAreas(idxRoamer)
   return Settings::ROAMING_AREAS
 end
 
+def getRoamingMap(roamingPokemon)
+  possible_roamers = {}
+  for roamer in Settings::ROAMING_SPECIES
+    name = roamer[0]
+    id =
+    possible_roamers[name] = id
+
+  end
+end
+
 # Puts a roamer in a completely random map available to it.
 def pbRandomRoam(index)
   return if !$PokemonGlobal.roamPosition
@@ -54,6 +64,23 @@ def pbRoamPokemon
   # Roam each Pokémon in turn
   for i in 0...Settings::ROAMING_SPECIES.length
     pbRoamPokemonOne(i)
+  end
+
+  applyRoamWeather()
+end
+
+
+def applyRoamWeather()
+  return if $game_screen.weather_type != :None
+  currently_roaming = getAllCurrentlyRoamingPokemon()
+  currently_roaming.each do |roamer_id|
+    roamerOnCurrentMap = $PokemonGlobal.roamPosition[roamer_id] == $game_map.map_id
+    if roamerOnCurrentMap
+      return if $PokemonGlobal.roamPokemonCaught[roamer_id]
+      weather = Settings::ROAMING_SPECIES[roamer_id][6]
+      $game_screen.weather(weather, 4, 0)
+      return
+    end
   end
 end
 

@@ -18,6 +18,8 @@ class PokemonSystem
   attr_accessor :textinput
   attr_accessor :quicksurf
   attr_accessor :download_sprites
+  attr_accessor :max_nb_sprites_download
+  attr_accessor :on_mobile
   # Per-save file
   attr_accessor :battlestyle
   attr_accessor :battle_type
@@ -164,6 +166,7 @@ class PokemonSystem
     @textinput = 1 # Text input mode (0=cursor, 1=keyboard)
     @quicksurf = 0
     @download_sprites = 0
+    @max_nb_sprites_download = 5
     @quicksave = 1
     # Vanilla Per-save file
     @battlestyle = 0 # Battle style (0=switch, 1=set)
@@ -1128,6 +1131,7 @@ class PokemonOption_Scene
 
   def initialize
     @autosave_menu = false
+    @manually_changed_difficulty=false
   end
 
   def initUIElements
@@ -1585,6 +1589,8 @@ end
 class VanillaOptSc_1 < PokemonOption_Scene
   def initialize
     @changedColor = false
+    @autosave_menu = false
+    @manually_changed_difficulty=false
   end
 
   def pbStartScene(inloadscreen = false)
