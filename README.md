@@ -21,7 +21,7 @@ Pokemon Essential Github: https://github.com/Maruno17/pokemon-essentials
 
 Kuray Infinite Fusion (KIF) Discord: https://discord.gg/UFxQkUZeyE
 
-**If you've been banned from our Discord (the Kuray Hub), you can fill this form to ask for an unban, or informations about the ban: https://forms.gle/TPCprf38ANmYNB5T8 **
+**If you've been banned from our Discord (the Kuray Hub), you can fill this form to ask for an unban, or informations about the ban: ** https://forms.gle/TPCprf38ANmYNB5T8
 
 Pokemon Infinite Fusion (PIF) Discord: https://discord.gg/infinitefusion
 
