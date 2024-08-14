@@ -80,7 +80,7 @@ module Graphics
   def self.update
     if $PokemonSystem
       if Input.trigger?(Input::JUMPUP) && $PokemonSystem.is_in_battle
-        if $PokemonSystem.autobattler
+        if $PokemonSystem.autobattler && $PokemonSystem.autobattleshortcut && $PokemonSystem.autobattleshortcut == 0
           if $PokemonSystem.autobattler == 0
             $PokemonSystem.autobattler = 1
             $AutoBattler = true

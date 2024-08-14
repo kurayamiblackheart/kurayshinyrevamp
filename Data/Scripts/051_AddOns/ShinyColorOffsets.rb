@@ -1,3 +1,46 @@
+# class ShinySelector
+#   def set_colors(pokemon_id)
+#
+#
+#
+#     picturePath = get_unfused_sprite_path(getPokemon(pokemon_id).id_number)
+#     @pokemonBitmap = AnimatedBitmap.new(picturePath)
+#     @previewwindow = PictureWindow.new(@pokemonBitmap)
+#     @previewwindow.z = 100
+#
+#
+#
+#     pbFadeOutIn {
+#       scene = ShinySliderOptionsScene.new
+#       screen = PokemonOptionScreen.new(scene)
+#       screen.pbStartScreen
+#     }
+#
+#   end
+# end
+#
+# class ShinySliderOptionsScene < PokemonOption_Scene
+#   def pbGetOptions(inloadscreen = false)
+#     options = []
+#     options << SliderOption.new(_INTL("Hue"), 0, 360, 1,
+#                                 proc { $game_variables[VAR_RANDOMIZER_TRAINER_BST] },
+#                                 proc { |value|
+#                                   $game_variables[VAR_RANDOMIZER_TRAINER_BST] = value
+#                                 })
+#   end
+#
+#   def initOptionsWindow
+#     options = []
+#     options << SliderOption.new(_INTL("Hue"), 0, 360, 1,
+#                                 proc { $game_variables[VAR_RANDOMIZER_TRAINER_BST] },
+#                                 proc { |value|
+#                                   $game_variables[VAR_RANDOMIZER_TRAINER_BST] = value
+#                                 })
+#     return Window_PokemonOption.new(options, 0, 300, Graphics.width, Graphics.height)
+#   end
+# end
+
+
 SHINY_COLOR_OFFSETS = {
   1 => -30,
   2 => -85,

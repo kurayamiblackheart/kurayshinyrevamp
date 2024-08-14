@@ -372,12 +372,15 @@ class PokemonPauseMenu
         # 235 = Rage Candy Bar
         # 263 = Rare Candy
         # 264 = Master Ball
+        # 3 = Max Repel
         $game_temp.mart_prices[235] = [10000, 0] if $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[263] = [10000, 0] if $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[264] = [960000, 0] if $PokemonSystem.kuraystreamerdream == 0
+        $game_temp.mart_prices[3] = [700, 350] if $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[235] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         $game_temp.mart_prices[263] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         $game_temp.mart_prices[264] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
+        $game_temp.mart_prices[3] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         # 68 = Eviolite
         $game_temp.mart_prices[68] = [4000, 2000]
         # 623 = Rocket Ball
@@ -394,7 +397,7 @@ class PokemonPauseMenu
           657, 659,
           114, 115, 116, 100,
           194,
-          235, 263, 264,
+          235, 263, 264, 3,
           68
         ]
         # allitems.push(568) if $game_switches[SWITCH_GOT_BADGE_8]

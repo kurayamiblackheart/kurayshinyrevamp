@@ -158,17 +158,30 @@ class PokeBattle_Battle
   #=============================================================================
   # Send out all battlers at the start of battle
   #=============================================================================
+  def battleStartShinyCheck(foemon)
+    if foemon.shiny? && $PokemonSystem.autobattlershiny && $PokemonSystem.autobattlershiny == 1 && $PokemonSystem.autobattler && $PokemonSystem.autobattler == 1
+      $AutoBattler = false
+      $PokemonSystem.autobattler = 0
+    end
+  end
+  
   def pbStartBattleSendOut(sendOuts)
     # "Want to battle" messages
     if wildBattle?
       foeParty = pbParty(1)
       case foeParty.length
       when 1
+        battleStartShinyCheck(foeParty[0])
         pbDisplayPaused(_INTL("Oh! A wild {1} appeared!",foeParty[0].name))
       when 2
+        battleStartShinyCheck(foeParty[0])
+        battleStartShinyCheck(foeParty[1])
         pbDisplayPaused(_INTL("Oh! A wild {1} and {2} appeared!",foeParty[0].name,
            foeParty[1].name))
       when 3
+        battleStartShinyCheck(foeParty[0])
+        battleStartShinyCheck(foeParty[1])
+        battleStartShinyCheck(foeParty[2])
         pbDisplayPaused(_INTL("Oh! A wild {1}, {2} and {3} appeared!",foeParty[0].name,
            foeParty[1].name,foeParty[2].name))
       end

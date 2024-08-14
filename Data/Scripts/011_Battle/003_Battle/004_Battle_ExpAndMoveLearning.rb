@@ -59,6 +59,11 @@ class PokeBattle_Battle
   def pbGainEVsOne(idxParty, defeatedBattler)
     pkmn = pbParty(0)[idxParty] # The Pokémon gaining EVs from defeatedBattler
     evYield = defeatedBattler.pokemon.evYield
+    if $PokemonSystem.evstrain && $PokemonSystem.evstrain > 0
+      # Remove all yield EVs from opponents, except Power items.
+      evYield = {}
+      GameData::Stat.each_main { |s| evYield[s.id] = 0 }
+    end
     # Num of effort points pkmn already has
     evTotal = 0
     GameData::Stat.each_main { |s| evTotal += pkmn.ev[s.id] }

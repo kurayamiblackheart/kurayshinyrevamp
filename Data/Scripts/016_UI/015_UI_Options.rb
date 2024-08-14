@@ -57,6 +57,8 @@ class PokemonSystem
   attr_accessor :shenanigans
   attr_accessor :kuraystreamerdream
   attr_accessor :autobattler
+  attr_accessor :autobattleshortcut
+  attr_accessor :autobattlershiny
   attr_accessor :shinyodds # overwrite the shiny odds
   attr_accessor :unfusetraded # allow to unfuse traded pokemons
 
@@ -145,6 +147,7 @@ class PokemonSystem
   attr_accessor :noevsmode
   attr_accessor :maxivsmode
   attr_accessor :showlevel_nolevelmode
+  attr_accessor :evstrain
 
   attr_accessor :rocketballsteal
 
@@ -205,6 +208,8 @@ class PokemonSystem
     @shenanigans = 0
     @kuraystreamerdream = 0
     @autobattler = 0
+    @autobattleshortcut = 0
+    @autobattlershiny = 0
     @sb_maxing = 1
     @unfusetraded = 0
     @sb_soullinked = 0
@@ -269,6 +274,7 @@ class PokemonSystem
 
     @noevsmode = 0
     @maxivsmode = 0
+    @evstrain = 0
     @showlevel_nolevelmode = 0
     @rocketballsteal = 0
     @trainerexpboost = 50
@@ -383,6 +389,8 @@ class PokemonSystem
     @shiny_trainer_pkmn = saved.shiny_trainer_pkmn if saved.shiny_trainer_pkmn
     @shenanigans = saved.shenanigans if saved.shenanigans
     @autobattler = saved.autobattler if saved.autobattler
+    @autobattleshortcut = saved.autobattleshortcut if saved.autobattleshortcut
+    @autobattlershiny = saved.autobattlershiny if saved.autobattlershiny
     @shinyodds = saved.shinyodds if saved.shinyodds
     @sb_maxing = saved.sb_maxing if saved.sb_maxing
     @sb_soullinked = saved.sb_soullinked if saved.sb_soullinked
@@ -426,6 +434,7 @@ class PokemonSystem
     @skipcaughtprompt = saved.skipcaughtprompt if saved.skipcaughtprompt
     @noevsmode = saved.noevsmode if saved.noevsmode
     @maxivsmode = saved.maxivsmode if saved.maxivsmode
+    @evstrain = saved.evstrain if saved.evstrain
     @showlevel_nolevelmode = saved.showlevel_nolevelmode if saved.showlevel_nolevelmode
     @rocketballsteal = saved.rocketballsteal if saved.rocketballsteal
     @trainerexpboost = saved.trainerexpboost if saved.trainerexpboost
@@ -434,7 +443,7 @@ end
 
 def options_as_json(options={})
   {
-    "json_version" => "0.5",
+    "json_version" => "0.6",
     "textspeed" => $PokemonSystem.textspeed,
     "battlescene" => $PokemonSystem.battlescene,
     "frame" => $PokemonSystem.frame,
@@ -479,6 +488,8 @@ def options_as_json(options={})
     "shenanigans" => $PokemonSystem.shenanigans,
     "kuraystreamerdream" => $PokemonSystem.kuraystreamerdream,
     "autobattler" => $PokemonSystem.autobattler,
+    "autobattleshortcut" => $PokemonSystem.autobattleshortcut,
+    "autobattlershiny" => $PokemonSystem.autobattlershiny,
     "shinyodds" => $PokemonSystem.shinyodds,
     "unfusetraded" => $PokemonSystem.unfusetraded,
     "sb_maxing" => $PokemonSystem.sb_maxing,
@@ -541,6 +552,7 @@ def options_as_json(options={})
     "autosave_steps_switch" => $game_switches[AUTOSAVE_STEPS_SWITCH],
     "noevsmode" => $PokemonSystem.noevsmode,
     "maxivsmode" => $PokemonSystem.maxivsmode,
+    "evstrain" => $PokemonSystem.evstrain,
     "showlevel_nolevelmode" => $PokemonSystem.showlevel_nolevelmode,
     "rocketballsteal" => $PokemonSystem.rocketballsteal,
     "trainerexpboost" => $PokemonSystem.trainerexpboost
@@ -706,9 +718,12 @@ def options_load_json(jsonparse)
 
   $PokemonSystem.noevsmode = 0
   $PokemonSystem.maxivsmode = 0
+  $PokemonSystem.evstrain = 0
   $PokemonSystem.showlevel_nolevelmode = 0
   $PokemonSystem.rocketballsteal = 0
   $PokemonSystem.trainerexpboost = 50
+  $PokemonSystem.autobattleshortcut = 0
+  $PokemonSystem.autobattlershiny = 0
   if json_ver >= 2
     $PokemonSystem.noevsmode = jsonparse['noevsmode']
     $PokemonSystem.maxivsmode = jsonparse['maxivsmode']
@@ -722,6 +737,11 @@ def options_load_json(jsonparse)
   end
   if json_ver >= 5
     $PokemonSystem.importegg = jsonparse['importegg']
+  end
+  if json_ver >= 6
+    $PokemonSystem.evstrain = jsonparse['evstrain']
+    $PokemonSystem.autobattleshortcut = jsonparse['autobattleshortcut']
+    $PokemonSystem.autobattlershiny = jsonparse['autobattlershiny']
   end
 
 end
@@ -749,6 +769,8 @@ def options_convertjsonver(jsonparse)
       return 6
     when '0.7'
       return 7
+    when '0.8'
+      return 8
     end
   else
     return 0
@@ -2150,6 +2172,18 @@ class KurayOptSc_2 < PokemonOption_Scene
                       ["You fight your own battles",
                       "Allows Trapstarr to take control of your pokemon"]
     )
+    options << EnumOption.new(_INTL("Auto-Battle Shortcut"), [_INTL("On"), _INTL("Off")],
+                      proc { $PokemonSystem.autobattleshortcut },
+                      proc { |value| $PokemonSystem.autobattleshortcut = value },
+                      ["Allows to toggle Auto-Battle in battles with the X key.",
+                      "Disable the Auto-Battle toggle shortcut."]
+    )
+    options << EnumOption.new(_INTL("Auto-Battle Shiny Stop"), [_INTL("Off"), _INTL("On")],
+                      proc { $PokemonSystem.autobattlershiny },
+                      proc { |value| $PokemonSystem.autobattlershiny = value },
+                      ["Do NOT stop Auto-Battle if a shiny enemy is detected.",
+                      "Automatically stops Auto-Battle if a shiny enemy is detected."]
+    )
 
     options << EnumOption.new(_INTL("Damage Variance"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.damage_variance },
@@ -2233,6 +2267,12 @@ class KurayOptSc_2 < PokemonOption_Scene
     proc { |value| $PokemonSystem.maxivsmode = value },
     ["Disabled.",
     "Pokemon IVs are always at max."]
+    )
+    options << EnumOption.new(_INTL("EVs Train Mode"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.evstrain },
+    proc { |value| $PokemonSystem.evstrain = value },
+    ["EVs yielding works as expected.",
+    "Enemies do not yield EVs (except yielding from held Power-items)."]
     )
     options << EnumOption.new(_INTL("Rocket Mode"), [_INTL("Off"), _INTL("On"), _INTL("All Balls")],
     proc { $PokemonSystem.rocketballsteal },
