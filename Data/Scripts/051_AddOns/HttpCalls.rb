@@ -1,3 +1,30 @@
+# module Settings
+
+#   def performKurayJsonSettingsOverrides()
+#     # Read the .json file and override the settings
+#     if File.exists?(GAME_REMOTE_SETTINGS_FILE_PATH)
+#       data = File.read(GAME_REMOTE_SETTINGS_FILE_PATH)
+#       settings_load_json(eval(data))
+#     end
+#   end
+
+#   def settings_load_json(jsonparse)
+#     json_ver = jsonparse["JSON_VERSION"]
+#     CREDITS_FILE_URL = jsonparse["CREDITS_FILE_URL"]
+#     SPRITES_FILE_URL = jsonparse["SPRITES_FILE_URL"]
+#     VERSION_FILE_URL = jsonparse["VERSION_FILE_URL"]
+#     CUSTOM_DEX_FILE_URL = jsonparse["CUSTOM_DEX_FILE_URL"]
+#     AUTOGEN_SPRITES_REPO_URL = jsonparse["AUTOGEN_SPRITES_REPO_URL"]
+#     CUSTOM_SPRITES_REPO_URL = jsonparse["CUSTOM_SPRITES_REPO_URL"]
+#     BASE_POKEMON_SPRITES_REPO_URL = jsonparse["BASE_POKEMON_SPRITES_REPO_URL"]
+#     BASE_POKEMON_ALT_SPRITES_REPO_URL = jsonparse["BASE_POKEMON_ALT_SPRITES_REPO_URL"]
+#     DISCORD_URL = jsonparse["DISCORD_URL"]
+#     PIF_DISCORD_URL = jsonparse["PIF_DISCORD_URL"]
+#     WIKI_URL = jsonparse["WIKI_URL"]
+#   end
+
+# end
+
 def test_http_get
   url = "http://localhost:8080"
   response = HTTPLite.get(url)
@@ -9,6 +36,11 @@ end
 def updateHttpSettingsFile
   return if $PokemonSystem.download_sprites != 0
   download_file(Settings::HTTP_CONFIGS_FILE_URL, Settings::HTTP_CONFIGS_FILE_PATH,)
+end
+
+def updateKurayJsonSettings
+  return if $PokemonSystem.download_sprites != 0
+  download_file(Settings::GAME_REMOTE_SETTINGS_URL, Settings::GAME_REMOTE_SETTINGS_FILE_PATH,)
 end
 
 def updateCreditsFile

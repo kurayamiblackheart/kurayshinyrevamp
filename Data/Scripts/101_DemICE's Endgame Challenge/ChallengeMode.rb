@@ -443,6 +443,9 @@ module GameData
 		Metadata.load
 		MapMetadata.load
 
+		# Kuray New Items (Kuray Eggs)
+		self.kurayeggs_loadsystem()
+
 		puts "New Pokemons skipped."
 		return#skip new pokemons for now
 

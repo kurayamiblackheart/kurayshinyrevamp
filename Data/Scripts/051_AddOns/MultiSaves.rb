@@ -378,6 +378,10 @@ class PokemonLoadScreen
 
   def pbStartLoadScreen
     updateHttpSettingsFile
+    # Should be able to replace updateHttpSettingsFile with the following:
+    # Try later though.
+    # updateKurayJsonSettings
+    # Settings::performKurayJsonSettingsOverrides()
     updateCreditsFile
     updateCustomDexFile
     newer_version = find_newer_available_version
@@ -411,6 +415,10 @@ class PokemonLoadScreen
     $game_temp.nb_imported_sprites = nil
 
     copyKeybindings()
+    # WIP Kuray Eggs
+    kurayeggs_main()
+    # End of WIP Kuray Eggs
+
     save_file_list = SaveData::AUTO_SLOTS + SaveData::MANUAL_SLOTS
     first_time = true
     loop do

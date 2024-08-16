@@ -385,6 +385,18 @@ class PokemonPauseMenu
         $game_temp.mart_prices[68] = [4000, 2000]
         # 623 = Rocket Ball
         $game_temp.mart_prices[623] = [1000, 500]
+
+        # 2000 - 2021 = Modded Eggs
+        for i in 2000..2021
+          if $PokemonSystem.kuraystreamerdream == 0
+            tmp_sellprice = ($KURAYEGGS_BASEPRICE[i-2000]/2.0).round
+            $game_temp.mart_prices[i] = [$KURAYEGGS_BASEPRICE[i-2000], tmp_sellprice]
+          else
+            $game_temp.mart_prices[i] = [-1, 0]
+          end
+        end
+
+
         # allitems = [
         #   570, 604, 568, 569, 245, 247, 249, 246, 248, 250, 314, 371, 619, 618,
         #   114, 115, 116, 100
@@ -402,6 +414,9 @@ class PokemonPauseMenu
         ]
         # allitems.push(568) if $game_switches[SWITCH_GOT_BADGE_8]
         allitems.push(623) if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0
+        for i in 2000..2021
+          allitems.push(i)
+        end
         pbFadeOutIn {
           scene = PokemonMart_Scene.new
           screen = PokemonMartScreen.new(scene,allitems)

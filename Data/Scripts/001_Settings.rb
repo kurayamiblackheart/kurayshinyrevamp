@@ -7,7 +7,13 @@ module Settings
   # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
   GAME_VERSION = '6.2.3'
   IF_VERSION = "6.2.3"
-  GAME_VERSION_NUMBER = "0.18.3"
+
+  # GAME_VERSION_NUMBER = "0.19.0"
+  # Read the VERSION file inside Data folder to get the version number
+  GAME_VERSION_NUMBER = File.read("Data/VERSION").strip
+
+  GAME_REMOTE_SETTINGS_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/REMOTE_SETTINGS.json"
+  GAME_REMOTE_SETTINGS_FILE_PATH = "Data/DOWNLOADED_SETTINGS.json"
 
   POKERADAR_LIGHT_ANIMATION_RED_ID = 17
   POKERADAR_LIGHT_ANIMATION_GREEN_ID = 18

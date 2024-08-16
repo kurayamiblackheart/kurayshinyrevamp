@@ -59,6 +59,10 @@ class PokemonSystem
   attr_accessor :autobattler
   attr_accessor :autobattleshortcut
   attr_accessor :autobattlershiny
+  attr_accessor :kurayeggs_fusionpool
+  attr_accessor :kurayeggs_instanthatch
+  attr_accessor :kurayeggs_rarity
+  attr_accessor :kurayeggs_fusionodds
   attr_accessor :shinyodds # overwrite the shiny odds
   attr_accessor :unfusetraded # allow to unfuse traded pokemons
 
@@ -210,6 +214,10 @@ class PokemonSystem
     @autobattler = 0
     @autobattleshortcut = 0
     @autobattlershiny = 0
+    @kurayeggs_fusionodds = 20
+    @kurayeggs_fusionpool = 0
+    @kurayeggs_instanthatch = 0
+    @kurayeggs_rarity = 0
     @sb_maxing = 1
     @unfusetraded = 0
     @sb_soullinked = 0
@@ -391,6 +399,10 @@ class PokemonSystem
     @autobattler = saved.autobattler if saved.autobattler
     @autobattleshortcut = saved.autobattleshortcut if saved.autobattleshortcut
     @autobattlershiny = saved.autobattlershiny if saved.autobattlershiny
+    @kurayeggs_fusionpool = saved.kurayeggs_fusionpool if saved.kurayeggs_fusionpool
+    @kurayeggs_instanthatch = saved.kurayeggs_instanthatch if saved.kurayeggs_instanthatch
+    @kurayeggs_rarity = saved.kurayeggs_rarity if saved.kurayeggs_rarity
+    @kurayeggs_fusionodds = saved.kurayeggs_fusionodds if saved.kurayeggs_fusionodds
     @shinyodds = saved.shinyodds if saved.shinyodds
     @sb_maxing = saved.sb_maxing if saved.sb_maxing
     @sb_soullinked = saved.sb_soullinked if saved.sb_soullinked
@@ -443,7 +455,7 @@ end
 
 def options_as_json(options={})
   {
-    "json_version" => "0.6",
+    "json_version" => "0.7",
     "textspeed" => $PokemonSystem.textspeed,
     "battlescene" => $PokemonSystem.battlescene,
     "frame" => $PokemonSystem.frame,
@@ -489,6 +501,10 @@ def options_as_json(options={})
     "kuraystreamerdream" => $PokemonSystem.kuraystreamerdream,
     "autobattler" => $PokemonSystem.autobattler,
     "autobattleshortcut" => $PokemonSystem.autobattleshortcut,
+    "kurayeggs_fusionpool" => $PokemonSystem.kurayeggs_fusionpool,
+    "kurayeggs_instanthatch" => $PokemonSystem.kurayeggs_instanthatch,
+    "kurayeggs_rarity" => $PokemonSystem.kurayeggs_rarity,
+    "kurayeggs_fusionodds" => $PokemonSystem.kurayeggs_fusionodds,
     "autobattlershiny" => $PokemonSystem.autobattlershiny,
     "shinyodds" => $PokemonSystem.shinyodds,
     "unfusetraded" => $PokemonSystem.unfusetraded,
@@ -724,6 +740,10 @@ def options_load_json(jsonparse)
   $PokemonSystem.trainerexpboost = 50
   $PokemonSystem.autobattleshortcut = 0
   $PokemonSystem.autobattlershiny = 0
+  $PokemonSystem.kurayeggs_fusionpool = 0
+  $PokemonSystem.kurayeggs_instanthatch = 0
+  $PokemonSystem.kurayeggs_rarity = 0
+  $PokemonSystem.kurayeggs_fusionodds = 20
   if json_ver >= 2
     $PokemonSystem.noevsmode = jsonparse['noevsmode']
     $PokemonSystem.maxivsmode = jsonparse['maxivsmode']
@@ -742,6 +762,12 @@ def options_load_json(jsonparse)
     $PokemonSystem.evstrain = jsonparse['evstrain']
     $PokemonSystem.autobattleshortcut = jsonparse['autobattleshortcut']
     $PokemonSystem.autobattlershiny = jsonparse['autobattlershiny']
+  end
+  if json_ver >= 7
+    $PokemonSystem.kurayeggs_fusionpool = jsonparse['kurayeggs_fusionpool']
+    $PokemonSystem.kurayeggs_instanthatch = jsonparse['kurayeggs_instanthatch']
+    $PokemonSystem.kurayeggs_rarity = jsonparse['kurayeggs_rarity']
+    $PokemonSystem.kurayeggs_fusionodds = jsonparse['kurayeggs_fusionodds']
   end
 
 end
@@ -2285,6 +2311,29 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { $PokemonSystem.trainerexpboost },
                       proc { |value| $PokemonSystem.trainerexpboost = value },
                       "+x% | Boosts exp. gained in trainer battles (Default: +50%)"
+    )
+    options << EnumOption.new(_INTL("K-Eggs Fusion Pool"), [_INTL("Off"), _INTL("On")],
+    proc { $PokemonSystem.kurayeggs_fusionpool },
+    proc { |value| $PokemonSystem.kurayeggs_fusionpool = value },
+    ["In case of fusion, the other Pokemon is random.",
+    "In case of fusion, the other Pokemon must be from k-egg's pool as well."]
+    )
+    options << EnumOption.new(_INTL("K-Eggs Rarity"), [_INTL("On"), _INTL("Off")],
+    proc { $PokemonSystem.kurayeggs_rarity },
+    proc { |value| $PokemonSystem.kurayeggs_rarity = value },
+    ["Pokemons' rarity in k-eggs depend of their catch rate.",
+    "All Pokemons have the same odds to come from the k-eggs."]
+    )
+    options << SliderOption.new(_INTL("K-Eggs Fusion Odds"), 0, 100, 1,
+                      proc { $PokemonSystem.kurayeggs_fusionodds },
+                      proc { |value| $PokemonSystem.kurayeggs_fusionodds = value },
+                      "x% | Probability that a fusion hatches from Kuray Eggs (Default: 20%)"
+    )
+    options << EnumOption.new(_INTL("K-Eggs Usage"), [_INTL("Pokemon"), _INTL("Egg")],
+    proc { $PokemonSystem.kurayeggs_instanthatch },
+    proc { |value| $PokemonSystem.kurayeggs_instanthatch = value },
+    ["When Kuray Egg item used, spawns a Pokemon.",
+    "When Kuray Egg item used, spawns an Egg that contains a Pokemon."]
     )
 
     return options
