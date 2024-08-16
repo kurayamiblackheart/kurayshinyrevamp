@@ -416,7 +416,7 @@ class PokemonLoadScreen
 
     copyKeybindings()
     # WIP Kuray Eggs
-    kurayeggs_main()
+    # kurayeggs_main()
     # End of WIP Kuray Eggs
 
     save_file_list = SaveData::AUTO_SLOTS + SaveData::MANUAL_SLOTS
