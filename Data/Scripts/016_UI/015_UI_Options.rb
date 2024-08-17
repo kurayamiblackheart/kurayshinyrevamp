@@ -1600,11 +1600,25 @@ class SLOptionsScene < PokemonOption_Scene
 
   def pbRenKO(index=1)
     $PokemonSystem.optionsnames[index] = pbEnterText("Enter name for Preset", 0, 12, $PokemonSystem.optionsnames[index])
+    buildKO()
     refreshOption(index)
     return
   end
+
+  def buildKO()
+    kurayjson_save(RTP.getSaveFolder + "\\Options_Names.kro", $PokemonSystem.optionsnames)
+  end
   
   def createButtonsOption(index)
+    if !$KURAY_OPTIONSNAME_LOADED
+      $KURAY_OPTIONSNAME_LOADED = true
+      tempload = kurayjson_load(RTP.getSaveFolder + "\\Options_Names.kro")
+      if !tempload.nil?
+        if tempload.is_a?(Array) and tempload.length == 12
+          $PokemonSystem.optionsnames = tempload
+        end
+      end
+    end
     ButtonsOption.new(_INTL($PokemonSystem.optionsnames[index]), [_INTL("Load"), _INTL("Save"), _INTL("Name")],
       proc {
         |value|

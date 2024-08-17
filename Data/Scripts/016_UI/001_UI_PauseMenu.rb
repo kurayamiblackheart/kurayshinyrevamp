@@ -386,8 +386,8 @@ class PokemonPauseMenu
         # 623 = Rocket Ball
         $game_temp.mart_prices[623] = [1000, 500]
 
-        # 2000 - 2021 = Modded Eggs
-        for i in 2000..2021
+        # 2000 - 2032 = Modded Eggs
+        for i in 2000..2032
           if $PokemonSystem.kuraystreamerdream == 0
             tmp_sellprice = ($KURAYEGGS_BASEPRICE[i-2000]/2.0).round
             $game_temp.mart_prices[i] = [$KURAYEGGS_BASEPRICE[i-2000], tmp_sellprice]
@@ -414,9 +414,28 @@ class PokemonPauseMenu
         ]
         # allitems.push(568) if $game_switches[SWITCH_GOT_BADGE_8]
         allitems.push(623) if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0
-        for i in 2000..2021
-          allitems.push(i)
-        end
+        # for i in 2000..2021
+          # allitems.push(i)
+        # end
+        # 2000 Random
+        # 2001 Sparkling
+        # 2020 Fusion
+        # 2021 Base
+        # 2032 Legendary
+        newitems = [2000, 2001, 2032, 2021, 2020,
+          2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
+          2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
+          2022]
+        allitems.concat(newitems)
+        allitems.push(2023) if $game_switches[SWITCH_GOT_BADGE_1]
+        allitems.push(2024) if $game_switches[SWITCH_GOT_BADGE_2]
+        allitems.push(2025) if $game_switches[SWITCH_GOT_BADGE_3]
+        allitems.push(2026) if $game_switches[SWITCH_GOT_BADGE_4]
+        allitems.push(2027) if $game_switches[SWITCH_GOT_BADGE_5]
+        allitems.push(2028) if $game_switches[SWITCH_GOT_BADGE_6]
+        allitems.push(2029) if $game_switches[SWITCH_GOT_BADGE_7]
+        allitems.push(2030) if $game_switches[SWITCH_GOT_BADGE_8]
+        allitems.push(2031) if $game_variables[VAR_STAT_NB_ELITE_FOUR] >= 1
         pbFadeOutIn {
           scene = PokemonMart_Scene.new
           screen = PokemonMartScreen.new(scene,allitems)

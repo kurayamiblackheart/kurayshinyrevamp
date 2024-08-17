@@ -2,14 +2,132 @@
 # Kuray's Eggs System
 # ============================
 
+$KURAYEGGS_EXPORTPOKEMONDATA = false
 $KURAYEGGS_WRITEDATA = false
 $KURAYEGGS_SPARKLING = false
 $KURAYEGGS_FORCEDFUSION = 0
-$KURAYEGGS_DEBUG = true
+$KURAYEGGS_DEBUG = false
 $KURAYEGGS_VALIDATE = false
 $KURAYEGGS_BASEPRICE = []
+$KURAYEGGS_MINBST = [0, 280, 300, 380, 430, 450, 470, 480, 490, 500]
+$KURAYEGGS_MAXBST = [288, 319, 400, 470, 480, 490, 505, 530, 555, 1000000]
+$KURAYEGGS_MINBSTSHOW = [180, 280, 300, 380, 430, 450, 470, 480, 490, 500]
+$KURAYEGGS_MAXBSTSHOW = [288, 319, 400, 470, 480, 490, 505, 530, 555, 754]
+
 
 module GameData
+    def self.kuray_normalizeId(strCurrentId)
+        # We want the string to be 20 of length and to be filled with white spaces.
+        # .ljust method allows to fill the string with white spaces.
+        return strCurrentId.ljust(20)
+    end
+    def self.kuray_exportpokemondata()
+       strAllPokemons = ""
+        for i in 1..NB_POKEMON
+            species = GameData::Species.get(i)
+            strAllPokemons += "Species.register({\n"
+            strId = self.kuray_normalizeId(":id")
+            strAllPokemons += "\t#{strId} => :#{species.id},\n"
+            strId = self.kuray_normalizeId(":id_number")
+            strAllPokemons += "\t#{strId} => #{species.id_number},\n"
+            strId = self.kuray_normalizeId(":name")
+            strAllPokemons += "\t#{strId} => \"#{species.name}\",\n"
+            strId = self.kuray_normalizeId(":form_name")
+            if species.form_name == nil
+                strAllPokemons += "\t#{strId} => nil,\n"
+            else
+                strAllPokemons += "\t#{strId} => \"#{species.form_name}\",\n"    
+            end
+            strId = self.kuray_normalizeId(":category")
+            strAllPokemons += "\t#{strId} => \"#{species.category}\",\n"
+            strId = self.kuray_normalizeId(":pokedex_entry")
+            strAllPokemons += "\t#{strId} => \"#{species.pokedex_entry}\",\n"
+            strId = self.kuray_normalizeId(":type1")
+            strAllPokemons += "\t#{strId} => :#{species.type1},\n"
+            strId = self.kuray_normalizeId(":type2")
+            strAllPokemons += "\t#{strId} => :#{species.type2},\n"
+            strId = self.kuray_normalizeId(":base_stats")
+            strAllPokemons += "\t#{strId} => #{species.base_stats.to_s},\n"
+            strId = self.kuray_normalizeId(":evs")
+            strAllPokemons += "\t#{strId} => #{species.evs.to_s},\n"
+            strId = self.kuray_normalizeId(":base_exp")
+            strAllPokemons += "\t#{strId} => #{species.base_exp},\n"
+            strId = self.kuray_normalizeId(":growth_rate")
+            strAllPokemons += "\t#{strId} => :#{species.growth_rate},\n"
+            strId = self.kuray_normalizeId(":gender_ratio")
+            strAllPokemons += "\t#{strId} => :#{species.gender_ratio},\n"
+            strId = self.kuray_normalizeId(":catch_rate")
+            strAllPokemons += "\t#{strId} => #{species.catch_rate},\n"
+            strId = self.kuray_normalizeId(":happiness")
+            strAllPokemons += "\t#{strId} => #{species.happiness},\n"
+            strId = self.kuray_normalizeId(":moves")
+            strAllPokemons += "\t#{strId} => #{species.moves.to_s},\n"
+            strId = self.kuray_normalizeId(":tutor_moves")
+            strAllPokemons += "\t#{strId} => #{species.tutor_moves.to_s},\n"
+            strId = self.kuray_normalizeId(":egg_moves")
+            strAllPokemons += "\t#{strId} => #{species.egg_moves.to_s},\n"
+            strId = self.kuray_normalizeId(":abilities")
+            strAllPokemons += "\t#{strId} => #{species.abilities.to_s},\n"
+            strId = self.kuray_normalizeId(":hidden_abilities")
+            strAllPokemons += "\t#{strId} => #{species.hidden_abilities.to_s},\n"
+
+            strId = self.kuray_normalizeId(":wild_item_common")
+            if species.wild_item_common == nil
+                strAllPokemons += "\t#{strId} => nil,\n"
+            else
+                strAllPokemons += "\t#{strId} => :#{species.wild_item_common},\n"
+            end
+            strId = self.kuray_normalizeId(":wild_item_uncommon")
+            if species.wild_item_uncommon == nil
+                strAllPokemons += "\t#{strId} => nil,\n"
+            else
+                strAllPokemons += "\t#{strId} => :#{species.wild_item_uncommon},\n"
+            end
+            strId = self.kuray_normalizeId(":wild_item_rare")
+            if species.wild_item_rare == nil
+                strAllPokemons += "\t#{strId} => nil,\n"
+            else
+                strAllPokemons += "\t#{strId} => :#{species.wild_item_rare},\n"
+            end
+
+            strId = self.kuray_normalizeId(":egg_groups")
+            strAllPokemons += "\t#{strId} => #{species.egg_groups.to_s},\n"
+            strId = self.kuray_normalizeId(":hatch_steps")
+            strAllPokemons += "\t#{strId} => #{species.hatch_steps},\n"
+            strId = self.kuray_normalizeId(":evolutions")
+            strAllPokemons += "\t#{strId} => #{species.evolutions.to_s},\n"
+            strId = self.kuray_normalizeId(":height")
+            strAllPokemons += "\t#{strId} => #{species.height},\n"
+            strId = self.kuray_normalizeId(":weight")
+            strAllPokemons += "\t#{strId} => #{species.weight},\n"
+            strId = self.kuray_normalizeId(":color")
+            strAllPokemons += "\t#{strId} => :#{species.color},\n"
+            strId = self.kuray_normalizeId(":shape")
+            strAllPokemons += "\t#{strId} => :#{species.shape},\n"
+            strId = self.kuray_normalizeId(":habitat")
+            strAllPokemons += "\t#{strId} => :#{species.habitat},\n"
+            strId = self.kuray_normalizeId(":generation")
+            strAllPokemons += "\t#{strId} => #{species.generation},\n"
+            strId = self.kuray_normalizeId(":back_sprite_x")
+            strAllPokemons += "\t#{strId} => #{species.back_sprite_x},\n"
+            strId = self.kuray_normalizeId(":back_sprite_y")
+            strAllPokemons += "\t#{strId} => #{species.back_sprite_y},\n"
+            strId = self.kuray_normalizeId(":front_sprite_x")
+            strAllPokemons += "\t#{strId} => #{species.front_sprite_x},\n"
+            strId = self.kuray_normalizeId(":front_sprite_y")
+            strAllPokemons += "\t#{strId} => #{species.front_sprite_y},\n"
+            strId = self.kuray_normalizeId(":front_sprite_altitude")
+            strAllPokemons += "\t#{strId} => #{species.front_sprite_altitude},\n"
+            strId = self.kuray_normalizeId(":shadow_x")
+            strAllPokemons += "\t#{strId} => #{species.shadow_x},\n"
+            strId = self.kuray_normalizeId(":shadow_size")
+            strAllPokemons += "\t#{strId} => #{species.shadow_size}\n"
+            strAllPokemons += "})\n"
+            strAllPokemons += "\n"
+        end
+        kuray_writefile("AllPokemons.txt", strAllPokemons)
+    end
+
     def self.kurayeggs_iteminject(egg_symbol, id_here, egg_name_display, egg_price, egg_description)
         egg_name_display_plural = egg_name_display + "s"
         Item.register({
@@ -35,7 +153,8 @@ module GameData
     end
 
     def self.kurayeggs_processsymb(egg_name)
-        egg_symbol = "KURAYEGG_" + egg_name.upcase
+        # Replace whitespaces with underscores and make the string uppercase.
+        egg_symbol = "KURAYEGG_" + egg_name.upcase.gsub(" ", "_")
         egg_symbol = egg_symbol.to_sym
         return egg_symbol
     end
@@ -94,6 +213,48 @@ module GameData
         egg_description = "Egg with ANY Pokémon. 10x shiny odds. Non-fused guaranteed."
         $KURAYEGGS_BASEPRICE.push(egg_price)
         self.kurayeggs_iteminject(egg_symbol, id_here, egg_name_display, egg_price, egg_description)
+
+        # 0 Badge - $500
+        # 1 Badge - $800
+        # 2 Badges - $1 200
+        # 3 Badges - $2 000
+        # 4 Badges - $3 500
+        # 5 Badges - $5 000
+        # 6 Badges - $7 000
+        # 7 Badges - $10 000
+        # 8 Badges - $12 000
+        # Elite 4 - $15 000
+        bst_pricing = [500, 800, 1200, 2000, 3500, 5000, 7000, 10000, 12000, 15000]
+        all_bsttypes = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        for bsttype in all_bsttypes
+            id_here += 1
+            price_maker = bsttype.to_i
+            egg_price = bst_pricing[price_maker]
+            if price_maker == 9
+                egg_name = "Elite 4"
+            elsif price_maker == 1
+                egg_name = bsttype + " Badge"
+            elsif price_maker == 0
+                egg_name = "Starter"
+            else
+                egg_name = bsttype + " Badges"
+            end
+            egg_symbol = self.kurayeggs_processsymb(egg_name)
+            egg_name_display = egg_name + " " + egg_name_last
+            egg_description = "Egg with a Pokémon who's BST is between " + $KURAYEGGS_MINBSTSHOW[price_maker].to_s + " and " + $KURAYEGGS_MAXBSTSHOW[price_maker].to_s + ". 10x shiny odds."
+            $KURAYEGGS_BASEPRICE.push(egg_price)
+            self.kurayeggs_iteminject(egg_symbol, id_here, egg_name_display, egg_price, egg_description)
+        end
+
+        id_here += 1
+        egg_price = eggs_baseprice*5
+        egg_name = "Legendary"
+        egg_symbol = self.kurayeggs_processsymb(egg_name)
+        egg_name_display = egg_name + " " + egg_name_last
+        egg_description = "Egg with a LEGENDARY Pokémon. 10x shiny odds."
+        $KURAYEGGS_BASEPRICE.push(egg_price)
+        self.kurayeggs_iteminject(egg_symbol, id_here, egg_name_display, egg_price, egg_description)
+
     end
 end
 
@@ -107,6 +268,19 @@ def kurayeggs_typelookup(type, list_name)
         species = GameData::Species.get(i)
         if species.type1 == type || species.type2 == type
             $KURAYEGGS_LISTS[list_name].push([species.id, species.catch_rate])
+        end
+    end
+    # Inspect the created dictionnary to check the values.
+    puts $KURAYEGGS_LISTS.inspect if $KURAYEGGS_DEBUG
+end
+
+def kurayeggs_legendarylookup()
+    $KURAYEGGS_LISTS["Legendary"] = []
+    for i in 1..NB_POKEMON
+      species = GameData::Species.get(i)
+      # Check if the species.id is inside the LEGENDARIES_LIST array
+        if LEGENDARIES_LIST.include?(species.id)
+            $KURAYEGGS_LISTS["Legendary"].push([species.id, species.catch_rate])
         end
     end
     # Inspect the created dictionnary to check the values.
@@ -152,9 +326,10 @@ def kurayeggs_generatebstdatabase()
 end
 
 def kurayeggs_main()
-    hash_test = { "hello": "world"}
-    puts hash_test.inspect
-    puts hash_test["hello"]
+    # This works as an alternative way to make hashes in Ruby.
+    # hash_test = { "hello": "world"}
+    # puts hash_test.inspect
+    # puts hash_test[:hello]
     kurayeggs_generatebstdatabase()
     return
     # puts "WIP - Kuray's Eggs System"
@@ -391,8 +566,75 @@ def kurayeggs_effectfromid(id)
     when 21
         # Base Egg (cannot be a fusion)
         selected_mon = kurayeggs_choose(1, "Random")
+    when 22
+        # 0 Badge Egg (available before Brock)
+        # BST Range: 0-288
+        selected_mon = kurayeggs_choose(2, "0")
+    when 23
+        # 1 Badge Egg (available right after Brock)
+        # BST Range: 280-319
+        selected_mon = kurayeggs_choose(2, "1")
+    when 24
+        # 2 Badges Egg (available right after Misty)
+        # BST Range: 300-400
+        selected_mon = kurayeggs_choose(2, "2")
+    when 25
+        # 3 Badges Egg (available right after Lt. Surge)
+        # BST Range: 380-470
+        selected_mon = kurayeggs_choose(2, "3")
+    when 26
+        # 4 Badges Egg (available right after Erika)
+        # BST Range: 430-480
+        selected_mon = kurayeggs_choose(2, "4")
+    when 27
+        # 5 Badges Egg (available right after Koga)
+        # BST Range: 450-490
+        selected_mon = kurayeggs_choose(2, "5")
+    when 28
+        # 6 Badges Egg (available right after Sabrina)
+        # BST Range: 470-505
+        selected_mon = kurayeggs_choose(2, "6")
+    when 29
+        # 7 Badges Egg (available right after Blaine)
+        # BST Range: 480-530
+        selected_mon = kurayeggs_choose(2, "7")
+    when 30
+        # 8 Badges Egg (available right after Giovanni)
+        # BST Range: 490-555
+        selected_mon = kurayeggs_choose(2, "8")
+    when 31
+        # Elite Four Egg (available right after the Elite Four)
+        # BST Range: 500-INF
+        selected_mon = kurayeggs_choose(2, "9")
+    when 32
+        # Legendary Egg (contains a Legendary Pokemon)
+        selected_mon = kurayeggs_choose(3, "Legendary")
     end
     return selected_mon
+end
+
+def kurayeggs_bstlookup(type="-1")
+    if type == "-1"
+        puts "Error - No type given." if $KURAYEGGS_DEBUG
+        return
+    end
+    maxBST = 1000000
+    minBST = 0
+    mark_type = type.to_i
+    if type.to_i >= 0 && type.to_i <= 9
+        maxBST = $KURAYEGGS_MAXBST[mark_type]
+        minBST = $KURAYEGGS_MINBST[mark_type]
+    end
+    $KURAYEGGS_LISTS[type] = []
+    for i in 1..NB_POKEMON
+      species = GameData::Species.get(i)
+      statssum = calcBaseStatsSum(species.id)
+        if statssum >= minBST && statssum <= maxBST
+            $KURAYEGGS_LISTS[type].push([species.id, species.catch_rate])
+        end
+    end
+    # Inspect the created dictionnary to check the values.
+    puts $KURAYEGGS_LISTS.inspect if $KURAYEGGS_DEBUG
 end
 
 def kurayeggs_createmon(eggsymbol)
@@ -401,16 +643,35 @@ def kurayeggs_createmon(eggsymbol)
     return
 end
 
-def kurayeggs_choose(kmode, type)
+def kurayeggs_choose(kmode, type="None")
     # kmode 0 is a typing egg.
-    if kmode == 0 || kmode == 1
+    if kmode == 0 || kmode == 1 || kmode == 3
         # We create the possible symbol by using the type name in uppercase and transforming it into a symbol name.
         if !$KURAYEGGS_LISTS.has_key?(type)
             if kmode == 1
                 kurayeggs_randomlookup()
+            elsif kmode == 3
+                kurayeggs_legendarylookup()
             else
                 kurayeggs_typelookup(type.upcase.to_sym, type)
             end
+        end
+    end
+    if kmode == 2
+        choosen_tier = rand(1..100)
+        # 10% chance for the type to be one tier lower
+        # 10% chance for the type to be one tier higher
+        # 80% chance for the type to be this exact tier
+        current_tier = type.to_i
+        if choosen_tier <= 10 && current_tier > 0
+            current_tier -= 1
+            type = current_tier.to_s
+        elsif choosen_tier <= 20 && current_tier < 9
+            current_tier += 1
+            type = current_tier.to_s
+        end
+        if !$KURAYEGGS_LISTS.has_key?(type)
+            kurayeggs_bstlookup(type)
         end
     end
     # We use the array chooser function

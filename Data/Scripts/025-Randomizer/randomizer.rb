@@ -3,7 +3,7 @@ LEGENDARIES_LIST = [:ARTICUNO, :ZAPDOS, :MOLTRES, :MEWTWO, :MEW,
                     :GROUDON, :KYOGRE, :RAYQUAZA, :DEOXYS, :JIRACHI, :LATIAS, :LATIOS,
                     :REGIGIGAS, :DIALGA, :PALKIA, :GIRATINA, :DARKRAI, :CRESSELIA, :ARCEUS,
                     :GENESECT, :RESHIRAM, :ZEKROM, :KYUREM, :MELOETTA,
-                    :NECROZMA]
+                    :NECROZMA, :U_NECROZMA]
 
 class PokemonGlobalMetadata
   attr_accessor :psuedoHash

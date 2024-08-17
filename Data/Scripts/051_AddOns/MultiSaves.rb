@@ -415,6 +415,7 @@ class PokemonLoadScreen
     $game_temp.nb_imported_sprites = nil
 
     copyKeybindings()
+    $KURAY_OPTIONSNAME_LOADED = false
     # WIP Kuray Eggs
     kurayeggs_main() if $KURAYEGGS_WRITEDATA
     # puts RUBY_VERSION.to_s + " is the ruby version"

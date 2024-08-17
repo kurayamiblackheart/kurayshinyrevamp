@@ -1,3 +1,5 @@
+$KURAY_OPTIONSNAME_LOADED = false
+
 def kurayjson_load(filePath)
     # We are going to load a .json file, or any kind of file that contains json data
     # We will then proceed to eval the retrieved data and return it a jsonparse
