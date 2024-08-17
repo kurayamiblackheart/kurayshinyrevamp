@@ -159,6 +159,9 @@ class PokemonSystem
 
   attr_accessor :playerage_temp
 
+  attr_accessor :trainerprogress
+  attr_accessor :gymrewardeggs
+
   def initialize
     # Vanilla Global
     @raiser = 1
@@ -287,6 +290,9 @@ class PokemonSystem
     @rocketballsteal = 0
     @trainerexpboost = 50
     @playerage_temp = 0
+    @gymrewardeggs = 3
+
+    @trainerprogress = []
   end
 
   def load_bootup_data(saved)
@@ -450,12 +456,14 @@ class PokemonSystem
     @showlevel_nolevelmode = saved.showlevel_nolevelmode if saved.showlevel_nolevelmode
     @rocketballsteal = saved.rocketballsteal if saved.rocketballsteal
     @trainerexpboost = saved.trainerexpboost if saved.trainerexpboost
+    @gymrewardeggs = saved.gymrewardeggs if saved.gymrewardeggs
+    @trainerprogress = saved.trainerprogress if saved.trainerprogress
   end
 end
 
 def options_as_json(options={})
   {
-    "json_version" => "0.7",
+    "json_version" => "0.8",
     "textspeed" => $PokemonSystem.textspeed,
     "battlescene" => $PokemonSystem.battlescene,
     "frame" => $PokemonSystem.frame,
@@ -571,7 +579,8 @@ def options_as_json(options={})
     "evstrain" => $PokemonSystem.evstrain,
     "showlevel_nolevelmode" => $PokemonSystem.showlevel_nolevelmode,
     "rocketballsteal" => $PokemonSystem.rocketballsteal,
-    "trainerexpboost" => $PokemonSystem.trainerexpboost
+    "trainerexpboost" => $PokemonSystem.trainerexpboost,
+    "gymrewardeggs" => $PokemonSystem.gymrewardeggs
   }
 end
 
@@ -738,6 +747,7 @@ def options_load_json(jsonparse)
   $PokemonSystem.showlevel_nolevelmode = 0
   $PokemonSystem.rocketballsteal = 0
   $PokemonSystem.trainerexpboost = 50
+  $PokemonSystem.gymrewardeggs = 3
   $PokemonSystem.autobattleshortcut = 0
   $PokemonSystem.autobattlershiny = 0
   $PokemonSystem.kurayeggs_fusionpool = 0
@@ -768,6 +778,9 @@ def options_load_json(jsonparse)
     $PokemonSystem.kurayeggs_instanthatch = jsonparse['kurayeggs_instanthatch']
     $PokemonSystem.kurayeggs_rarity = jsonparse['kurayeggs_rarity']
     $PokemonSystem.kurayeggs_fusionodds = jsonparse['kurayeggs_fusionodds']
+  end
+  if json_ver >= 8
+    $PokemonSystem.gymrewardeggs = jsonparse['gymrewardeggs']
   end
 
 end
@@ -2348,6 +2361,11 @@ class KurayOptSc_2 < PokemonOption_Scene
     proc { |value| $PokemonSystem.kurayeggs_instanthatch = value },
     ["When Kuray Egg item used, spawns a Pokemon.",
     "When Kuray Egg item used, spawns an Egg that contains a Pokemon."]
+    )
+    options << SliderOption.new(_INTL("K-Eggs Rewards"), 0, 10, 1,
+                      proc { $PokemonSystem.gymrewardeggs },
+                      proc { |value| $PokemonSystem.gymrewardeggs = value },
+                      "Numbers of obtained K-Eggs upon unlocking each one through progression (Default: 3)"
     )
 
     return options

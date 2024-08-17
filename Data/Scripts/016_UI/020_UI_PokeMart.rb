@@ -286,6 +286,74 @@ class PokemonMart_Scene
     @buying = buying
     pbRefresh
     Graphics.frame_reset
+    pbUnlockEggs()
+  end
+
+  def pbUnlockEggs()
+    # pbDisplayPaused(_INTL("Test."))
+    # $PokemonSystem.gymrewardeggs
+    # $PokemonSystem.trainerprogress
+    can_get_egg = true
+    if !$PokemonSystem.gymrewardeggs
+      can_get_egg = false
+    end
+    if can_get_egg
+      if $PokemonSystem.gymrewardeggs < 1
+        can_get_egg = false
+      end
+    end
+    if !$PokemonSystem.trainerprogress.include?("0")
+      $PokemonSystem.trainerprogress.push("0")
+      pbDisplayPaused(_INTL("You unlocked Starter K-Eggs!"))
+      if can_get_egg
+        pbGiveEgg(2022)
+      end
+    end
+    for i in 1..8
+      smartUnlock(i)
+    end
+    if !$PokemonSystem.trainerprogress.include?("9") && $game_variables[VAR_STAT_NB_ELITE_FOUR] >= 1
+      $PokemonSystem.trainerprogress.push("9")
+      pbDisplayPaused(_INTL("You unlocked Elite 4 K-Eggs!"))
+      if can_get_egg
+        pbGiveEgg(2031)
+      end
+    end
+  end
+
+  def smartUnlock(id=1)
+    can_get_egg = true
+    if !$PokemonSystem.gymrewardeggs
+      can_get_egg = false
+    end
+    if can_get_egg
+      if $PokemonSystem.gymrewardeggs < 1
+        can_get_egg = false
+      end
+    end
+    all_ids = [$game_switches[SWITCH_GOT_BADGE_1], $game_switches[SWITCH_GOT_BADGE_2], $game_switches[SWITCH_GOT_BADGE_3], $game_switches[SWITCH_GOT_BADGE_4], $game_switches[SWITCH_GOT_BADGE_5], $game_switches[SWITCH_GOT_BADGE_6], $game_switches[SWITCH_GOT_BADGE_7], $game_switches[SWITCH_GOT_BADGE_8]]
+    
+    if all_ids[id-1] && !$PokemonSystem.trainerprogress.include?(id.to_s)
+      $PokemonSystem.trainerprogress.push(id.to_s)
+      if id == 1
+        pbDisplayPaused(_INTL("You unlocked 1 Badge K-Eggs!"))
+      else
+        pbDisplayPaused(_INTL("You unlocked {1} Badges K-Eggs!", id))
+      end
+      if can_get_egg
+        pbGiveEgg(2022+id)
+      end
+    end
+  end
+
+  def pbGiveEgg(item_id)
+    item = GameData::Item.get(item_id)
+    $PokemonBag.pbStoreItem(item_id, $PokemonSystem.gymrewardeggs)
+    if $PokemonSystem.gymrewardeggs > 1
+      pbDisplayPaused(_INTL("You received {2}x {1}s!", item.name, $PokemonSystem.gymrewardeggs))
+    else
+      pbDisplayPaused(_INTL("You received a {1}!", item.name))
+    end
   end
 
   def pbStartBuyScene(stock, adapter)
