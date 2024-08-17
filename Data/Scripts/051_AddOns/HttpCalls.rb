@@ -265,8 +265,8 @@ GAME_VERSION_FORMAT_REGEX = /\A\d+(\.\d+)*\z/
 
 def fetch_latest_game_version
   begin
-    download_file(Settings::VERSION_FILE_URL, Settings::VERSION_FILE_PATH,)
-    version_file = File.open(Settings::VERSION_FILE_PATH, "r")
+    download_file(Settings::VERSION_FILE_URL, Settings::REMOTE_VERSION_FILE_PATH,)
+    version_file = File.open(Settings::REMOTE_VERSION_FILE_PATH, "r")
     version = version_file.first
     version_file.close
 

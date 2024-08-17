@@ -416,7 +416,8 @@ class PokemonLoadScreen
 
     copyKeybindings()
     # WIP Kuray Eggs
-    # kurayeggs_main()
+    kurayeggs_main() if $KURAYEGGS_WRITEDATA
+    # puts RUBY_VERSION.to_s + " is the ruby version"
     # End of WIP Kuray Eggs
 
     save_file_list = SaveData::AUTO_SLOTS + SaveData::MANUAL_SLOTS

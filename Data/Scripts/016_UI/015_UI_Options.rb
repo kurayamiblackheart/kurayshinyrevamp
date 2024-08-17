@@ -328,7 +328,7 @@ class PokemonSystem
 
     MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed($PokemonSystem.textspeed))
     MessageConfig.pbSetSpeechFrame("Graphics/Windowskins/" + Settings::SPEECH_WINDOWSKINS[$PokemonSystem.textskin])
-    pbSetResizeFactor($PokemonSystem.screensize)
+    # pbSetResizeFactor($PokemonSystem.screensize)
     if $PokemonSystem.kurayfonts == 0
       # MessageConfig::FONT_SIZE = 29
       # MessageConfig::NARROW_FONT_SIZE = 29

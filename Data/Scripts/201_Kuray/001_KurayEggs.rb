@@ -2,6 +2,7 @@
 # Kuray's Eggs System
 # ============================
 
+$KURAYEGGS_WRITEDATA = false
 $KURAYEGGS_SPARKLING = false
 $KURAYEGGS_FORCEDFUSION = 0
 $KURAYEGGS_DEBUG = true
@@ -124,7 +125,37 @@ end
 
 $KURAYEGGS_LISTS = {}
 
+def kuray_writefile(filename, content)
+    # Ensure the Output directory exists
+    output_dir = "Output"
+    Dir.mkdir(output_dir) unless File.exists?(output_dir)
+
+    # Path to the file where the content will be written
+    file_path = File.join(output_dir, filename)
+
+    # Open the file and write the content
+    File.open(file_path, "w") do |file|
+    file.write(content)
+    end
+end
+
+def kurayeggs_generatebstdatabase()
+    txtCont = "Name\tBST\tCatch Rate\n"
+    for i in 1..NB_POKEMON
+        species = GameData::Species.get(i)
+        statssum = calcBaseStatsSum(species.id)
+        txtCont += species.id.to_s + "\t" + statssum.to_s + "\t" + species.catch_rate.to_s + "\n"
+    end
+    filename = "BST.txt"
+    kuray_writefile(filename, txtCont)
+    return
+end
+
 def kurayeggs_main()
+    hash_test = { "hello": "world"}
+    puts hash_test.inspect
+    puts hash_test["hello"]
+    kurayeggs_generatebstdatabase()
     return
     # puts "WIP - Kuray's Eggs System"
     # kurayeggs_effectfromid(0)
