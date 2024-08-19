@@ -286,7 +286,9 @@ class PokemonMart_Scene
     @buying = buying
     pbRefresh
     Graphics.frame_reset
-    pbUnlockEggs()
+    if $game_temp.fromkurayshop
+      pbUnlockEggs()
+    end
   end
 
   def pbUnlockEggs()

@@ -590,7 +590,7 @@ def options_load_json(jsonparse)
   $PokemonSystem.battlescene = jsonparse['battlescene']
   $PokemonSystem.frame = jsonparse['frame']
   $PokemonSystem.textskin = jsonparse['textskin']
-  $PokemonSystem.screensize = jsonparse['screensize']
+  # $PokemonSystem.screensize = jsonparse['screensize']
   $PokemonSystem.language = jsonparse['language']
   $PokemonSystem.runstyle = jsonparse['runstyle']
   $PokemonSystem.bgmvolume = jsonparse['bgmvolume']
@@ -703,7 +703,7 @@ def options_load_json(jsonparse)
   end
   MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed($PokemonSystem.textspeed))
   MessageConfig.pbSetSpeechFrame("Graphics/Windowskins/" + Settings::SPEECH_WINDOWSKINS[$PokemonSystem.textskin])
-  pbSetResizeFactor($PokemonSystem.screensize)
+  # pbSetResizeFactor($PokemonSystem.screensize)
   if $PokemonSystem.kurayfonts == 0
     # MessageConfig::FONT_SIZE = 29
     # MessageConfig::NARROW_FONT_SIZE = 29
