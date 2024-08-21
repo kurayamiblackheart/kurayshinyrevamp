@@ -12,7 +12,7 @@ module Settings
   # Read the VERSION file inside Data folder to get the version number
   GAME_VERSION_NUMBER = File.read("Data/VERSION").strip
 
-  GAME_REMOTE_SETTINGS_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/REMOTE_SETTINGS.json"
+  GAME_REMOTE_SETTINGS_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/release/Data/REMOTE_SETTINGS.json"
   GAME_REMOTE_SETTINGS_FILE_PATH = "Data/DOWNLOADED_SETTINGS.json"
 
   POKERADAR_LIGHT_ANIMATION_RED_ID = 17
@@ -59,7 +59,7 @@ module Settings
   OW_SHINE_ANIMATION_ID=25
 
   # HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/Scripts/RemoteUrls.rb"
-  HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/Scripts/RemoteUrls.rb"
+  HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/release/Data/Scripts/RemoteUrls.rb"
 
   # HTTP_CONFIGS_FILE_PATH = "Data/Scripts/RemoteUrls.rb"
   HTTP_CONFIGS_FILE_PATH = "Data/Scripts/DownloadedSettings.rb"
