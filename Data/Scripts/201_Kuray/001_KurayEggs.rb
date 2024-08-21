@@ -724,6 +724,7 @@ def kurayeggs_triggereggitem(id, itemid)
     # This function is used to trigger the egg item effect based on its ID.
     # The effect is determined by the ID of the egg item.
     found_pokemon = false
+    item_name = GameData::Item.get(itemid).name
     pbUseItemMessage(itemid)
     # Try 20 times to get a valid Pokemon.
     for i in 1..20
@@ -866,6 +867,7 @@ def kurayeggs_triggereggitem(id, itemid)
     kurayegg_pokemon.time_form_set = nil
     kurayegg_pokemon.form          = 0 if kurayegg_pokemon.isSpecies?(:SHAYMIN)
     kurayegg_pokemon.heal
+    kurayegg_pokemon.obtain_text = item_name
     # Check where we can place the pokemon
     if $Trainer.party_full?
         # If the player's party is full, the Pokémon is sent to storage.

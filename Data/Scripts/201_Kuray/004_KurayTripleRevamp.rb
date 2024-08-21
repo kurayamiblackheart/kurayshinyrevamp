@@ -1959,7 +1959,7 @@ module GameData
             :wild_item_uncommon  => nil,
             :wild_item_rare      => nil,
             :egg_groups          => [:Undiscovered],
-            :hatch_steps         => 535
+            :hatch_steps         => 535,
             :evolutions          => [[:KURAY_ABCHOTLY, :Level, 34, true]],
             :height              => 15,
             :weight              => 728,
