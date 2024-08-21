@@ -101,7 +101,8 @@ module Settings
   HARD_MODE_LEVEL_MODIFIER = 1.1
 
   ZAPMOLCUNO_NB = 999999#176821
-  KURAY_CUSTOM_POKEMONS = 9999999#Custom unfuseable pokemons
+  KURAY_CUSTOM_POKEMONS = 9999999+500000#Custom unfuseable fakemons
+  KURAY_NEW_TRIPLES = 9999999#Custom triple fusions
 
   MAPS_WITHOUT_SURF_MUSIC = [762]
 
