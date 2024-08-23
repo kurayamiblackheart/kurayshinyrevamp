@@ -715,7 +715,7 @@ def kurayeggs_generatejustwildydata()
         if type1 == type2
             type2 = ""
         end
-        txtCont += i.to_s + "\t" + species.id.to_s + "\t" + species.name + "\t" + statssum.to_s + "\t" + species.catch_rate.to_s + "\t" + type1 + "\t" + type2 + "\t" + name2 + "\t" + name3 + "\n"
+        txtCont += i.to_s + "\t" + species.id.to_s + "\t" + species.name + "\t" + statssum.to_s + "\t" + species.catch_rate.to_s + "\t" + type1 + "\t" + type2 + "\t" + name3 + "\t" + name2 + "\n"
     end
     filename = "JustWildy.txt"
     kuray_writefile(filename, txtCont)
