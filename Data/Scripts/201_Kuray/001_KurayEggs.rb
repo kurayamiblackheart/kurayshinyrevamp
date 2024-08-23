@@ -3,7 +3,7 @@
 # ============================
 
 $KURAYEGGS_EXPORTPOKEMONDATA = false
-$KURAYEGGS_WRITEDATA = true
+$KURAYEGGS_WRITEDATA = false
 $KURAYEGGS_SPARKLING = false
 $KURAYEGGS_FORCEDFUSION = 0
 $KURAYEGGS_DEBUG = false
@@ -700,11 +700,11 @@ end
 
 def kurayeggs_generatejustwildydata()
     # Generate google sheet for Just Wildy
-    txtCont = "\tDex Number\tSystem Name\tName\tBST\tCatch Rate\n"
+    txtCont = "Dex Number\tSystem Name\tName\tBST\tCatch Rate\n"
     for i in 1..NB_POKEMON
         species = GameData::Species.get(i)
         statssum = calcBaseStatsSum(species.id)
-        txtCont += i + "\t" + species.id.to_s + "\t" + species.name + "\t" + statssum.to_s + "\t" + species.catch_rate.to_s + "\n"
+        txtCont += i.to_s + "\t" + species.id.to_s + "\t" + species.name + "\t" + statssum.to_s + "\t" + species.catch_rate.to_s + "\n"
     end
     filename = "JustWildy.txt"
     kuray_writefile(filename, txtCont)
