@@ -700,11 +700,22 @@ end
 
 def kurayeggs_generatejustwildydata()
     # Generate google sheet for Just Wildy
-    txtCont = "Dex Number\tSystem Name\tName\tBST\tCatch Rate\n"
+    txtCont = "Dex Number\tSystem Name\tName\tBST\tCatch Rate\tType 1\tType 2\tCleaned System Name\tCleaned Name\n"
     for i in 1..NB_POKEMON
         species = GameData::Species.get(i)
         statssum = calcBaseStatsSum(species.id)
-        txtCont += i.to_s + "\t" + species.id.to_s + "\t" + species.name + "\t" + statssum.to_s + "\t" + species.catch_rate.to_s + "\n"
+        # convert type1's symbol into a name with the first letter upcased, and the ":" sign from symbol gone, and the rest lowercased
+        type1 = species.type1.to_s.capitalize
+        # convert type2's symbol into a name with the first letter upcased, and the ":" sign from symbol gone, and the rest lowercased
+        type2 = species.type2.to_s.capitalize
+        # remove "'", "." and "-" from names
+        name2 = species.name.gsub(/['.-]/, "")
+        # do the same with species.id
+        name3 = species.id.to_s.gsub(/['.-]/, "")
+        if type1 == type2
+            type2 = ""
+        end
+        txtCont += i.to_s + "\t" + species.id.to_s + "\t" + species.name + "\t" + statssum.to_s + "\t" + species.catch_rate.to_s + "\t" + type1 + "\t" + type2 + "\t" + name2 + "\t" + name3 + "\n"
     end
     filename = "JustWildy.txt"
     kuray_writefile(filename, txtCont)
