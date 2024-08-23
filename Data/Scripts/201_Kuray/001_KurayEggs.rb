@@ -3,7 +3,7 @@
 # ============================
 
 $KURAYEGGS_EXPORTPOKEMONDATA = false
-$KURAYEGGS_WRITEDATA = false
+$KURAYEGGS_WRITEDATA = true
 $KURAYEGGS_SPARKLING = false
 $KURAYEGGS_FORCEDFUSION = 0
 $KURAYEGGS_DEBUG = false
@@ -499,7 +499,7 @@ module GameData
         end
     end
 
-    def self.kurayeggs_iteminject(egg_symbol, id_here, egg_name_display, egg_price, egg_description)
+    def self.kurayeggs_iteminject(egg_symbol, id_here, egg_name_display, egg_price, egg_description, itemtype=0)
         egg_name_display_plural = egg_name_display + "s"
         Item.register({
             :id               => egg_symbol,
@@ -517,10 +517,15 @@ module GameData
         MessageTypes.set(MessageTypes::Items,            id_here, egg_name_display)
         MessageTypes.set(MessageTypes::ItemPlurals,      id_here, egg_name_display_plural)
         MessageTypes.set(MessageTypes::ItemDescriptions, id_here, egg_description)
-        
-        ItemHandlers::UseInField.add(egg_symbol, proc { |item|
-            next kurayeggs_triggereggitem(id_here-2000, item)
-        })
+        if itemtype == 0
+            ItemHandlers::UseInField.add(egg_symbol, proc { |item|
+                next kurayeggs_triggereggitem(id_here-Settings::KURAY_EGGS_ID, item)
+            })
+        else
+            ItemHandlers::UseInField.add(egg_symbol, proc { |item|
+                next kuraychests_triggerchest(id_here-Settings::KURAY_CHESTS_ID, item)
+            })
+        end
     end
 
     def self.kuray_name_to_sym(name)
@@ -528,17 +533,22 @@ module GameData
         return name.to_sym
     end
 
-    def self.kurayeggs_processsymb(egg_name)
+    def self.kurayglobal_processsymb(egg_name, addon="")
         # Replace whitespaces with underscores and make the string uppercase.
-        egg_symbol = self.kuray_name_to_sym("KURAYEGG_" + egg_name)
+        # egg_symbol = self.kuray_name_to_sym(addon + egg_name)
         # egg_symbol = "KURAYEGG_" + egg_name.upcase.gsub(" ", "_")
         # egg_symbol = egg_symbol.to_sym
-        return egg_symbol
+        # Code will need to be cleaned later.
+        return self.kuray_name_to_sym(addon + egg_name)
+    end
+
+    def self.kurayeggs_processsymb(egg_name)
+        return self.kurayglobal_processsymb(egg_name, "KURAYEGG_")
     end
 
 
     def self.kurayeggs_loadsystem()
-        id_here = 1999
+        id_here = Settings::KURAY_EGGS_ID-1
 
         eggs_baseprice = 5000
         egg_name_last = "K-Egg"
@@ -688,6 +698,19 @@ def kuray_writefile(filename, content)
     end
 end
 
+def kurayeggs_generatejustwildydata()
+    # Generate google sheet for Just Wildy
+    txtCont = "\tDex Number\tSystem Name\tName\tBST\tCatch Rate\n"
+    for i in 1..NB_POKEMON
+        species = GameData::Species.get(i)
+        statssum = calcBaseStatsSum(species.id)
+        txtCont += i + "\t" + species.id.to_s + "\t" + species.name + "\t" + statssum.to_s + "\t" + species.catch_rate.to_s + "\n"
+    end
+    filename = "JustWildy.txt"
+    kuray_writefile(filename, txtCont)
+    return
+end
+
 def kurayeggs_generatebstdatabase()
     txtCont = "Name\tBST\tCatch Rate\n"
     for i in 1..NB_POKEMON
@@ -706,11 +729,11 @@ def kurayeggs_main()
     # puts hash_test.inspect
     # puts hash_test[:hello]
 
-
+    kurayeggs_generatejustwildydata()
     # kurayeggs_generatebstdatabase()
     
-    # GameData::kuray_exportpokemondata(1)
-    GameData::kuray_create_triplefusions_data()
+    # GameData::kuray_exportpokemondata(1)#1 = triple, 0 = normal mons
+    # GameData::kuray_create_triplefusions_data()
     
     return
     # puts "WIP - Kuray's Eggs System"

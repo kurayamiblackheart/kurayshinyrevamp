@@ -104,6 +104,9 @@ module Settings
   KURAY_CUSTOM_POKEMONS = 9999999+500000#Custom unfuseable fakemons
   KURAY_NEW_TRIPLES = 9999999#Custom triple fusions
 
+  KURAY_EGGS_ID = 2000
+  KURAY_CHESTS_ID = 3000
+
   MAPS_WITHOUT_SURF_MUSIC = [762]
 
   WONDERTRADE_BASE_URL = "http://localhost:8080"
