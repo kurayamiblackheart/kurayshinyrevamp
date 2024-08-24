@@ -197,7 +197,7 @@ class PokemonGlobalMetadata
   end
 
   #Sylvi Items
-  alias _overworld_clone clone
+  alias _overworld_clone clone unless method_defined?(:_overworld_clone)
   def clone
     ret = _overworld_clone
     ret.pcItemStorage = @pcItemStorage.clone
