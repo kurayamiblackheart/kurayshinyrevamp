@@ -10,7 +10,7 @@ class Pokemon
   attr_accessor :shadow_moves
   HEART_GAUGE_SIZE = 3840
 
-  alias :__shadow_expeq :exp=
+  alias :__shadow_expeq :exp= unless method_defined?(:__shadow_expeq)
   def exp=(value)
     if shadowPokemon?
       @saved_exp += value - @exp
@@ -19,7 +19,7 @@ class Pokemon
     end
   end
 
-  alias :__shadow_hpeq :hp=
+  alias :__shadow_hpeq :hp= unless method_defined?(:__shadow_hpeq)
   def hp=(value)
     __shadow_hpeq(value)
     @hyper_mode = false if @hp <= 0
@@ -148,7 +148,7 @@ class Pokemon
     end
   end
 
-  alias :__shadow_clone :clone
+  alias :__shadow_clone :clone unless method_defined?(:__shadow_clone)
   def clone
     ret = __shadow_clone
     if @saved_ev

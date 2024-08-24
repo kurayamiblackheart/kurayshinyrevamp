@@ -74,7 +74,7 @@ $CanToggle = true
 
 module Graphics
   class << Graphics
-    alias fast_forward_update update
+    alias fast_forward_update update unless method_defined?(:fast_forward_update)
   end
 
   def self.update

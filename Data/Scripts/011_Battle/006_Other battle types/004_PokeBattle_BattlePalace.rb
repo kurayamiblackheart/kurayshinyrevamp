@@ -178,14 +178,14 @@ end
 class PokeBattle_AI
   attr_accessor :battlePalace
 
-  alias _battlePalace_initialize initialize
+  alias _battlePalace_initialize initialize unless method_defined?(:_battlePalace_initialize)
 
   def initialize(*arg)
     _battlePalace_initialize(*arg)
     @justswitched = [false,false,false,false]
   end
 
-  alias _battlePalace_pbEnemyShouldWithdraw? pbEnemyShouldWithdraw?
+  alias _battlePalace_pbEnemyShouldWithdraw? pbEnemyShouldWithdraw? unless method_defined?(:_battlePalace_pbEnemyShouldWithdraw?)
 
   def pbEnemyShouldWithdraw?(idxBattler)
     return _battlePalace_pbEnemyShouldWithdraw?(idxBattler) if !@battlePalace

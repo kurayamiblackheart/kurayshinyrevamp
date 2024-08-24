@@ -1,8 +1,8 @@
 
-alias challende_mode_getTrainersDataMode getTrainersDataMode
+alias challende_mode_getTrainersDataMode getTrainersDataMode unless respond_to?(:challende_mode_getTrainersDataMode)
 def getTrainersDataMode
 	mode = challende_mode_getTrainersDataMode
-	if $game_switches && $game_switches[850] && 
+	if $game_switches && $game_switches[850] &&
 		($game_map.map_id == 314 ||  # Pokemon League Lobby
 			$game_map.map_id == 315 || # Lorelei
 			$game_map.map_id == 316 || # Bruno
@@ -13,16 +13,16 @@ def getTrainersDataMode
 			$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
 			$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
 		mode = GameData::TrainerChallenge
-	end  
+	end
 	return mode
 end
 
 class PokeBattle_Battler
 
-	alias challenge_pbInitPokemon pbInitPokemon
+	alias challenge_pbInitPokemon pbInitPokemon unless method_defined?(:challenge_pbInitPokemon)
 	def pbInitPokemon(pkmn,idxParty)
 		challenge_pbInitPokemon(pkmn,idxParty)
-		if $game_switches && $game_switches[850] && 
+		if $game_switches && $game_switches[850] &&
 			($game_map.map_id == 314 ||  # Pokemon League Lobby
 				$game_map.map_id == 315 || # Lorelei
 				$game_map.map_id == 316 || # Bruno
@@ -33,33 +33,33 @@ class PokeBattle_Battler
 				$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
 				$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
 		    @moves.each { |move| move.pp*=2 } if !pbOwnedByPlayer?
-		end	
+		end
 	end
 
 end
 
 class PokeBattle_Battle
-	
-	alias challende_mode_pbEORSwitch pbEORSwitch
+
+	alias challende_mode_pbEORSwitch pbEORSwitch unless method_defined?(:challende_mode_pbEORSwitch)
 	def pbEORSwitch(favorDraws = false)
 		@switchStyle=false if $game_switches[850] && trainerBattle?
 		challende_mode_pbEORSwitch(favorDraws)
-	end	
-	
-	alias challende_mode_pbItemMenu pbItemMenu
+	end
+
+	alias challende_mode_pbItemMenu pbItemMenu unless method_defined?(:challende_mode_pbItemMenu)
 	def pbItemMenu(idxBattler,firstAction)
 		if $game_switches[850] && trainerBattle?
 		  pbDisplay(_INTL("Items can't be used in this challenge."))
 		  return false
-		end	
+		end
 		challende_mode_pbItemMenu(idxBattler,firstAction)
-	end	
+	end
 
-  alias challende_mode_setBattleMode setBattleMode
+  alias challende_mode_setBattleMode setBattleMode unless method_defined?(:challende_mode_setBattleMode)
   def setBattleMode(mode)
     # default = $game_variables[VAR_DEFAULT_BATTLE_TYPE].is_a?(Array) ? $game_variables[VAR_DEFAULT_BATTLE_TYPE] : [1, 1]
     #KurayX patching battles
-	if $game_switches && $game_switches[850] && 
+	if $game_switches && $game_switches[850] &&
 		($game_map.map_id == 314 ||  # Pokemon League Lobby
 			$game_map.map_id == 315 || # Lorelei
 			$game_map.map_id == 316 || # Bruno
@@ -70,16 +70,16 @@ class PokeBattle_Battle
 			$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
 			$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
 		@sideSizes = [1, 1]
-	else	
-		challende_mode_setBattleMode(mode)	
-	end	
+	else
+		challende_mode_setBattleMode(mode)
+	end
   end
 
 end
 
 class HallOfFame_Scene
 
-  alias challende_mode_writeGameMode writeGameMode
+  alias challende_mode_writeGameMode writeGameMode unless method_defined?(:challende_mode_writeGameMode)
   def writeGameMode(overlay, x, y)
 	if $game_switches[850]
 		gameMode = "Endgame Challenge"
@@ -88,7 +88,7 @@ class HallOfFame_Scene
 		pbDrawTextPositions(overlay, [[_INTL("{1} {2}", gameMode, subMode), x, y, 2, BASECOLOR, SHADOWCOLOR]])
 	else
 		challende_mode_writeGameMode(overlay, x, y)
-	end	
+	end
   end
 
   def writeTrainerData
@@ -112,14 +112,14 @@ class HallOfFame_Scene
 	else
    	 pbMessageDisplay(@sprites["msgwindow"],
                      _INTL("League champion!\nCongratulations!\\^"))
-	end				 
+	end
   end
 
 end
 
 class PokeBattle_Move
 
-	alias challende_mode_pbCalcDamageMultipliers pbCalcDamageMultipliers
+	alias challende_mode_pbCalcDamageMultipliers pbCalcDamageMultipliers unless method_defined?(:challende_mode_pbCalcDamageMultipliers)
 	def pbCalcDamageMultipliers(user,target,numTargets,type,baseDmg,multipliers)
 		if $game_switches[850]
 			# Global abilities
@@ -321,7 +321,7 @@ class PokeBattle_Move
 			challende_mode_pbCalcDamageMultipliers(user,target,numTargets,type,baseDmg,multipliers)
 		end
 	end
-	
+
 	def pbAccuracyCheck(user,target)
 		# "Always hit" effects and "always hit" accuracy
 		return true if target.effects[PBEffects::Telekinesis]>0
@@ -348,9 +348,9 @@ class PokeBattle_Move
 			if user.pbOwnedByPlayer?
 				accuracy*=1.2  if @baseDamage>0
 			else
-				accuracy*=1.3 
+				accuracy*=1.3
 			end
-		end			
+		end
 		evasion  = 100.0 * stageMul[evaStage] / stageDiv[evaStage]
 		accuracy = (accuracy * modifiers[:accuracy_multiplier]).round
 		evasion  = (evasion  * modifiers[:evasion_multiplier]).round
@@ -358,14 +358,14 @@ class PokeBattle_Move
 		# Calculation
 		return @battle.pbRandom(100) < modifiers[:base_accuracy] * accuracy / evasion
 	end
-	
-end  
+
+end
 
 #===============================================================================
 # Hits 2-5 times.
 #===============================================================================
 class PokeBattle_Move_0C0 < PokeBattle_Move
-  
+
 	def pbNumHits(user,targets)
 	  if @id == :WATERSHURIKEN && user.isSpecies?(:GRENINJA) && user.form == 2
 		return 3
@@ -378,7 +378,7 @@ class PokeBattle_Move_0C0 < PokeBattle_Move
   end
 
 module GameData
-	
+
 	def self.check_existence(moves, tutor_moves, egg_moves, abilities, hidden_abilities, type1, type2, wild_item_common, wild_item_uncommon, wild_item_rare)
 		self.check_existence_moves(moves,1)
 		self.check_existence_moves(tutor_moves,1)
@@ -517,25 +517,25 @@ module GameData
 		})
 		puts "Loaded custom Pokemon: #{id.to_sym} - #{name}"
 	end
-	
+
 	class TrainerType
-		
-		alias challenge_initialize initialize
+
+		alias challenge_initialize initialize unless method_defined?(:challenge_initialize)
 		def initialize(hash)
 			challenge_initialize(hash)
 			if $game_switches[850]
 				@skill_level = 100 || @base_money
-			end	
+			end
 		end
-		
+
 	end
-	
-	class Trainer	  
-				
-				
-		alias challenge_mode_to_trainer to_trainer
+
+	class Trainer
+
+
+		alias challenge_mode_to_trainer to_trainer unless method_defined?(:challenge_mode_to_trainer)
 		def to_trainer
-			if $game_switches && $game_switches[850] && 
+			if $game_switches && $game_switches[850] &&
 				($game_map.map_id == 314 ||  # Pokemon League Lobby
 					$game_map.map_id == 315 || # Lorelei
 					$game_map.map_id == 316 || # Bruno
@@ -551,9 +551,9 @@ module GameData
 					  $game_switches[987]=false
 					  $game_switches[47]=false
 					  $game_switches[SWITCH_IS_REMATCH]=false
-			end		  
+			end
 		  trainer = challenge_mode_to_trainer
-			if $game_switches && $game_switches[850] && 
+			if $game_switches && $game_switches[850] &&
 				($game_map.map_id == 314 ||  # Pokemon League Lobby
 					$game_map.map_id == 315 || # Lorelei
 					$game_map.map_id == 316 || # Bruno
@@ -562,23 +562,23 @@ module GameData
 					$game_map.map_id == 328 || # Champion Room
 					$game_map.map_id == 546 || # Vermillion Fight Arena
 					$game_map.map_id == 783 || # Mt. Silver Summit (Cynthia)
-					$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)		  
+					$game_map.map_id == 784 )  # Mt. Silver Summit Future (Gold)
 				trainer.party.each_with_index do |pkmn, i|
 					pkmn_data = @pokemon[i]
-					pkmn.abilityMutation = true if pkmn_data[:abilityMutation]					
+					pkmn.abilityMutation = true if pkmn_data[:abilityMutation]
 						maxlevel=0
 						for i in $Trainer.party
 							if i.level>maxlevel
 								maxlevel=i.level
-							end    
-						end 
+							end
+						end
 						maxlevel=60 if maxlevel<60
 						pkmn.level=maxlevel
 					GameData::Stat.each_main do |s|
 						pkmn.ev[s.id] = 252
 						pkmn.ev[s.id]+= 200 if (s.id==:ATTACK || s.id==:SPECIAL_ATTACK)
 						pkmn.ev[s.id] = 0 if (s.id==:SPEED) && pkmn.hasMove?(:TRICKROOM)
-					end				
+					end
 					pkmn.calc_stats
 					#Shedproofing
 					needfairy=false
@@ -587,12 +587,12 @@ module GameData
 					needsomething=false
 					for i in $Trainer.party
 						if i.ability==:WONDERGUARD
-							needfairy=true if i.hasType?(:DARK) && i.hasType?(:GHOST) 
-							needdark=true if i.hasType?(:NORMAL) && i.hasType?(:GHOST) 
-							needfire=true if i.hasType?(:BUG) && i.hasType?(:STEEL) 
+							needfairy=true if i.hasType?(:DARK) && i.hasType?(:GHOST)
+							needdark=true if i.hasType?(:NORMAL) && i.hasType?(:GHOST)
+							needfire=true if i.hasType?(:BUG) && i.hasType?(:STEEL)
 							needsomething=true if !needfairy && !needfire && !needdark
-						end	
-					end	
+						end
+					end
 					partypoopers=0
 					partypoopers+=1 if needfairy
 					partypoopers+=1 if needdark
@@ -604,7 +604,7 @@ module GameData
 							pkmn.forget_move_at_index(3)
 							pkmn.learn_move(:HAIL)
 						elsif partypoopers>0
-							if needfire 
+							if needfire
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:HIDDENPOWER)# 31,30,31,30,31,30
 								pkmn.iv[:HP]=31
@@ -634,7 +634,7 @@ module GameData
 								pkmn.iv[:SPECIAL_ATTACK]=30
 								pkmn.iv[:SPECIAL_DEFENSE]=31
 							end
-						end	
+						end
 					when :B91H130
 						if partypoopers>1
 							pkmn.forget_move_at_index(2)
@@ -655,12 +655,12 @@ module GameData
 								pkmn.iv[:ATTACK]=30
 								pkmn.iv[:SPECIAL_ATTACK]=30
 							end
-						end	
+						end
 					when :B262H361
 						if needsomething
 							pkmn.forget_move_at_index(3)
 							pkmn.learn_move(:STEALTHROCK)
-						end	
+						end
 						if partypoopers>1
 							pkmn.forget_move_at_index(3)
 							pkmn.learn_move(:HAIL)
@@ -677,7 +677,7 @@ module GameData
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:HAIL)
 							end
-						end	
+						end
 					when :B121H124
 						if partypoopers>1
 							pkmn.forget_move_at_index(3)
@@ -707,12 +707,12 @@ module GameData
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:MOONBLAST)
 							end
-						end	
+						end
 					when :B144H367
 						if partypoopers>1 || needsomething
 							pkmn.forget_move_at_index(3)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B144H367
 						if partypoopers>1
 							pkmn.forget_move_at_index(2)
@@ -730,7 +730,7 @@ module GameData
 								pkmn.forget_move_at_index(2)
 								pkmn.learn_move(:HAIL)
 							end
-						end	
+						end
 					# Bruno
 					when :B142H106
 						if needsomething
@@ -743,7 +743,7 @@ module GameData
 							pkmn.learn_move(:WHIRLWIND)
 							pkmn.forget_move(:FAKEOUT)
 							pkmn.learn_move(:STEALTHROCK)
-						end	
+						end
 					when :B107H212
 						if partypoopers>1
 							pkmn.forget_move(:ROCKTOMB)
@@ -763,17 +763,17 @@ module GameData
 								pkmn.forget_move_at_index(2)
 								pkmn.learn_move(:TOXIC)
 							end
-						end	
+						end
 					when :B321H94
 						if partypoopers>0 || needsomething
 							pkmn.forget_move_at_index(3)
 							pkmn.learn_move(:WILLOWISP)
-						end		
+						end
 					when :B208H367
 						if partypoopers>0
 							pkmn.forget_move_at_index(2)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B68H293
 						if partypoopers>1
 							pkmn.forget_move(:STONEEDGE)
@@ -793,18 +793,18 @@ module GameData
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:TOXIC)
 							end
-						end	
-					# Agatha	
+						end
+					# Agatha
 					when :B255H263
 						if needdark || needsomething
 							pkmn.forget_move_at_index(3)
 							pkmn.learn_move(:WILLOWISP)
-						end		
+						end
 					when :B328H197
 						if partypoopers>0
 							pkmn.forget_move_at_index(3)
 							pkmn.learn_move(:WILLOWISP)
-						end		
+						end
 					when :B105H373
 						if partypoopers>1
 							pkmn.forget_move_at_index(1)
@@ -817,21 +817,21 @@ module GameData
 								pkmn.forget_move_at_index(1)
 								pkmn.learn_move(:WILLOWISP)
 							end
-						end	
+						end
 					when :B289H331
 						if needfire
 							pkmn.forget_move_at_index(2)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B94H275
 						if needfire
 							pkmn.forget_move(:SHADOWBALL)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 						if needfairy
 							pkmn.forget_move(:FOCUSBLAST)
 							pkmn.learn_move(:DAZZLINGGLEAM)
-						end	
+						end
 					when :B281H94
 						if partypoopers>2
 							pkmn.forget_move(:SHADOWBALL)
@@ -843,11 +843,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:SHADOWBALL)
 									pkmn.learn_move(:DARKPULSE)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:SHADOWBALL)
 									pkmn.learn_move(:DAZZLINGGLEAM)
-								end	
+								end
 							else
 								pkmn.forget_move(:FIREBLAST)
 								pkmn.learn_move(:DAZZLINGGLEAM)
@@ -858,12 +858,12 @@ module GameData
 							if needdark
 								pkmn.forget_move(:SHADOWBALL)
 								pkmn.learn_move(:DARKPULSE)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:FOCUSBLAST)
 								pkmn.learn_move(:DAZZLINGGLEAM)
-							end	
-						end	
+							end
+						end
 					#Lance
 					when :B299H309
 						if needsomething
@@ -881,7 +881,7 @@ module GameData
 							pkmn.learn_move(:ROAR)
 							pkmn.forget_move(:THUNDERWAVE)
 							pkmn.learn_move(:STEALTHROCK)
-						end	
+						end
 					when :B142H306
 						if partypoopers>0
 							pkmn.forget_move_at_index(1)
@@ -906,16 +906,16 @@ module GameData
 							if needfire
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:FIREPUNCH)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:SANDSTORM)
-							end	
+							end
 							if needdark
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:BRUTALSWING)
-							end	
-						end	
+							end
+						end
 					#Blue
 					when :B142H267
 						if needsomething
@@ -946,21 +946,21 @@ module GameData
 								pkmn.learn_move(:HAIL)
 							else
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 						elsif partypoopers>0
 							if needfire
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:PLAYROUGH)
-							end	
+							end
 							if needdark
 								pkmn.forget_move_at_index(3)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
-						end	
+							end
+						end
 					when :B65H275
 						if partypoopers>0
 							if needfire # 31,30,31,30,31,30
@@ -969,11 +969,11 @@ module GameData
 								pkmn.iv[:ATTACK]=30
 								pkmn.iv[:SPEED]=30
 								pkmn.iv[:SPECIAL_DEFENSE]=30
-							end	
+							end
 							if needdark
 								pkmn.forget_move(:NASTYPLOT)
 								pkmn.learn_move(:DARKPULSE)
-							end	
+							end
 						end
 					when :B6H379
 						if partypoopers>0
@@ -985,23 +985,23 @@ module GameData
 							pkmn.forget_move_at_index(0)
 							if needfire
 								pkmn.learn_move(:HAIL)
-							else	
+							else
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 						elsif partypoopers>0
 							pkmn.forget_move_at_index(0)
 							if needfire
 								pkmn.learn_move(:MYSTICWATER)
-							end	
+							end
 							if needfairy
 								pkmn.learn_move(:HIDDENPOWER)
 								pkmn.iv[:HP]=30
 								pkmn.iv[:ATTACK]=30
 								pkmn.iv[:SPECIAL_ATTACK]=30
-							end	
+							end
 							if needdark
 								pkmn.learn_move(:DARKPULSE)
-							end	
+							end
 						end
 					when :B348H3
 						if partypoopers>0
@@ -1024,7 +1024,7 @@ module GameData
 							pkmn.learn_move(:WHIRLWIND)
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:STEALTHROCK)
-						end	
+						end
 					when :B244H302
 						if partypoopers>0 || needsomething
 							pkmn.forget_move_at_index(3)
@@ -1040,20 +1040,20 @@ module GameData
 						if needfire
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:FIREPUNCH)
-						end	
+						end
 						if needfairy
 							pkmn.forget_move(:DRAGONDANCE)
 							pkmn.learn_move(:TOXIC)
-						end	
+						end
 						if needdark
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:KNOCKOFF)
-						end	
+						end
 					when :B243H186
 						if needfairy || needdark || needsomething
 							pkmn.forget_move(:REFLECT)
 							pkmn.learn_move(:TOXIC)
-						end	
+						end
 					when :B266H134
 						if partypoopers>0 || needsomething
 							pkmn.forget_move_at_index(3)
@@ -1063,20 +1063,20 @@ module GameData
 						if needfire
 							pkmn.forget_move(:AQUAJET)
 							pkmn.learn_move(:FIREFANG)
-						end	
+						end
 						if needfairy
 							pkmn.forget_move(:ICEPUNCH)
 							pkmn.learn_move(:PLAYROUGH)
-						end	
+						end
 					when :B336H171
 						if needfire
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:FIREFANG)
-						end	
+						end
 						if needfairy || needdark
 							pkmn.forget_move(:AQUATAIL)
 							pkmn.learn_move(:TOXIC)
-						end	
+						end
 					when :B135H121
 						if partypoopers>1
 							pkmn.forget_move_at_index(3)
@@ -1095,7 +1095,7 @@ module GameData
 							if needfairy
 								pkmn.learn_move(:MOONBLAST)
 							end
-						end	
+						end
 					# Surge
 					when :B135H124
 						if partypoopers>0
@@ -1111,11 +1111,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:EARTHQUAKE)
 									pkmn.learn_move(:KNOCKOFF)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:EARTHQUAKE)
 									pkmn.learn_move(:HAIL)
-								end	
+								end
 							else
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:HAIL)
@@ -1126,17 +1126,17 @@ module GameData
 							if needdark
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:HAIL)
-							end	
-						end	
+							end
+						end
 					when :B110H181
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:THUNDERWAVE)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B336H332
 						if partypoopers>2
 							pkmn.forget_move(:EARTHQUAKE)
@@ -1150,11 +1150,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:EARTHQUAKE)
 									pkmn.learn_move(:CRUNCH)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:EARTHQUAKE)
 									pkmn.learn_move(:TOXIC)
-								end	
+								end
 							else
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:CRUNCH)
@@ -1165,36 +1165,36 @@ module GameData
 							if needfire
 								pkmn.forget_move(:ZINGZAP)
 								pkmn.learn_move(:FIREFANG)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:ZINGZAP)
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 							if needdark
 								pkmn.forget_move(:ZINGZAP)
 								pkmn.learn_move(:CRUNCH)
-							end	
-						end	
+							end
+						end
 					when :B348H358
 						if needfairy || needdark
 							pkmn.item= :FOCUSSASH
 							pkmn.forget_move(:TECHNOBLAST)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B142H26
 						if needfire
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:FIREFANG)
-						end	
+						end
 						if needfairy
 							if needdark
 								pkmn.forget_move(:VOLTTACKLE)
 								pkmn.learn_move(:TOXIC)
-							else	
+							else
 								pkmn.forget_move(:AQUATAIL)
 								pkmn.learn_move(:TOXIC)
 							end
-						end	
+						end
 						if needdark
 							pkmn.forget_move(:AQUATAIL)
 							pkmn.learn_move(:CRUNCH)
@@ -1204,37 +1204,37 @@ module GameData
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:DRAGONPULSE)
 							pkmn.learn_move(:LEECHSEED)
-						end	
+						end
 					when :B333H318
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:FIREPUNCH)
 							pkmn.learn_move(:LEECHSEED)
-						end	
+						end
 					when :B368H355
 						if partypoopers>0 || needsomething
 							pkmn.ability = :MOLDBREAKER
-						end	
+						end
 					when :B364H184
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:THUNDERWAVE)
 							pkmn.learn_move(:LEECHSEED)
-						end	
+						end
 					when :B271H244
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:SWORDSDANCE)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B266H143
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:ROCKSLIDE)
 							pkmn.learn_move(:LEECHSEED)
-						end	
+						end
 					#Koga
 					when :B149H89
 						if needfairy || needdark
 							pkmn.forget_move(:FIREPUNCH)
 							pkmn.learn_move(:GASTROACID)
-						end	
+						end
 					when :B49H377
 						if partypoopers>1
 							pkmn.forget_move(:BATONPASS)
@@ -1248,24 +1248,24 @@ module GameData
 							pkmn.forget_move(:BATONPASS)
 							if needfire
 								pkmn.learn_move(:FIREBLAST)
-							end	
+							end
 							if needfairy
 								pkmn.learn_move(:HIDDENPOWER)
 								pkmn.iv[:HP]=30
 								pkmn.iv[:ATTACK]=30
 								pkmn.iv[:SPECIAL_ATTACK]=30
-							end	
-						end	
+							end
+						end
 					when :B89H184
 						if partypoopers>0
 							pkmn.forget_move(:THUNDERPUNCH)
 							pkmn.learn_move(:GASTROACID)
-						end	
+						end
 					when :B110H263
 						if needfairy || needdark || needsomething
 							pkmn.forget_move(:THUNDERWAVE)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B309H34
 						if partypoopers>1
 							pkmn.forget_move(:WATERFALL)
@@ -1276,85 +1276,85 @@ module GameData
 							pkmn.forget_move(:WATERFALL)
 							if needdark
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.learn_move(:TOXIC)
-							end	
-						end	
+							end
+						end
 					# Sabrina
 					when :B321H196
 						if needfairy || needdark
 							pkmn.forget_move(:SHADOWBALL)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B245H103
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:BLIZZARD)
 							pkmn.learn_move(:LEECHSEED)
-						end	
+						end
 					when :B293H143
 						if needfire || needfairy
 							pkmn.forget_move(:SLACKOFF)
 							pkmn.learn_move(:GASTROACID)
-						end	
+						end
 					when :B331H288
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B36H151
 						if needfairy || needdark || needsomething
 							pkmn.forget_move(:PHOTONGEYSER)
 							pkmn.learn_move(:MOONGEISTBEAM)
-						end		
+						end
 					when :B65H157
 						if needfairy || needdark
 							pkmn.forget_move(:ERUPTION)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					# Blaine
 					when :B377H268
 						if needfairy || needdark
 							pkmn.forget_move(:SURF)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B38H352
 						if needfairy || needdark
 							pkmn.forget_move(:SLEEPPOWDER)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B278H6
 						if needfairy || needdark || needsomething
 							pkmn.forget_move(:DRAGONPULSE)
 							pkmn.learn_move(:SUNSTEELSTRIKE)
-						end	
+						end
 					when :B135H157
 						if needfairy || needdark
 							pkmn.forget_move(:ERUPTION)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B244H334
 						if needfairy || needdark
 							pkmn.forget_move(:STONEEDGE)
 							pkmn.learn_move(:SUNSTEELSTRIKE)
-						end	
+						end
 					when :B142H59
 						if needfairy || needdark || needsomething
 							pkmn.species=:B142H78
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:SUNSTEELSTRIKE)
-						end	
+						end
 					# Giovanni
 					when :B38H334
 						if needfairy || needdark || needsomething
 							pkmn.forget_move(:DRAGONPULSE)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B34H374
 						if partypoopers>0
 							pkmn.forget_move(:THUNDERBOLT)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B232H184
 						if partypoopers>1
 							pkmn.forget_move(:ICESHARD)
@@ -1363,13 +1363,13 @@ module GameData
 							pkmn.forget_move(:ICESHARD)
 							if needfire
 								pkmn.learn_move(:HAIL)
-							end	
+							end
 							if needfairy
 								pkmn.learn_move(:SANDSTORM)
-							end	
+							end
 							if needdark
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 						end
 					when :B262H51
 						if partypoopers>1
@@ -1379,19 +1379,19 @@ module GameData
 							pkmn.forget_move(:ICESHARD)
 							if needfire
 								pkmn.learn_move(:HAIL)
-							end	
+							end
 							if needfairy
 								pkmn.learn_move(:SANDSTORM)
-							end	
+							end
 							if needdark
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 						end
 					when :B265H110
 						if needsomething
 							pkmn.forget_move(:THUNDERPUNCH)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 						if partypoopers>1
 							pkmn.forget_move(:THUNDERPUNCH)
 							pkmn.learn_move(:WILLOWISP)
@@ -1399,12 +1399,12 @@ module GameData
 							pkmn.forget_move(:THUNDERPUNCH)
 							if needfire
 								pkmn.learn_move(:FIREPUNCH)
-							end	
+							end
 							if needfairy || needdark
 								pkmn.learn_move(:WILLOWISP)
-							end	
+							end
 						end
-					# Whitney	
+					# Whitney
 					when :B254H214
 						if partypoopers>2
 							pkmn.forget_move(:EARTHQUAKE)
@@ -1418,11 +1418,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:ROCKBLAST)
 									pkmn.learn_move(:THIEF)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:ROCKBLAST)
 									pkmn.learn_move(:TOXIC)
-								end	
+								end
 							else
 								pkmn.forget_move(:ROCKBLAST)
 								pkmn.learn_move(:TOXIC)
@@ -1435,12 +1435,12 @@ module GameData
 							if needdark
 								pkmn.forget_move(:ROCKBLAST)
 								pkmn.learn_move(:THIEF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:ROCKBLAST)
 								pkmn.learn_move(:TOXIC)
-							end	
-						end	
+							end
+						end
 					when :B151H383
 						if needsomething
 							pkmn.forget_move(:DRAINPUNCH)
@@ -1459,7 +1459,7 @@ module GameData
 							if needdark
 								pkmn.forget_move(:DRAINPUNCH)
 								pkmn.learn_move(:MOONGEISTBEAM)
-							end	
+							end
 						end
 					when :B273H143
 						if partypoopers>0
@@ -1486,11 +1486,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:FRUSTRATION)
 									pkmn.learn_move(:KNOCKOFF)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:FRUSTRATION)
 									pkmn.learn_move(:PLAYROUGH)
-								end	
+								end
 							else
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:KNOCKOFF)
@@ -1505,12 +1505,12 @@ module GameData
 							if needdark
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:AQUAJET)
 								pkmn.learn_move(:PLAYROUGH)
-							end	
-						end	
+							end
+						end
 					when :B275H374
 						if partypoopers>2
 							pkmn.forget_move(:FIREBLAST)
@@ -1519,17 +1519,17 @@ module GameData
 							if needdark || needfairy
 								pkmn.forget_move(:TECHNOBLAST)
 								pkmn.learn_move(:WILLOWISP)
-							end	
+							end
 						elsif partypoopers>0
 							if needdark
 								pkmn.forget_move(:FIREBLAST)
 								pkmn.learn_move(:DARKPULSE)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:TECHNOBLAST)
 								pkmn.learn_move(:WILLOWISP)
-							end	
-						end	
+							end
+						end
 					# Kurt
 					when :B309H214
 						if partypoopers>0
@@ -1540,27 +1540,27 @@ module GameData
 							if needdark
 								pkmn.forget_move(:FRUSTRATION)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:STONEEDGE)
 								pkmn.learn_move(:PLAYROUGH)
-							end	
-						end	
+							end
+						end
 					when :B123H142
 						if needsomething
 							pkmn.ability = :STEALTHROCK
-						end	
+						end
 						if partypoopers>0
 							pkmn.item = :REDCARD
 							pkmn.forget_move(:SWORDSDANCE)
 							pkmn.learn_move(:WHIRLWIND)
 							pkmn.forget_move(:AQUATAIL)
 							pkmn.learn_move(:STEALTHROCK)
-						end	
+						end
 					when :B127H229
 						if partypoopers>0
 							pkmn.ability = :MOLDBREAKER
-						end	
+						end
 					when :B304H184
 						if partypoopers>2
 							pkmn.forget_move(:EARTHQUAKE)
@@ -1576,11 +1576,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:XSCISSOR)
 									pkmn.learn_move(:KNOCKOFF)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:XSCISSOR)
 									pkmn.learn_move(:PLAYROUGH)
-								end	
+								end
 							else
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:KNOCKOFF)
@@ -1595,12 +1595,12 @@ module GameData
 							if needdark
 								pkmn.forget_move(:XSCISSOR)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:XSCISSOR)
 								pkmn.learn_move(:PLAYROUGH)
-							end	
-						end	
+							end
+						end
 					when :B296H289
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:EARTHQUAKE)
@@ -1620,25 +1620,25 @@ module GameData
 							if needdark
 								pkmn.forget_move(:IRONTAIL)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:IRONTAIL)
 								pkmn.learn_move(:PLAYROUGH)
-							end	
-						end	
+							end
+						end
 					when :B142H281
 						if needdark || needfairy
 							pkmn.forget_move(:SWORDSDANCE)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B269H324
 						if needdark && needfairy
 							pkmn.forget_move(:FLASHCANNON)
-							if needfire 
+							if needfire
 								pkmn.forget_move(:AIRSLASH)
 							else
 								pkmn.forget_move(:FIREBLAST)
-							end	
+							end
 							pkmn.learn_move(:HIDDENPOWER) # 31,30,30,31,30,31
 							pkmn.iv[:ATTACK]=30
 							pkmn.iv[:DEFENSE]=30
@@ -1651,17 +1651,17 @@ module GameData
 								pkmn.iv[:ATTACK]=30
 								pkmn.iv[:DEFENSE]=30
 								pkmn.iv[:SPECIAL_ATTACK]=30
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:FLASHCANNON)
 								pkmn.learn_move(:MOONBLAST)
-							end	
-						end	
+							end
+						end
 					when :B270H381
 						if needdark || needfairy || needsomething
 							pkmn.forget_move(:IRONDEFENSE)
 							pkmn.learn_move(:TOXIC)
-						elsif needfire	
+						elsif needfire
 							pkmn.forget_move(:IRONDEFENSE)
 							pkmn.learn_move(:FIREPUNCH)
 						end
@@ -1678,11 +1678,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:STONEEDGE)
 									pkmn.learn_move(:CRUNCH)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:STONEEDGE)
 									pkmn.learn_move(:SANDSTORM)
-								end	
+								end
 							else
 								pkmn.forget_move(:BRICKBREAK)
 								pkmn.learn_move(:CRUNCH)
@@ -1697,12 +1697,12 @@ module GameData
 							if needdark
 								pkmn.forget_move(:BRICKBREAK)
 								pkmn.learn_move(:CRUNCH)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:BRICKBREAK)
 								pkmn.learn_move(:SANDSTORM)
-							end	
-						end	
+							end
+						end
 					when :B273H171
 						if partypoopers>1
 							pkmn.forget_move(:SWORDSDANCE)
@@ -1719,12 +1719,12 @@ module GameData
 							if needdark
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:TOXIC)
-							end	
-						end	
+							end
+						end
 					# Clair
 					when :B299H130
 						if partypoopers>2
@@ -1739,11 +1739,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:STONEEDGE)
 									pkmn.learn_move(:CRUNCH)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:STONEEDGE)
 									pkmn.learn_move(:SANDSTORM)
-								end	
+								end
 							else
 								pkmn.forget_move(:THUNDERWAVE)
 								pkmn.learn_move(:SANDSTORM)
@@ -1756,12 +1756,12 @@ module GameData
 							if needdark
 								pkmn.forget_move(:THUNDERWAVE)
 								pkmn.learn_move(:CRUNCH)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:THUNDERWAVE)
 								pkmn.learn_move(:SANDSTORM)
-							end	
-						end	
+							end
+						end
 					when :B368H212
 						if partypoopers>0 || needsomething
 							pkmn.ability = :MOLDBREAKER
@@ -1769,7 +1769,7 @@ module GameData
 							pkmn.learn_move(:IRONHEAD)
 							pkmn.forget_move(:BULLDOZE)
 							pkmn.learn_move(:EARTHQUAKE)
-						end	
+						end
 					when :B377H146
 						if needdark || needfairy || needsomething
 							pkmn.forget_move(:FLASHCANNON)
@@ -1787,25 +1787,25 @@ module GameData
 							if needdark
 								pkmn.forget_move(:DRAGONRUSH)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:FRUSTRATION)
 								pkmn.learn_move(:PLAYROUGH)
-							end	
+							end
 							if needfire
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:FIREPUNCH)
 							end
-						end	
+						end
 					when :B149H184
 						if needfire
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:FIREPUNCH)
-						end	
+						end
 						if needfairy
 							pkmn.forget_move(:DRAGONRUSH)
 							pkmn.learn_move(:PLAYROUGH)
-						end	
+						end
 					when :B230H269
 						if needdark
 							pkmn.forget_move(:AURASPHERE)
@@ -1819,11 +1819,11 @@ module GameData
 						if needfire
 							pkmn.forget_move(:FOCUSBLAST)
 							pkmn.learn_move(:FIREBLAST)
-						end	
+						end
 						if needfairy
 							pkmn.forget_move(:SHADOWBALL)
 							pkmn.learn_move(:DAZZLINGGLEAM)
-						end	
+						end
 					when :B321H255
 						if needdark
 							pkmn.forget_move(:FIREBLAST)
@@ -1837,12 +1837,12 @@ module GameData
 							if needfairy
 								pkmn.forget_move(:SHADOWSNEAK)
 								pkmn.learn_move(:PLAYROUGH)
-							end	
+							end
 							if needfire
 								pkmn.forget_move(:SHADOWSNEAK)
 								pkmn.learn_move(:FIREPUNCH)
 							end
-						end	
+						end
 					when :B312H242
 						if partypoopers>0
 							pkmn.forget_move(:SOFTBOILED)
@@ -1851,7 +1851,7 @@ module GameData
 							pkmn.learn_move(:SPITE)
 							pkmn.forget_move(:TOXIC)
 							pkmn.learn_move(:SLEEPTALK)
-						end	
+						end
 					when :B289H310
 						if needfire || needsomething
 							pkmn.forget_move(:SHADOWSNEAK)
@@ -1861,51 +1861,51 @@ module GameData
 						if needdark || needfairy || needsomething
 							pkmn.forget_move(:BUGBUZZ)
 							pkmn.learn_move(:WILLOWISP)
-						end	
-					# Pryce	
+						end
+					# Pryce
 					when :B262H321
 						if needdark || needfairy
 							pkmn.forget_move(:CLOSECOMBAT)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B262H184
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:BRICKBREAK)
 							pkmn.learn_move(:HAIL)
-						end	
+						end
 					when :B157H124
 						if needdark || needfairy
 							pkmn.forget_move(:BLIZZARD)
 							pkmn.learn_move(:HAIL)
-						end	
+						end
 					when :B272H367
 						if needdark || needfairy
 							pkmn.forget_move(:FREEZEDRY)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B91H245
 						if partypoopers>0
 							pkmn.forget_move(:ROCKBLAST)
 							pkmn.learn_move(:HAIL)
-						end	
+						end
 					when :B299H274
 						if partypoopers>0
 							pkmn.forget_move(:STONEEDGE)
 							pkmn.learn_move(:HAIL)
-						end	
+						end
 					# Jasmine
 					when :B94H263
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:GIGADRAIN)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B377H263
 						if needdark && needfairy
 							pkmn.forget_move(:SURF)
 							pkmn.learn_move(:DARKPULSE)
 							pkmn.forget_move(:DRAGONPULSE)
 							pkmn.learn_move(:SANDSTORM)
-						end	
+						end
 					when :B336H324
 						if partypoopers>2
 							pkmn.forget_move(:AQUATAIL)
@@ -1919,11 +1919,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:AQUATAIL)
 									pkmn.learn_move(:CRUNCH)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:AQUATAIL)
 									pkmn.learn_move(:SANDSTORM)
-								end	
+								end
 							else
 								pkmn.forget_move(:AQUATAIL)
 								pkmn.learn_move(:SANDSTORM)
@@ -1936,11 +1936,11 @@ module GameData
 							if needdark
 								pkmn.forget_move(:AQUATAIL)
 								pkmn.learn_move(:CRUNCH)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:AQUATAIL)
 								pkmn.learn_move(:SANDSTORM)
-							end	
+							end
 						end
 					when :B205H184
 						if partypoopers>2
@@ -1957,11 +1957,11 @@ module GameData
 								if needdark
 									pkmn.forget_move(:ICEPUNCH)
 									pkmn.learn_move(:KNOCKOFF)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:ICEPUNCH)
 									pkmn.learn_move(:PLAYROUGH)
-								end	
+								end
 							else
 								pkmn.forget_move(:ICEPUNCH)
 								pkmn.learn_move(:SANDSTORM)
@@ -1974,11 +1974,11 @@ module GameData
 							if needdark
 								pkmn.forget_move(:ICEPUNCH)
 								pkmn.learn_move(:CRUNCH)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:ICEPUNCH)
 								pkmn.learn_move(:PLAYROUGH)
-							end	
+							end
 						end
 					when :B326H335
 						if needfire
@@ -1997,9 +1997,9 @@ module GameData
 								pkmn.learn_move(:FLASHCANNON)
 								pkmn.forget_move(:EARTHPOWER)
 								pkmn.learn_move(:TOXIC)
-							end	
-						end	
-					# Chuck	
+							end
+						end
+					# Chuck
 					when :B169H106
 						if partypoopers>2
 							pkmn.forget_move(:FAKEOUT)
@@ -2007,17 +2007,17 @@ module GameData
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:TOXIC)
 						elsif partypoopers>1
-							if needfire	
+							if needfire
 								pkmn.forget_move(:FAKEOUT)
 								pkmn.learn_move(:BLAZEKICK)
 								if needdark
 									pkmn.forget_move(:EARTHQUAKE)
 									pkmn.learn_move(:KNOCKOFF)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:EARTHQUAKE)
 									pkmn.learn_move(:TOXIC)
-								end	
+								end
 							else
 								pkmn.forget_move(:FAKEOUT)
 								pkmn.learn_move(:TOXIC)
@@ -2032,11 +2032,11 @@ module GameData
 							if needdark
 								pkmn.forget_move(:FAKEOUT)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:FAKEOUT)
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 						end
 					when :B135H296
 						if partypoopers>2
@@ -2044,7 +2044,7 @@ module GameData
 							pkmn.learn_move(:BLAZEKICK)
 							pkmn.forget_move(:FLASHCANNON)
 							pkmn.learn_move(:TOXIC)
-						elsif partypoopers>1 
+						elsif partypoopers>1
 							if needfire && needfairy
 								pkmn.forget_move(:THUNDER)
 								pkmn.learn_move(:BLAZEKICK)
@@ -2058,7 +2058,7 @@ module GameData
 								if needfairy
 									pkmn.forget_move(:THUNDER)
 									pkmn.learn_move(:TOXIC)
-								end	
+								end
 							end
 						elsif partypoopers>0
 							if needfire
@@ -2068,7 +2068,7 @@ module GameData
 							if needfairy
 								pkmn.forget_move(:THUNDER)
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 						end
 					when :B321H377
 						if partypoopers>1
@@ -2085,8 +2085,8 @@ module GameData
 								pkmn.item = :LIFEORB
 								pkmn.forget_move(:SWORDSDANCE)
 								pkmn.learn_move(:WILLOWISP)
-							end	
-						end	
+							end
+						end
 					when :B337H237
 						if needdark && needfairy
 							pkmn.forget_move(:EARTHQUAKE)
@@ -2099,27 +2099,27 @@ module GameData
 							if needfairy
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 						end
 					when :B355H212
 						if partypoopers>0 || needsomething
 							pkmn.forget_move(:MACHPUNCH)
 							pkmn.learn_move(:LEECHSEED)
-						end	
+						end
 					when :B267H62
 						if partypoopers>2
 							pkmn.forget_move(:ICEPUNCH)
 							pkmn.learn_move(:TOXIC)
 						elsif partypoopers>1
-							if needfire	
+							if needfire
 								if needdark
 									pkmn.forget_move(:ICEPUNCH)
 									pkmn.learn_move(:DARKESTLARIAT)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:ICEPUNCH)
 									pkmn.learn_move(:TOXIC)
-								end	
+								end
 							else
 								pkmn.forget_move(:FIREPUNCH)
 								pkmn.learn_move(:TOXIC)
@@ -2130,11 +2130,11 @@ module GameData
 							if needdark
 								pkmn.forget_move(:FIREPUNCH)
 								pkmn.learn_move(:DARKESTLARIAT)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:FIREPUNCH)
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 						end
 					# Gold
 					when :B150H275
@@ -2142,15 +2142,15 @@ module GameData
 							pkmn.forget_move(:PSYSTRIKE)
 							pkmn.learn_move(:TOXIC)
 						elsif partypoopers>1
-							if needfire	
+							if needfire
 								if needdark
 									pkmn.forget_move(:PSYSTRIKE)
 									pkmn.learn_move(:DARKPULSE)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:PSYSTRIKE)
 									pkmn.learn_move(:TOXIC)
-								end	
+								end
 							else
 								pkmn.forget_move(:FIREBLAST)
 								pkmn.learn_move(:TOXIC)
@@ -2161,11 +2161,11 @@ module GameData
 							if needdark
 								pkmn.forget_move(:PSYSTRIKE)
 								pkmn.learn_move(:DARKPULSE)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:PSYSTRIKE)
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 						end
 					when :B245H154
 						if partypoopers>0 || needsomething
@@ -2176,18 +2176,18 @@ module GameData
 						if needdark || needfairy || needsomething
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:SUNSTEELSTRIKE)
-						end	
+						end
 					when :B243H157
 						if needdark || needfairy
 							pkmn.item == :LIFEORB
 							pkmn.forget_move(:ERUPTION)
 							pkmn.learn_move(:WILLOWISP)
-						end	
+						end
 					when :B142H250
 						if needdark || needfairy || needsomething
 							pkmn.forget_move(:EARTHQUAKE)
 							pkmn.learn_move(:SUNSTEELSTRIKE)
-						end	
+						end
 					# Dem
 					when :B135H94
 						if partypoopers>0 || needsomething
@@ -2199,15 +2199,15 @@ module GameData
 							pkmn.forget_move(:BULKUP)
 							pkmn.learn_move(:TOXIC)
 						elsif partypoopers>1
-							if needfire	
+							if needfire
 								if needdark
 									pkmn.forget_move(:DRAINPUNCH)
 									pkmn.learn_move(:KNOCKOFF)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:DRAINPUNCH)
 									pkmn.learn_move(:PLAYROUGH)
-								end	
+								end
 							else
 								pkmn.forget_move(:FIREPUNCH)
 								pkmn.learn_move(:KNOCKOFF)
@@ -2218,18 +2218,18 @@ module GameData
 							if needdark
 								pkmn.forget_move(:FIREPUNCH)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:FIREPUNCH)
 								pkmn.learn_move(:PLAYROUGH)
-							end	
+							end
 						end
 					#when :B169H106 see chuck
 					when :B254H381
 						if needfairy
 							pkmn.forget_move(:AGILITY)
 							pkmn.learn_move(:PLAYROUGH)
-						end	
+						end
 					when :B262H288
 						if partypoopers>2
 							pkmn.forget_move(:EARTHQUAKE)
@@ -2237,17 +2237,17 @@ module GameData
 							pkmn.forget_move(:ZENHEADBUTT)
 							pkmn.learn_move(:TOXIC)
 						elsif partypoopers>1
-							if needfire	
+							if needfire
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:FIREPUNCH)
 								if needdark
 									pkmn.forget_move(:ZENHEADBUTT)
 									pkmn.learn_move(:KNOCKOFF)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:ZENHEADBUTT)
 									pkmn.learn_move(:DAZZLINGGLEAM)
-								end	
+								end
 							else
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:KNOCKOFF)
@@ -2258,15 +2258,15 @@ module GameData
 							if needfire
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:FIREPUNCH)
-							end	
+							end
 							if needdark
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:DAZZLINGGLEAM)
-							end	
+							end
 						end
 					when :B208H184
 						if partypoopers>2
@@ -2275,13 +2275,13 @@ module GameData
 							pkmn.forget_move(:ICEPUNCH)
 							pkmn.learn_move(:KNOCKOFF)
 						elsif partypoopers>1
-							if needfire	
+							if needfire
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:FIREFANG)
 								if needdark
 									pkmn.forget_move(:ICEPUNCH)
 									pkmn.learn_move(:KNOCKOFF)
-								end	
+								end
 							else
 								pkmn.forget_move(:ICEPUNCH)
 								pkmn.learn_move(:KNOCKOFF)
@@ -2290,11 +2290,11 @@ module GameData
 							if needfire
 								pkmn.forget_move(:EARTHQUAKE)
 								pkmn.learn_move(:FIREFANG)
-							end	
+							end
 							if needdark
 								pkmn.forget_move(:ICEPUNCH)
 								pkmn.learn_move(:KNOCKOFF)
-							end	
+							end
 						end
 					when :B195H250
 						if needdark || needfairy
@@ -2348,17 +2348,17 @@ module GameData
 							pkmn.forget_move(:CALMMIND)
 							pkmn.learn_move(:TOXIC)
 						elsif partypoopers>1
-							if needfire	
+							if needfire
 								pkmn.forget_move(:AGILITY)
 								pkmn.learn_move(:FLAMETHROWER)
 								if needdark
 									pkmn.forget_move(:CALMMIND)
 									pkmn.learn_move(:DARKPULSE)
-								end	
+								end
 								if needfairy
 									pkmn.forget_move(:CALMMIND)
 									pkmn.learn_move(:TOXIC)
-								end	
+								end
 							else
 								pkmn.forget_move(:AGILITY)
 								pkmn.learn_move(:DARKPULSE)
@@ -2373,11 +2373,11 @@ module GameData
 							if needdark
 								pkmn.forget_move(:AGILITY)
 								pkmn.learn_move(:DARKPULSE)
-							end	
+							end
 							if needfairy
 								pkmn.forget_move(:AGILITY)
 								pkmn.learn_move(:TOXIC)
-							end	
+							end
 						end
 					when :B345H335
 						if partypoopers>0
@@ -2389,20 +2389,20 @@ module GameData
 							pkmn.forget_move(:THUNDER)
 							pkmn.learn_move(:WILLOWISP)
 						end
-					
+
 					# Pokemon specific Shedproofing End
 					end
 				end
 				$game_switches[987]=randovar
-				$game_switches[47]=reversevar  
+				$game_switches[47]=reversevar
 				$game_switches[SWITCH_IS_REMATCH]=rematch
-			end	
+			end
 		  return trainer
-		end				
-		
+		end
+
 	end
-	
-	
+
+
 	class TrainerChallenge
 		attr_reader :id
 		attr_reader :id_number
@@ -2412,10 +2412,10 @@ module GameData
 		attr_reader :items
 		attr_reader :real_lose_text
 		attr_reader :pokemon
-		
+
 		DATA = {}
 		DATA_FILENAME = "trainers_challenge.dat"
-		
+
 		SCHEMA = {
 			"Items" => [:items, "*e", :Item],
 			"LoseText" => [:lose_text, "s"],
@@ -2436,10 +2436,10 @@ module GameData
 			"Shadow" => [:shadowness, "b"],
 			"Ball" => [:poke_ball, "s"],
 		}
-		
+
 		extend ClassMethods
 		include InstanceMethods
-		
+
 		# @param tr_type [Symbol, String]
 		# @param tr_name [String]
 		# @param tr_version [Integer, nil]
@@ -2450,7 +2450,7 @@ module GameData
 			key = [tr_type.to_sym, tr_name, tr_version]
 			return !self::DATA[key].nil?
 		end
-		
+
 		# @param tr_type [Symbol, String]
 		# @param tr_name [String]
 		# @param tr_version [Integer, nil]
@@ -2462,7 +2462,7 @@ module GameData
 			raise "Unknown trainer #{tr_type} #{tr_name} #{tr_version}." unless self::DATA.has_key?(key)
 			return self::DATA[key]
 		end
-		
+
 		# @param tr_type [Symbol, String]
 		# @param tr_name [String]
 		# @param tr_version [Integer, nil]
@@ -2473,11 +2473,11 @@ module GameData
 			key = [tr_type.to_sym, tr_name, tr_version]
 			return (self::DATA.has_key?(key)) ? self::DATA[key] : nil
 		end
-		
+
 		def self.list_all()
 			return self::DATA
 		end
-		
+
 		def initialize(hash)
 			@id = hash[:id]
 			@id_number = hash[:id_number]
@@ -2494,17 +2494,17 @@ module GameData
 				end
 			end
 		end
-		
+
 		# @return [String] the translated name of this trainer
 		def name
 			return pbGetMessageFromHash(MessageTypes::TrainerNames, @real_name)
 		end
-		
+
 		# @return [String] the translated in-battle lose message of this trainer
 		def lose_text
 			return pbGetMessageFromHash(MessageTypes::TrainerLoseText, @real_lose_text)
 		end
-		
+
 		def replace_species_with_placeholder(species)
 			case species
 			when Settings::RIVAL_STARTER_PLACEHOLDER_SPECIES
@@ -2517,7 +2517,7 @@ module GameData
 				return pbGet(3)
 			end
 		end
-		
+
 		def generateRandomChampionSpecies(old_species)
 			customsList = getCustomSpeciesList()
 			bst_range = pbGet(VAR_RANDOMIZER_TRAINER_BST)
@@ -2529,14 +2529,14 @@ module GameData
 			evolved_species_id = getEvolution(evolved_species_id)
 			return getSpecies(evolved_species_id)
 		end
-		
+
 		def generateRandomGymSpecies(old_species)
 			gym_index = pbGet(VAR_CURRENT_GYM_TYPE)
 			return old_species if gym_index == -1
 			return generateRandomChampionSpecies(old_species) if gym_index == 999
 			type_id = pbGet(VAR_GYM_TYPES_ARRAY)[gym_index]
 			return old_species if type_id == -1
-			
+
 			customsList = getCustomSpeciesList()
 			bst_range = pbGet(VAR_RANDOMIZER_TRAINER_BST)
 			gym_type = GameData::Type.get(type_id)
@@ -2547,7 +2547,7 @@ module GameData
 				end
 			end
 		end
-		
+
 		def replace_species_to_randomized_gym(species, trainerId, pokemonIndex)
 			if $PokemonGlobal.randomGymTrainersHash == nil
 				$PokemonGlobal.randomGymTrainersHash = {}
@@ -2563,14 +2563,14 @@ module GameData
 			end
 			return new_species
 		end
-		
+
 		def add_generated_species_to_gym_array(new_species, trainerId)
 			if (new_species.is_a?(Symbol))
 				id = new_species
 			else
 				id = new_species.id_number
 			end
-			
+
 			expected_team_length = 1
 			expected_team_length = $PokemonGlobal.randomTrainersHash[trainerId].length if $PokemonGlobal.randomTrainersHash[trainerId]
 			new_team = []
@@ -2582,7 +2582,7 @@ module GameData
 			end
 			$PokemonGlobal.randomGymTrainersHash[trainerId] = new_team
 		end
-		
+
 		def replace_species_to_randomized_regular(species, trainerId, pokemonIndex)
 			if $PokemonGlobal.randomTrainersHash[trainerId] == nil
 				Kernel.pbMessage(_INTL("The trainers need to be re-shuffled."))
@@ -2591,20 +2591,20 @@ module GameData
 			new_species_dex = $PokemonGlobal.randomTrainersHash[trainerId][pokemonIndex]
 			return getSpecies(new_species_dex)
 		end
-		
+
 		def isGymBattle
 			return ($game_switches[SWITCH_RANDOM_TRAINERS] && ($game_variables[VAR_CURRENT_GYM_TYPE] != -1) || ($game_switches[SWITCH_FIRST_RIVAL_BATTLE] && $game_switches[SWITCH_RANDOM_STARTERS]))
 		end
-		
+
 		def replace_species_to_randomized(species, trainerId, pokemonIndex)
 			return species if $game_switches[SWITCH_FIRST_RIVAL_BATTLE]
 			if isGymBattle() && $game_switches[SWITCH_RANDOMIZE_GYMS_SEPARATELY]
 				return replace_species_to_randomized_gym(species, trainerId, pokemonIndex)
 			end
 			return replace_species_to_randomized_regular(species, trainerId, pokemonIndex)
-			
+
 		end
-		
+
 		def replaceSingleSpeciesModeIfApplicable(species)
 			if $game_switches[SWITCH_SINGLE_POKEMON_MODE]
 				if $game_switches[SWITCH_SINGLE_POKEMON_MODE_HEAD]
@@ -2621,7 +2621,7 @@ module GameData
 			end
 			return species
 		end
-		
+
 		def replaceFusionsHeadWithSpecies(species)
 			speciesId = getDexNumberForSpecies(species)
 			if speciesId > NB_POKEMON
@@ -2632,7 +2632,7 @@ module GameData
 			end
 			return species
 		end
-		
+
 		def replaceFusionsBodyWithSpecies(species)
 			speciesId = getDexNumberForSpecies(species)
 			if speciesId > NB_POKEMON
@@ -2643,7 +2643,7 @@ module GameData
 			end
 			return species
 		end
-		
+
 		def to_trainer
 			placeholder_species = [Settings::RIVAL_STARTER_PLACEHOLDER_SPECIES,
 				Settings::VAR_1_PLACEHOLDER_SPECIES,
@@ -2661,11 +2661,11 @@ module GameData
 			trainer.id = $Trainer.make_foreign_ID
 			trainer.items = @items.clone
 			trainer.lose_text = self.lose_text
-			
+
 			isRematch = $game_switches[SWITCH_IS_REMATCH]
 			isPlayingRandomized = $game_switches[SWITCH_RANDOM_TRAINERS] && !$game_switches[SWITCH_FIRST_RIVAL_BATTLE]
 			rematchId = getRematchId(trainer.name, trainer.trainer_type)
-			
+
 			# Create each Pokémon owned by the trainer
 			index = 0
 			@pokemon.each do |pkmn_data|
@@ -2688,7 +2688,7 @@ module GameData
 						level = Settings::MAXIMUM_LEVEL
 					end
 				end
-				
+
 				if $game_switches[Settings::OVERRIDE_BATTLE_LEVEL_SWITCH]
 					override_level = $game_variables[Settings::OVERRIDE_BATTLE_LEVEL_VALUE_VAR]
 					if override_level.is_a?(Integer)
@@ -2696,31 +2696,31 @@ module GameData
 					end
 				end
 				####
-				
+
 				#trainer rematch infinite fusion edit
 				if isRematch
 					nbRematch = getNumberRematch(rematchId)
 					level = getRematchLevel(level, nbRematch)
 					species = evolveRematchPokemon(nbRematch, species)
 				end
-				
+
 				maxlevel=0
 				for i in $Trainer.party
 					if i.level>maxlevel
 						maxlevel=i.level
-					end    
-				end 
+					end
+				end
 				level=maxlevel
-				
+
 				pkmn = Pokemon.new(species, level, trainer, false)
-				
+
 				trainer.party.push(pkmn)
 				# Set Pokémon's properties if defined
 				if pkmn_data[:form]
 					pkmn.forced_form = pkmn_data[:form] if MultipleForms.hasFunction?(species, "getForm")
 					pkmn.form_simple = pkmn_data[:form]
 				end
-				
+
 				if $game_switches[SWITCH_RANDOM_HELD_ITEMS]
 					pkmn.item = pbGetRandomHeldItem().id
 				else
@@ -2763,7 +2763,7 @@ module GameData
 				end
 				pkmn.poke_ball = pkmn_data[:poke_ball] if pkmn_data[:poke_ball]
 				pkmn.calc_stats
-				
+
 				index += 1
 			end
 			return trainer

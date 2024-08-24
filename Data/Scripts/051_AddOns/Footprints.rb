@@ -82,19 +82,19 @@ class Game_Event < Game_Character
 end
 
 class Sprite_Character
-  alias old_initialize_foot initialize
+  alias old_initialize_foot initialize unless method_defined?(:old_initialize_foot)
   def initialize(viewport, character=nil)
     old_initialize_foot(viewport, character)
     @disposed = false
   end
 
-  alias old_update_foot update
+  alias old_update_foot update unless method_defined?(:old_update_foot)
   def update
     return if @disposed
     old_update_foot
   end
 
-  alias old_dispose_foot dispose
+  alias old_dispose_foot dispose unless method_defined?(:old_dispose_foot)
   def dispose
     old_dispose_foot
     @disposed = true
@@ -105,7 +105,7 @@ class Spriteset_Map
   attr_accessor :character_sprites
   attr_accessor :footsprites
 
-  alias old_initialize initialize
+  alias old_initialize initialize unless method_defined?(:old_initialize)
   def initialize(map=nil)
     old_initialize(map)
     @footsprites = []
@@ -119,14 +119,14 @@ class Spriteset_Map
     return FootprintVariables.show(event, pos)
   end
 
-  alias old_dispose dispose
+  alias old_dispose dispose unless method_defined?(:old_dispose)
   def dispose
     old_dispose
     @footsprites.each { |sprite| sprite.dispose } if !@footsprites.nil?
     @footsprites.clear
   end
 
-  alias old_update update
+  alias old_update update unless method_defined?(:old_update)
   def update
     old_update
     return if @footsprites.nil?
@@ -156,7 +156,7 @@ class Game_Character
     return $game_map.terrain_tag(get_last_pos[0], get_last_pos[1]) == FootprintVariables::TERRAIN_FOOT && $scene.is_a?(Scene_Map) && $scene.spriteset?
   end
 
-  alias leave_tile_footprints triggerLeaveTile
+  alias leave_tile_footprints triggerLeaveTile unless method_defined?(:leave_tile_footprints)
   def triggerLeaveTile
     leave_tile_footprints
     $scene.spriteset.putFootprint(self, get_last_pos) if foot_prints?

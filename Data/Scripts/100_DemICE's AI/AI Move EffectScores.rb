@@ -1,7 +1,7 @@
 class PokeBattle_AI
-	
-	alias stupidity_pbGetMoveScoreFunctionCode pbGetMoveScoreFunctionCode
-	
+
+	alias stupidity_pbGetMoveScoreFunctionCode pbGetMoveScoreFunctionCode unless method_defined?(:stupidity_pbGetMoveScoreFunctionCode)
+
 	def pbGetMoveScoreFunctionCode(score, move, user, target, skill = 100)
 		initialscore=score
 		attacker=user
@@ -9,32 +9,32 @@ class PokeBattle_AI
 		# prankpri = false
 		# if move.baseDamage==0 && attacker.hasActiveAbility?(:PRANKSTER)
 		# 	prankpri = true
-		# end	
+		# end
 		# if move.priority>0 || prankpri || (attacker.hasActiveAbility?(:GALEWINGS) && attacker.hp==attacker.totalhp && move.type==:FLYING)
 		thisprio = priorityAI(user,move)
 		if thisprio > 0
 			aspeed = pbRoughStat(attacker,:SPEED,skill)
 			ospeed = pbRoughStat(opponent,:SPEED,skill)
-			if move.baseDamage>0  
+			if move.baseDamage>0
 				fastermon = ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				if fastermon
 					PBDebug.log(sprintf("AI Pokemon is faster.")) if $INTERNAL
 				else
 					PBDebug.log(sprintf("Player Pokemon is faster.")) if $INTERNAL
-				end   
-				# pridamage=pbRoughDamage(move,attacker,opponent,skill,move.baseDamage)   
-				# if pridamage>=opponent.totalhp  
+				end
+				# pridamage=pbRoughDamage(move,attacker,opponent,skill,move.baseDamage)
+				# if pridamage>=opponent.totalhp
 				if !targetSurvivesMove(move,attacker,opponent)
 					if fastermon
 						score*=1.3
 					else
 						score*=2
 					end
-				end      
+				end
 				movedamage = -1
 				maxpriomove=nil
 				maxmove=nil
-				opppri = false     
+				opppri = false
 				pridam = -1
 				#if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				for j in opponent.moves
@@ -44,13 +44,13 @@ class PokeBattle_AI
 						if tempdam>pridam
 							pridam = tempdam
 							maxpriomove=j
-						end              
-					end    
+						end
+					end
 					if tempdam>movedamage
 						movedamage = tempdam
 						maxmove=j
-					end 
-				end 
+					end
+				end
 				#end
 				PBDebug.log(sprintf("Expected damage taken: %d",movedamage)) if $INTERNAL
 				if !fastermon
@@ -64,17 +64,17 @@ class PokeBattle_AI
 								if opponent.lastMoveUsed && opponent.pbHasMove?(opponent.lastMoveUsed)
 									next if j.id!=opponent.lastMoveUsed
 								end
-							end		
+							end
 							tempdam = pbRoughDamage(j,opponent,attacker,skill,j.baseDamage)
 							maxdam=tempdam if tempdam>maxdam
 							maxmove2=j
-						end  
+						end
 						#if maxdam>=attacker.hp
 						if !targetSurvivesMove(maxmove2,opponent,attacker)
 							score+=30
 						end
 					end
-				end      
+				end
 				if opppri
 					score*=1.1
 					#if pridam>attacker.hp
@@ -94,17 +94,17 @@ class PokeBattle_AI
 				end
 				if opponent.hasActiveAbility?(:DAZZLING) || opponent.hasActiveAbility?(:QUEENLYMAJESTY)
 					score*=0
-				end    
+				end
 				if pbTargetsMultiple?(move,user)
-					quickcheck = false 
+					quickcheck = false
 					for j in opponent.moves
 						quickcheck = true if j.function=="0AB"
-					end          
+					end
 					if quickcheck
 						score*=0.2
-					end 
-				end	
-			end      
+					end
+				end
+			end
 		elsif move.priority<0
 			if fastermon
 				score*=0.9
@@ -113,17 +113,17 @@ class PokeBattle_AI
 						score*=2
 					end
 				end
-			end      
-		end  
+			end
+		end
 		case move.function
-			
+
 			#---------------------------------------------------------------------------
 		when "003", "004"
 			aspeed = pbRoughStat(user, :SPEED, skill)
 			ospeed = pbRoughStat(target, :SPEED, skill)
 			if target.pbCanSleep?(user,false,move)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
@@ -145,10 +145,10 @@ class PokeBattle_AI
 						"103", "104", "105", "153", # Hazards
 						"0D5", "0D6",  #  Recovery
 						"0D8", "16D", "0D9")  # Synthesis, Shore up , Rest
-					score += 60	
+					score += 60
 					# GameData::Stat.each_battle do |stat|
 					# 	score -= 10*user.stages[stat.id]
-					# end	
+					# end
 				end
 				if user.pbHasMoveFunction?("024", "025", "02C", # Bulk Up, Coil, Calm Mind
 						"027", "028","02A", # Growth, Cosmoic Power
@@ -158,9 +158,9 @@ class PokeBattle_AI
 					score += 60
 				end
 				if target.hasActiveItem?(:LUMBERRY) || target.hasActiveItem?(:CHESTOBERRY)
-					score-=30 
+					score-=30
 					score-=150 if maxdam>halfhealth
-				end	
+				end
 				if skill >= PBTrainerAI.mediumSkill
 					score -=300 if target.effects[PBEffects::Yawn] > 0 && move.function == "004"
 				end
@@ -178,7 +178,7 @@ class PokeBattle_AI
 				score -= 90 if move.statusMove?
 				score -=300 if target.effects[PBEffects::Yawn] > 0 && move.function == "004"
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "007", "008", "009"
 			if target.pbCanParalyze?(user, false,move) &&
@@ -209,25 +209,25 @@ class PokeBattle_AI
 			elsif skill >= PBTrainerAI.mediumSkill
 				score -= 90 if move.statusMove?
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "00A" # Burn
 			if target.pbCanBurn?(user, false,move)
-				score += 30    
+				score += 30
 				score += 80 if target.hasActiveAbility?(:WONDERGUARD)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
-				maxphys=(bestmove[3]=="physical") 
-				halfhealth=(user.totalhp/2)     
+				maxdam=bestmove[0]
+				maxphys=(bestmove[3]=="physical")
+				halfhealth=(user.totalhp/2)
 				halfdam= maxdam*0.5
 				if move.statusMove? && maxphys
-					score += 30 
+					score += 30
 					score += 80 if halfdam < halfhealth
-				end   
+				end
 				if target.hasActiveItem?(:LUMBERRY) || target.hasActiveItem?(:RAWSTBERRY)
-					score-=50 
+					score-=50
 					score-=150 if maxdam>halfhealth
-				end	
+				end
 				if skill>=PBTrainerAI.highSkill
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
@@ -240,7 +240,7 @@ class PokeBattle_AI
 				end
 			elsif skill >= PBTrainerAI.mediumSkill
 				score -= 90 if move.statusMove?
-			end    
+			end
 		#---------------------------------------------------------------------------
 		when "005", "006", "0BE"
 			if target.pbCanPoison?(user,false,move)
@@ -261,7 +261,7 @@ class PokeBattle_AI
 			if skill>=PBTrainerAI.mediumSkill
 				score -= 90 if move.statusMove?
 			end
-			end        
+			end
 			#---------------------------------------------------------------------------
 		when "012"   # Fake Out
 			if user.turnCount == 0
@@ -273,7 +273,7 @@ class PokeBattle_AI
 				score -= 90   # Because it will fail here
 				score = 0 #if skill >= PBTrainerAI.bestSkill
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "034"  # Minimize
 			if move.statusMove?
@@ -282,16 +282,16 @@ class PokeBattle_AI
 				else
 					target==user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker) || (target.status == :SLEEP && target.statusCount>1)
 						score += 40
 						score += 20 if halfhealth>maxdam
@@ -304,7 +304,7 @@ class PokeBattle_AI
 							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
 							score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>halfhealth
 						end
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:EVASION] * 10
@@ -318,17 +318,17 @@ class PokeBattle_AI
 			if user.pbHasType?(:GHOST)
 				score-=200 if target.effects[PBEffects::Curse]
 				score-=200 if target.hasActiveAbility?(:MAGICGUARD)
-			else    
+			else
 				if (user.statStageAtMax?(:ATTACK) &&
 					user.statStageAtMax?(:DEFENSE)) || user.hasActiveAbility?(:CONTRARY)
 					score -= 200
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
-					maxphys=(bestmove[3]=="physical") 
+					maxphys=(bestmove[3]=="physical")
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					if targetSurvivesMove(maxmove,target,attacker,maxprio)|| (target.status == :SLEEP && target.statusCount>1)
@@ -344,7 +344,7 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:ATTACK]*5
@@ -363,7 +363,7 @@ class PokeBattle_AI
 						end
 					end
 				end
-			end    
+			end
 			#---------------------------------------------------------------------------
 		when "024"  # Bulk Up
 			if (user.statStageAtMax?(:ATTACK) &&
@@ -372,18 +372,18 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
-				maxphys=(bestmove[3]=="physical") 
+				maxphys=(bestmove[3]=="physical")
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio)|| (target.status == :SLEEP && target.statusCount>1)
 					score += 40
 					score+=20 if maxphys
@@ -397,7 +397,7 @@ class PokeBattle_AI
 					end
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
-				end 
+				end
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:ATTACK]*10
@@ -416,7 +416,7 @@ class PokeBattle_AI
 					end
 				end
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "025"  # Coil
 			if (user.statStageAtMax?(:ATTACK) &&
@@ -426,18 +426,18 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
-				maxphys=(bestmove[3]=="physical") 
+				maxphys=(bestmove[3]=="physical")
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 40
 					score+=20 if maxphys
@@ -451,7 +451,7 @@ class PokeBattle_AI
 					end
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
-				end 
+				end
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:ATTACK]*10
@@ -470,8 +470,8 @@ class PokeBattle_AI
 						score -= 90
 					end
 				end
-			end		  
-			
+			end
+
 			#---------------------------------------------------------------------------
 		when "026"  # Dragon Dance
 			if (user.statStageAtMax?(:ATTACK) &&
@@ -480,17 +480,17 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 20
 					score+= 60 if (target.status == :SLEEP && target.statusCount>1)
@@ -520,7 +520,7 @@ class PokeBattle_AI
 					end
 				end
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "036"  # Shift Gear
 			if (user.statStageAtMax?(:ATTACK) &&
@@ -529,17 +529,17 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 20
 					if skill>=PBTrainerAI.highSkill
@@ -577,18 +577,18 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
-				maxspec=(bestmove[3]=="special") 
+				maxspec=(bestmove[3]=="special")
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 20
 					score+= 60 if (target.status == :SLEEP && target.statusCount>1)
@@ -623,7 +623,7 @@ class PokeBattle_AI
 					end
 				end
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "02C"  # Calm Mind
 			if (user.statStageAtMax?(:SPECIAL_ATTACK) &&
@@ -632,18 +632,18 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
-				maxspec=(bestmove[3]=="special") 
+				maxspec=(bestmove[3]=="special")
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 40
 					score+=20 if maxspec
@@ -657,7 +657,7 @@ class PokeBattle_AI
 					end
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
-				end 
+				end
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:SPECIAL_ATTACK]*10
@@ -676,7 +676,7 @@ class PokeBattle_AI
 					end
 				end
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "02A"  # Cosmic Power
 			if (user.statStageAtMax?(:DEFENSE) &&
@@ -685,17 +685,17 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 30
 					score += 20 if halfhealth>maxdam
@@ -708,22 +708,22 @@ class PokeBattle_AI
 					if skill>=PBTrainerAI.highSkill
 						aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
 						ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-						if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) 
+						if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 							#healorchip=user.totalhp*(1-hpchange)
 							actualhp = thirdhealth + (user.totalhp * hpchange)
 							if maxdam>actualhp
-								score -= 90 
+								score -= 90
 							else
 								score += 60 if hpchange >= 1.1
 							end
 						end
 					end
-				end 
+				end
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:DEFENSE] * 4
 				score -= user.stages[:SPECIAL_DEFENSE] * 4
-			end		
+			end
 			#---------------------------------------------------------------------------
 		when "112"  # Stockpile
 			target=user.pbDirectOpposing(true)
@@ -732,17 +732,17 @@ class PokeBattle_AI
 				score -= 200
 			else
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 30
 					score += 20 if halfhealth>maxdam
@@ -755,22 +755,22 @@ class PokeBattle_AI
 					if skill>=PBTrainerAI.highSkill
 						aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
 						ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-						if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) 
+						if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 							#healorchip=user.totalhp*(1-hpchange)
 							actualhp = thirdhealth + (user.totalhp * hpchange)
 							if maxdam>actualhp
-								score -= 90 
+								score -= 90
 							else
 								score += 60 if hpchange >= 1.1
 							end
 						end
 					end
-				end 
+				end
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:DEFENSE] * 10
 				score -= user.stages[:SPECIAL_DEFENSE] * 10
-			end	
+			end
 			#---------------------------------------------------------------------------
 		when "137"  # Magnetic Flux
 			geared=false
@@ -784,17 +784,17 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 30
 					score += 20 if halfhealth>maxdam
@@ -807,7 +807,7 @@ class PokeBattle_AI
 						ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
 						score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
 					end
-				end 
+				end
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:DEFENSE] * 4
@@ -821,18 +821,18 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
-					maxphys=(bestmove[3]=="physical") 
+					maxphys=(bestmove[3]=="physical")
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 						if maxphys
 							score += 30
@@ -847,7 +847,7 @@ class PokeBattle_AI
 							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
 							score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
 						end
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:DEFENSE] * 20
@@ -863,18 +863,18 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
-					maxphys=(bestmove[3]=="physical") 
+					maxphys=(bestmove[3]=="physical")
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 						if maxphys
 							score += 40
@@ -889,7 +889,7 @@ class PokeBattle_AI
 							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
 							score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
 						end
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:DEFENSE] * 30
@@ -906,18 +906,18 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
-					maxspec=(bestmove[3]=="special") 
+					maxspec=(bestmove[3]=="special")
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 						if maxspec
 							score += 30
@@ -932,7 +932,7 @@ class PokeBattle_AI
 							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
 							score -= 90 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>thirdhealth
 						end
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:SPECIAL_DEFENSE] * 20
@@ -948,17 +948,17 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 						#score += 40
 						if skill>=PBTrainerAI.highSkill
@@ -983,28 +983,28 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 						#score += 40
 						if skill>=PBTrainerAI.highSkill
 							aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
 							ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
 							if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
-								score += 100 
-								if attacker.pbHasMoveFunction?("175") && attacker.hasActiveAbility?(:SERENEGRACE) && 
+								score += 100
+								if attacker.pbHasMoveFunction?("175") && attacker.hasActiveAbility?(:SERENEGRACE) &&
 									((!target.hasActiveAbility?(:INNERFOCUS) && !target.hasActiveAbility?(:SHIELDDUST)) || mold_broken) &&
 									target.effects[PBEffects::Substitute]==0
-									score +=140 
+									score +=140
 								end
 							end
 						end
@@ -1030,17 +1030,17 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 40
 					score += 20 if user.hasActiveAbility?(:SPEEDBOOST)
@@ -1052,7 +1052,7 @@ class PokeBattle_AI
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
 					prio=false
-				end 
+				end
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:ATTACK] * 10
@@ -1079,17 +1079,17 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 40
 					score += 20 if user.hasActiveAbility?(:SPEEDBOOST)
@@ -1101,7 +1101,7 @@ class PokeBattle_AI
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
 					prio=false
-				end 
+				end
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:ATTACK] * 10
@@ -1131,17 +1131,17 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 						score += 40
 						score += 20 if user.hasActiveAbility?(:SPEEDBOOST)
@@ -1152,7 +1152,7 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:ATTACK] * 20
@@ -1181,7 +1181,7 @@ class PokeBattle_AI
 					end
 					score += 20 if hasPhysicalAttack
 				end
-			end            
+			end
 			#---------------------------------------------------------------------------
 		when "02E"  # Swords Dance
 			if move.statusMove?
@@ -1190,7 +1190,7 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
 					priodam=0
@@ -1201,22 +1201,22 @@ class PokeBattle_AI
 							if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 								next if j.id!=user.lastMoveUsed
 							end
-						end		
+						end
 						tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
 						tempdam = 0 if pbCheckMoveImmunity(1,j,target,user,100)
 						if tempdam>priodam
-							priodam=tempdam 
+							priodam=tempdam
 							priomove=j
-						end	
-					end 
+						end
+					end
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,user,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 						score += 40
 						score+= 60 if (target.status == :SLEEP && target.statusCount>1)
@@ -1228,11 +1228,11 @@ class PokeBattle_AI
 								if priomove
 									if targetSurvivesMove(priomove,user,target) && !targetSurvivesMove(priomove,user,target,0,2)
 										score+=80
-									else	
-										score -= 90 
+									else
+										score -= 90
 									end
 								else
-									score -= 90 
+									score -= 90
 								end
 							else
 								score+=80
@@ -1240,7 +1240,7 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:ATTACK]*20
@@ -1271,7 +1271,7 @@ class PokeBattle_AI
 					score += 20 if hasPhysicalAttack
 				end
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "029" # Hone Claws
 			if (user.statStageAtMax?(:ATTACK) &&
@@ -1280,17 +1280,17 @@ class PokeBattle_AI
 			else
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
 				halfhealth=(user.totalhp/2)
 				thirdhealth=(user.totalhp/3)
 				aspeed = pbRoughStat(user,:SPEED,skill)
 				ospeed = pbRoughStat(target,:SPEED,skill)
-				if canSleepTarget(user,target,true) && 
+				if canSleepTarget(user,target,true) &&
 					((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 					score-=90
-				end	
+				end
 				if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 					score += 40
 					score += 20 if user.hasActiveAbility?(:SPEEDBOOST)
@@ -1301,7 +1301,7 @@ class PokeBattle_AI
 					end
 					score += 20 if halfhealth>maxdam
 					score += 40 if thirdhealth>maxdam
-				end 
+				end
 				score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 				score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 				score -= user.stages[:ATTACK] * 10
@@ -1328,17 +1328,17 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 						score += 40
 						score+= 60 if (target.status == :SLEEP && target.statusCount>1)
@@ -1350,7 +1350,7 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:SPECIAL_ATTACK]*20
@@ -1381,7 +1381,7 @@ class PokeBattle_AI
 					score += 20 if hasSpecicalAttack
 				end
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "039" # Tail Glow
 			if move.statusMove?
@@ -1390,17 +1390,17 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker,maxprio) || (target.status == :SLEEP && target.statusCount>1)
 						score += 40
 						score += 20 if user.hasActiveAbility?(:SPEEDBOOST)
@@ -1411,7 +1411,7 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score += 40 if user.turnCount == 0
@@ -1442,7 +1442,7 @@ class PokeBattle_AI
 					end
 					score += 20 if hasSpecicalAttack
 				end
-			end       
+			end
 			#---------------------------------------------------------------------------
 		when "035" # Shell Smash
 			if user.hasActiveAbility?(:CONTRARY)
@@ -1467,7 +1467,7 @@ class PokeBattle_AI
 					score += 20 if hasDamagingAttack
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
 					halfhealth=(user.totalhp/2)
@@ -1477,10 +1477,10 @@ class PokeBattle_AI
 					mult=1
 					mult=2 if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && !user.hasActiveItem?(:WHITEHERB)
 					maxdam*=mult
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					if targetSurvivesMove(maxmove,target,attacker,maxprio,mult) || (target.status == :SLEEP && target.statusCount>1)
 						score += 100-30*mult
 						if skill>=PBTrainerAI.highSkill
@@ -1493,8 +1493,8 @@ class PokeBattle_AI
 					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
-				end	
-			end    
+				end
+			end
 			#---------------------------------------------------------------------------
 			when "03A" # Belly Drum
 				if user.statStageAtMax?(:ATTACK) ||
@@ -1503,7 +1503,7 @@ class PokeBattle_AI
 				else
 					target=user.pbDirectOpposing(true)
 					bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxdam=bestmove[0] 
+					maxdam=bestmove[0]
 					maxmove=bestmove[1]
 					maxprio=bestmove[2]
 					priodam=0
@@ -1514,22 +1514,22 @@ class PokeBattle_AI
 							if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 								next if j.id!=user.lastMoveUsed
 							end
-						end		
+						end
 						tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
 						tempdam = 0 if pbCheckMoveImmunity(1,j,target,user,100)
 						if tempdam>priodam
-							priodam=tempdam 
+							priodam=tempdam
 							priomove=j
-						end	
-					end 
+						end
+					end
 					halfhealth=(user.totalhp/2)
 					thirdhealth=(user.totalhp/3)
 					aspeed = pbRoughStat(user,:SPEED,skill)
 					ospeed = pbRoughStat(target,:SPEED,skill)
-					if canSleepTarget(user,target,true) && 
+					if canSleepTarget(user,target,true) &&
 						((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 						score-=90
-					end	
+					end
 					mult=2
 					mult=1.5 if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && user.hasActiveItem?(:SITRUSBERRY)
 					if targetSurvivesMove(maxmove,target,user,maxprio,mult) || (target.status == :SLEEP && target.statusCount>1)
@@ -1543,11 +1543,11 @@ class PokeBattle_AI
 								if priomove
 									if targetSurvivesMove(priomove,user,target) && !targetSurvivesMove(priomove,user,target,0,4)
 										score+=80
-									else	
-										score -= 90 
+									else
+										score -= 90
 									end
 								else
-									score -= 90 
+									score -= 90
 								end
 							else
 								score+=80
@@ -1555,7 +1555,7 @@ class PokeBattle_AI
 						end
 						score += 20 if halfhealth>maxdam
 						score += 40 if thirdhealth>maxdam
-					end 
+					end
 					score-=50 if target.pbHasMoveFunction?("055","054","15D") # Psych Up, Heart Swap, Spectral Thief
 					score-=50 if target.pbHasMove?(:CLEARSMOG) && !user.pbHasType?(:STEEL) # Clear Smog
 					score -= user.stages[:ATTACK]*20
@@ -1576,10 +1576,10 @@ class PokeBattle_AI
 				#---------------------------------------------------------------------------
 			when "04F" # Acid Spray
 				bestmove=bestMoveVsTarget(user,target,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
-				maxspec=(bestmove[3]=="special") 
+				maxspec=(bestmove[3]=="special")
 				thirdhealth=(target.totalhp/3)
 				score +=40 if maxspec && maxdam <= thirdhealth && !target.hasActiveAbility?(:CONTRARY) && !target.statStageAtMin?(:SPECIAL_DEFENSE)
 			#---------------------------------------------------------------------------
@@ -1589,15 +1589,15 @@ class PokeBattle_AI
 				score -= 90
 			else
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
-				maxphys=(bestmove[3]=="physical") 
+				maxphys=(bestmove[3]=="physical")
 				maxowndam=0
 				for j in target.moves
 					tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,user,target,100)
 					maxowndam=tempdam if tempdam>maxowndam
-				end 
+				end
 				maxowndam=target.hp if maxowndam>target.hp
 				counterdam=0
 				counterdam=maxdam*2 if maxphys
@@ -1613,7 +1613,7 @@ class PokeBattle_AI
 					score-=90
 				else
 					score += 30 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-				end   
+				end
 				score-=200 if pbAIRandom(100) < 50
 			end
 			#---------------------------------------------------------------------------
@@ -1623,15 +1623,15 @@ class PokeBattle_AI
 				score -= 90
 			else
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
-				maxspec=(bestmove[3]=="special") 
+				maxspec=(bestmove[3]=="special")
 				maxowndam=0
 				for j in target.moves
 					tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,user,target,100)
 					maxowndam=tempdam if tempdam>maxowndam
-				end 
+				end
 				maxowndam=target.hp if maxowndam>target.hp
 				counterdam=0
 				counterdam=maxdam*2 if maxspec
@@ -1647,9 +1647,9 @@ class PokeBattle_AI
 					score-=90
 				else
 					score += 30 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-				end   
+				end
 				score-=200 if pbAIRandom(100) < 50
-			end   
+			end
 			#---------------------------------------------------------------------------
 		when "073"  # Metal Burst
 			target=user.pbDirectOpposing(true)
@@ -1657,14 +1657,14 @@ class PokeBattle_AI
 				score -= 90
 			else
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxowndam=0
 				for j in target.moves
 					tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,user,target,100)
 					maxowndam=tempdam if tempdam>maxowndam
-				end 
+				end
 				maxowndam=target.hp if maxowndam>target.hp
 				counterdam=0
 				counterdam=maxdam*1.5
@@ -1680,14 +1680,14 @@ class PokeBattle_AI
 					score-=90
 				else
 					if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-						score += 30 
-					else  
+						score += 30
+					else
 						score-=90
-					end        
-				end  
+					end
+				end
 				score=5 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				score-=200 if pbAIRandom(100) < 50
-			end   
+			end
 			#---------------------------------------------------------------------------
 		when "073"  # Bide
 			target=user.pbDirectOpposing(true)
@@ -1695,14 +1695,14 @@ class PokeBattle_AI
 				score -= 90
 			else
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxowndam=0
 				for j in target.moves
 					tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,user,target,100)
 					maxowndam=tempdam if tempdam>maxowndam
-				end 
+				end
 				maxowndam=target.hp if maxowndam>target.hp
 				counterdam=0
 				counterdam=maxdam*2
@@ -1718,16 +1718,16 @@ class PokeBattle_AI
 					score-=90
 				else
 					score += 30 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-				end   
+				end
 				score-=200 if pbAIRandom(100) < 50
-			end     
+			end
 			#---------------------------------------------------------------------------
 		when "0B4"   # Sleep Talk
 			if (user.asleep? && user.statusCount>1) || (user.hasActiveAbility?(:COMATOSE) && user.pbHasMoveFunction?("125"))
 				score += 150   # Because it can only be used while asleep
 			else
 				score -= 90
-			end 
+			end
 			#---------------------------------------------------------------------------
 		# when "125" # Last Resort # HANDLED IN pbCheckMoveImmunity
 		# 	hasThisMove = false
@@ -1761,10 +1761,10 @@ class PokeBattle_AI
 					if b.hasActiveAbility?(:WONDERGUARD) &&
 							(user.pbOpposingSide.effects[PBEffects::StealthRock] ||
 							user.pbOpposingSide.effects[PBEffects::ToxicSpikes] >0
-							user.pbOpposingSide.effects[PBEffects::Spikes] >0)	
+							user.pbOpposingSide.effects[PBEffects::Spikes] >0)
 						score+=50
-					end	
-				end	
+					end
+				end
 			end
 			#---------------------------------------------------------------------------
 			when "061" # Soak
@@ -1798,15 +1798,15 @@ class PokeBattle_AI
 		when "103" # Spikes
 			target=user.pbDirectOpposing(true)
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			denier=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				if b.effects[PBEffects::MagicCoat] || b.hasActiveAbility?(:MAGICBOUNCE) ||
 					(b.pbHasMoveFunction?("110") && !user.pbHasType?(:GHOST)) ||
-					b.pbHasMoveFunction?("049") 
+					b.pbHasMoveFunction?("049")
 					denier=true
 				end
-			end    
+			end
 			if user.pbOpposingSide.effects[PBEffects::Spikes] >= 3 || denier
 				score -= 90
 			elsif user.allOpposing.none? { |b| @battle.pbCanChooseNonActive?(b.index) }
@@ -1818,9 +1818,9 @@ class PokeBattle_AI
 				party.each_with_index do |pkmn, idxParty|
 					next if !pkmn || !pkmn.able?
 					next if inBattleIndices.include?(idxParty)
-					next if pkmn.ability == :MAGICGUARD || pkmn.isAirborne? || pkmn.item == :HEAVYDUTYBOOTS 
+					next if pkmn.ability == :MAGICGUARD || pkmn.isAirborne? || pkmn.item == :HEAVYDUTYBOOTS
 					count += 1
-					count += 1 if (pkmn.item == :FOCUSSASH || pkmn.ability == :STURDY || pkmn.ability == :WONDERGUARD) && 
+					count += 1 if (pkmn.item == :FOCUSSASH || pkmn.ability == :STURDY || pkmn.ability == :WONDERGUARD) &&
 					user.pbOpposingSide.effects[PBEffects::Spikes]==0
 				end
 				score += [15, 10, 5][user.pbOpposingSide.effects[PBEffects::Spikes]] * count
@@ -1832,10 +1832,10 @@ class PokeBattle_AI
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				if b.effects[PBEffects::MagicCoat] || b.hasActiveAbility?(:MAGICBOUNCE) ||
 					(b.pbHasMoveFunction?("110") && !user.pbHasType?(:GHOST)) ||
-					b.pbHasMoveFunction?("049") 
+					b.pbHasMoveFunction?("049")
 					denier=true
 				end
-			end    
+			end
 			if user.pbOpposingSide.effects[PBEffects::ToxicSpikes] >= 2 || denier
 				score -= 90
 			elsif user.allOpposing.none? { |b| @battle.pbCanChooseNonActive?(b.index) }
@@ -1847,15 +1847,15 @@ class PokeBattle_AI
 				party.each_with_index do |pkmn, idxParty|
 					next if !pkmn || !pkmn.able?
 					next if inBattleIndices.include?(idxParty)
-					next if pkmn.ability == :MAGICGUARD || pkmn.ability == :IMMUNITY || pkmn.isAirborne? || pkmn.item == :HEAVYDUTYBOOTS || 
+					next if pkmn.ability == :MAGICGUARD || pkmn.ability == :IMMUNITY || pkmn.isAirborne? || pkmn.item == :HEAVYDUTYBOOTS ||
 					pkmn.status != :NONE || pkmn.hasType?(:STEEL)
 					if pkmn.hasType?(:POISON) || pkmn.ability == :POISONHEAL || pkmn.ability == :GUTS || pkmn.ability == :TOXICBOOST
 						count-=1
-					else  
+					else
 						count += 1
-						count += 1 if (pkmn.item == :FOCUSSASH || pkmn.ability == :STURDY || pkmn.ability == :WONDERGUARD) && 
+						count += 1 if (pkmn.item == :FOCUSSASH || pkmn.ability == :STURDY || pkmn.ability == :WONDERGUARD) &&
 						user.pbOpposingSide.effects[PBEffects::ToxicSpikes]==0
-					end 
+					end
 				end
 				count=0 if count<0
 				score += [15, 5][user.pbOpposingSide.effects[PBEffects::ToxicSpikes]] * count
@@ -1867,10 +1867,10 @@ class PokeBattle_AI
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				if b.effects[PBEffects::MagicCoat] || b.hasActiveAbility?(:MAGICBOUNCE) ||
 					(b.pbHasMoveFunction?("110") && !user.pbHasType?(:GHOST)) ||
-					b.pbHasMoveFunction?("049") 
+					b.pbHasMoveFunction?("049")
 					denier=true
 				end
-			end    
+			end
 			if user.pbOpposingSide.effects[PBEffects::StealthRock] || denier
 				score -= 200
 			elsif user.allOpposing.none? { |b| @battle.pbCanChooseNonActive?(b.index) }
@@ -1885,15 +1885,15 @@ class PokeBattle_AI
 					next if pkmn.ability == :MAGICGUARD || pkmn.item == :HEAVYDUTYBOOTS
 					count += 1
 					count += 1 if pkmn.item == :FOCUSSASH || pkmn.ability == :STURDY || pkmn.ability == :WONDERGUARD ||
-					(pkmn.hasType?(:FIRE) && (pkmn.hasType?(:ICE) || pkmn.hasType?(:BUG) || pkmn.hasType?(:FLYING))) || 
-					(pkmn.hasType?(:ICE) &&  (pkmn.hasType?(:BUG) || pkmn.hasType?(:FLYING))) || 
-					(pkmn.hasType?(:BUG) && pkmn.hasType?(:FLYING)) 
+					(pkmn.hasType?(:FIRE) && (pkmn.hasType?(:ICE) || pkmn.hasType?(:BUG) || pkmn.hasType?(:FLYING))) ||
+					(pkmn.hasType?(:ICE) &&  (pkmn.hasType?(:BUG) || pkmn.hasType?(:FLYING))) ||
+					(pkmn.hasType?(:BUG) && pkmn.hasType?(:FLYING))
 					count +=3 if pkmn.ability == :WONDERGUARD
 				end
 				score += 15 * count
 				@battle.allOtherSideBattlers(user.index).each do |b|
 					score+=80 if b.hasActiveAbility?(:WONDERGUARD)
-				end	
+				end
 			end
 			#---------------------------------------------------------------------------
 		when "153" # Sticky Web
@@ -1902,10 +1902,10 @@ class PokeBattle_AI
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				if b.effects[PBEffects::MagicCoat] || b.hasActiveAbility?(:MAGICBOUNCE) ||
 					(b.pbHasMoveFunction?("110") && !user.pbHasType?(:GHOST)) ||
-					b.pbHasMoveFunction?("049") 
+					b.pbHasMoveFunction?("049")
 					denier=true
 				end
-			end    
+			end
 			if user.pbOpposingSide.effects[PBEffects::StickyWeb] || denier
 				score -= 95
 			elsif user.allOpposing.none? { |b| @battle.pbCanChooseNonActive?(b.index) }
@@ -1925,23 +1925,23 @@ class PokeBattle_AI
 					next if pkmn.item == :HEAVYDUTYBOOTS || pkmn.ability == :CLEARBODY || pkmn.ability == :FULLMETALBODY
 					if pkmn.ability == :CONTRARY || pkmn.ability == :DEFIANT || pkmn.ability == :COMPETITIVE
 						count-=1
-					else  
+					else
 						count += 1
 						count += 1 if pkmn.speed>=maxownspeed
-					end 
+					end
 				end
 				score += 10 * count
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "0A2" # Reflect
 			target=user.pbDirectOpposing(true)
 			aspeed = pbRoughStat(user,:SPEED,skill)
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			maxmove=bestmove[1]
-			maxphys=(bestmove[3]=="physical") 
+			maxphys=(bestmove[3]=="physical")
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			score+=30 if user.hasActiveItem?(:LIGHTCLAY)
@@ -1953,12 +1953,12 @@ class PokeBattle_AI
 				else
 					halfdam=maxdam/2
 					score+=40 if halfdam<user.hp
-				end     
-			end 
-			score-=90 if target.pbHasMoveFunction?("0B2", "10A", "049") || 
+				end
+			end
+			score-=90 if target.pbHasMoveFunction?("0B2", "10A", "049") ||
 			(target.pbHasMoveFunction?("0BA") && ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)))
 			score = 5 if user.pbOwnSide.effects[PBEffects::Reflect] > 0 || user.pbOwnSide.effects[PBEffects::AuroraVeil] > 1
-			
+
 			#---------------------------------------------------------------------------
 		when "0A3" # Light Screen
 			score = 5 if user.pbOwnSide.effects[PBEffects::LightScreen] > 0 || user.pbOwnSide.effects[PBEffects::AuroraVeil] > 1
@@ -1966,9 +1966,9 @@ class PokeBattle_AI
 			aspeed = pbRoughStat(user,:SPEED,skill)
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			maxmove=bestmove[1]
-			maxspec=(bestmove[3]=="special") 
+			maxspec=(bestmove[3]=="special")
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			score+=30 if user.hasActiveItem?(:LIGHTCLAY)
@@ -1980,9 +1980,9 @@ class PokeBattle_AI
 				else
 					halfdam=maxdam/2
 					score+=40 if halfdam<user.hp
-				end     
-			end 
-			score-=90 if target.pbHasMoveFunction?("0B2", "10A", "049") || 
+				end
+			end
+			score-=90 if target.pbHasMoveFunction?("0B2", "10A", "049") ||
 			(target.pbHasMoveFunction?("0BA") && ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)))
 			score = 5 if user.pbOwnSide.effects[PBEffects::LightScreen] > 0 || user.pbOwnSide.effects[PBEffects::AuroraVeil] > 1
 			#---------------------------------------------------------------------------
@@ -1991,7 +1991,7 @@ class PokeBattle_AI
 			aspeed = pbRoughStat(user,:SPEED,skill)
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			maxmove=bestmove[1]
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
@@ -2002,10 +2002,10 @@ class PokeBattle_AI
 			else
 				halfdam=maxdam/2
 				score+=80 if halfdam<user.hp
-			end    
-			score-=90 if target.pbHasMoveFunction?("0B2", "10A", "049") || 
+			end
+			score-=90 if target.pbHasMoveFunction?("0B2", "10A", "049") ||
 			(target.pbHasMoveFunction?("0BA") && ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)))
-			score =5 if user.pbOwnSide.effects[PBEffects::AuroraVeil] > 0 || @battle.pbWeather != :Hail || 
+			score =5 if user.pbOwnSide.effects[PBEffects::AuroraVeil] > 0 || @battle.pbWeather != :Hail ||
 			user.pbOwnSide.effects[PBEffects::Reflect] > 1 || user.pbOwnSide.effects[PBEffects::LightScreen] > 1
 			#---------------------------------------------------------------------------
 		when "0FF" # Sunny Day
@@ -2020,15 +2020,15 @@ class PokeBattle_AI
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
-					end	
+					end
 					tempdam = pbRoughDamage(j,b,user,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,b,user,100)
 					if tempdam>maxdam
-						maxdam=tempdam 
+						maxdam=tempdam
 						water= (j.type==:WATER)
-					end    
-				end 
-			end   
+					end
+				end
+			end
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			score+=30 if user.hasActiveItem?(:HEATROCK)
@@ -2045,11 +2045,11 @@ class PokeBattle_AI
 			user.eachMove do |m|
 				next if !m.damagingMove? || m.type != :FIRE
 				score += 20
-			end    
+			end
 			if user.hasActiveAbility?(:CHLOROPHYLL)
 				score+=20
 				score+=40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
-			end    
+			end
 			score+=20 if user.hasActiveAbility?(:FLOWERGIFT) || user.hasActiveAbility?(:SOLARPOWER) || user.hasActiveAbility?(:PROTOSYNTHESIS)
 			score-=50 if user.hasActiveAbility?(:DRYSKIN)
 			ownparty = @battle.pbParty(user.index)
@@ -2062,23 +2062,23 @@ class PokeBattle_AI
 				pkmn.eachMove do |m|
 					next if m.base_damage==0 || m.type != :FIRE
 					score += 20
-				end   
+				end
 				score+=10 if pkmn.pbHasMoveFunction?("0D8", "028")
-				score+=20 if pkmn.pbHasMoveFunction?("0C4") 
+				score+=20 if pkmn.pbHasMoveFunction?("0C4")
 			end
 			party = @battle.pbParty(target.index)
 			party.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				if pkmn.ability == :SWIFTSWIM && @battle.pbWeather == :Rain
 					score+=40
-				end 
+				end
 				if (pkmn.ability == :SLUSHRUSH && @battle.pbWeather == :Hail) || (pkmn.ability == :SANDRUSH && @battle.pbWeather == :Sandstorm)
 					score+=20
-				end 
+				end
 				pkmn.eachMove do |m|
 					next if m.base_damage==0 || m.type != :WATER
 					score += 20
-				end    
+				end
 			end
 			if @battle.pbCheckGlobalAbility(:AIRLOCK) ||
 				@battle.pbCheckGlobalAbility(:CLOUDNINE)
@@ -2099,15 +2099,15 @@ class PokeBattle_AI
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
-					end	
+					end
 					tempdam = pbRoughDamage(j,b,user,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,b,user,100)
 					if tempdam>maxdam
-						maxdam=tempdam 
+						maxdam=tempdam
 						fire= (j.type==:FIRE)
-					end    
-				end 
-			end   
+					end
+				end
+			end
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			score+=30 if user.hasActiveItem?(:DAMPROCK)
@@ -2124,11 +2124,11 @@ class PokeBattle_AI
 			user.eachMove do |m|
 				next if !m.damagingMove? || m.type != :WATER
 				score += 20
-			end    
+			end
 			if user.hasActiveAbility?(:SWIFTSWIM)
 				score+=20
 				score+=40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
-			end    
+			end
 			score+=20 if user.hasActiveAbility?(:RAINDISH) || user.hasActiveAbility?(:DRYSKIN) || user.hasActiveAbility?(:HYDRATION)
 			ownparty = @battle.pbParty(user.index)
 			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
@@ -2140,23 +2140,23 @@ class PokeBattle_AI
 				pkmn.eachMove do |m|
 					next if m.base_damage==0 || m.type != :WATER
 					score += 20
-				end   
+				end
 				score-=10 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.pbWeather == :Sun
-				score+=10 if pkmn.pbHasMoveFunction?("008") 
+				score+=10 if pkmn.pbHasMoveFunction?("008")
 			end
 			party = @battle.pbParty(target.index)
 			party.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				if pkmn.ability == :CHLOROPHYLL && @battle.pbWeather == :Sun
 					score+=40
-				end 
+				end
 				if (pkmn.ability == :SLUSHRUSH && @battle.pbWeather == :Hail) || (pkmn.ability == :SANDRUSH && @battle.pbWeather == :Sandstorm)
 					score+=20
-				end 
+				end
 				pkmn.eachMove do |m|
 					next if m.base_damage==0 || m.type != :FIRE
 					score += 20
-				end    
+				end
 			end
 			if @battle.pbCheckGlobalAbility(:AIRLOCK) ||
 				@battle.pbCheckGlobalAbility(:CLOUDNINE)
@@ -2177,28 +2177,28 @@ class PokeBattle_AI
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
-					end	
+					end
 					tempdam = pbRoughDamage(j,b,user,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,b,user,100)
 					if tempdam>maxdam
-						maxdam=tempdam 
+						maxdam=tempdam
 						maxspec=j.specialMove?(j.type)
-					end    
-				end 
-			end   
+					end
+				end
+			end
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			score+=30 if user.hasActiveItem?(:SMOOTHROCK)
 			score+=30 if halfhealth>maxdam || (target.status == :SLEEP && target.statusCount>1)
 			score+=20 if maxspec && ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && user.pbHasType?(:ROCK)
 			score+=20 if user.pbHasType?(:ROCK)
-			if !user.hasActiveItem?(:SAFETYGOGGLES) && !user.hasActiveItem?(:UTILITYUMBRELLA) && 
+			if !user.hasActiveItem?(:SAFETYGOGGLES) && !user.hasActiveItem?(:UTILITYUMBRELLA) &&
 				!user.pbHasType?(:ROCK) && !user.pbHasType?(:STEEL) && !user.pbHasType?(:GROUND) &&
-				!user.hasActiveAbility?(:MAGICGUARD) && !user.hasActiveAbility?(:OVERCOAT) && 
+				!user.hasActiveAbility?(:MAGICGUARD) && !user.hasActiveAbility?(:OVERCOAT) &&
 				!user.hasActiveAbility?(:SANDVEIL) && !user.hasActiveAbility?(:SANDRUSH) && !user.hasActiveAbility?(:SANDFORCE)
 				score-=10
 				score-=40 if user.hp==user.totalhp && (user.hasActiveAbility?(:STURDY) || user.hasActiveItem?(:FOCUSSASH))
-			end    
+			end
 			if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				score -= 50 if maxdam>thirdhealth
 			end
@@ -2207,7 +2207,7 @@ class PokeBattle_AI
 			if user.hasActiveAbility?(:SANDRUSH)
 				score+=20
 				score+=40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
-			end    
+			end
 			score+=20 if user.hasActiveAbility?(:SANDVEIL) || user.hasActiveAbility?(:SANDFORCE)
 			ownparty = @battle.pbParty(user.index)
 			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
@@ -2218,21 +2218,21 @@ class PokeBattle_AI
 				score+=20 if pkmn.ability == :SANDVEIL || pkmn.ability == :SANDFORCE
 				score+=20 if pkmn.hasType?(:ROCK)
 				score-=10 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.pbWeather == :Sun
-				score+=20 if pkmn.pbHasMoveFunction?("16D") 
+				score+=20 if pkmn.pbHasMoveFunction?("16D")
 			end
 			party = @battle.pbParty(target.index)
 			party.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				if (pkmn.ability == :CHLOROPHYLL && @battle.pbWeather == :Sun) || (pkmn.ability == :SWIFTSWIM && @battle.pbWeather == :Rain)
 					score+=40
-				end 
+				end
 				if (pkmn.ability == :SLUSHRUSH && @battle.pbWeather == :Hail)
 					score+=20
-				end 
+				end
 			end
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				score+=80 if b.hasActiveAbility?(:WONDERGUARD) && !b.pbHasType?(:ROCK) && !b.pbHasType?(:GROUND) && !b.pbHasType?(:STEEL)
-			end	
+			end
 			if @battle.pbCheckGlobalAbility(:AIRLOCK) ||
 				@battle.pbCheckGlobalAbility(:CLOUDNINE)
 				score -=200
@@ -2252,28 +2252,28 @@ class PokeBattle_AI
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
-					end	
+					end
 					tempdam = pbRoughDamage(j,b,user,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,b,user,100)
 					if tempdam>maxdam
-						maxdam=tempdam 
+						maxdam=tempdam
 						maxphys=j.physicalMove?(j.type)
-					end    
-				end 
-			end   
+					end
+				end
+			end
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			score+=30 if user.hasActiveItem?(:ICYROCK)
 			score+=30 if halfhealth>maxdam || (target.status == :SLEEP && target.statusCount>1)
 			#score+=20 if maxphys && aspeed>ospeed && user.pbHasType?(:ICE) # DemICE alas, not in this game
 			score+=20 if user.pbHasType?(:ICE)
-			if !user.hasActiveItem?(:SAFETYGOGGLES) && !user.hasActiveItem?(:UTILITYUMBRELLA) && 
+			if !user.hasActiveItem?(:SAFETYGOGGLES) && !user.hasActiveItem?(:UTILITYUMBRELLA) &&
 				!user.pbHasType?(:ICE) && !user.pbHasType?(:STEEL) && !user.pbHasType?(:GROUND) &&
-				!user.hasActiveAbility?(:MAGICGUARD) && !user.hasActiveAbility?(:OVERCOAT) && 
+				!user.hasActiveAbility?(:MAGICGUARD) && !user.hasActiveAbility?(:OVERCOAT) &&
 				!user.hasActiveAbility?(:SANDVEIL) && !user.hasActiveAbility?(:SANDRUSH) && !user.hasActiveAbility?(:SANDFORCE)
 				score-=10
 				score-=40 if user.hp==user.totalhp && (user.hasActiveAbility?(:STURDY) || user.hasActiveItem?(:FOCUSSASH))
-			end    
+			end
 			if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				score -= 50 if maxdam>thirdhealth
 			end
@@ -2283,7 +2283,7 @@ class PokeBattle_AI
 			if user.hasActiveAbility?(:SLUSHRUSH)
 				score+=20
 				score+=40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
-			end    
+			end
 			score+=20 if user.hasActiveAbility?(:SNOWCLOAK) || user.hasActiveAbility?(:ICEBODY)
 			ownparty = @battle.pbParty(user.index)
 			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
@@ -2294,28 +2294,28 @@ class PokeBattle_AI
 				score+=20 if pkmn.ability == :SNOWCLOAK || pkmn.ability == :ICEBODY
 				#score+=20 if pkmn.hasType?(:ICE)
 				score-=10 if pkmn.pbHasMoveFunction?("0D8", "028", "0C4") && @battle.pbWeather == :Sun
-				score+=20 if pkmn.pbHasMoveFunction?("00D") 
-				score+=20 if pkmn.pbHasMoveFunction?("167") 
+				score+=20 if pkmn.pbHasMoveFunction?("00D")
+				score+=20 if pkmn.pbHasMoveFunction?("167")
 			end
 			party = @battle.pbParty(target.index)
 			party.each_with_index do |pkmn, idxParty|
 				next if !pkmn || !pkmn.able?
 				if (pkmn.ability == :CHLOROPHYLL && @battle.pbWeather == :Sun) || (pkmn.ability == :SWIFTSWIM && @battle.pbWeather == :Rain)
 					score+=40
-				end 
+				end
 				if (pkmn.ability == :SANDRUSH && @battle.pbWeather == :Sandstorm)
 					score+=20
-				end 
+				end
 			end
 			@battle.allOtherSideBattlers(user.index).each do |b|
 				score+=80 if b.hasActiveAbility?(:WONDERGUARD) && !b.pbHasType?(:ICE)
-			end	
+			end
 			if @battle.pbCheckGlobalAbility(:AIRLOCK) ||
 				@battle.pbCheckGlobalAbility(:CLOUDNINE)
 				score -=200
 			elsif @battle.pbWeather == :Hail
 				score -=200
-			end   
+			end
 			#---------------------------------------------------------------------------
 		when "154"  # Electric Terrain
 			target=user.pbDirectOpposing(true)
@@ -2330,16 +2330,16 @@ class PokeBattle_AI
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
-					end	
+					end
 					tempdam = pbRoughDamage(j,b,user,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,b,user,100)
 					if tempdam>maxdam
-						maxdam=tempdam 
+						maxdam=tempdam
 						maxphys=j.physicalMove?(j.type)
 						maxspec=j.specialMove?(j.type)
-					end    
-				end 
-			end   
+					end
+				end
+			end
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			score+=30 if user.hasActiveItem?(:TERRAINEXTENDER)
@@ -2349,7 +2349,7 @@ class PokeBattle_AI
 			user.eachMove do |m|
 				next if !m.damagingMove? || m.type != :ELECTRIC
 				score += 10
-			end  
+			end
 			if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				score -= 50 if maxdam>thirdhealth
 			end
@@ -2358,7 +2358,7 @@ class PokeBattle_AI
 			if user.hasActiveAbility?(:SURGESURFER)
 				score+=20
 				score+=40 if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))
-			end    
+			end
 			score+=20 if user.hasActiveAbility?(:QUARKDRIVE)
 			ownparty = @battle.pbParty(user.index)
 			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
@@ -2369,11 +2369,11 @@ class PokeBattle_AI
 				score+=20 if pkmn.ability == :QUARKDRIVE
 				score+=20 if pkmn.item == :ELECTRICSEED
 				# score+=20 if pkmn.pbHasMoveFunction?("TypeAndPowerDependOnTerrain", "BPRaiseWhileElectricTerrain")
-				# score+=30 if pkmn.pbHasMoveFunction?("DoublePowerInElectricTerrain") 
+				# score+=30 if pkmn.pbHasMoveFunction?("DoublePowerInElectricTerrain")
 			end
 			if @battle.field.terrain == :Electric
 				score -=200
-			end   
+			end
 			#---------------------------------------------------------------------------
 		when "155"  # Grassy Terrain
 			target=user.pbDirectOpposing(true)
@@ -2389,17 +2389,17 @@ class PokeBattle_AI
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
-					end	
+					end
 					tempdam = pbRoughDamage(j,b,user,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,b,user,100)
 					if tempdam>maxdam
-						maxdam=tempdam 
+						maxdam=tempdam
 						maxmove=j.function
 						maxphys=j.physicalMove?(j.type)
 						maxspec=j.specialMove?(j.type)
-					end    
-				end 
-			end   
+					end
+				end
+			end
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			score+=30 if user.hasActiveItem?(:TERRAINEXTENDER)
@@ -2409,7 +2409,7 @@ class PokeBattle_AI
 			user.eachMove do |m|
 				next if !m.damagingMove? || m.type != :GRASS
 				score += 10
-			end  
+			end
 			if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				score -= 50 if maxdam>thirdhealth
 			end
@@ -2418,7 +2418,7 @@ class PokeBattle_AI
 			if user.hasActiveAbility?(:GRASSPELT)
 				score+=20
 				score+=20 if maxphys && ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-			end    
+			end
 			ownparty = @battle.pbParty(user.index)
 			inBattleIndices = @battle.allSameSideBattlers(user.index).map { |b| b.pokemonIndex }
 			ownparty.each_with_index do |pkmn, idxParty|
@@ -2428,11 +2428,11 @@ class PokeBattle_AI
 				score+=20 if pkmn.item == :GRASSYSEED
 				score-=20 if pkmn.pbHasMoveFunction?("076", "095","044") # Earthquake, Magnitude, Bulldoze
 				score+=20 if pkmn.pbHasMoveFunction?("16E")
-				#score+=40 if pkmn.pbHasMoveFunction?("HigherPriorityInGrassyTerrain") 
+				#score+=40 if pkmn.pbHasMoveFunction?("HigherPriorityInGrassyTerrain")
 			end
 			if @battle.field.terrain == :Grassy
 				score -=200
-			end   
+			end
 			#---------------------------------------------------------------------------
 		when "156"  # Misty Terrain
 			target=user.pbDirectOpposing(true)
@@ -2448,17 +2448,17 @@ class PokeBattle_AI
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
-					end	
+					end
 					tempdam = pbRoughDamage(j,b,user,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,b,user,100)
 					if tempdam>maxdam
-						maxdam=tempdam 
+						maxdam=tempdam
 						dragon= (j.type==:DRAGON)
 						maxphys=j.physicalMove?(j.type)
 						maxspec=j.specialMove?(j.type)
-					end    
-				end 
-			end   
+					end
+				end
+			end
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			score+=40 if dragon && ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
@@ -2469,7 +2469,7 @@ class PokeBattle_AI
 				next if m.baseDamage>20
 				score += 20 if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && (m.function=="007")
 				score+=20 if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && target.pbHasMoveFunction?("003", "004")
-			end                                                        
+			end
 			if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				score -= 50 if maxdam>thirdhealth
 			end
@@ -2484,14 +2484,14 @@ class PokeBattle_AI
 				pkmn.eachMove do |m|
 					next if m.base_damage==0 || m.type != :DRAGON
 					score -= 20
-				end   
+				end
 				score-=20 if pkmn.pbHasMoveFunction?("003", "004","006")
 				# score+=20 if pkmn.pbHasMoveFunction?("TypeAndPowerDependOnTerrain")
-				# score+=30 if pkmn.pbHasMoveFunction?("UserFaintsPowersUpInMistyTerrainExplosive") 
+				# score+=30 if pkmn.pbHasMoveFunction?("UserFaintsPowersUpInMistyTerrainExplosive")
 			end
 			if @battle.field.terrain == :Misty
 				score -=200
-			end   
+			end
 			#---------------------------------------------------------------------------
 		when "173"  # Psychic Terrain
 			target=user.pbDirectOpposing(true)
@@ -2507,29 +2507,29 @@ class PokeBattle_AI
 						if b.lastMoveUsed && b.pbHasMove?(b.lastMoveUsed)
 							next if j.id!=b.lastMoveUsed
 						end
-					end	
+					end
 					tempdam = pbRoughDamage(j,b,user,skill,j.baseDamage)
 					tempdam = 0 if pbCheckMoveImmunity(1,j,b,user,100)
 					if tempdam>maxdam
-						maxdam=tempdam 
+						maxdam=tempdam
 						prio= priorityAI(b,j) > 0
 						maxphys=j.physicalMove?(j.type)
 						maxspec=j.specialMove?(j.type)
-					end    
-				end 
-			end   
+					end
+				end
+			end
 			halfhealth=(user.totalhp/2)
 			thirdhealth=(user.totalhp/3)
 			user.eachMove do |m|
 				next if !m.damagingMove? || m.type != :PSYCHIC
 				score += 10
-			end  
+			end
 			score+=40 if prio
 			score+=20 if target.hasActiveAbility?(:PRANKSTER)
 			score+=20 if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && user.hasActiveItem?(:PSYCHICSEED) & maxspec
 			score+=30 if user.hasActiveItem?(:TERRAINEXTENDER)
 			score+=20 if halfhealth>maxdam
-			score+=20 if target.pbHasMoveFunction?("116")                                       
+			score+=20 if target.pbHasMoveFunction?("116")
 			if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 				score -= 50 if maxdam>thirdhealth
 			end
@@ -2544,13 +2544,13 @@ class PokeBattle_AI
 				score+=20 if pkmn.item == :PSYCHICSEED
 				pkmn.eachMove do |m|
 					score -= 5 if m.priority>0
-				end   
+				end
 				# score+=20 if pkmn.pbHasMoveFunction?("TypeAndPowerDependOnTerrain")
-				# score+=30 if pkmn.pbHasMoveFunction?("HitsAllFoesAndPowersUpInPsychicTerrain") 
+				# score+=30 if pkmn.pbHasMoveFunction?("HitsAllFoesAndPowersUpInPsychicTerrain")
 			end
 			if @battle.field.terrain == :Psychic
 				score -=200
-			end 
+			end
 			#---------------------------------------------------------------------------
 		when "0EE"  # U-Turn , Volt Switch , Flip Turn
 			target=user.pbDirectOpposing(true)
@@ -2566,7 +2566,7 @@ class PokeBattle_AI
 				score +=30 if user.effects[PBEffects::Curse]
 				score +=30 if user.effects[PBEffects::PerishSong]==1
 				score +=30 if user.effects[PBEffects::LeechSeed]>=0
-			end    
+			end
 			#---------------------------------------------------------------------------
 			# when "SwitchOutUserStatusMove"  # Teleport
 			# target=user.pbDirectOpposing(true)
@@ -2587,7 +2587,7 @@ class PokeBattle_AI
 			aspeed = pbRoughStat(user,:SPEED,skill)
 			ospeed = pbRoughStat(opponent,:SPEED,skill)
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			maxmove=bestmove[1]
 			maxoppdam=0
 			maxoppmove=nil
@@ -2596,14 +2596,14 @@ class PokeBattle_AI
 					if opponent.lastMoveUsed && opponent.pbHasMove?(opponent.lastMoveUsed)
 						next if j.id!=opponent.lastMoveUsed
 					end
-				end		
+				end
 				tempdam = pbRoughDamage(j,opponent,user,skill,j.baseDamage)
 				tempdam = 0 if pbCheckMoveImmunity(1,j,opponent,user,100)
 				if tempdam>maxoppdam
-					maxoppdam=tempdam 
+					maxoppdam=tempdam
 					maxoppmove=j
-				end	
-			end 
+				end
+			end
 			party=@battle.pbParty(attacker.index)
 			sack=false
 			sack=true if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
@@ -2630,16 +2630,16 @@ class PokeBattle_AI
 						when :PARALYSIS
 							stagemult+=5 if maxdam>=attacker.hp/3
 						end
-					end	
+					end
 				end
 				if (opponent.status == :SLEEP && opponent.statusCount==2)
-						stagemult+=5 if targetSurvivesMove(maxmove,attacker,opponent) 
+						stagemult+=5 if targetSurvivesMove(maxmove,attacker,opponent)
 						stagemult+=5 if !targetSurvivesMove(maxoppmove,opponent,attacker)
-				end		
+				end
 				GameData::Stat.each_battle do |stat|
 					next if attacker.pbHasMoveFunction?("10D") && attacker.stages[stat.id]<0 && stat.id==:SPEED
 					score += stagemult*attacker.stages[stat.id]
-				end	
+				end
 				if attacker.effects[PBEffects::Substitute]>0
 					score+=30
 				end
@@ -2706,7 +2706,7 @@ class PokeBattle_AI
 		when "05B" # Tailwind
 			target=user.pbDirectOpposing(true)
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			maxmove=bestmove[1]
 			if targetSurvivesMove(maxmove,target,attacker) || (target.status == :SLEEP && target.statusCount>1)
 				#score += 40
@@ -2729,9 +2729,9 @@ class PokeBattle_AI
 					ospeed = pbRoughStat(target,:SPEED,skill)
 					aspeed*=1.5 if user.hasActiveAbility?(:SPEEDBOOST)
 					ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
-					score += 100 if (((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))) || 
+					score += 100 if (((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))) ||
 									(((aspeed<espeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((aspeed*2>espeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))) ||
-									(((pspeed<espeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((pspeed*2>espeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))) || 
+									(((pspeed<espeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((pspeed*2>espeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1))) ||
 									(((pspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)) && ((pspeed*2>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>1)))
 				end
 			end
@@ -2740,7 +2740,7 @@ class PokeBattle_AI
 		when "11F" # Trick Room
 			target=user.pbDirectOpposing(true)
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			maxmove=bestmove[1]
 			maxprio=bestmove[2]
 			if targetSurvivesMove(maxmove,target,attacker,maxprio) || maxprio==0 || (target.status == :SLEEP && target.statusCount>1)
@@ -2766,7 +2766,7 @@ class PokeBattle_AI
 					ospeed*=1.5 if target.hasActiveAbility?(:SPEEDBOOST)
 					if ((aspeed<ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) ||
 						((minspeed<maxspeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-						score += 140 
+						score += 140
 					else
 						score -= 200
 					end
@@ -2776,7 +2776,7 @@ class PokeBattle_AI
 			when "0AA", "14C", "168" , "14B"  # Protect
 				target=user.pbDirectOpposing(true)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
 				maxprio=bestmove[2]
 				aspeed = pbRoughStat(user,:SPEED,skill)
@@ -2788,10 +2788,10 @@ class PokeBattle_AI
 					score+=140 if (maxdam >= @battle.positions[user.index].effects[PBEffects::WishAmount] || maxdam >= user.hp)
 				else
 					if ownhpchange > opphpchange
-						score += 90 
+						score += 90
 					end
 					if ((aspeed<=ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) && maxdam>0
-						if user.hasActiveAbility?(:SPEEDBOOST) && !target.hasActiveAbility?(:SPEEDBOOST) 
+						if user.hasActiveAbility?(:SPEEDBOOST) && !target.hasActiveAbility?(:SPEEDBOOST)
 							if @battle.field.effects[PBEffects::TrickRoom]<2
 								score+=60
 								score+=80 if (aspeed * 1.5) > ospeed
@@ -2816,7 +2816,7 @@ class PokeBattle_AI
 						end
 					end
 					bestownmove=bestMoveVsTarget(user,target,skill) # [maxdam,maxmove,maxprio,physorspec]
-					maxowndam=bestmove[0] 
+					maxowndam=bestmove[0]
 					maxownmove=bestmove[1]
 					maxownprio=bestmove[2]
 					if target.effects[PBEffects::Rollout] > 0 && maxdam>0
@@ -2831,7 +2831,7 @@ class PokeBattle_AI
 				score-=90 if target.pbHasMoveFunction?("024","025","026","036",
 					"02B","02C","027", "028","01C",
 					"02E","029","032","039","035") # Setup
-			  if user.effects[PBEffects::ProtectRate]>1 
+			  if user.effects[PBEffects::ProtectRate]>1
 				if ((aspeed>=ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) &&
 					targetSurvivesMove(maxmove,target,user,maxprio)
 					score -= 300
@@ -2845,7 +2845,7 @@ class PokeBattle_AI
 		when "0DC" # Leech Seed
 			attacker=user
 			opponent=target
-			if (opponent.effects[PBEffects::LeechSeed]<0 && !opponent.pbHasType?(:GRASS) && opponent.effects[PBEffects::Substitute]<=0) 
+			if (opponent.effects[PBEffects::LeechSeed]<0 && !opponent.pbHasType?(:GRASS) && opponent.effects[PBEffects::Substitute]<=0)
 				if attacker.effects[PBEffects::Substitute]>0
 					score+=30
 				end
@@ -2901,7 +2901,7 @@ class PokeBattle_AI
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			fastermon=((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
 			fasterhealing=fastermon || user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE)
-			if move.function == "0D8" 
+			if move.function == "0D8"
 				case @battle.pbWeather
 				when :Sun, :HarshSun
 					halfhealth=(user.totalhp*2/3)
@@ -2910,20 +2910,20 @@ class PokeBattle_AI
 				else
 					halfhealth=(user.totalhp/4)
 				end
-			elsif move.function == "16D" 
+			elsif move.function == "16D"
 				case @battle.pbWeather
 				when :Sandstorm
 					halfhealth=(user.totalhp*2/3)
 				else
 					halfhealth=(user.totalhp/2)
-				end   
-			else     
+				end
+			else
 				halfhealth=(user.totalhp/2)
-			end    
+			end
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			maxmove=bestmove[1]
-			maxdam=0 if (target.status == :SLEEP && target.statusCount>1)		
+			maxdam=0 if (target.status == :SLEEP && target.statusCount>1)
 			#if maxdam>user.hp
 			if !targetSurvivesMove(maxmove,target,user)
 				if maxdam>(user.hp+halfhealth)
@@ -2958,12 +2958,12 @@ class PokeBattle_AI
 			hplost=(user.totalhp-user.hp)
 			hplost+=maxdam if !fasterhealing
 			if user.effects[PBEffects::LeechSeed]>=0 && !fastermon && canSleepTarget(target,user)
-				score *= 0.3 
-			end	
+				score *= 0.3
+			end
 			if hpchange<1 ## we are going to be taking more chip damage than we are going to heal
 				chipdamage=((user.totalhp*(1-hpchange)))
 				thisdam+=chipdamage
-			elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for  
+			elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for
 				healing=((user.totalhp*(hpchange-1)))
 				thisdam-=healing if !(thisdam>user.hp)
 			elsif hpchange<=0 ## we are going to a huge overstack of end of turn effects. hence we should just not heal.
@@ -2996,9 +2996,9 @@ class PokeBattle_AI
 			score/=(user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]>0
 			score*=0.8 if maxdam>halfhealth
 			if target.hasActiveItem?(:METRONOME)
-				met=(1.0+target.effects[PBEffects::Metronome]*0.2) 
+				met=(1.0+target.effects[PBEffects::Metronome]*0.2)
 				score/=met
-			end 
+			end
 			score*=1.1 if user.status==:PARALYSIS || user.effects[PBEffects::Confusion]>0
 			if target.status==:POISON || target.status==:BURN || target.effects[PBEffects::LeechSeed]>=0 || target.effects[PBEffects::Curse] || target.effects[PBEffects::Trapping]>0
 				score*=1.3
@@ -3008,8 +3008,8 @@ class PokeBattle_AI
 			score*=0.1 if ((user.hp.to_f)/user.totalhp)>0.8
 			score*=0.6 if ((user.hp.to_f)/user.totalhp)>0.6
 			score*=2 if ((user.hp.to_f)/user.totalhp)<0.25
-			score=0 if @battle.positions[user.index].effects[PBEffects::Wish]>0	
-			
+			score=0 if @battle.positions[user.index].effects[PBEffects::Wish]>0
+
 			#---------------------------------------------------------------------------
 		when "0D7" # Wish
 			if @battle.positions[user.index].effects[PBEffects::Wish] == 0
@@ -3020,11 +3020,11 @@ class PokeBattle_AI
 				fasterhealing=false#fastermon || user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE)
 				halfhealth=(user.totalhp/2)
 				bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-				maxdam=bestmove[0] 
+				maxdam=bestmove[0]
 				maxmove=bestmove[1]
-				maxdam=0 if (target.status == :SLEEP && target.statusCount>1)	
+				maxdam=0 if (target.status == :SLEEP && target.statusCount>1)
 				mult=2
-				mult=1 if user.pbHasMoveFunction?("0AA", "14C", "168" , "14B")	
+				mult=1 if user.pbHasMoveFunction?("0AA", "14C", "168" , "14B")
 				#if maxdam>user.hp
 				if !targetSurvivesMove(maxmove,target,user,0,mult)
 					# if maxdam>(user.hp+halfhealth)
@@ -3059,12 +3059,12 @@ class PokeBattle_AI
 				hplost=(user.totalhp-user.hp)
 				hplost+=maxdam if !fasterhealing
 				if user.effects[PBEffects::LeechSeed]>=0 && !fastermon && canSleepTarget(target,user)
-					score *= 0.3 
-				end	
+					score *= 0.3
+				end
 				if hpchange<1 ## we are going to be taking more chip damage than we are going to heal
 					chipdamage=((user.totalhp*(1-hpchange)))
 					thisdam+=chipdamage
-				elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for  
+				elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for
 					healing=((user.totalhp*(hpchange-1)))
 					thisdam-=healing if !(thisdam>user.hp)
 				elsif hpchange<=0 ## we are going to a huge overstack of end of turn effects. hence we should just not heal.
@@ -3097,9 +3097,9 @@ class PokeBattle_AI
 				score/=(user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]>0
 				score*=0.8 if maxdam>halfhealth
 				if target.hasActiveItem?(:METRONOME)
-					met=(1.0+target.effects[PBEffects::Metronome]*0.2) 
+					met=(1.0+target.effects[PBEffects::Metronome]*0.2)
 					score/=met
-				end 
+				end
 				score*=1.1 if user.status==:PARALYSIS || user.effects[PBEffects::Confusion]>0
 				if target.status==:POISON || target.status==:BURN || target.effects[PBEffects::LeechSeed]>=0 || target.effects[PBEffects::Curse] || target.effects[PBEffects::Trapping]>0
 					score*=1.3
@@ -3112,7 +3112,7 @@ class PokeBattle_AI
 				# score*=2 if ((user.hp.to_f)/user.totalhp)<0.6
 				score*=1.5 if user.pbHasMoveFunction?("0AA", "14C", "168" , "14B")
 			else
-				score=0 
+				score=0
 			end
 			#---------------------------------------------------------------------------
 		when "160" # Strength Sap
@@ -3120,21 +3120,21 @@ class PokeBattle_AI
 			aspeed = pbRoughStat(user,:SPEED,skill)
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			fastermon=((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
-			fasterhealing=fastermon || user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE) 
+			fasterhealing=fastermon || user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE)
 			healAmt=pbRoughStat(target,:ATTACK,skill)
 			halfhealth=(healAmt/2)
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			maxmove=bestmove[1]
 			if !maxmove.nil?
 				if maxmove.physicalMove?
 					if target.hasActiveAbility?(:CONTRARY)
-						maxdam *= 1.5 
+						maxdam *= 1.5
 					else
-						maxdam *= 0.7 
+						maxdam *= 0.7
 					end
 				end
-				maxdam=0 if (target.status == :SLEEP && target.statusCount>1)		
+				maxdam=0 if (target.status == :SLEEP && target.statusCount>1)
 				#if maxdam>user.hp
 				if !targetSurvivesMove(maxmove,target,user)
 					if maxdam>(user.hp+halfhealth)
@@ -3169,12 +3169,12 @@ class PokeBattle_AI
 				hplost=(user.totalhp-user.hp)
 				hplost+=maxdam if !fasterhealing
 				if user.effects[PBEffects::LeechSeed]>=0 && !fastermon && canSleepTarget(target,user)
-					score *= 0.3 
-				end	
+					score *= 0.3
+				end
 				if hpchange<1 ## we are going to be taking more chip damage than we are going to heal
 					chipdamage=((user.totalhp*(1-hpchange)))
 					thisdam+=chipdamage
-				elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for  
+				elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for
 					healing=((user.totalhp*(hpchange-1)))
 					thisdam-=healing if !(thisdam>user.hp)
 				elsif hpchange<=0 ## we are going to a huge overstack of end of turn effects. hence we should just not heal.
@@ -3207,9 +3207,9 @@ class PokeBattle_AI
 				score/=(user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]>0
 				score*=0.8 if maxdam>halfhealth
 				if target.hasActiveItem?(:METRONOME)
-					met=(1.0+target.effects[PBEffects::Metronome]*0.2) 
+					met=(1.0+target.effects[PBEffects::Metronome]*0.2)
 					score/=met
-				end 
+				end
 				score*=1.1 if user.status==:PARALYSIS || user.effects[PBEffects::Confusion]>0
 				if target.status==:POISON || target.status==:BURN || target.effects[PBEffects::LeechSeed]>=0 || target.effects[PBEffects::Curse] || target.effects[PBEffects::Trapping]>0
 					score*=1.3
@@ -3219,24 +3219,24 @@ class PokeBattle_AI
 				score*=0.1 if ((user.hp.to_f)/user.totalhp)>0.8
 				score*=0.6 if ((user.hp.to_f)/user.totalhp)>0.6
 				score*=2 if ((user.hp.to_f)/user.totalhp)<0.25
-				score=0 if @battle.positions[user.index].effects[PBEffects::Wish]>0	
+				score=0 if @battle.positions[user.index].effects[PBEffects::Wish]>0
 			end
-			
+
 			#---------------------------------------------------------------------------
 		when "0D9" # Rest
 			target=user.pbDirectOpposing(true)
 			aspeed = pbRoughStat(user,:SPEED,skill)
 			ospeed = pbRoughStat(target,:SPEED,skill)
-			fastermon=((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) || (user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE))         
+			fastermon=((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0)) || (user.hasActiveAbility?(:PRANKSTER) || user.hasActiveAbility?(:TRIAGE))
 			if user.hasActiveItem?(:CHESTOBERRY) || user.hasActiveItem?(:LUMBERRY)
 				halfhealth=(user.totalhp*2/3)
-			else    
+			else
 				halfhealth=(user.totalhp/4)
-			end    
+			end
 			bestmove=bestMoveVsTarget(target,user,skill) # [maxdam,maxmove,maxprio,physorspec]
-			maxdam=bestmove[0] 
+			maxdam=bestmove[0]
 			maxmove=bestmove[1]
-			maxdam=0 if (target.status == :SLEEP && target.statusCount>1)		
+			maxdam=0 if (target.status == :SLEEP && target.statusCount>1)
 			#if maxdam>user.hp
 			if !targetSurvivesMove(maxmove,target,user)
 				if maxdam>(user.hp+halfhealth)
@@ -3271,12 +3271,12 @@ class PokeBattle_AI
 			hplost=(user.totalhp-user.hp)
 			hplost+=maxdam if !fasterhealing
 			if user.effects[PBEffects::LeechSeed]>=0 && !fastermon && canSleepTarget(target,user)
-				score *= 0.3 
-			end	
+				score *= 0.3
+			end
 			if hpchange<1 ## we are going to be taking more chip damage than we are going to heal
 				chipdamage=((user.totalhp*(1-hpchange)))
 				thisdam+=chipdamage
-			elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for  
+			elsif hpchange>1 ## we are going to be healing more hp than we take chip damage for
 				healing=((user.totalhp*(hpchange-1)))
 				thisdam-=healing if !(thisdam>user.hp)
 			elsif hpchange<=0 ## we are going to a huge overstack of end of turn effects. hence we should just not heal.
@@ -3309,9 +3309,9 @@ class PokeBattle_AI
 			score*=(user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]>0
 			score*=0.8 if maxdam>halfhealth
 			if target.hasActiveItem?(:METRONOME)
-				met=(1.0+target.effects[PBEffects::Metronome]*0.2) 
+				met=(1.0+target.effects[PBEffects::Metronome]*0.2)
 				score/=met
-			end 
+			end
 			score*=1.1 if user.status==:PARALYSIS || user.effects[PBEffects::Confusion]>0
 			if target.status==:POISON || target.status==:BURN || target.effects[PBEffects::LeechSeed]>=0 || target.effects[PBEffects::Curse] || target.effects[PBEffects::Trapping]>0
 				score*=1.3
@@ -3321,20 +3321,20 @@ class PokeBattle_AI
 			score*=0.1 if ((user.hp.to_f)/user.totalhp)>0.8
 			score*=0.6 if ((user.hp.to_f)/user.totalhp)>0.6
 			score*=2 if ((user.hp.to_f)/user.totalhp)<0.25
-			score=0 if @battle.positions[user.index].effects[PBEffects::Wish]>0	
-			
+			score=0 if @battle.positions[user.index].effects[PBEffects::Wish]>0
+
 		else
 			score = stupidity_pbGetMoveScoreFunctionCode(score, move, user, target, skill)
 		end
-		
+
 		return score-initialscore
 	end
-	
+
 	def EndofTurnHPChanges(user,target,heal,chips,both,switching=false,rest=false)
-		#### Azery: function below sums up all the changes to hp that will occur after the battle round. Healing from various effects/items/statuses or damage from the same. 
+		#### Azery: function below sums up all the changes to hp that will occur after the battle round. Healing from various effects/items/statuses or damage from the same.
 		### the arguments above show which ones in specific we're looking for, both being the typical default for most but sometimes we're only looking to see how much damage will occur at the end or how much healing.
 		### thus it will return at 3 different points; end of healing if heal is desired, end of chip if chip is desired or at the very end if both.
-		healing = 1  
+		healing = 1
 		chip = 0
 		oppitemworks = target.itemActive?
 		attitemworks = user.itemActive?
@@ -3354,33 +3354,33 @@ class PokeBattle_AI
 		healing += 0.0625 if user.hasWorkingAbility(:RAINDISH) && @battle.pbWeather==:Rain
 		healing += 0.0625 if  user.hasWorkingAbility(:ICEBODY) && @battle.pbWeather==:Hail
 		healing += 0.125 if user.status == :POISON && user.hasWorkingAbility(:POISONHEAL)
-		healing += 0.125 if (target.effects[PBEffects::LeechSeed]>-1 && !target.hasWorkingAbility(:LIQUIDOOZE)) 
+		healing += 0.125 if (target.effects[PBEffects::LeechSeed]>-1 && !target.hasWorkingAbility(:LIQUIDOOZE))
 		healing*=0 if user.effects[PBEffects::HealBlock]>0
 		return healing if heal
-		if !(user.hasWorkingAbility(:MAGICGUARD)) 
-			if !(attitemworks && user.item == :SAFETYGOGGLES) || !(user.hasWorkingAbility(:OVERCOAT)) 
+		if !(user.hasWorkingAbility(:MAGICGUARD))
+			if !(attitemworks && user.item == :SAFETYGOGGLES) || !(user.hasWorkingAbility(:OVERCOAT))
 				weatherchip = 0
 				weatherchip += 0.0625 if @battle.pbWeather==:Sun && (user.hasWorkingAbility(:DRYSKIN))
-				if @battle.pbWeather==:Sandstorm && !(user.pbHasType?(:ROCK) || user.pbHasType?(:STEEL) || user.pbHasType?(:GROUND)) && !(user.hasWorkingAbility(:SANDVEIL) || user.hasWorkingAbility(:SANDFORCE) || user.hasWorkingAbility(:SANDRUSH))				 
+				if @battle.pbWeather==:Sandstorm && !(user.pbHasType?(:ROCK) || user.pbHasType?(:STEEL) || user.pbHasType?(:GROUND)) && !(user.hasWorkingAbility(:SANDVEIL) || user.hasWorkingAbility(:SANDFORCE) || user.hasWorkingAbility(:SANDRUSH))
 					weatherchip += 0.0625
-				end	
-				if @battle.pbWeather==:Hail && !(user.pbHasType?(:ICE)) && !(user.hasWorkingAbility(:ICEBODY) || user.hasWorkingAbility(:SNOWCLOAK) || user.hasWorkingAbility(:SLUSHRUSH)) 				 				 
+				end
+				if @battle.pbWeather==:Hail && !(user.pbHasType?(:ICE)) && !(user.hasWorkingAbility(:ICEBODY) || user.hasWorkingAbility(:SNOWCLOAK) || user.hasWorkingAbility(:SLUSHRUSH))
 					weatherchip += 0.0625
-				end	 
+				end
 				chip += weatherchip
 			end
 			if user.effects[PBEffects::Trapping]>0
-				multiturnchip = 0.125 
+				multiturnchip = 0.125
 				multiturnchip *= 1.3333 if (target.item == :BINDINGBAND)
 				chip+=multiturnchip
 			end
-			chip += 0.125 if (user.effects[PBEffects::LeechSeed]>=0 || (target.effects[PBEffects::LeechSeed]>=0 && target.hasWorkingAbility(:LIQUIDOOZE))) 
-			chip += 0.25  if (user.effects[PBEffects::Curse]) 
+			chip += 0.125 if (user.effects[PBEffects::LeechSeed]>=0 || (target.effects[PBEffects::LeechSeed]>=0 && target.hasWorkingAbility(:LIQUIDOOZE)))
+			chip += 0.25  if (user.effects[PBEffects::Curse])
 			if user.status!=:NONE && !rest
 				statuschip = 0
-				statuschip += 0.0625 if user.status==:BURN 
-				statuschip += 0.125 if ((user.status==:POISON &&  !user.hasWorkingAbility(:POISONHEAL) && user.effects[PBEffects::Toxic]==0)) || (user.status == :SLEEP && target.hasWorkingAbility(:BADDREAMS)) 
-				statuschip += (0.0625*user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]!=0 && !(user.hasWorkingAbility(:POISONHEAL)) 
+				statuschip += 0.0625 if user.status==:BURN
+				statuschip += 0.125 if ((user.status==:POISON &&  !user.hasWorkingAbility(:POISONHEAL) && user.effects[PBEffects::Toxic]==0)) || (user.status == :SLEEP && target.hasWorkingAbility(:BADDREAMS))
+				statuschip += (0.0625*user.effects[PBEffects::Toxic]) if user.effects[PBEffects::Toxic]!=0 && !(user.hasWorkingAbility(:POISONHEAL))
 				chip+=statuschip
 			end
 		end
@@ -3388,7 +3388,7 @@ class PokeBattle_AI
 		diff=(healing-chip)
 		return diff if both
 	end
-	
+
     def targetSurvivesMove(move,attacker,opponent,priodamage=0,mult=1)
 		return true if !move
 		mold_broken=moldbroken(attacker,opponent,move.function)
@@ -3399,19 +3399,19 @@ class PokeBattle_AI
 		# 	print damage
 		# 	print opponent.hp
 		# end
-		if !mold_broken && opponent.hasActiveAbility?(:DISGUISE) && opponent.turnCount==0	
+		if !mold_broken && opponent.hasActiveAbility?(:DISGUISE) && opponent.turnCount==0
 			if ["0C0", "0BD", "175", "0BF"].include?(move.function)
 				damage*=0.6
 			else
 				damage=1
 			end
-		end			
+		end
 		return true if damage < opponent.hp
 		return false if priodamage>0
 		if (opponent.hasActiveItem?(:FOCUSSASH) || (!mold_broken && opponent.hasActiveAbility?(:STURDY))) && opponent.hp==opponent.totalhp
 			return false if ["0C0", "0BD", "175", "0BF"].include?(move.function)
 			return true
-		end	
+		end
 		return false
 	end
 
@@ -3424,12 +3424,12 @@ class PokeBattle_AI
 		for move in attacker.moves
 			if ["003", "004"].include?(move.function)
 				return false if move.powderMove? && opponent.pbHasType?(:GRASS)
-				return true	
-			end	
-		end	
+				return true
+			end
+		end
 		return false
 	end
-	
+
 	def bestMoveVsTarget(user,target,skill)
 		maxdam=0
 		maxmove=nil
@@ -3440,21 +3440,21 @@ class PokeBattle_AI
 				if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
 					next if j.id!=user.lastMoveUsed
 				end
-			end		
+			end
 			tempdam = pbRoughDamage(j,user,target,skill,j.baseDamage)
 			tempdam = 0 if pbCheckMoveImmunity(1,j,user,target,100)
 			if tempdam>maxdam
-				maxdam=tempdam 
+				maxdam=tempdam
 				maxmove=j
 				physorspec="physical" if j.physicalMove?(j.type)
 				physorspec="special" if j.specialMove?(j.type)
-			end	
+			end
 			if priorityAI(user,j) > 0
 				maxprio=tempdam if tempdam>maxprio
-			end	
-		end 
+			end
+		end
 		return [maxdam,maxmove,maxprio,physorspec]
-	end	
+	end
 
 
 
@@ -3468,7 +3468,7 @@ class PokeBattle_AI
 		pri +=3 if move.healingMove? && user.hasActiveAbility?(:TRIAGE)
 		return pri
 	end
-	
+
 	def moveLocked(user)
 		return true if user.effects[PBEffects::ChoiceBand] && user.hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
 		return true if user.usingMultiTurnAttack?
@@ -3499,7 +3499,7 @@ class PokeBattle_AI
 end
 
 class Pokemon
-	
+
 	def isAirborne?
 		return false if @item == :IRONBALL
 		return true if hasType?(:FLYING)
@@ -3507,24 +3507,24 @@ class Pokemon
 		return true if @item == :AIRBALLOON
 		return false
 	end
-	
+
 	def eachMove
 		@moves.each { |m| yield m }
-	end  
-	
+	end
+
 	def pbHasMoveFunction?(*arg)
 		return false if !arg
 		eachMove do |m|
 			arg.each { |code| return true if m.function_code == code }
 		end
 		return false
-	end    
-	
-end    
+	end
+
+end
 
 
 class PokeBattle_Battle
-	
+
 	def allOtherSideBattlers(idxBattler = 0)
 		idxBattler = idxBattler.index if idxBattler.respond_to?("index")
 		return @battlers.select { |b| b && !b.fainted? && b.opposes?(idxBattler) }
@@ -3535,7 +3535,7 @@ class PokeBattle_Battle
 		return @battlers.select { |b| b && !b.fainted? && !b.opposes?(idxBattler) }
 	end
 
-	
+
 	def pbMakeFakeBattler(pokemon,batonpass=false,currentmon=nil,effectnegate=true)
 		if @index.nil? || !currentmon.nil?
 			@index=currentmon.index
@@ -3552,9 +3552,9 @@ class PokeBattle_Battle
 			battler.stages[:SPECIAL_DEFENSE] = currentmon.stages[:SPECIAL_DEFENSE]
 			battler.stages[:ACCURACY]        = currentmon.stages[:ACCURACY]
 			battler.stages[:EVASION]         = currentmon.stages[:EVASION]
-		end	
+		end
 		return battler
-	end	
+	end
 
 
 	def pbCanHardSwitchLax?(idxBattler, idxParty)
@@ -3577,8 +3577,8 @@ class PokeBattle_Battle
 		#   return false
 		# end
 		return true
-	  end	
-end  
+	  end
+end
 
 
 class PokeBattle_Battler
@@ -3586,12 +3586,12 @@ class PokeBattle_Battler
 	# Returns an array containing all unfainted opposing Pokémon.
 	def allOpposing
 		return @battle.allOtherSideBattlers(@index)
-	end	
+	end
 
 	# Returns an array containing all unfainted ally Pokémon.
 	def allAllies
 		return @battle.allSameSideBattlers(@index).reject { |b| b.index == @index }
-	end	
+	end
 
 	# Yields each unfainted opposing Pokémon.
 	# Unused
@@ -3599,12 +3599,12 @@ class PokeBattle_Battler
 		@battle.battlers.each { |b| yield b if b && !b.fainted? && b.opposes?(@index) }
 	end
 
-	alias stupidity_hasActiveAbility? hasActiveAbility?
+	alias stupidity_hasActiveAbility? hasActiveAbility? unless method_defined?(:stupidity_hasActiveAbility?)
 	def hasActiveAbility?(check_ability, ignore_fainted = false, mold_broken=false)
 		return false if mold_broken
-		return stupidity_hasActiveAbility?(check_ability, ignore_fainted) 
+		return stupidity_hasActiveAbility?(check_ability, ignore_fainted)
 	end
-	
+
 	def pbCanLowerAttackStatStageIntimidateAI(user)
 		return false if fainted?
 		# NOTE: Substitute intentionally blocks Intimidate even if self has Contrary.
@@ -3617,4 +3617,4 @@ class PokeBattle_Battler
 		return false if !pbCanLowerStatStage?(:ATTACK, user)
 	  end
 
-end	
+end

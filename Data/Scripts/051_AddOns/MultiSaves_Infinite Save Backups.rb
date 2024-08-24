@@ -4,7 +4,7 @@
 class Player
   attr_accessor :inf_backup_slots
 
-  alias inf_backup_slots_initialize initialize
+  alias inf_backup_slots_initialize initialize unless method_defined?(:inf_backup_slots_initialize)
   def initialize(name, trainer_type)
     inf_backup_slots_initialize(name, trainer_type)
     @inf_backup_slots= [0,0,0,0,0,0,0,0]
@@ -14,7 +14,7 @@ end
 
 class PokemonSaveScreen
 
-  alias backup_doSave doSave
+  alias backup_doSave doSave unless method_defined?(:backup_doSave)
   def doSave(slot)
     if $Trainer.save_slot
       #We create the backup file's name components
@@ -26,33 +26,33 @@ class PokemonSaveScreen
       for i in 0..SaveData::MANUAL_SLOTS.length
         if SaveData::MANUAL_SLOTS[i]==$Trainer.save_slot
           save_slot=i
-        end	
-      end	
-      
+        end
+      end
+
       #Create the backup slots array for not new save files.
       if !$Trainer.inf_backup_slots
         $Trainer.inf_backup_slots=[0,0,0,0,0,0,0,0]
-      end  
+      end
 
       #We increase the backup count for our current save slot
       $Trainer.inf_backup_slots[save_slot]+=1
-      
+
       #We piece together the backup file's name
       if $backupName!=""
         backup_slot=$Trainer.save_slot + ' - ' + $backupName
-      else  
+      else
         backup_slot = $Trainer.save_slot + ' ' + $Trainer.inf_backup_slots[save_slot].to_s + ' ' + hour.to_s + 'h' + ' ' + min.to_s + 'm' + ' ' + mapname
       end
 
-    end  
-    
+    end
+
     #We run http404error's doSave method and save the game
-    if backup_doSave(slot)    
+    if backup_doSave(slot)
       #THEN we create our backup on top of that.
       Game.save(backup_slot,true) if $Trainer.save_slot
       return true
-    end 
-    return false 
+    end
+    return false
   end
 
   # DemICE overrides the method from Auto Multi Save
@@ -117,6 +117,6 @@ class PokemonSaveScreen
     end
     @scene.pbEndScreen
     return ret
-  end  
-  
+  end
+
 end

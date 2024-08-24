@@ -314,16 +314,6 @@ def playShuffleSE(i)
   end
 end
 
-def getTrainersDataMode
-  mode = GameData::Trainer
-  if $game_switches && $game_switches[SWITCH_EXPERT_MODE]
-    mode = GameData::TrainerExpert
-  elsif $game_switches && $game_switches[SWITCH_MODERN_MODE]
-    mode = GameData::TrainerModern
-  end
-  return mode
-end
-
 def Kernel.pbShuffleTrainers(bst_range = 50, customsOnly = false, customsList = nil)
   bst_range = pbGet(VAR_RANDOMIZER_TRAINER_BST)
 

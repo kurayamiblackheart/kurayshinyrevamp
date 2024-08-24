@@ -179,7 +179,7 @@ end
 class Sprite_Character
   attr_accessor :shadow
 
-  alias ow_shadow_init initialize
+  alias ow_shadow_init initialize unless method_defined?(:ow_shadow_init)
   def initialize(viewport, character = nil, is_follower = false)
     @viewport = viewport
     @is_follower = is_follower
@@ -251,20 +251,20 @@ class Sprite_Character
     end
   end
 
-  alias ow_shadow_visible visible=
+  alias ow_shadow_visible visible= unless method_defined?(:ow_shadow_visible)
   def visible=(value)
     ow_shadow_visible(value)
     @shadow.visible = value if @shadow
   end
 
-  alias ow_shadow_dispose dispose
+  alias ow_shadow_dispose dispose unless method_defined?(:ow_shadow_dispose)
   def dispose
     ow_shadow_dispose
     @shadow.dispose if @shadow
     @shadow = nil
   end
 
-  alias ow_shadow_update update
+  alias ow_shadow_update update unless method_defined?(:ow_shadow_update)
   def update
     ow_shadow_update
     position_shadow

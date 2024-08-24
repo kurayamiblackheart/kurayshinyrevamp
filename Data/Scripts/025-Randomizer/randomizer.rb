@@ -13,7 +13,7 @@ class PokemonGlobalMetadata
   attr_accessor :randomItemsHash
   attr_accessor :randomTMsHash
 
-  alias random_init initialize
+  alias random_init initialize unless method_defined?(:random_init)
 
   def initialize
     random_init
