@@ -217,7 +217,6 @@ class PokeBattle_AI
 		bsdiv=15.0/bsdam
 		functionscore*= bsdiv if move.baseDamage>50
 		#print functionscore
-		score+=functionscore
 		# A score of 0 here means it absolutely should not be used
 		return 0 if score <= 0
 		# Adjust score based on how much damage it can deal
@@ -227,9 +226,19 @@ class PokeBattle_AI
 			accuracy*= 1.3 if $game_switches[850] # Endgame Challenge enabled
 			accuracy=100 if accuracy>100
 		if move.damagingMove?
-			score = pbGetMoveScoreDamage(score, move, user, target, skill)
+			damage = pbGetMoveScoreDamage(score, move, user, target, skill)
+			bestmove = bestMoveVsTarget(user,target,skill)
+			maxdam=bestmove[0] 
+			maxidx=bestmove[4]
+			maxmove=bestmove[1]
+			maxprio=bestmove[2]
+			score+=functionscore if (damage <100 || move.priority > 0) && !(user.hasActiveAbility?(:SHEERFORCE) && move.addlEffect>0) && targetSurvivesMove(maxmove,user,target,maxprio)
+			score+= damage
+			return 0 if score <= 0
 			score -= (100-accuracy)*0.3 if accuracy < 100  # DemICE
 		else   # Status moves
+			score+=functionscore
+			return 0 if score <= 0
 			# Don't prefer attacks which don't deal damage
 			score -= 10
 			# Account for accuracy of move
