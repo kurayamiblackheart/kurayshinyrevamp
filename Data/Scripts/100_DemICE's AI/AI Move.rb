@@ -350,6 +350,7 @@ class PokeBattle_AI
 			"111", "TwoTurnAttackChargeRaiseUserSpAtk1"].include?(move.function)  ||
 			(move.function=="0C4" && @battle.pbWeather != :Sun)) && !user.hasActiveItem?(:POWERHERB))
 		  realDamage *= 2 / 3   # Not halved because semi-invulnerable during use or hits first turn
+		  realDamage = 0 if target.pbHasMoveFunction?("0AA", "14C", "168" , "14B") # protect moves
 		end
 		if move.function == "0C2" # Use hyper beam as a last resort.
 			if ((aspeed>ospeed) ^ (@battle.field.effects[PBEffects::TrickRoom]>0))
@@ -361,6 +362,11 @@ class PokeBattle_AI
 					realDamage *= 0.5
 				end
 			end
+		end
+		# Brick Break
+		if (target.pbOwnSide.effects[PBEffects::AuroraVeil] > 0 || target.pbOwnSide.effects[PBEffects::Reflect] > 0 || target.pbOwnSide.effects[PBEffects::LightScreen] > 0) &&
+			move.function == "10A"
+			realDamage*=2 
 		end
 		# flinching are dealt with in the function code part of score calculation)
 		if skill>=PBTrainerAI.mediumSkill
