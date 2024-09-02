@@ -445,11 +445,11 @@ module GameData
 
 		# Kuray New Items (Kuray Eggs)
 		self.kurayeggs_loadsystem()
-		# self.kuraychests_loadchests()
+		self.kuraychests_loadchests()
 		# self.kuray_exportpokemondata(1) if $KURAYEGGS_EXPORTPOKEMONDATA
 		self.kuray_rewritepokemons()
-		# self.kuray_rewritetriples()
-		# self.kuray_newfakemonload()
+		self.kuray_rewritetriples()
+		self.kuray_newfakemonload()
 
 		puts "New Pokemons skipped."
 		return#skip new pokemons for now
