@@ -903,13 +903,14 @@ def kurayeggs_triggereggitem(id, itemid)
     kurayegg_pokemon.heal
     kurayegg_pokemon.obtain_text = item_name
     # Check where we can place the pokemon
-    if $Trainer.party_full?
+    pbAddPokemon(kurayegg_pokemon, 1, true, true)
+    # if $Trainer.party_full?
         # If the player's party is full, the Pokémon is sent to storage.
-        pbStorePokemon(kurayegg_pokemon)
-    else
+        # pbStorePokemon(kurayegg_pokemon)
+    # else
         # If the player's party isn't full, the Pokémon is added to the party.
-        pbAddToParty(kurayegg_pokemon)
-    end
+        # pbAddToParty(kurayegg_pokemon)
+    # end
     # for i in $KURAY_MODDED_TRIPLES
     #     target_sym = self.kuray_name_to_sym("KURAY_" + i[0])
     #     puts "Checking for #{target_sym}" if $KURAYEGGS_DEBUG
@@ -925,13 +926,14 @@ def kuray_generateandstore(pokemon, level=1)
     kurayegg_pokemon.form          = 0 if kurayegg_pokemon.isSpecies?(:SHAYMIN)
     kurayegg_pokemon.heal
     # Check where we can place the pokemon
-    if $Trainer.party_full?
+    pbAddPokemon(kurayegg_pokemon, 1, true, true)
+    # if $Trainer.party_full?
         # If the player's party is full, the Pokémon is sent to storage.
-        pbStorePokemon(kurayegg_pokemon)
-    else
+        # pbStorePokemon(kurayegg_pokemon)
+    # else
         # If the player's party isn't full, the Pokémon is added to the party.
-        pbAddToParty(kurayegg_pokemon)
-    end
+        # pbAddToParty(kurayegg_pokemon)
+    # end
 end
 
 def kurayeggs_effectfromid(id)
