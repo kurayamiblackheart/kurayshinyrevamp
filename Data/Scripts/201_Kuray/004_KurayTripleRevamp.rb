@@ -556,7 +556,7 @@ module GameData
             :pokedex_entry       => "Ivymelortle is a three-way fusion between the second stages of the Kanto starters that was created using Team Rocket's fusion machine. Further improvements by Colress has made the fusion stable enough to be use in battles.",
             :type1               => :FIREWATERGRASS,
             :type2               => :FIREWATERGRASS,
-            :base_stats          => {:HP=>59, :ATTACK=>63, :DEFENSE=>6, :SPECIAL_ATTACK=>75, :SPECIAL_DEFENSE=>75, :SPEED=>66},
+            :base_stats          => {:HP=>59, :ATTACK=>63, :DEFENSE=>68, :SPECIAL_ATTACK=>75, :SPECIAL_DEFENSE=>75, :SPEED=>66},
             :evs                 => {:HP=>1, :ATTACK=>1, :DEFENSE=>1, :SPECIAL_ATTACK=>1, :SPECIAL_DEFENSE=>1, :SPEED=>1},
             :base_exp            => 142,
             :growth_rate         => :Parabolic,
