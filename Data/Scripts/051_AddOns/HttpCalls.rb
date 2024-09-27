@@ -72,7 +72,8 @@ def download_file(url, saveLocation)
       echoln _INTL("\nDownloaded file {1} to {2}", url, saveLocation)
       return saveLocation
     else
-      echoln _INTL("Tried to download file {1} . Got response  {2}",url,response[:body])
+      # echoln _INTL("Tried to download file {1} . Got response  {2}",url,response[:body])
+      echoln _INTL("Tried to download file {1}.",url)
     end
     return nil
   rescue MKXPError, Errno::ENOENT => error
@@ -113,7 +114,8 @@ def download_sprite(base_path, head_id, body_id, saveLocation = "Graphics/temp",
       echoln _INTL("\nDownloaded file from {1} to {2}", base_path, saveLocation)
       return downloaded_file_name
     end
-    echoln "tried to download " + url
+    # echoln "tried to download " + url
+    echoln _INTL("Tried to download file {1} . Got response  {2}",url,response[:body])
     return nil
   rescue MKXPError, Errno::ENOENT
     return nil
