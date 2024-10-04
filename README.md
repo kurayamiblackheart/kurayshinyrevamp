@@ -1,6 +1,5 @@
 # PS: We are in a period where the sprites servers have been taken down, if you're encountering white question marks displayed as sprites, get the pre-loaded version.
 You can get the pre-loaded version of KIF by downloading the game from here: https://www.mediafire.com/folder/eo2b1qmi5ukyd/Kuray_Infinite_Fusion
-*(Simply follow the **2nd method**, but download this mediafire .rar instead of the github .zip)*
 
 # Kuray Infinite Fusion (KIF)
 
