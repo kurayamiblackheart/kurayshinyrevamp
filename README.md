@@ -17,16 +17,26 @@ This Github allows you to see the game (open-source), but also to contribute to 
 
 # Official Links
 Website: https://www.kurayinfinitefusion.com/
+
 Discord: https://discord.gg/kuray-hub-1121345297352753243 | https://discord.gg/vZUCRxDTPe
+
 Twitter: https://twitter.com/kuray_hub
+
 Reddit: https://www.reddit.com/r/kurayhub/
+
 Github: https://github.com/kurayamiblackheart/kurayshinyrevamp *(You are here!)*
+
 YouTube: https://www.youtube.com/@kuraylab
+
 Twitch: https://www.twitch.tv/kurayamiblackheart
 
+
 Pokemon Infinite Fusion (PIF) Github: https://github.com/infinitefusion/infinitefusion-e18
+
 Pokemon Infinite Fusion (PIF) Discord: https://discord.gg/infinitefusion
+
 Pokemon Essential Github: https://github.com/Maruno17/pokemon-essentials
+
 
 **If you've been banned from our Discord (the Kuray Hub), you can fill this form to ask for an unban, or informations about the ban:** https://forms.gle/TPCprf38ANmYNB5T8
 
