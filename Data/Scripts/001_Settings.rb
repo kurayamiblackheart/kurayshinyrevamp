@@ -5,8 +5,8 @@
 #==============================================================================#
 module Settings
   # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
-  GAME_VERSION = '6.2.3'
-  IF_VERSION = "6.2.3"
+  GAME_VERSION = '6.2.4'
+  IF_VERSION = "6.2.4"
 
   # GAME_VERSION_NUMBER = "0.19.0"
   # Read the VERSION file inside Data folder to get the version number
@@ -63,7 +63,8 @@ module Settings
 
   # HTTP_CONFIGS_FILE_PATH = "Data/Scripts/RemoteUrls.rb"
   HTTP_CONFIGS_FILE_PATH = "Data/Scripts/DownloadedSettings.rb"
-
+  BASE_POKEMON_SPRITES_REPO_URL = ""
+  
   MYSTERY_GIFT_KURAY_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/MysteryGift.txt"
   MYSTERY_GIFT_KURAY_PATH = "MysteryGift.txt"
 
@@ -93,6 +94,10 @@ module Settings
   VAR_1_PLACEHOLDER_SPECIES = :DIALGA
   VAR_2_PLACEHOLDER_SPECIES = :PALKIA
   VAR_3_PLACEHOLDER_SPECIES = :GIRATINA
+  
+  CUSTOMSPRITES_RATE_MAX_NB_REQUESTS = 5  #Nb. requests allowed in each time window
+  CUSTOMSPRITES_ENTRIES_RATE_TIME_WINDOW = 120    # In seconds
+  CUSTOMSPRITES_RATE_LOG_FILE = 'Data/sprites/sprites_rate_limit.log'  # Path to the log file
 
   RIVAL_STARTER_PLACEHOLDER_VARIABLE = 250
 

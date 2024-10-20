@@ -451,6 +451,12 @@ module GameData
 		# self.kuray_rewritetriples()
 		# self.kuray_newfakemonload()
 
+		# unofficial modded mons
+		# not recommended, but you do you people.
+		self.kuray_modqueue()
+
+
+		# dev stuff
 		# self.kuray_exportpokemondata(1) if $KURAYEGGS_EXPORTPOKEMONDATA
 
 		puts "New Pokemons skipped."

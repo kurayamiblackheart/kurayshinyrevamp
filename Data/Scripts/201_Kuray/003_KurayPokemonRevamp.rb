@@ -1,4 +1,13 @@
 module GameData
+    def self.kuray_modqueue()#Allows mods to add pokemons/modify them
+        # check if $POKEMONDATA_QUEUEING isn't empty
+        if $POKEMONDATA_QUEUEING.length > 0
+            $POKEMONDATA_QUEUEING.each do |data|
+                Species.register(data)
+            end
+        end
+    end
+
     def self.kuray_rewritepokemons()
         Species.register({
             :id                  => :BULBASAUR,

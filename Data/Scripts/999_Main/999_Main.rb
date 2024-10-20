@@ -135,8 +135,19 @@ def showLoadMovie
   loading_screen.visible=true
 end
 
+def passModdedPokemon(data={})
+  # check if data isn't empty
+  if !data.empty?
+    # check that data is a hash/dict
+    if data.is_a?(Hash)
+      $POKEMONDATA_QUEUEING.push(data)
+    end
+  end
+end
+
 def mainFunctionDebug
   begin
+    $POKEMONDATA_QUEUEING = []#Initialize for mod to add pokemons
     showLoadingScreen
     MessageTypes.loadMessageFile("Data/messages.dat") if safeExists?("Data/messages.dat")
     PluginManager.runPlugins

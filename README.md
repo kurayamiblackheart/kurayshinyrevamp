@@ -1,3 +1,6 @@
+# PS: We are in a period where the sprites servers have been taken down, if you're encountering white question marks displayed as sprites, get the pre-loaded version.
+You can get the pre-loaded version of KIF by downloading the game from here: https://www.mediafire.com/folder/eo2b1qmi5ukyd/Kuray_Infinite_Fusion
+
 # Kuray Infinite Fusion (KIF)
 
 Kuray Infinite Fusion (KIF) is a fork of Infinite Fusion, which adds countless new features, including infinite colors for shinies, mods support (people can create mods and load them from a "Mods" folder), a powerful AI (thanks to DemICE), and more!
@@ -13,17 +16,29 @@ Please remember that the backbone of KIF (which is PIF) is still being developed
 This Github allows you to see the game (open-source), but also to contribute to the development of this project with pull-requests, and download the latest release to stay up-to-date.
 
 # Official Links
-Kuray Infinite Fusion (KIF) Github: https://github.com/kurayamiblackheart/kurayshinyrevamp *(You are here!)*
+Website: https://www.kurayinfinitefusion.com/
+
+Discord: https://discord.gg/kuray-hub-1121345297352753243 | https://discord.gg/vZUCRxDTPe
+
+Twitter: https://twitter.com/kuray_hub
+
+Reddit: https://www.reddit.com/r/kurayhub/
+
+Github: https://github.com/kurayamiblackheart/kurayshinyrevamp *(You are here!)*
+
+YouTube: https://www.youtube.com/@kuraylab
+
+Twitch: https://www.twitch.tv/kurayamiblackheart
+
 
 Pokemon Infinite Fusion (PIF) Github: https://github.com/infinitefusion/infinitefusion-e18
 
+Pokemon Infinite Fusion (PIF) Discord: https://discord.gg/infinitefusion
+
 Pokemon Essential Github: https://github.com/Maruno17/pokemon-essentials
 
-Kuray Infinite Fusion (KIF) Discord: https://discord.gg/UFxQkUZeyE
 
 **If you've been banned from our Discord (the Kuray Hub), you can fill this form to ask for an unban, or informations about the ban:** https://forms.gle/TPCprf38ANmYNB5T8
-
-Pokemon Infinite Fusion (PIF) Discord: https://discord.gg/infinitefusion
 
 -----------------------------------------------
 
