@@ -448,7 +448,7 @@ module GameData
 		# self.kuraychests_loadchests()
 
 		self.kuray_rewritepokemons()
-		# self.kuray_rewritetriples()
+		self.kuray_rewritetriples()
 		# self.kuray_newfakemonload()
 
 		# unofficial modded mons
