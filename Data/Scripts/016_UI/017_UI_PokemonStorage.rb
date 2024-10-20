@@ -2591,7 +2591,7 @@ class PokemonStorageScene
           File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
           logic_png(pokemon, importname)
           if deletepkm
-            @storage.pbDelete(box, k)
+            @storage.pbDelete(j, k)
           end
         end
       end
@@ -2613,7 +2613,7 @@ class PokemonStorageScene
         File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
         logic_png(pokemon, importname)
         if deletepkm
-          @storage.pbDelete(box, k)
+          @storage.pbDelete(j, k)
         end
       end
     end
