@@ -98,6 +98,7 @@ module Settings
   CUSTOMSPRITES_RATE_MAX_NB_REQUESTS = 5  #Nb. requests allowed in each time window
   CUSTOMSPRITES_ENTRIES_RATE_TIME_WINDOW = 120    # In seconds
   CUSTOMSPRITES_RATE_LOG_FILE = 'Data/sprites/sprites_rate_limit.log'  # Path to the log file
+  Dir.mkdir('Data/sprites') unless File.exists?('Data/sprites')#make sure that this dir exists
 
   RIVAL_STARTER_PLACEHOLDER_VARIABLE = 250
 
