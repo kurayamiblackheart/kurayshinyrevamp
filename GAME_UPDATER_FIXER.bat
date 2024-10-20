@@ -1,4 +1,4 @@
 @echo off
 cls
-erase /F ".git\index.lock"
+erase /F /Q ".git\index.lock"
 exit
