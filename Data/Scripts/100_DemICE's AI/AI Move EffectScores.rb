@@ -210,7 +210,7 @@ class PokeBattle_AI
 				end
 				score -=200 if target.hasActiveAbility?(:HYDRATION) && @battle.pbWeather == :Rain
 				if skill >= PBTrainerAI.highSkill
-					score -= 40 if target.hasActiveAbility?([:GUTS, :MARVELSCALE, :QUICKFEET])
+					score -= 100 if target.hasActiveAbility?([:GUTS, :MARVELSCALE, :QUICKFEET])
 				end
 			elsif skill >= PBTrainerAI.mediumSkill
 				score -= 90 if move.statusMove?
@@ -242,7 +242,7 @@ class PokeBattle_AI
 				end
 				score -=200 if target.hasActiveAbility?(:HYDRATION) && @battle.pbWeather == :Rain
 				if skill >= PBTrainerAI.highSkill
-					score -= 40 if target.hasActiveAbility?([:GUTS, :MARVELSCALE, :QUICKFEET, :FLAREBOOST])
+					score -= 160 if target.hasActiveAbility?([:GUTS, :MARVELSCALE, :QUICKFEET, :FLAREBOOST])
 				end
 			elsif skill >= PBTrainerAI.mediumSkill
 				score -= 90 if move.statusMove?
@@ -261,7 +261,7 @@ class PokeBattle_AI
 			if skill>=PBTrainerAI.highSkill
 				score += 10 if pbRoughStat(target,:DEFENSE,skill)>100
 				score += 10 if pbRoughStat(target,:SPECIAL_DEFENSE,skill)>100
-				score -= 40 if target.hasActiveAbility?([:GUTS,:MARVELSCALE,:TOXICBOOST])
+				score -= 160 if target.hasActiveAbility?([:GUTS,:MARVELSCALE,:TOXICBOOST])
 			end
 			else
 			if skill>=PBTrainerAI.mediumSkill
@@ -276,8 +276,8 @@ class PokeBattle_AI
 				target.effects[PBEffects::Substitute] == 0
 				# end
 			else
-				score -= 90   # Because it will fail here
-				score = 0 #if skill >= PBTrainerAI.bestSkill
+				score -= 2000   # Because it will fail here
+				#score = 0 #if skill >= PBTrainerAI.bestSkill
 			end
 
 			#---------------------------------------------------------------------------
@@ -2411,7 +2411,7 @@ class PokeBattle_AI
 			aspeed = pbRoughStat(user,:SPEED,skill)
 			ospeed = pbRoughStat(target,:SPEED,skill)
 			maxdam=0
-			maxmove="none"
+			maxmove= "none"
 			maxphys=false
 			maxspec=false
 			@battle.allOtherSideBattlers(user.index).each do |b|
@@ -3470,7 +3470,7 @@ class PokeBattle_AI
 		maxdam=0
 		maxmove=nil
 		maxprio=0
-		physorspec="none"
+		physorspec= "none"
 		for j in user.moves
 			if moveLocked(user)
 				if user.lastMoveUsed && user.pbHasMove?(user.lastMoveUsed)
@@ -3482,8 +3482,8 @@ class PokeBattle_AI
 			if tempdam>maxdam
 				maxdam=tempdam
 				maxmove=j
-				physorspec="physical" if j.physicalMove?(j.type)
-				physorspec="special" if j.specialMove?(j.type)
+				physorspec= "physical" if j.physicalMove?(j.type)
+				physorspec= "special" if j.specialMove?(j.type)
 			end
 			if priorityAI(user,j) > 0
 				maxprio=tempdam if tempdam>maxprio
