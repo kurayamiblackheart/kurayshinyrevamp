@@ -45,6 +45,7 @@ end
 
 def pbUsePokeRadar
   return false if !pbCanUsePokeRadar?
+  $PokemonGlobal.repel = 2 if $PokemonGlobal.repel < 2 # autorepel
   $PokemonTemp.pokeradar = [0, 0, 0, []] if !$PokemonTemp.pokeradar
   $PokemonGlobal.pokeradarBattery = Settings::POKERADAR_BATTERY_STEPS
   unseenPokemon = listPokemonInCurrentRoute($PokemonEncounters.encounter_type, false, true)
@@ -55,10 +56,6 @@ def pbUsePokeRadar
   playPokeradarLightAnimation(rareAllowed)
   pbWait(20)
   pbPokeRadarHighlightGrass
-  if $PokemonGlobal.repel <= 0
-    $PokemonGlobal.repel=10
-    $PokemonGlobal.tempRepel=true
-  end
   return true
 end
 
@@ -105,11 +102,6 @@ def displayPokeradarBanner(seenPokemon = [], unseenPokemon = [], includeRare = f
 end
 
 def pbPokeRadarCancel
-  if $PokemonGlobal.tempRepel
-    $PokemonGlobal.repel=0
-  end
-  $PokemonGlobal.tempRepel=false
-
   if $PokemonTemp.pokeradar_ui != nil
     $PokemonTemp.pokeradar_ui.dispose
     $PokemonTemp.pokeradar_ui = nil
@@ -319,6 +311,9 @@ Events.onWildBattleEnd += proc { |_sender, e|
 }
 
 Events.onStepTaken += proc { |_sender, _e|
+  if $PokemonTemp.pokeradar # autorepel
+    $PokemonGlobal.repel += 1
+  end
   if $PokemonGlobal.pokeradarBattery && $PokemonGlobal.pokeradarBattery > 0 &&
     !$PokemonTemp.pokeradar
     $PokemonGlobal.pokeradarBattery -= 1

@@ -119,7 +119,7 @@ ItemHandlers::UseInField.add(:MAXREPEL, proc { |item|
 Events.onStepTaken += proc {
   if $PokemonGlobal.repel > 0 && !$game_player.terrain_tag.ice # Shouldn't count down if on ice
     $PokemonGlobal.repel -= 1
-    if $PokemonGlobal.repel <= 0 && ! $PokemonGlobal.tempRepel
+    if $PokemonGlobal.repel <= 0
       isIncense = $game_switches[SWITCH_USED_AN_INCENSE]
       $game_switches[SWITCH_FORCE_ALL_WILD_FUSIONS] = false
       $game_switches[SWITCH_USED_AN_INCENSE] = false
@@ -1080,7 +1080,7 @@ ItemHandlers::UseOnPokemon.add(:ABILITYCAPSULE, proc { |item, pkmn, scene|
                            pkmn.name, newabilname))
     pkmn.ability_index = newabil
     pkmn.ability = GameData::Ability.get((newabil == 0) ? abil1 : abil2).id
-    
+
     #pkmn.ability = GameData::Ability.get((newabil == 0) ? abil1 : abil2).id
 	  scene.pbHardRefresh
     scene.pbDisplay(_INTL("{1}'s Ability changed to {2}!", pkmn.name, newabilname))
