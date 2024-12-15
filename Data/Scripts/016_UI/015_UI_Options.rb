@@ -117,7 +117,7 @@ class PokemonSystem
 
   attr_accessor :custom_bst
   attr_accessor :custom_bst_sliders
-
+  attr_accessor :pokeradarplus
 
   #Made by Blue Wuppo
   attr_accessor :walkingpoison
@@ -252,6 +252,7 @@ class PokemonSystem
     @custom_bst = 0
     @custom_bst_sliders = { :HP => 65, :ATTACK => 35, :DEFENSE => 35,
       :SPECIAL_ATTACK => 65, :SPECIAL_DEFENSE => 65, :SPEED => 35 }
+    @pokeradarplus = 0
     @importnodelete = 0
 	@sb_stat_tracker = 0
 	@player_wins = 0
@@ -434,6 +435,7 @@ class PokemonSystem
     @eventmoves = saved.eventmoves if saved.eventmoves
     @custom_bst = saved.custom_bst if saved.custom_bst
     @custom_bst_sliders = saved.custom_bst_sliders if saved.custom_bst_sliders
+    @pokeradarplus = saved.pokeradarplus if saved.pokeradarplus
     #Made by Blue Wuppo
     @walkingpoison = saved.walkingpoison if saved.walkingpoison
     @modernhail = saved.modernhail if saved.modernhail
@@ -548,6 +550,7 @@ def options_as_json(options={})
     "shinyadvanced" => $PokemonSystem.shinyadvanced,
     "custom_bst" => $PokemonSystem.custom_bst,
     "custom_bst_sliders" => $PokemonSystem.custom_bst_sliders,
+    "pokeradarplus" => $PokemonSystem.pokeradarplus,
     "walkingpoison" => $PokemonSystem.walkingpoison,
     "modernhail" => $PokemonSystem.modernhail,
     "frostbite" => $PokemonSystem.frostbite,
@@ -664,6 +667,7 @@ def options_load_json(jsonparse)
   $PokemonSystem.shinyadvanced = jsonparse['shinyadvanced']
   $PokemonSystem.custom_bst = jsonparse['custom_bst']
   $PokemonSystem.custom_bst_sliders = jsonparse['custom_bst_sliders']
+  $PokemonSystem.pokeradarplus = jsonparse['pokeradarplus']
   $PokemonSystem.walkingpoison = jsonparse['walkingpoison']
   $PokemonSystem.modernhail = jsonparse['modernhail']
   $PokemonSystem.frostbite = jsonparse['frostbite']
@@ -2730,6 +2734,11 @@ class KurayOptSc_4 < PokemonOption_Scene
                       "Some abilities heal instead of taking dmg on overworld poison."]
     )
     #End of By Blue Wuppo
+    options << EnumOption.new(_INTL("PokeRadar+"), [_INTL("Off"), _INTL("On")],
+      proc { $PokemonSystem.pokeradarplus },
+      proc { |value| $PokemonSystem.pokeradarplus = value },
+        "Adds a chain count display. Chains won't randomly drop."
+    )
 
     return options
   end

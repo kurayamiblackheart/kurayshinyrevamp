@@ -148,6 +148,9 @@ def canEncounterRarePokemon(unseenPokemon)
 end
 
 def pbPokeRadarHighlightGrass(showmessage = true)
+  if $PokemonSystem.pokeradarplus > 0
+    pbMessage(_INTL("Chain count: {1}\\wtnp[10]", $PokemonTemp.pokeradar[2]))
+  end
   grasses = [] # x, y, ring (0-3 inner to outer), rarity§
   # Choose 1 random tile from each ring around the player
   for i in 0...4
@@ -186,8 +189,12 @@ def pbPokeRadarHighlightGrass(showmessage = true)
   end
   if grasses.length == 0
     # No shaking grass found, break the chain
-    pbMessage(_INTL("Nothing happened...")) if showmessage
-    pbPokeRadarCancel
+    if $PokemonSystem.pokeradarplus > 0
+      pbMessage(_INTL("Nothing happened...\nPokeRadar+ saved the chain!"))
+    else
+      pbMessage(_INTL("Nothing happened...")) if showmessage
+      pbPokeRadarCancel
+    end
   else
     # Show grass rustling animations
     for grass in grasses
@@ -258,7 +265,7 @@ EncounterModifier.register(proc { |encounter|
     rarity = 0 # 0 = rustle, 1 = vigorous rustle, 2 = shiny rustle
     $PokemonTemp.pokeradar[3].each { |g| rarity = g[3] if g[2] == ring }
     if $PokemonTemp.pokeradar[2] > 0 # Chain count, i.e. is chaining
-      if rarity == 2 || rand(100) < 86 + ring * 4 + ($PokemonTemp.pokeradar[2] / 4).floor
+      if rarity == 2 || rand(100) < 86 + ring * 4 + ($PokemonTemp.pokeradar[2] / 4).floor || $PokemonSystem.pokeradarplus > 0
         # Continue the chain
         encounter = [$PokemonTemp.pokeradar[0], $PokemonTemp.pokeradar[1]]
         $PokemonTemp.forceSingleBattle = true
