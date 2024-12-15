@@ -2255,10 +2255,9 @@ class KurayOptSc_2 < PokemonOption_Scene
                       "Legendary Head can breed (like old PIF)."]
     )
     options << EnumOption.new(_INTL("Event Moves"), [_INTL("Off"), _INTL("On")],
-    proc { $PokemonSystem.eventmoves },
-    proc { |value| $PokemonSystem.eventmoves = value },
-    ["No Event Moves.",
-    "Event Moves are available at the Battle Factory Egg Move Tutor."]
+      proc { $PokemonSystem.eventmoves },
+      proc { |value| $PokemonSystem.eventmoves = value },
+      "Event Moves are available at the Battle Factory Egg Move Tutor."
     )
     # Made by Blue Woppo
     options << EnumOption.new(_INTL("Modern Hail"), [_INTL("Off"), _INTL("Hail"), _INTL("Snow")],
