@@ -374,7 +374,7 @@ class PokeBattle_AI
 		end
 		# Changed by DemICE 17-Nov-2024 I should have put fake out here a long long time ago
 		if move.function == "012" && user.turnCount > 0
-			return true
+			return 0
 		end
 		# Brick Break
 		if (target.pbOwnSide.effects[PBEffects::AuroraVeil] > 0 || target.pbOwnSide.effects[PBEffects::Reflect] > 0 || target.pbOwnSide.effects[PBEffects::LightScreen] > 0) &&
