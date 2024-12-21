@@ -525,7 +525,7 @@ end
 
 module Graphics
   def self.delta_s
-    return self.delta.to_f / 1_000_000
+    return self.delta
   end
 end
 
