@@ -772,18 +772,21 @@ class PokemonSummary_Scene
       when 5
         y = 242
       end
+      base_stat = @pokemon.baseStats[stats[i]]
       ev_stat = ($PokemonSystem.noevsmode && $PokemonSystem.noevsmode > 0) ? 0 : @pokemon.ev[stats[i]]
       iv_stat = ($PokemonSystem.maxivsmode && $PokemonSystem.maxivsmode > 0) ? Pokemon::IV_STAT_LIMIT : @pokemon.iv[stats[i]]
       textpos += [
-        [stats_displayname[i], 248, y, 0, base, statshadows[stats[i]]],
-        [sprintf("%d", @pokemon.send(stats_value[i].downcase)), 400, y, 1, Color.new(64, 64, 64), Color.new(176, 176, 176)],
-        [sprintf("%d", iv_stat), 440, y, 1, Color.new(84, 64, 44), Color.new(248, 148, 0)],
-        [sprintf("%d", ev_stat), 480, y, 1, Color.new(54, 84, 54), Color.new(24, 192, 32)]
+        [stats_displayname[i], 236, y, 0, base, statshadows[stats[i]]],
+        [sprintf("%d", @pokemon.send(stats_value[i].downcase)), 380, y, 1, Color.new(64, 64, 64), Color.new(176, 176, 176)],
+        [sprintf("%d", iv_stat), 420, y, 1, Color.new(84, 64, 44), Color.new(248, 148, 0)],
+        [sprintf("%d", ev_stat), 460, y, 1, Color.new(54, 84, 54), Color.new(24, 192, 32)],
+        [sprintf("%d", base_stat), 500, y, 1, Color.new(36, 60, 80), Color.new(88, 152, 248)]
       ]
       if i == 0 # If the stat is HP
-        textpos << [sprintf("%d", @pokemon.hp), 346, y, 1, base, shadow]
-        textpos << ["IVs", 440, y-23, 1, Color.new(64, 44, 24), Color.new(228, 128, 0)]
-        textpos << ["EVs", 480, y-23, 1, Color.new(34, 64, 34), Color.new(4, 172, 12)]
+        textpos << [sprintf("%d", @pokemon.hp), 326, y, 1, base, shadow]
+        textpos << ["IVs", 420, y-23, 1, Color.new(64, 44, 24), Color.new(228, 128, 0)]
+        textpos << ["EVs", 460, y-23, 1, Color.new(34, 64, 34), Color.new(4, 172, 12)]
+        textpos << ["BST", 500, y-23, 1, Color.new(36, 60, 80), Color.new(88, 152, 248)]
       end
     end
     
