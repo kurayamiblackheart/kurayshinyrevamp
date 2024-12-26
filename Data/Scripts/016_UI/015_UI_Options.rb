@@ -117,6 +117,8 @@ class PokemonSystem
 
   attr_accessor :custom_bst
   attr_accessor :custom_bst_sliders
+  attr_accessor :custom_bst_npc
+  attr_accessor :custom_bst_sliders_npc
   attr_accessor :pokeradarplus
 
   #Made by Blue Wuppo
@@ -251,6 +253,9 @@ class PokemonSystem
 
     @custom_bst = 0
     @custom_bst_sliders = { :HP => 65, :ATTACK => 35, :DEFENSE => 35,
+      :SPECIAL_ATTACK => 65, :SPECIAL_DEFENSE => 65, :SPEED => 35 }
+    @custom_bst_npc = 0
+    @custom_bst_sliders_npc = { :HP => 65, :ATTACK => 35, :DEFENSE => 35,
       :SPECIAL_ATTACK => 65, :SPECIAL_DEFENSE => 65, :SPEED => 35 }
     @pokeradarplus = 0
     @importnodelete = 0
@@ -435,6 +440,8 @@ class PokemonSystem
     @eventmoves = saved.eventmoves if saved.eventmoves
     @custom_bst = saved.custom_bst if saved.custom_bst
     @custom_bst_sliders = saved.custom_bst_sliders if saved.custom_bst_sliders
+    @custom_bst_npc = saved.custom_bst_npc if saved.custom_bst_npc
+    @custom_bst_sliders_npc = saved.custom_bst_sliders_npc if saved.custom_bst_sliders_npc
     @pokeradarplus = saved.pokeradarplus if saved.pokeradarplus
     #Made by Blue Wuppo
     @walkingpoison = saved.walkingpoison if saved.walkingpoison
@@ -550,6 +557,8 @@ def options_as_json(options={})
     "shinyadvanced" => $PokemonSystem.shinyadvanced,
     "custom_bst" => $PokemonSystem.custom_bst,
     "custom_bst_sliders" => $PokemonSystem.custom_bst_sliders,
+    "custom_bst_npc" => $PokemonSystem.custom_bst_npc,
+    "custom_bst_sliders_npc" => $PokemonSystem.custom_bst_sliders_npc,
     "pokeradarplus" => $PokemonSystem.pokeradarplus,
     "walkingpoison" => $PokemonSystem.walkingpoison,
     "modernhail" => $PokemonSystem.modernhail,
@@ -667,6 +676,8 @@ def options_load_json(jsonparse)
   $PokemonSystem.shinyadvanced = jsonparse['shinyadvanced']
   $PokemonSystem.custom_bst = jsonparse['custom_bst']
   $PokemonSystem.custom_bst_sliders = jsonparse['custom_bst_sliders']
+  $PokemonSystem.custom_bst_npc = jsonparse['custom_bst_npc']
+  $PokemonSystem.custom_bst_sliders_npc = jsonparse['custom_bst_sliders_npc']
   $PokemonSystem.pokeradarplus = jsonparse['pokeradarplus']
   $PokemonSystem.walkingpoison = jsonparse['walkingpoison']
   $PokemonSystem.modernhail = jsonparse['modernhail']
@@ -2148,12 +2159,12 @@ class KurayOptSc_2 < PokemonOption_Scene
                       ["Stat boost for self-fusions is disabled.",
                       "Stat boost for self-fusions is enabled."]
     )
-    options << EnumOption.new(_INTL("Fusion Base Stats"), [_INTL("Off"), _INTL("Head"), _INTL("Better")],
+    options << EnumOption.new(_INTL("Fusion BaseStats"), [_INTL("Off"), _INTL("Head"), _INTL("Better")],
                       proc { $PokemonSystem.custom_bst },
                       proc { |value| $PokemonSystem.custom_bst = value },
                       ["Default fusion base stats.",
-                      "Sliders determine what % of each stat is derived from the head pokemon.",
-                      "Sliders determine what % of each stat is derived from the better base stat."]
+                      "Sliders determine what % of each stat comes from the head pokemon.",
+                      "Sliders determine what % of each stat comes from the better base stat."]
     )
     options << SliderOption.new(_INTL("    HP"), 0, 100, 5,
                       proc { $PokemonSystem.custom_bst_sliders[:HP] },
@@ -2184,6 +2195,43 @@ class KurayOptSc_2 < PokemonOption_Scene
                       proc { $PokemonSystem.custom_bst_sliders[:SPEED] },
                       proc { |value| $PokemonSystem.custom_bst_sliders[:SPEED] = value },
                       "Percentage of base Speed contributed."
+    )
+    options << EnumOption.new(_INTL("NPC Fusion BaseStats"), [_INTL("Off"), _INTL("Head"), _INTL("Better")],
+    proc { $PokemonSystem.custom_bst_npc },
+    proc { |value| $PokemonSystem.custom_bst_npc = value },
+    ["Default NPC fusion base stats.",
+    "Sliders determine what % of each stat comes from the head pokemon.",
+    "Sliders determine what % of each stat comes from the better base stat."]
+    )
+    options << SliderOption.new(_INTL("    HP"), 0, 100, 5,
+        proc { $PokemonSystem.custom_bst_sliders_npc[:HP] },
+        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:HP] = value },
+        "Percentage of base HP contributed."
+    )
+    options << SliderOption.new(_INTL("    Attack"), 0, 100, 5,
+        proc { $PokemonSystem.custom_bst_sliders_npc[:ATTACK] },
+        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:ATTACK] = value },
+        "Percentage of base Attack contributed."
+    )
+    options << SliderOption.new(_INTL("    Defense"), 0, 100, 5,
+        proc { $PokemonSystem.custom_bst_sliders_npc[:DEFENSE] },
+        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:DEFENSE] = value },
+        "Percentage of base Defense contributed."
+    )
+    options << SliderOption.new(_INTL("    Special Attack"), 0, 100, 5,
+        proc { $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_ATTACK] },
+        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_ATTACK] = value },
+        "Percentage of base Special Attack contributed."
+    )
+    options << SliderOption.new(_INTL("    Special Defense"), 0, 100, 5,
+        proc { $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_DEFENSE] },
+        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_DEFENSE] = value },
+        "Percentage of base Special Defense contributed."
+    )
+    options << SliderOption.new(_INTL("    Speed"), 0, 100, 5,
+        proc { $PokemonSystem.custom_bst_sliders_npc[:SPEED] },
+        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPEED] = value },
+        "Percentage of base Speed contributed."
     )
     options << EnumOption.new(_INTL("Dominant Fusion Types"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.dominant_fusion_types },

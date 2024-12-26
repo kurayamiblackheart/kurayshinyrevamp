@@ -795,7 +795,7 @@ class Pokemon
   # Recalculates this Pokémon's stats.
   # @param value [Integer] (between 1 and the maximum level) calc stats at this level instead
   def calc_stats(this_level = self.level_simple)
-    if $PokemonSystem.kuraylevelcap != 0 && (@owner.id == $Trainer.id || @obtain_method == 2 || @obtain_method == 4 || self.imported?) # obtained from trade
+    if $PokemonSystem.kuraylevelcap != 0 && player_owned?
       levelcap = getkuraylevelcap()
       if this_level > levelcap
         this_level = levelcap
@@ -1752,6 +1752,13 @@ class Pokemon
   # Ownership, obtained information
   #=============================================================================
 
+  # checks if the player has the same trainer id as the pokemon, if it was obtained in a trade, a 
+  # fateful encounter, or imported into the game.
+  # @return [Boolean] whether the player owns the pokemon
+  def player_owned?()
+    return @owner.id == $Trainer.id || @obtain_method == 2 || @obtain_method == 4 || self.imported?
+  end
+
   # Changes this Pokémon's owner.
   # @param new_owner [Owner] the owner to change to
   def owner=(new_owner)
@@ -1978,8 +1985,10 @@ class Pokemon
 
   # @return [Hash<Integer>] this Pokémon's base stats, a hash with six key/value pairs
   def baseStats
-    if $PokemonSystem.custom_bst > 0 && species_data.is_a?(GameData::FusedSpecies)
-      this_base_stats = species_data.calculate_base_stats_custom
+    if $PokemonSystem.custom_bst > 0 && species_data.is_a?(GameData::FusedSpecies) && player_owned?
+      this_base_stats = species_data.calculate_base_stats_custom($PokemonSystem.custom_bst, $PokemonSystem.custom_bst_sliders)
+    elsif $PokemonSystem.custom_bst_npc > 0 && species_data.is_a?(GameData::FusedSpecies) && !player_owned?
+      this_base_stats = species_data.calculate_base_stats_custom($PokemonSystem.custom_bst_npc, $PokemonSystem.custom_bst_sliders_npc)
     else
       this_base_stats = species_data.base_stats
     end

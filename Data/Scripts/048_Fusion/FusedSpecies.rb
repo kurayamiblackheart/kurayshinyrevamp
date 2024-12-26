@@ -177,20 +177,20 @@ module GameData
       return fused_stats
     end
 
-    def calculate_base_stats_custom()
+    def calculate_base_stats_custom(bst_option, bst_sliders)
       head_stats = @head_pokemon.base_stats
       body_stats = @body_pokemon.base_stats
 
       fused_stats = {}
 
-      if $PokemonSystem.custom_bst == 1 # Head
-        head_stats.each{|stat, head_value| fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat])}
-      elsif $PokemonSystem.custom_bst == 2 # Better
+      if bst_option == 1 # Head
+        head_stats.each{|stat, head_value| fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], bst_sliders[stat])}
+      elsif bst_option == 2 # Better
         head_stats.each{|stat, head_value|
           if head_value > body_stats[stat] then
-            fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat])
+            fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], bst_sliders[stat])
           else
-            fused_stats[stat] = calculate_fused_stats_custom(body_stats[stat], head_value, $PokemonSystem.custom_bst_sliders[stat])
+            fused_stats[stat] = calculate_fused_stats_custom(body_stats[stat], head_value, bst_sliders[stat])
           end
         }
       else
