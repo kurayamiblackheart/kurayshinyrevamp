@@ -125,8 +125,11 @@ def pbDayCareGetCompat
   # Shadow Pokémon cannot breed
   return 0 if pkmn1.shadowPokemon? || pkmn2.shadowPokemon?
   # Pokémon in the Undiscovered egg group cannot breed
-  egg_groups1 = pkmn1.species_data.egg_groups
-  egg_groups2 = pkmn2.species_data.egg_groups
+  # egg_groups1 = pkmn1.species_data.egg_groups
+  # egg_groups2 = pkmn2.species_data.egg_groups
+  # Forcing it into array to prevent crash from undefined method include? for :Undiscovered:Symbol
+  egg_groups1 = [pkmn1.species_data.egg_groups].flatten
+  egg_groups2 = [pkmn2.species_data.egg_groups].flatten
   return 0 if egg_groups1.include?(:Undiscovered) ||
               egg_groups2.include?(:Undiscovered)
   return 0 if (!$PokemonSystem.legendarybreed || $PokemonSystem.legendarybreed == 0) &&

@@ -112,6 +112,7 @@ def pbBattleAnimation(bgm=nil,battletype=0,foe=nil)
   $PokemonGlobal.nextBattleME        = nil
   $PokemonGlobal.nextBattleCaptureME = nil
   $PokemonGlobal.nextBattleBack      = nil
+  $PokemonTemp.forced_alt_sprites=nil
   $PokemonEncounters.reset_step_count
   # Fade back to the overworld
   viewport.color = Color.new(0,0,0,255)
@@ -135,10 +136,15 @@ def pbBattleAnimationOverride(viewport,battletype=0,foe=nil)
   ##### Tweaked by Maruno           #####
   if (battletype==1 || battletype==3) && foe.length==1   # Against single trainer
     tr_type = foe[0].trainer_type
+    tr_number= GameData::TrainerType.get(tr_type).id_number
+
     if tr_type
       tbargraphic = sprintf("vsBar_%s", tr_type.to_s) rescue nil
-      tgraphic    = sprintf("vsTrainer_%s", tr_type.to_s) rescue nil
-      if pbResolveBitmap("Graphics/Transitions/" + tbargraphic) && pbResolveBitmap("Graphics/Transitions/" + tgraphic)
+      #tgraphic    = sprintf("vsTrainer_%s", tr_type.to_s) rescue nil
+      tgraphic    = sprintf("trainer%03d", tr_number) rescue nil
+
+      echoln tgraphic
+      if pbResolveBitmap("Graphics/Transitions/" + tbargraphic) && pbResolveBitmap("Graphics/Characters/" + tgraphic)
         player_tr_type = $Trainer.trainer_type
         outfit = $Trainer.outfit
         # Set up
@@ -155,11 +161,14 @@ def pbBattleAnimationOverride(viewport,battletype=0,foe=nil)
         overlay = Sprite.new(viewport)
         overlay.bitmap = Bitmap.new(Graphics.width,Graphics.height)
         pbSetSystemFont(overlay.bitmap)
-        pbargraphic = sprintf("vsBar_%s_%d", player_tr_type.to_s, outfit) rescue nil
+        #pbargraphic = sprintf("vsBar_%s_%d", player_tr_type.to_s, outfit) rescue nil
+        pbargraphic = sprintf("vsBar_%s", player_tr_type.to_s) rescue nil
         if !pbResolveBitmap("Graphics/Transitions/" + pbargraphic)
           pbargraphic = sprintf("vsBar_%s", player_tr_type.to_s) rescue nil
         end
+        # xoffset = ((Graphics.width/2)/10)*10
         xoffset = ((Graphics.width/2)/10)*10
+        #xoffset = 0#((Graphics.width/2)/10)*10
         bar1 = Sprite.new(viewplayer)
         bar1.bitmap = RPG::Cache.transition(pbargraphic)
         bar1.x      = -xoffset
@@ -178,6 +187,7 @@ def pbBattleAnimationOverride(viewport,battletype=0,foe=nil)
         flash.opacity = 0
         # Animate bars sliding in from either side
         slideInTime = (Graphics.frame_rate*0.25).floor
+
         for i in 0...slideInTime
           bar1.x = xoffset*(i+1-slideInTime)/slideInTime
           bar2.x = xoffset*(slideInTime-i-1)/slideInTime
@@ -194,17 +204,38 @@ def pbBattleAnimationOverride(viewport,battletype=0,foe=nil)
         bar1.bitmap = RPG::Cache.transition(pbargraphic)
         bar2 = AnimatedPlane.new(viewopp)
         bar2.bitmap = RPG::Cache.transition(tbargraphic)
-        pgraphic = sprintf("vsTrainer_%s_%d", player_tr_type.to_s, outfit) rescue nil
-        if !pbResolveBitmap("Graphics/Transitions/" + pgraphic)
-          pgraphic = sprintf("vsTrainer_%s", player_tr_type.to_s) rescue nil
-        end
+        #pgraphic = sprintf("vsTrainer_%s_%d", player_tr_type.to_s, outfit) rescue nil
+        #pgraphic = sprintf("vsTrainer_%s", player_tr_type.to_s) rescue nil
+
+        # pgraphic = generate_front_trainer_sprite_bitmap()#sprintf("trainer%03d", tr_number) rescue nil
+        #
+        # #if !pbResolveBitmap("Graphics/Transitions/" + pgraphic)
+        # if !pbResolveBitmap("Graphics/Characters/" + pgraphic)
+        #   pgraphic = sprintf("vsTrainer_%s", player_tr_type.to_s) rescue nil
+        # end
         player = Sprite.new(viewplayer)
-        player.bitmap = RPG::Cache.transition(pgraphic)
-        player.x      = -xoffset
+        #player.bitmap = RPG::Cache.transition(tgraphic)
+        #
+        playerSpriteWrapper = generate_front_trainer_sprite_bitmap()
+        player.bitmap = playerSpriteWrapper.bitmap # RPG::Cache.load_bitmap("Graphics/Characters/", pgraphic) #RPG::Cache.transition(pgraphic)
+        player.x      =  -250
+        player.y = -30
+        player.zoom_x = 2
+        player.zoom_y = 2
+
+        player.mirror =true
+        player_center_offset=-20
+
         trainer = Sprite.new(viewopp)
-        trainer.bitmap = RPG::Cache.transition(tgraphic)
-        trainer.x      = xoffset
+        #trainer.bitmap = RPG::Cache.transition(tgraphic)
+        trainer.bitmap =RPG::Cache.load_bitmap("Graphics/Characters/", tgraphic) #RPG::Cache.transition(pgraphic)
+        trainer.x      = xoffset+150
         trainer.tone   = Tone.new(-255,-255,-255)
+        trainer.zoom_x = 2
+        trainer.zoom_y = 2
+        trainer.y = -10
+        trainer_center_offset=0
+
         # Dim the flash and make the trainer sprites appear, while animating bars
         animTime = (Graphics.frame_rate*1.2).floor
         for i in 0...animTime
@@ -212,13 +243,20 @@ def pbBattleAnimationOverride(viewport,battletype=0,foe=nil)
           bar1.ox -= 32*20/Graphics.frame_rate
           bar2.ox += 32*20/Graphics.frame_rate
           if i>=animTime/2 && i<slideInTime+animTime/2
-            player.x = xoffset*(i+1-slideInTime-animTime/2)/slideInTime
-            trainer.x = xoffset*(slideInTime-i-1+animTime/2)/slideInTime
+            player.x = (xoffset*(i+1-slideInTime-animTime/2)/slideInTime)+player_center_offset
+            trainer.x = xoffset*(slideInTime-i-1+animTime/2)/slideInTime+trainer_center_offset
           end
           pbWait(1)
         end
-        player.x = 0
-        trainer.x = 0
+
+
+        echoln  "VS flash"
+        #player.x = -150
+        #player.y=-75
+
+        #trainer.x = -20
+        # trainer.y = -75
+
         # Make whole screen flash white again
         flash.opacity = 255
         pbSEPlay("Vs sword")

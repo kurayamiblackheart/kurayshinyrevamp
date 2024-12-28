@@ -53,7 +53,16 @@ class PokemonSprite < SpriteWrapper
   def setPokemonBitmap(pokemon, back = false)
     @_iconbitmap.dispose if @_iconbitmap
     @_iconbitmap = (pokemon) ? GameData::Species.sprite_bitmap_from_pokemon(pokemon, back) : nil
-    self.bitmap = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
+    if @_iconbitmap
+      if  pokemon.hat
+        add_hat_to_bitmap(@_iconbitmap.bitmap,pokemon.hat,pokemon.hat_x,pokemon.hat_y)
+      else
+
+      end
+      self.bitmap = @_iconbitmap.bitmap
+    else
+      @_iconbitmap.bitmap=nil
+    end
     self.color = Color.new(0, 0, 0, 0)
     changeOrigin
   end
@@ -250,6 +259,9 @@ class PokemonIconSprite < SpriteWrapper
     else
       if dex_number >= Settings::ZAPMOLCUNO_NB
         specialPath = getSpecialIconName(dex_number)
+        if !pbResolveBitmap(specialPath)
+          specialPath = sprintf("Graphics/Battlers/special/000")
+        end
         return pbResolveBitmap(specialPath)
         head_id=nil
       else
@@ -264,63 +276,7 @@ class PokemonIconSprite < SpriteWrapper
 
   #KurayX Custom icons
   def getSpecialIconName(dexNum)
-    base_path = "Graphics/Battlers/special/"
-    case dexNum
-    when Settings::ZAPMOLCUNO_NB..Settings::ZAPMOLCUNO_NB + 1
-      return sprintf(base_path + "144.145.146")
-    when Settings::ZAPMOLCUNO_NB + 2
-      return sprintf(base_path + "243.244.245")
-    when Settings::ZAPMOLCUNO_NB + 3
-      return sprintf(base_path +"340.341.342")
-    when Settings::ZAPMOLCUNO_NB + 4
-      return sprintf(base_path +"343.344.345")
-    when Settings::ZAPMOLCUNO_NB + 5
-      return sprintf(base_path +"349.350.351")
-    when Settings::ZAPMOLCUNO_NB + 6
-      return sprintf(base_path +"151.251.381")
-    when Settings::ZAPMOLCUNO_NB + 11
-      return sprintf(base_path +"150.348.380")
-      #starters
-    when Settings::ZAPMOLCUNO_NB + 7
-      return sprintf(base_path +"3.6.9")
-    when Settings::ZAPMOLCUNO_NB + 8
-      return sprintf(base_path +"154.157.160")
-    when Settings::ZAPMOLCUNO_NB + 9
-      return sprintf(base_path +"278.281.284")
-    when Settings::ZAPMOLCUNO_NB + 10
-      return sprintf(base_path +"318.321.324")
-      #starters prevos
-    when Settings::ZAPMOLCUNO_NB + 12
-      return sprintf(base_path +"1.4.7")
-    when Settings::ZAPMOLCUNO_NB + 13
-      return sprintf(base_path +"2.5.8")
-    when Settings::ZAPMOLCUNO_NB + 14
-      return sprintf(base_path +"152.155.158")
-    when Settings::ZAPMOLCUNO_NB + 15
-      return sprintf(base_path +"153.156.159")
-    when Settings::ZAPMOLCUNO_NB + 16
-      return sprintf(base_path +"276.279.282")
-    when Settings::ZAPMOLCUNO_NB + 17
-      return sprintf(base_path +"277.280.283")
-    when Settings::ZAPMOLCUNO_NB + 18
-      return sprintf(base_path +"316.319.322")
-    when Settings::ZAPMOLCUNO_NB + 19
-      return sprintf(base_path +"317.320.323")
-    when Settings::ZAPMOLCUNO_NB + 20 #birdBoss Left
-      return sprintf(base_path +"invisible")
-    when Settings::ZAPMOLCUNO_NB + 21 #birdBoss middle
-      return sprintf(base_path + "144.145.146")
-    when Settings::ZAPMOLCUNO_NB + 22 #birdBoss right
-      return sprintf(base_path +"invisible")
-    when Settings::ZAPMOLCUNO_NB + 23 #sinnohboss left
-      return sprintf(base_path +"invisible")
-    when Settings::ZAPMOLCUNO_NB + 24 #sinnohboss middle
-      return sprintf(base_path +"343.344.345")
-    when Settings::ZAPMOLCUNO_NB + 25 #sinnohboss right
-      return sprintf(base_path +"invisible")
-    else
-      return sprintf(base_path + "000")
-    end
+    return kuray_global_triples(dexNum)
   end
 
   #Just in case (KurayX) KurayX Custom icons

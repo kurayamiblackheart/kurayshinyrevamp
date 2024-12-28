@@ -41,17 +41,17 @@ def Kernel.initRandomTypeArray()
   $game_variables[VAR_GYM_TYPES_ARRAY] = $game_switches[SWITCH_RANDOMIZED_GYM_TYPES] ? typesArray : GYM_TYPES_ARRAY
 end
 
-def setRivalStarter(starter1, starter2, starter3, choice)
-  starters = [starter1, starter2, starter3]
-  starters.delete_at(choice)
-  if starters[0] > NB_POKEMON || starters[1] > NB_POKEMON
-    rivalStarter = starters[0]
-  else
-    rivalStarter = starters[0] * NB_POKEMON + starters[1]
-  end
-  pbSet(VAR_RIVAL_STARTER, rivalStarter)
-  $game_switches[SWITCH_DEFINED_RIVAL_STARTER] = true
-end
+# def setRivalStarter(starter1, starter2, starter3, choice)
+#   starters = [starter1, starter2, starter3]
+#   starters.delete_at(choice)
+#   if starters[0] > NB_POKEMON || starters[1] > NB_POKEMON
+#     rivalStarter = starters[0]
+#   else
+#     rivalStarter = starters[0] * NB_POKEMON + starters[1]
+#   end
+#   pbSet(VAR_RIVAL_STARTER, rivalStarter)
+#   $game_switches[SWITCH_DEFINED_RIVAL_STARTER] = true
+# end
 
 def setRivalStarterSpecific(rivalStarter)
   pbSet(VAR_RIVAL_STARTER, rivalStarter)
@@ -64,7 +64,7 @@ class PokeBattle_Battle
     for pokemon in party
       next if !pokemon
       newspecies = rand(PBSpecies.maxValue - 1) + 1
-      while !gymLeaderOk(newspecies) || bstOk(newspecies, pokemon.species, $game_variables[VAR_RANDOMIZER_WILD_POKE_BST])
+      while !gymLeaderOk(newspecies) || bstNotOk(newspecies, pokemon.species, $game_variables[VAR_RANDOMIZER_WILD_POKE_BST])
         newspecies = rand(PBSpecies.maxValue - 1) + 1
       end
       pokemon.species = newspecies
@@ -122,7 +122,18 @@ end
 # end
 #
 
-def bstOk(newspecies, oldPokemonSpecies, bst_range = 50)
+def legendaryOk(oldspecies,newspecies,includeLegendaries)
+  oldSpeciesIsLegendary = is_legendary(oldspecies)
+  if oldSpeciesIsLegendary  #legendaries always randomize to legendaries
+    return is_legendary(newspecies)
+  else
+    return true if includeLegendaries
+    return !is_legendary(newspecies)
+  end
+
+end
+
+def bstNotOk(newspecies, oldPokemonSpecies, bst_range = 50)
   newBST = calcBaseStatsSum(newspecies)
   originalBST = calcBaseStatsSum(oldPokemonSpecies)
   return newBST < originalBST - bst_range || newBST > originalBST + bst_range
@@ -219,10 +230,11 @@ def Kernel.sumGameStats()
   stringStats << "\nBeaten the Elite Four " << $game_variables[VAR_STAT_NB_ELITE_FOUR].to_s << " times"
   stringStats << "\nFused " << $game_variables[VAR_STAT_NB_FUSIONS].to_s << " Pokémon"
 
-  stringStats << "\nRematched " << $game_variables[VAR_STAT_LEADER_REMATCH].to_s << " Gym Leaders"
+  nbGymRematches = $game_variables[VAR_STAT_LEADER_REMATCH]
+  stringStats << "\nRematched " << nbGymRematches.to_s << " Gym Leaders" if nbGymRematches > 0
   stringStats << "\nTook " << $PokemonGlobal.stepcount.to_s << " steps"
   stringStats << "\nVisited " << countVisitedMaps.to_s << " different areas"
-  stringStats << "\nUsed " << $game_variables[VAR_STAT_RARE_CANDY] << " Rare Candies"
+  stringStats << "\nUsed " << $game_variables[VAR_STAT_RARE_CANDY].to_s << " Rare Candies"
 
   if $game_switches[910]
     stringStats << "\nMade " << $game_variables[VAR_STAT_NB_WONDERTRADES].to_s << " Wonder Trades"
@@ -261,13 +273,13 @@ def Kernel.pbRandomizeTM()
   end
 end
 
-def getNewSpecies(oldSpecies, bst_range = 50, ignoreRivalPlaceholder = false, maxDexNumber = PBSpecies.maxValue)
+def getNewSpecies(oldSpecies, bst_range = 50, ignoreRivalPlaceholder = false, maxDexNumber = PBSpecies.maxValue, includeLegendaries=true)
   oldSpecies_dex = dexNum(oldSpecies)
   return oldSpecies_dex if (oldSpecies_dex == Settings::RIVAL_STARTER_PLACEHOLDER_SPECIES && !ignoreRivalPlaceholder)
   return oldSpecies_dex if oldSpecies_dex >= Settings::ZAPMOLCUNO_NB
   newspecies_dex = rand(maxDexNumber - 1) + 1
   i = 0
-  while bstOk(newspecies_dex, oldSpecies_dex, bst_range)
+  while bstNotOk(newspecies_dex, oldSpecies_dex, bst_range) || !(legendaryOk(oldSpecies_dex,newspecies_dex,includeLegendaries))
     newspecies_dex = rand(maxDexNumber - 1) + 1
     i += 1
     if i % 10 == 0
@@ -277,14 +289,15 @@ def getNewSpecies(oldSpecies, bst_range = 50, ignoreRivalPlaceholder = false, ma
   return newspecies_dex
 end
 
-def getNewCustomSpecies(oldSpecies, customSpeciesList, bst_range = 50, ignoreRivalPlaceholder = false)
+def getNewCustomSpecies(oldSpecies, customSpeciesList, bst_range = 50, ignoreRivalPlaceholder = false,includeLegendaries=true)
   oldSpecies_dex = dexNum(oldSpecies)
   return oldSpecies_dex if (oldSpecies_dex == Settings::RIVAL_STARTER_PLACEHOLDER_SPECIES && !ignoreRivalPlaceholder)
   return oldSpecies_dex if oldSpecies_dex >= Settings::ZAPMOLCUNO_NB
   i = rand(customSpeciesList.length - 1) + 1
   n = 0
   newspecies_dex = customSpeciesList[i]
-  while bstOk(newspecies_dex, oldSpecies_dex, bst_range)
+
+  while bstNotOk(newspecies_dex, oldSpecies_dex, bst_range) || !(legendaryOk(oldSpecies_dex,newspecies_dex,includeLegendaries))
     i = rand(customSpeciesList.length - 1) #+1
     newspecies_dex = customSpeciesList[i]
     n += 1
@@ -299,14 +312,6 @@ def playShuffleSE(i)
   if i % 40 == 0 || i == 0
     pbSEPlay("Charm", 60)
   end
-end
-
-def getTrainersDataMode
-  mode = GameData::Trainer
-  if $game_switches && $game_switches[SWITCH_MODERN_MODE]
-    mode = GameData::TrainerModern
-  end
-  return mode
 end
 
 def Kernel.pbShuffleTrainers(bst_range = 50, customsOnly = false, customsList = nil)
@@ -723,13 +728,13 @@ def fixRivalStarter()
   end
   starterChoice = pbGet(7)
 
-  s1 = $PokemonGlobal.psuedoBSTHash[1]
-  s2 = $PokemonGlobal.psuedoBSTHash[4]
-  s3 = $PokemonGlobal.psuedoBSTHash[7]
-  setRivalStarter(s3, s2, s1, starterChoice)
-
+  setRivalStarter(0, 1) if starterChoice == 2
+  setRivalStarter(0, 2) if starterChoice == 1
+  setRivalStarter(1, 2) if starterChoice == 0
+  setRivalStarter(0, 1) if starterChoice > 2
+  echoln pbGet(VAR_RIVAL_STARTER)
   #evolve en fct des badges
-  rivalStarter = pbGet(250)
+  rivalStarter = pbGet(VAR_RIVAL_STARTER)
 
   if $game_switches[68] #beat blue cerulean
     rivalStarter = evolveBody(rivalStarter)

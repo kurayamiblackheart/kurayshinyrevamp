@@ -173,11 +173,21 @@ class PokeBattle_Battle
   def wildBattle?;    return @opponent.nil?;  end
   def trainerBattle?; return !@opponent.nil?; end
 
+  # def get_default_battle_format()
+  #   case $PokemonSystem.battle_type
+  #   when 0 then return [1, 1]
+  #   when 1 then return [2, 2]
+  #   when 2 then return [3, 3]
+  #   end
+  #   return [1,1]
+  # end
+
   # Sets the number of battler slots on each side of the field independently.
   # For "1v2" names, the first number is for the player's side and the second
   # number is for the opposing side.
   def setBattleMode(mode)
     # default = $game_variables[VAR_DEFAULT_BATTLE_TYPE].is_a?(Array) ? $game_variables[VAR_DEFAULT_BATTLE_TYPE] : [1, 1]
+    # default = get_default_battle_format()
     #KurayX patching battles
     default = $game_variables[VAR_DEFAULT_BATTLE_TYPE].is_a?(Array) ? $game_variables[VAR_DEFAULT_BATTLE_TYPE].clone : [1, 1]
     @sideSizes =
@@ -277,6 +287,11 @@ class PokeBattle_Battle
     return false if opposes?(idxBattler)
     # Trapstarr's Auto-Battler (Ally controls player pokemon)
     return false if $PokemonSystem.autobattler != nil && $PokemonSystem.autobattler == 1
+    return pbGetOwnerIndexFromBattlerIndex(idxBattler)==0
+  end
+
+  def pbOwnedByPlayerSerious?(idxBattler)
+    return false if opposes?(idxBattler)
     return pbGetOwnerIndexFromBattlerIndex(idxBattler)==0
   end
 
@@ -699,11 +714,11 @@ class PokeBattle_Battle
         @field.weather = :None
         pbDisplay("The heavy rain has lifted!")
       end
-    when :StrongWinds
-      if !pbCheckGlobalAbility(:DELTASTREAM)
-        @field.weather = :None
-        pbDisplay("The mysterious air current has dissipated!")
-      end
+    # when :StrongWinds
+    #   if !pbCheckGlobalAbility(:DELTASTREAM)
+    #     @field.weather = :None
+    #     pbDisplay("The mysterious air current has dissipated!")
+    #   end
     end
     if @field.weather!=oldWeather
       # Check for form changes caused by the weather changing

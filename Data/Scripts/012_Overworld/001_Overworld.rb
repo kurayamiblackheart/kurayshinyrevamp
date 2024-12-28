@@ -42,6 +42,11 @@ def pbBatteryLow?
   return false
 end
 
+def pbOnBattery?
+  pstate = System.power_state
+  return pstate[:discharging]
+end
+
 Events.onMapUpdate += proc { |_sender, _e|
   if !$PokemonTemp.batterywarning && pbBatteryLow?
     if !$game_temp.in_menu && !$game_temp.in_battle &&
@@ -226,14 +231,7 @@ def getEncounter(encounter_type)
   return encounter
 end
 
-def pbBattleOnStepTaken(repel_active)
-  return if $Trainer.able_pokemon_count == 0
-  return if !$PokemonEncounters.encounter_possible_here?
-  encounter_type = $PokemonEncounters.encounter_type
-  return if !encounter_type
-  return if !$PokemonEncounters.encounter_triggered?(encounter_type, repel_active)
-  $PokemonTemp.encounterType = encounter_type
-
+def kurayEncounterInit(encounter_type)
   encounter = getEncounter(encounter_type)
   if isFusedEncounter()
     encounter_fusedWith = getEncounter(encounter_type)
@@ -245,19 +243,31 @@ def pbBattleOnStepTaken(repel_active)
   if encounter[0].is_a?(Integer)
     encounter[0] = getSpecies(encounter[0])
   end
+  return encounter
+end
+
+def pbBattleOnStepTaken(repel_active)
+  return if $Trainer.able_pokemon_count == 0
+  return if !$PokemonEncounters.encounter_possible_here?
+  encounter_type = $PokemonEncounters.encounter_type
+  return if !encounter_type
+  return if !$PokemonEncounters.encounter_triggered?(encounter_type, repel_active)
+  $PokemonTemp.encounterType = encounter_type
+
+  encounter = kurayEncounterInit(encounter_type)
 
   $game_switches[SWITCH_FORCE_FUSE_NEXT_POKEMON] = false
 
   encounter = EncounterModifier.trigger(encounter)
   if $PokemonEncounters.allow_encounter?(encounter, repel_active)
     if $PokemonEncounters.have_triple_wild_battle?
-      encounter3 = $PokemonEncounters.choose_wild_pokemon(encounter_type)
+      encounter3 = $PokemonEncounters.kurayEncounterInit(encounter_type)
       encounter3 = EncounterModifier.trigger(encounter3)
-      encounter2 = $PokemonEncounters.choose_wild_pokemon(encounter_type)
+      encounter2 = $PokemonEncounters.kurayEncounterInit(encounter_type)
       encounter2 = EncounterModifier.trigger(encounter2)
       pbTripleWildBattle(encounter[0], encounter[1], encounter2[0], encounter2[1], encounter3[0], encounter3[1])
     elsif $PokemonEncounters.have_double_wild_battle?
-      encounter2 = $PokemonEncounters.choose_wild_pokemon(encounter_type)
+      encounter2 = $PokemonEncounters.kurayEncounterInit(encounter_type)
       encounter2 = EncounterModifier.trigger(encounter2)
       pbDoubleWildBattle(encounter[0], encounter[1], encounter2[0], encounter2[1])
     else
@@ -319,18 +329,36 @@ Events.onMapChange += proc { |_sender, e|
   $game_screen.weather(new_weather[0], 9, 0) if rand(100) < new_weather[1]
 }
 
-Events.onMapChange += proc { |_sender, e|
-  next if !Settings::SEVII_ROAMING.include?($game_map.map_id)
-  new_map_ID = e[0]
-  new_map_metadata = GameData::MapMetadata.try_get(new_map_ID)
-  next if new_map_metadata && new_map_metadata.weather
-  feebas_map = $PokemonGlobal.roamPosition[4]
-  if $game_map.map_id == feebas_map
-    $game_screen.weather(:Rain, 4, 0)
-  else
-    $game_screen.weather(:None, 0, 0)
-  end
-}
+# Events.onMapChange += proc { |_sender, e|
+#   next if !Settings::SEVII_ROAMING.include?($game_map.map_id)
+#   new_map_ID = e[0]
+#   new_map_metadata = GameData::MapMetadata.try_get(new_map_ID)
+#   next if new_map_metadata && new_map_metadata.weather
+#   feebas_map = $PokemonGlobal.roamPosition[4]
+#   if $game_map.map_id == feebas_map
+#     $game_screen.weather(:Rain, 4, 0)
+#   else
+#     $game_screen.weather(:None, 0, 0)
+#   end
+# }
+
+#    [:ENTEI, 50, 350, 1, "Legendary Birds",ROAMING_AREAS,:Sunny],
+# Events.onMapChange += proc { |_sender, e|
+#   next if $game_screen.weather_type != :None
+#   currently_roaming = $PokemonGlobal.roamPosition.keys
+#   currently_roaming.each do |roamer_id|
+#     roamerOnCurrentMap = $PokemonGlobal.roamPosition[roamer_id] == $game_map.map_id
+#     echoln _INTL("{1} is on map {2}",roamer_id,$game_map.map_id)
+#     echoln $PokemonGlobal.roamPokemon
+#     if roamerOnCurrentMap
+#       next if $PokemonGlobal.roamPokemonCaught[roamer_id]
+#       weather = Settings::ROAMING_SPECIES[roamer_id][6]
+#       $game_screen.weather(weather, 4, 0)
+#       next
+#     end
+#
+#   end
+# }
 
 Events.onMapSceneChange += proc { |_sender, e|
   scene = e[0]

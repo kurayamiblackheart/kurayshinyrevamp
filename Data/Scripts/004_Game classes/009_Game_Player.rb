@@ -9,6 +9,9 @@ class Game_Player < Game_Character
   attr_accessor :bump_se
   attr_accessor :charsetData
   attr_accessor :encounter_count
+  attr_accessor :outfit_changed
+  attr_accessor :x
+  attr_accessor :y
 
   SCREEN_CENTER_X = (Settings::SCREEN_WIDTH / 2 - Game_Map::TILE_WIDTH / 2) * Game_Map::X_SUBPIXELS
   SCREEN_CENTER_Y = (Settings::SCREEN_HEIGHT / 2 - Game_Map::TILE_HEIGHT / 2) * Game_Map::Y_SUBPIXELS
@@ -175,6 +178,12 @@ class Game_Player < Game_Character
     self.map.display_y = y * Game_Map::REAL_RES_Y - SCREEN_CENTER_Y
   end
 
+
+  def isCentered()
+    x_centered = self.map.display_x == x * Game_Map::REAL_RES_X - SCREEN_CENTER_X
+    y_centered = self.map.display_y == y * Game_Map::REAL_RES_Y - SCREEN_CENTER_Y
+    return x_centered && y_centered
+  end
   #-----------------------------------------------------------------------------
   # * Move to Designated Position
   #     x : x-coordinate
@@ -388,9 +397,9 @@ def pbGetPlayerCharset(meta,charset,trainer=nil,force=false)
   $game_player.charsetData = [$Trainer.character_ID,charset,outfit] if $game_player
   ret = meta[charset]
   ret = meta[1] if nil_or_empty?(ret)
-  if pbResolveBitmap("Graphics/Characters/"+ret+"_"+outfit.to_s)
-    ret = ret+"_"+outfit.to_s
-  end
+  # if pbResolveBitmap("Graphics/Characters/"+ret+"_"+outfit.to_s)
+  #   ret = ret+"_"+outfit.to_s
+  # end
   return ret
 end
 

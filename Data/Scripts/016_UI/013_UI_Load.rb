@@ -166,7 +166,7 @@ class PokemonLoad_Scene
     meta = GameData::Metadata.get_player(trainer.character_ID)
     if meta
       filename = pbGetPlayerCharset(meta,1,trainer,true)
-      @sprites["player"] = TrainerWalkingCharSprite.new(filename,@viewport)
+      @sprites["player"] = TrainerWalkingCharSprite.new(filename,@viewport,trainer)
       charwidth  = @sprites["player"].bitmap.width
       charheight = @sprites["player"].bitmap.height
       @sprites["player"].x        = 56*2-charwidth/8

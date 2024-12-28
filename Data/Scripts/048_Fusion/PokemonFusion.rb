@@ -869,6 +869,8 @@ class PokemonFusionScene
 
 
       #exp
+      @pokemon1.head_gender = @pokemon2.gender
+      @pokemon1.head_nickname = @pokemon2.nicknamed?
       @pokemon1.exp_when_fused_head = @pokemon2.exp
       @pokemon1.exp_when_fused_body = @pokemon1.exp
       @pokemon1.exp_gained_since_fused = 0
@@ -876,6 +878,11 @@ class PokemonFusionScene
       @pokemon1.kuraycustomfile = nil
       @pokemon2.kuraycustomfile = nil
 
+      # 2 = head
+      # 1 = body
+      if @pokemon2.item != nil && $PokemonBag.pbCanStore?(@pokemon2.item, 1)
+          $PokemonBag.pbStoreItem(@pokemon2.item, 1)
+      end
       #KurayX - KURAYX_ABOUT_SHINIES
       if @pokemon2.shiny?
         @pokemon1.head_shiny = true
@@ -940,17 +947,23 @@ class PokemonFusionScene
       overlay.dispose
       #first check if hidden ability
       # getAbilityList format: [[:ABILITY, index],...]
-      hiddenAbility1 = @pokemon1.ability == @pokemon1.getAbilityList[-1][0]
-      hiddenAbility2 = @pokemon2.ability == @pokemon2.getAbilityList[-1][0]
+      # hiddenAbility1 = @pokemon1.ability == @pokemon1.getAbilityList[-1][0]
+      # hiddenAbility2 = @pokemon2.ability == @pokemon2.getAbilityList[-1][0]
+
+      # ability1 = @pokemon1.ability_index
+      # ability2 = @pokemon2.ability_index
 
       #change species
+      ability1 = @pokemon1.ability
+      ability2 = @pokemon2.ability
+
       @pokemon1.species = newSpecies
       if @pokemon2.egg? || @pokemon1.egg?
         @pokemon1.steps_to_hatch = @pokemon1.species_data.hatch_steps
       end
       @pokemon1.kuraycustomfilereset
       #@pokemon1.ability = pbChooseAbility(@pokemon1, hiddenAbility1, hiddenAbility2)
-      pbChooseAbility(@pokemon1, hiddenAbility1, hiddenAbility2)
+      pbChooseAbility(ability1,ability2)
 
       setFusionMoves(@pokemon1, @pokemon2, firstOptionSelected) if !noMoves
 

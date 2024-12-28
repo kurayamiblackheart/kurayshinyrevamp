@@ -659,9 +659,9 @@ class PokemonEvolutionScene
       end	
     end
     
-    if allNewPossibleAbilities.include?(oldAbility)
-      @pokemon.ability=oldAbility
-    end
+    # if allNewPossibleAbilities.include?(oldAbility)
+    #   @pokemon.ability=oldAbility
+    # end
 
     # Learn moves upon evolution for evolved species
     movelist = @pokemon.getMoveList

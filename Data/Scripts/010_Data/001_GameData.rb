@@ -264,6 +264,7 @@ module GameData
     TrainerType.load
     Trainer.load
     TrainerModern.load
+    TrainerExpert.load
     Metadata.load
     MapMetadata.load
 
@@ -289,5 +290,31 @@ module GameData
     #MessageTypes.set(MessageTypes::Items,            1000, "Mario")
     #MessageTypes.set(MessageTypes::ItemPlurals,      1000, "Marios")
     #MessageTypes.set(MessageTypes::ItemDescriptions, 1000, "A Mario.")
+    
+    # Item.register({
+    #  :id               => :HPREINFORCER,
+    #  :id_number        => 2000,
+    #  :name             => "HP Reinforcer",
+    #  :name_plural      => "HP Reinforcers",
+    #  :pocket           => 1,
+    #  :price            => 1000,
+    #  :description      => "A Mario.",
+    #  :field_use        => 1,
+    #  :battle_use       => 0,
+    #  :type             => 7,
+    #  :move             => nil
+    # })
+    # MessageTypes.set(MessageTypes::Items,            1000, "Mario")
+    # MessageTypes.set(MessageTypes::ItemPlurals,      1000, "Marios")
+    # MessageTypes.set(MessageTypes::ItemDescriptions, 1000, "A Mario.")
+
+    # _INTL("Items"),
+    # _INTL("Medicine"),
+    # _INTL("Poké Balls"),
+    # _INTL("TMs & HMs"),
+    # _INTL("Berries"),
+    # _INTL("Mail"),
+    # _INTL("Battle Items"),
+    # _INTL("Key Items")
   end
 end

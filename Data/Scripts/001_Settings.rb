@@ -5,9 +5,15 @@
 #==============================================================================#
 module Settings
   # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
-  GAME_VERSION = '6.0.0'
-  IF_VERSION = "6.0.4"
-  GAME_VERSION_NUMBER = "0.11.28"
+  GAME_VERSION = '6.2.4'
+  IF_VERSION = "6.2.4"
+
+  # GAME_VERSION_NUMBER = "0.19.0"
+  # Read the VERSION file inside Data folder to get the version number
+  GAME_VERSION_NUMBER = File.read("Data/VERSION").strip
+
+  GAME_REMOTE_SETTINGS_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/release/Data/REMOTE_SETTINGS.json"
+  GAME_REMOTE_SETTINGS_FILE_PATH = "Data/DOWNLOADED_SETTINGS.json"
 
   POKERADAR_LIGHT_ANIMATION_RED_ID = 17
   POKERADAR_LIGHT_ANIMATION_GREEN_ID = 18
@@ -21,7 +27,7 @@ module Settings
   FUSION_ICON_SPRITE_OFFSET = 10
 
   #Infinite fusion settings
-  NB_POKEMON = 465
+  NB_POKEMON = 470
   CUSTOM_BASE_SPRITES_FOLDER = "Graphics/BaseSprites/"
   # CUSTOM_BASE_SPRITES_FOLDER = "Graphics/CustomBattlers/customBaseSprites/"
   CUSTOM_BATTLERS_FOLDER = "Graphics/CustomBattlers/"
@@ -31,15 +37,43 @@ module Settings
   DEFAULT_SPRITE_PATH = "Graphics/Battlers/Special/000.png"
   CREDITS_FILE_PATH = "Data/SPRITE_CREDS"
   VERSION_FILE_PATH = "Data/VERSION"
+  REMOTE_VERSION_FILE_PATH = "Data/REMOTE_VERSION"
   CUSTOM_SPRITES_FILE_PATH = "Data/CUSTOM_SPRITES"
+  CUSTOM_DEX_ENTRIES_PATH = "Data/dex.json"
+
+  BACK_ITEM_ICON_PATH = "Graphics/Items/back.png"
+
+  PLAYER_GRAPHICS_FOLDER = "Graphics/Characters/player/"
+  PLAYER_HAT_FOLDER = 'hat'
+  PLAYER_HAIR_FOLDER = 'hair'
+  PLAYER_CLOTHES_FOLDER = 'clothes'
+  PLAYER_BALL_FOLDER = 'balls'
+  PLAYER_TEMP_OUTFIT_FALLBACK = 'temp'
+
+
+  HATS_DATA_PATH = "Data/hats_data.json"
+  HAIRSTYLE_DATA_PATH = "Data/hairstyles_data.json"
+  CLOTHES_DATA_PATH = "Data/clothes_data.json"
+
+  PLAYER_SURFBASE_FOLDER = 'surf_base/'
+  OW_SHINE_ANIMATION_ID=25
 
   # HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/Scripts/RemoteUrls.rb"
-  HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/Scripts/RemoteUrls.rb"
+  HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/release/Data/Scripts/RemoteUrls.rb"
 
   # HTTP_CONFIGS_FILE_PATH = "Data/Scripts/RemoteUrls.rb"
   HTTP_CONFIGS_FILE_PATH = "Data/Scripts/DownloadedSettings.rb"
+  BASE_POKEMON_SPRITES_REPO_URL = ""
+  
+  MYSTERY_GIFT_KURAY_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/MysteryGift.txt"
+  MYSTERY_GIFT_KURAY_PATH = "MysteryGift.txt"
+
   # MIGHT_NOT_NEED84x
   # LEVEL_CAPS=[12,22,26,35,38,45,51,54,58,62,63,64,64,65,67,68]
+
+  CUSTOM_ENTRIES_NAME_PLACEHOLDER = "POKENAME"
+
+  # DEFAULT_SPEED_UP_SPEED=2
 
   FRONTSPRITE_POSITION_OFFSET = 20
   FRONTSPRITE_SCALE = 0.6666666666666666
@@ -51,10 +85,20 @@ module Settings
   NO_LEVEL_MODE_LEVEL_INCR = 5.8
   NO_LEVEL_MODE_LEVEL_BASE = 6
 
+  DISCORD_URL = "https://discord.gg/kuray-hub-1121345297352753243"
+  
+  PIF_DISCORD_URL = "https://discord.com/invite/infinitefusion"
+  WIKI_URL = "https://infinitefusion.fandom.com/"
+
   RIVAL_STARTER_PLACEHOLDER_SPECIES = :MEW #(MEW)
   VAR_1_PLACEHOLDER_SPECIES = :DIALGA
   VAR_2_PLACEHOLDER_SPECIES = :PALKIA
   VAR_3_PLACEHOLDER_SPECIES = :GIRATINA
+  
+  CUSTOMSPRITES_RATE_MAX_NB_REQUESTS = 5  #Nb. requests allowed in each time window
+  CUSTOMSPRITES_ENTRIES_RATE_TIME_WINDOW = 120    # In seconds
+  CUSTOMSPRITES_RATE_LOG_FILE = 'Data/sprites/sprites_rate_limit.log'  # Path to the log file
+  Dir.mkdir('Data/sprites') unless File.exists?('Data/sprites')#make sure that this dir exists
 
   RIVAL_STARTER_PLACEHOLDER_VARIABLE = 250
 
@@ -63,12 +107,24 @@ module Settings
   HARD_MODE_LEVEL_MODIFIER = 1.1
 
   ZAPMOLCUNO_NB = 999999#176821
+  KURAY_CUSTOM_POKEMONS = 9999999+500000#Custom unfuseable fakemons
+  KURAY_NEW_TRIPLES = 9999999#Custom triple fusions
+
+  KURAY_EGGS_ID = 2000
+  KURAY_CHESTS_ID = 3000
+
   MAPS_WITHOUT_SURF_MUSIC = [762]
 
   WONDERTRADE_BASE_URL = "http://localhost:8080"
   WONDERTRADE_PUBLIC_KEY = "http://localhost:8080"
 
   MAX_NB_OUTFITS=99
+  DEFAULT_OUTFIT_MALE = "red"
+  DEFAULT_OUTFIT_FEMALE = "leaf"
+  STARTING_OUTFIT = "pikajamas"
+
+  OUTFIT_PREVIEW_PICTURE_ID=20
+
   # The generation that the battle system follows. Used throughout the battle
   # scripts, and also by some other settings which are used in and out of battle
   # (you can of course change those settings to suit your game).
@@ -106,6 +162,12 @@ module Settings
   # Whether a bred baby Pokémon can inherit egg moves from its mother. It can
   # always inherit egg moves from its father.
   BREEDING_CAN_INHERIT_EGG_MOVES_FROM_MOTHER = (MECHANICS_GENERATION >= 6)
+
+  KANTO_STARTERS = [:BULBASAUR, :CHARMANDER, :SQUIRTLE]
+  JOHTO_STARTERS = [:CHIKORITA, :CYNDAQUIL, :TOTODILE]
+  HOENN_STARTERS = [:TREECKO, :TORCHIC, :MUDKIP]
+  SINNOH_STARTERS = [:TURTWIG, :CHIMCHAR, :PIPLUP]
+
 
   #=============================================================================
 
@@ -342,11 +404,11 @@ module Settings
   #   * Name of BGM to play for that encounter (optional).
   #   * Roaming areas specifically for this Pokémon (optional).
   ROAMING_SPECIES = [
-    [:ENTEI, 50, 350, 1, "Legendary Birds"],
-    [:B245H243, 50, 341, 1, "Legendary Birds"],
-    [:LATIOS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING],
-    [:LATIAS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING],
-    [:FEEBAS, 15, 4, 3, "Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)",SEVII_ROAMING]
+    [:ENTEI, 50, 350, 1, "Legendary Birds",ROAMING_AREAS,:Sunny],
+    [:B245H243, 50, 341, 1, "Legendary Birds",ROAMING_AREAS,:Storm],
+    [:LATIOS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING,:StrongWinds],
+    [:LATIAS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING,:StrongWinds],
+    [:FEEBAS, 15, 4, 3, "Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)",SEVII_ROAMING,:Rain]
   ]
 
   #=============================================================================
@@ -448,6 +510,7 @@ module Settings
   # ID of the animation played when a berry tree grows a stage while the player
   # is on the map (for new plant growth mechanics only).
   PLANT_SPARKLE_ANIMATION_ID = 7
+  SLEEP_ANIMATION_ID = 26
 
   CUT_TREE_ANIMATION_ID = 19
   ROCK_SMASH_ANIMATION_ID = 20

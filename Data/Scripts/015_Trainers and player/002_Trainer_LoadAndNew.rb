@@ -5,18 +5,22 @@
 
 def getTrainersDataMode
   mode = GameData::Trainer
-  if $game_switches && $game_switches[SWITCH_MODERN_MODE]
+  if $game_switches && $game_switches[SWITCH_EXPERT_MODE]
+    mode = GameData::TrainerExpert
+  elsif $game_switches && $game_switches[SWITCH_MODERN_MODE]
     mode = GameData::TrainerModern
   end
   return mode
 end
-
 
 def pbLoadTrainer(tr_type, tr_name, tr_version = 0)
   tr_type_data = GameData::TrainerType.try_get(tr_type)
   raise _INTL("Trainer type {1} does not exist.", tr_type) if !tr_type_data
   tr_type = tr_type_data.id
   trainer_data = getTrainersDataMode.try_get(tr_type, tr_name, tr_version)
+  if !trainer_data
+    trainer_data = GameData::Trainer.try_get(tr_type, tr_name, tr_version)
+  end
   return (trainer_data) ? trainer_data.to_trainer : nil
 end
 

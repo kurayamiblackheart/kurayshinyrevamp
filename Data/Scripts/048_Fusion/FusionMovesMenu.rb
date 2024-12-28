@@ -41,8 +41,8 @@ class FusionMovesOptionsScene < PokemonOption_Scene
     @sprites["overlay"].z = 9999
     pbSetSystemFont(@sprites["overlay"].bitmap)
 
-    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
-    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @sprites["option"].nameBaseColor = MessageConfig::BLUE_TEXT_MAIN_COLOR
+    @sprites["option"].nameShadowColor = MessageConfig::BLUE_TEXT_SHADOW_COLOR
     @changedColor = true
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)

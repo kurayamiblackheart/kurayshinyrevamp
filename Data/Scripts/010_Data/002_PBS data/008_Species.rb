@@ -181,21 +181,22 @@ module GameData
       @shadow_x = hash[:shadow_x] || 0
       @shadow_size = hash[:shadow_size] || 2
       @alwaysUseGeneratedSprite=false
+      # puts "Species #{@id} #{@species} #{@form} #{@real_name}"
     end
 
-    #KurayX
-    def as_json(options={})
-      {
-        "type1" => @type1,
-        "type2" => @type2
-      }
-    end
+    # #KurayX
+    # def as_json(options={})
+    #   {
+    #     "type1" => @type1,
+    #     "type2" => @type2
+    #   }
+    # end
 
-    #KurayX
-    def load_json(jsonparse)
-      @type1 = jsonparse['type1']
-      @type2 = jsonparse['type2']
-    end
+    # #KurayX
+    # def load_json(jsonparse)
+    #   @type1 = jsonparse['type1']
+    #   @type2 = jsonparse['type2']
+    # end
 
     def set_always_use_generated_sprite(useGeneratedSprite)
       @alwaysUseGeneratedSprite=useGeneratedSprite
@@ -230,6 +231,14 @@ module GameData
 
     def is_fusion
       return @id_number > Settings::NB_POKEMON
+    end
+
+    def get_body_species
+      return @species
+    end
+
+    def get_head_species
+      return @species
     end
 
     def hasType?(type)

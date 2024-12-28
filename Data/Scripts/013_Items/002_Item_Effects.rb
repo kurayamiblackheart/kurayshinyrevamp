@@ -119,7 +119,7 @@ ItemHandlers::UseInField.add(:MAXREPEL, proc { |item|
 Events.onStepTaken += proc {
   if $PokemonGlobal.repel > 0 && !$game_player.terrain_tag.ice # Shouldn't count down if on ice
     $PokemonGlobal.repel -= 1
-    if $PokemonGlobal.repel <= 0 && ! $PokemonGlobal.tempRepel
+    if $PokemonGlobal.repel <= 0
       isIncense = $game_switches[SWITCH_USED_AN_INCENSE]
       $game_switches[SWITCH_FORCE_ALL_WILD_FUSIONS] = false
       $game_switches[SWITCH_USED_AN_INCENSE] = false
@@ -244,7 +244,7 @@ ItemHandlers::UseInField.copy(:BICYCLE, :RACEBIKE)
 
 ItemHandlers::UseInField.add(:OLDROD, proc { |item|
   notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
-  if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff)
+  if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff) || $PokemonGlobal.surfing
     pbMessage(_INTL("Can't use that here."))
     next 0
   end
@@ -257,7 +257,7 @@ ItemHandlers::UseInField.add(:OLDROD, proc { |item|
 
 ItemHandlers::UseInField.add(:GOODROD, proc { |item|
   notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
-  if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff)
+  if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff) || $PokemonGlobal.surfing
     pbMessage(_INTL("Can't use that here."))
     next 0
   end
@@ -270,7 +270,7 @@ ItemHandlers::UseInField.add(:GOODROD, proc { |item|
 
 ItemHandlers::UseInField.add(:SUPERROD, proc { |item|
   notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
-  if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff)
+  if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff) || $PokemonGlobal.surfing
     pbMessage(_INTL("Can't use that here."))
     next 0
   end
@@ -1080,6 +1080,8 @@ ItemHandlers::UseOnPokemon.add(:ABILITYCAPSULE, proc { |item, pkmn, scene|
                            pkmn.name, newabilname))
     pkmn.ability_index = newabil
     pkmn.ability = GameData::Ability.get((newabil == 0) ? abil1 : abil2).id
+
+    #pkmn.ability = GameData::Ability.get((newabil == 0) ? abil1 : abil2).id
 	  scene.pbHardRefresh
     scene.pbDisplay(_INTL("{1}'s Ability changed to {2}!", pkmn.name, newabilname))
     next true

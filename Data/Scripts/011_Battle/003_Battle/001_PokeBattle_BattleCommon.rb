@@ -5,9 +5,11 @@ module PokeBattle_BattleCommon
   def pbStorePokemon(pkmn)
     # Nickname the Pokémon (unless it's a Shadow Pokémon)
     if !pkmn.shadowPokemon?
-      if pbDisplayConfirm(_INTL("Would you like to give a nickname to {1}?", pkmn.name))
-        nickname = @scene.pbNameEntry(_INTL("{1}'s nickname?", pkmn.speciesName), pkmn)
-        pkmn.name = nickname
+      if $PokemonSystem.skipcaughtnickname != 1
+        if pbDisplayConfirm(_INTL("Would you like to give a nickname to {1}?", pkmn.name))
+          nickname = @scene.pbNameEntry(_INTL("{1}'s nickname?", pkmn.speciesName), pkmn)
+          pkmn.name = nickname
+        end
       end
     end
     # Store the Pokémon
@@ -15,7 +17,9 @@ module PokeBattle_BattleCommon
     storedBox  = @peer.pbStorePokemon(pbPlayer,pkmn)
     if storedBox<0
       pbDisplayPaused(_INTL("{1} has been added to your party.",pkmn.name))
-      @initialItems[0][pbPlayer.party.length-1] = pkmn.item_id if @initialItems
+      if $PokemonGlobal.pokemonSelectionOriginalParty==nil
+        @initialItems[0][pbPlayer.party.length-1] = pkmn.item_id if @initialItems
+      end
       return
     end
     # Messages saying the Pokémon was stored in a PC box
@@ -38,6 +42,21 @@ module PokeBattle_BattleCommon
       pbDisplayPaused(_INTL("It was stored in box \"{1}\".",boxName))
     end
   end
+
+  #def pbChoosePokemon(variableNumber, nameVarNumber, ableProc = nil, allowIneligible = false)
+  # def swapCaughtPokemon(caughtPokemon)
+  #   pbChoosePokemon(1,2,
+  #                   proc {|poke|
+  #                     !poke.egg? &&
+  #                       !(poke.isShadow? rescue false)
+  #                   })
+  #   index = pbGet(1)
+  #   return false if index == -1
+  #   $PokemonStorage.pbStoreCaught($Trainer.party[index])
+  #   pbRemovePokemonAt(index)
+  #   pbStorePokemon(caughtPokemon)
+  #   return true
+  # end
 
   # Register all caught Pokémon in the Pokédex, and store them.
   def pbRecordAndStoreCaughtPokemon
@@ -74,7 +93,8 @@ module PokeBattle_BattleCommon
       # Record a Shadow Pokémon's species as having been caught
       pbPlayer.pokedex.set_shadow_pokemon_owned(pkmn.species) if pkmn.shadowPokemon?
       # Store caught Pokémon
-      pbStorePokemon(pkmn)
+      # pbStorePokemon(pkmn)
+      promptCaughtPokemonAction(pkmn)
       if $game_switches[AUTOSAVE_CATCH_SWITCH]
         Kernel.tryAutosave()
       end
@@ -82,6 +102,30 @@ module PokeBattle_BattleCommon
     end
     @caughtPokemon.clear
   end
+
+  # def promptCaughtPokemonAction(pokemon)
+  #   pickedOption = false
+  #   return pbStorePokemon(pokemon) if !$Trainer.party_full?
+  #
+  #   while !pickedOption
+  #     command = pbMessage(_INTL("\\ts[]Your team is full!"),
+  #                         [_INTL("Add to your party"), _INTL("Store to PC"),], 2)
+  #     echoln ("command " + command.to_s)
+  #     case command
+  #     when 0 #SWAP
+  #       if swapCaughtPokemon(pokemon)
+  #         echoln pickedOption
+  #         pickedOption = true
+  #       end
+  #     else
+  #       #STORE
+  #       pbStorePokemon(pokemon)
+  #       echoln pickedOption
+  #       pickedOption = true
+  #     end
+  #   end
+  #
+  # end
 
   #=============================================================================
   # Throw a Poké Ball
@@ -118,7 +162,17 @@ module PokeBattle_BattleCommon
     end
     # Animation of opposing trainer blocking Poké Balls (unless it's a Snag Ball
     # at a Shadow Pokémon)
-    if trainerBattle? && !(GameData::Item.get(ball).is_snag_ball? && battler.shadowPokemon?)
+    is_steal_ball = false
+    if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0 && trainerBattle?
+      if GameData::Item.get(ball).id_number == 623 || $PokemonSystem.rocketballsteal > 1
+        is_steal_ball = true
+      end
+    end
+    # Have to check if the variable exists beforehand, decided to say fuck it and separate it from the other if statement above.
+    if $PokemonSystem.nomoneylost && $PokemonSystem.nomoneylost == 1
+      is_steal_ball = false
+    end
+    if trainerBattle? && !(GameData::Item.get(ball).is_snag_ball? && battler.shadowPokemon?) && !is_steal_ball
       @scene.pbThrowAndDeflect(ball,1)
       pbDisplay(_INTL("The Trainer blocked your Poké Ball! Don't be a thief!"))
       return
@@ -167,7 +221,7 @@ module PokeBattle_BattleCommon
         @decision = (trainerBattle?) ? 1 : 4   # Battle ended by win/capture
       end
       # Modify the Pokémon's properties because of the capture
-      if GameData::Item.get(ball).is_snag_ball?
+      if GameData::Item.get(ball).is_snag_ball? && is_steal_ball
         pkmn.owner = Pokemon::Owner.new_from_trainer(pbPlayer)
       end
       BallHandlers.onCatch(ball,self,pkmn)
@@ -217,29 +271,34 @@ module PokeBattle_BattleCommon
     # Definite capture, no need to perform randomness checks
     return 4 if x>=255 || BallHandlers.isUnconditional?(ball,self,battler)
     # Second half of the shakes calculation
-    y = ( 65536 / ((255.0/x)**0.1875) ).floor
+    y = (65536 / ((255.0 / x) ** 0.1875)).floor
     # Critical capture check
     if Settings::ENABLE_CRITICAL_CAPTURES
       c = 0
       numOwned = $Trainer.pokedex.owned_count
-      if numOwned>600;    c = x*5/12
-      elsif numOwned>450; c = x*4/12
-      elsif numOwned>300; c = x*3/12
-      elsif numOwned>150; c = x*2/12
-      elsif numOwned>30;  c = x/12
+      if numOwned > 600;
+        c = x * 5 / 12
+      elsif numOwned > 450;
+        c = x * 4 / 12
+      elsif numOwned > 300;
+        c = x * 3 / 12
+      elsif numOwned > 150;
+        c = x * 2 / 12
+      elsif numOwned > 30;
+        c = x / 12
       end
       # Calculate the number of shakes
-      if c>0 && pbRandom(256)<c
+      if c > 0 && pbRandom(256) < c
         @criticalCapture = true
-        return 4 if pbRandom(65536)<y
+        return 4 if pbRandom(65536) < y
         return 0
       end
     end
     # Calculate the number of shakes
     numShakes = 0
     for i in 0...4
-      break if numShakes<i
-      numShakes += 1 if pbRandom(65536)<y
+      break if numShakes < i
+      numShakes += 1 if pbRandom(65536) < y
     end
     return numShakes
   end

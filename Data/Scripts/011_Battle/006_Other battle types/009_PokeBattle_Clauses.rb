@@ -100,7 +100,7 @@ end
 
 
 class PokeBattle_Move_022   # Double Team
-  alias __clauses__pbMoveFailed? pbMoveFailed?
+  alias __clauses__pbMoveFailed? pbMoveFailed? unless method_defined?(:__clauses__pbMoveFailed?)
 
   def pbMoveFailed?(user,targets)
     if !damagingMove? && @battle.rules["evasionclause"]
@@ -114,7 +114,7 @@ end
 
 
 class PokeBattle_Move_034   # Minimize
-  alias __clauses__pbMoveFailed? pbMoveFailed?
+  alias __clauses__pbMoveFailed? pbMoveFailed? unless method_defined?(:__clauses__pbMoveFailed?)
 
   def pbMoveFailed?(user,targets)
     if !damagingMove? && @battle.rules["evasionclause"]
@@ -128,7 +128,7 @@ end
 
 
 class PokeBattle_Move_067   # Skill Swap
-  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget?
+  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget? unless method_defined?(:__clauses__pbFailsAgainstTarget?)
 
   def pbFailsAgainstTarget?(user,target)
     if @battle.rules["skillswapclause"]
@@ -142,7 +142,7 @@ end
 
 
 class PokeBattle_Move_06A   # Sonic Boom
-  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget?
+  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget? unless method_defined?(:__clauses__pbFailsAgainstTarget?)
 
   def pbFailsAgainstTarget?(user,target)
     if @battle.rules["sonicboomclause"]
@@ -156,7 +156,7 @@ end
 
 
 class PokeBattle_Move_06B   # Dragon Rage
-  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget?
+  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget? unless method_defined?(:__clauses__pbFailsAgainstTarget?)
 
   def pbFailsAgainstTarget?(user,target)
     if @battle.rules["sonicboomclause"]
@@ -170,7 +170,7 @@ end
 
 
 class PokeBattle_Move_070   # OHKO moves
-  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget?
+  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget? unless method_defined?(:__clauses__pbFailsAgainstTarget?)
 
   def pbFailsAgainstTarget?(user,target)
     if @battle.rules["ohkoclause"]
@@ -216,7 +216,7 @@ end
 
 
 class PokeBattle_Move_0E5   # Perish Song
-  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget?
+  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget? unless method_defined?(:__clauses__pbFailsAgainstTarget?)
 
   def pbFailsAgainstTarget?(user,target)
     if @battle.rules["perishsongclause"] &&
@@ -231,7 +231,7 @@ end
 
 
 class PokeBattle_Move_0E7   # Destiny Bond
-  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget?
+  alias __clauses__pbFailsAgainstTarget? pbFailsAgainstTarget? unless method_defined?(:__clauses__pbFailsAgainstTarget?)
 
   def pbFailsAgainstTarget?(user,target)
     if @battle.rules["perishsongclause"] &&

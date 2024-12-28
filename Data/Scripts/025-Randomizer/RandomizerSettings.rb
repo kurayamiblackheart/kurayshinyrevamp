@@ -129,8 +129,8 @@ class RandomizerTrainerOptionsScene < PokemonOption_Scene
 
   def pbStartScene(inloadscreen = false)
     super
-    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
-    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @sprites["option"].nameBaseColor = MessageConfig::BLUE_TEXT_MAIN_COLOR
+    @sprites["option"].nameShadowColor = MessageConfig::BLUE_TEXT_SHADOW_COLOR
     @changedColor = true
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
@@ -163,6 +163,13 @@ class RandomizerTrainerOptionsScene < PokemonOption_Scene
                               },
                               "Use only Pokémon that have custom sprites in trainer teams"
     )
+
+    # options << EnumOption.new(_INTL("Allow legendaries"), [_INTL("On"), _INTL("Off")],
+    #                           proc { $game_switches[SWITCH_RANDOM_TRAINER_LEGENDARIES] ? 0 : 1 },
+    #                           proc { |value|
+    #                             $game_switches[SWITCH_RANDOM_TRAINER_LEGENDARIES] = value == 0
+    #                           }, "Regular Pokémon can also be randomized into legendaries"
+    # )
 
     return options
   end
@@ -238,11 +245,24 @@ class RandomizerWildPokemonOptionsScene < PokemonOption_Scene
                               }, "['Fuse everything' & starters] Include only  Pokémon with a custom sprite."
     )
 
-    options << EnumOption.new(_INTL("Starters"), [_INTL("On"), _INTL("Off")],
-                              proc { $game_switches[SWITCH_RANDOM_STARTERS] ? 0 : 1 },
+    options << EnumOption.new(_INTL("Allow legendaries"), [_INTL("On"), _INTL("Off")],
+                              proc { $game_switches[SWITCH_RANDOM_WILD_LEGENDARIES] ? 0 : 1 },
                               proc { |value|
-                                $game_switches[SWITCH_RANDOM_STARTERS] = value == 0
-                              }, "Randomize the selection of starters to choose from at the start of the game"
+                                $game_switches[SWITCH_RANDOM_WILD_LEGENDARIES] = value == 0
+                              }, ["Regular wild Pokémon can also be randomized into legendaries.",
+                                  "Only legendaries can be randomized into legendaries"]
+    )
+
+    options << EnumOption.new(_INTL("Starters"), [_INTL("1st Stage"), _INTL("Any"), _INTL("Off")],
+                              proc { $game_switches[SWITCH_RANDOM_STARTERS] ? 0 : 2 },
+                              proc { |value|
+                                $game_switches[SWITCH_RANDOM_STARTERS] = (value == 0 || value == 1)
+                                if value == 0
+                                  $game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE] = true
+                                end
+                              }, ["The starters will always be a first evolution Pokémon",
+                                  "The starters can be any Pokémon",
+                                  "The starters are not randomized"]
     )
     options << EnumOption.new(_INTL("Static encounters"), [_INTL("On"), _INTL("Off")],
                               proc { $game_switches[RANDOM_STATIC] ? 0 : 1 },
@@ -278,8 +298,8 @@ class RandomizerGymOptionsScene < PokemonOption_Scene
 
   def pbStartScene(inloadscreen = false)
     super
-    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
-    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @sprites["option"].nameBaseColor = MessageConfig::BLUE_TEXT_MAIN_COLOR
+    @sprites["option"].nameShadowColor = MessageConfig::BLUE_TEXT_SHADOW_COLOR
     @changedColor = true
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
@@ -317,6 +337,14 @@ class RandomizerGymOptionsScene < PokemonOption_Scene
                                 $game_switches[RANDOM_GYM_TYPES] = value == 0
                               }, "Shuffle the gym types"
     )
+
+    # options << EnumOption.new(_INTL("Allow legendaries"), [_INTL("On"), _INTL("Off")],
+    #                           proc { $game_switches[SWITCH_RANDOM_GYM_LEGENDARIES] ? 0 : 1 },
+    #                           proc { |value|
+    #                             $game_switches[SWITCH_RANDOM_GYM_LEGENDARIES] = value == 0
+    #                           }, "Regular Pokémon can also be randomized into legendaries"
+    # )
+
     options << EnumOption.new(_INTL("Rerandomize each battle"), [_INTL("On"), _INTL("Off")],
                               proc { $game_switches[SWITCH_GYM_RANDOM_EACH_BATTLE] ? 0 : 1 },
                               proc { |value|
@@ -338,8 +366,8 @@ class RandomizerItemOptionsScene < PokemonOption_Scene
 
   def pbStartScene(inloadscreen = false)
     super
-    @sprites["option"].nameBaseColor = Color.new(35, 130, 200)
-    @sprites["option"].nameShadowColor = Color.new(20, 75, 115)
+    @sprites["option"].nameBaseColor = MessageConfig::BLUE_TEXT_MAIN_COLOR
+    @sprites["option"].nameShadowColor = MessageConfig::BLUE_TEXT_SHADOW_COLOR
     @changedColor = true
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
@@ -358,37 +386,88 @@ class RandomizerItemOptionsScene < PokemonOption_Scene
 
   def pbGetOptions(inloadscreen = false)
     options = [
-      EnumOption.new(_INTL("Type"), [_INTL("Mapped"), _INTL("Dynamic")],
-                     proc {
-                       if $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC]
-                         1
-                       else
-                         0
-                       end
-                     },
-                     proc { |value|
-                       if value == 0
-                         $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = true
-                         $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC] = false
-                       else
-                         value == 1
-                         $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = false
-                         $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC] = true
-                       end
-                     },
-                     [
-                       "Random items are decided at the start of the game",
-                       "Random items are decided as you obtain them"],
-      # proc { $game_switches[SWITCH_RANDOM_ITEMS_FULL] ? 0 : 1 },
-      # proc { |value|
-      #   $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = value == 0
-      #   $game_switches[SWITCH_RANDOM_ITEMS_FULL] = value == 1
-      # }, ["Random items are decided at the start of the game", "Random items are decided as you obtain them"]
-      ),
       EnumOption.new(_INTL("Found items"), [_INTL("On"), _INTL("Off")],
                      proc { $game_switches[SWITCH_RANDOM_FOUND_ITEMS] ? 0 : 1 },
                      proc { |value|
                        $game_switches[SWITCH_RANDOM_FOUND_ITEMS] = value == 0
+                       $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = value == 0
+                       $game_switches[SWITCH_RANDOM_ITEMS] = $game_switches[SWITCH_RANDOM_FOUND_ITEMS] || $game_switches[SWITCH_RANDOM_GIVEN_ITEMS]
+                     }, "Randomize the items picked up on the ground"
+      ),
+      EnumOption.new(_INTL("Found TMs"), [_INTL("On"), _INTL("Off")],
+                     proc { $game_switches[SWITCH_RANDOM_FOUND_TMS] ? 0 : 1 },
+                     proc { |value|
+                       $game_switches[SWITCH_RANDOM_FOUND_TMS] = value == 0
+                       $game_switches[SWITCH_RANDOM_TMS] = $game_switches[SWITCH_RANDOM_FOUND_TMS] || $game_switches[SWITCH_RANDOM_GIVEN_TMS]
+                     }, "Randomize the TMs picked up on the ground"
+      ),
+      EnumOption.new(_INTL("Given items"), [_INTL("On"), _INTL("Off")],
+                     proc { $game_switches[SWITCH_RANDOM_GIVEN_ITEMS] ? 0 : 1 },
+                     proc { |value|
+                       $game_switches[SWITCH_RANDOM_GIVEN_ITEMS] = value == 0
+                       $game_switches[SWITCH_RANDOM_ITEMS] = $game_switches[SWITCH_RANDOM_FOUND_ITEMS] || $game_switches[SWITCH_RANDOM_GIVEN_ITEMS]
+                     }, "Randomize the items given by NPCs (may make some quests impossible to complete)"
+      ),
+      EnumOption.new(_INTL("Given TMs"), [_INTL("On"), _INTL("Off")],
+                     proc { $game_switches[SWITCH_RANDOM_GIVEN_TMS] ? 0 : 1 },
+                     proc { |value|
+                       $game_switches[SWITCH_RANDOM_GIVEN_TMS] = value == 0
+                       $game_switches[SWITCH_RANDOM_TMS] = $game_switches[SWITCH_RANDOM_FOUND_TMS] || $game_switches[SWITCH_RANDOM_GIVEN_TMS]
+                     }, "Randomize the TMs given by NPCs"
+      ),
+
+      EnumOption.new(_INTL("Shop items"), [_INTL("On"), _INTL("Off")],
+                     proc { $game_switches[SWITCH_RANDOM_SHOP_ITEMS] ? 0 : 1 },
+                     proc { |value|
+                       $game_switches[SWITCH_RANDOM_SHOP_ITEMS] = value == 0
+                     }, "Randomizes the items available in shops (always mapped)"
+      ),
+
+      EnumOption.new(_INTL("Trainer Held items"), [_INTL("On"), _INTL("Off")],
+                     proc { $game_switches[RANDOM_HELD_ITEMS] ? 0 : 1 },
+                     proc { |value|
+                       $game_switches[RANDOM_HELD_ITEMS] = value == 0
+                     }, "Give random held items to all trainers"
+      )
+    ]
+    return options
+  end
+end
+
+class RandomizerItemOptionsScene < PokemonOption_Scene
+  RANDOM_HELD_ITEMS = 843
+
+  def initialize
+    @changedColor = false
+  end
+
+  def pbStartScene(inloadscreen = false)
+    super
+    @sprites["option"].nameBaseColor = MessageConfig::BLUE_TEXT_MAIN_COLOR
+    @sprites["option"].nameShadowColor = MessageConfig::BLUE_TEXT_SHADOW_COLOR
+    @changedColor = true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i] = (@PokemonOptions[i].get || 0)
+    end
+    @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Randomizer settings: Items"), 0, 0, Graphics.width, 64, @viewport)
+    @sprites["textbox"].text = _INTL("Set the randomizer settings for items")
+
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbFadeInAndShow(sprites, visiblesprites = nil)
+    return if !@changedColor
+    super
+  end
+
+  def pbGetOptions(inloadscreen = false)
+    options = [
+      EnumOption.new(_INTL("Found items"), [_INTL("On"), _INTL("Off")],
+                     proc { $game_switches[SWITCH_RANDOM_FOUND_ITEMS] ? 0 : 1 },
+                     proc { |value|
+                       $game_switches[SWITCH_RANDOM_FOUND_ITEMS] = value == 0
+                       $game_switches[SWITCH_RANDOM_ITEMS_MAPPED] = value == 0
                        $game_switches[SWITCH_RANDOM_ITEMS] = $game_switches[SWITCH_RANDOM_FOUND_ITEMS] || $game_switches[SWITCH_RANDOM_GIVEN_ITEMS]
                      }, "Randomize the items picked up on the ground"
       ),

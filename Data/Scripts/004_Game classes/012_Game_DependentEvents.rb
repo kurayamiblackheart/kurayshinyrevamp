@@ -14,8 +14,9 @@ def pbRemoveDependencies()
   pbDeregisterPartner() rescue nil
 end
 
-def pbAddDependency(event)
+def pbAddDependency(event,follows=true)
   $PokemonTemp.dependentEvents.addEvent(event)
+  $PokemonTemp.dependentEvents.follows_player = follows
 end
 
 def pbRemoveDependency(event)
@@ -140,6 +141,7 @@ end
 
 class DependentEvents
   attr_reader :lastUpdate
+  attr_writer :follows_player
 
   def createEvent(eventData)
     rpgEvent = RPG::Event.new(eventData[3],eventData[4])
@@ -169,6 +171,7 @@ class DependentEvents
     for event in events
       @realEvents.push(createEvent(event))
     end
+    @follows_player=true
   end
 
   def pbEnsureEvent(event, newMapID)
@@ -213,6 +216,7 @@ class DependentEvents
       facings.push(d) # Get forward facing
     end
     mapTile=nil
+
     if areConnected
       bestRelativePos=-1
       oldthrough=follower.through
@@ -251,6 +255,7 @@ class DependentEvents
       mapTile=passable ? mapTile : nil
     end
     if mapTile && follower.map.map_id==mapTile[0]
+      return if !@follows_player
       # Follower is on same map
       newX=mapTile[1]
       newY=mapTile[2]
@@ -258,6 +263,13 @@ class DependentEvents
       deltaY=(d == 2 ? -1 : d == 8 ? 1 : 0)
       posX = newX + deltaX
       posY = newY + deltaY
+
+      # if !@follows_player
+      #   posX=follower.original_x
+      #   posY=follower.original_y
+      #
+      # end
+
       follower.move_speed=leader.move_speed # sync movespeed
       if (follower.x-newX==-1 && follower.y==newY) ||
          (follower.x-newX==1 && follower.y==newY) ||
@@ -337,13 +349,20 @@ class DependentEvents
     leader=$game_player
     for i in 0...events.length
       event=@realEvents[i]
-      pbFollowEventAcrossMaps(leader,event,false,i==0)
-      # Update X and Y for this event
-      events[i][3]=event.x
-      events[i][4]=event.y
-      events[i][5]=event.direction
-      # Set leader to this event
-      leader=event
+      if !@follows_player
+        pbRemoveDependencies if leader.map.map_id != event.map.map_id
+        pbFollowEventAcrossMaps(leader,event,false,i==0)
+        events[i][3]=event.original_x
+        events[i][4]=event.original_y
+      else
+        pbFollowEventAcrossMaps(leader,event,false,i==0)
+        # Update X and Y for this event
+        events[i][3]=event.x
+        events[i][4]=event.y
+        events[i][5]=event.direction
+        # Set leader to this event
+        leader=event
+      end
     end
   end
 
@@ -372,6 +391,8 @@ class DependentEvents
     events=$PokemonGlobal.dependentEvents
     return if events.length==0
     for i in 0...events.length
+      break if !@follows_player
+
       event=@realEvents[i]
       next if !@realEvents[i]
       event.transparent=$game_player.transparent
@@ -388,6 +409,7 @@ class DependentEvents
       events[i][5]=event.direction
     end
     # Check event triggers
+    #
     if Input.trigger?(Input::USE) && !$game_temp.in_menu && !$game_temp.in_battle &&
        !$game_player.move_route_forcing && !$game_temp.message_window_showing &&
        !pbMapInterpreterRunning?
@@ -471,6 +493,8 @@ class DependentEvents
   def addEvent(event,eventName=nil,commonEvent=nil)
     return if !event
     events=$PokemonGlobal.dependentEvents
+
+
     for i in 0...events.length
       if events[i] && events[i][0]==$game_map.map_id && events[i][1]==event.id
         # Already exists

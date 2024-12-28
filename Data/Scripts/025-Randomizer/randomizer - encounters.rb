@@ -33,14 +33,15 @@ def Kernel.randomizeWildPokemonByRoute()
 end
 
 #input: [[60, :TENTACOOL,5,40, [30, :GOLDEEN, 5, 35], etc.]]
-def randomizePokemonList(encountersList,bstRange=50,maxSpecies=420,customOnly=false,customsList=[])
+def randomizePokemonList(encountersList,bstRange=50,maxSpecies=NB_POKEMON,customOnly=false,customsList=[])
+  includeLegendaries = $game_switches[SWITCH_RANDOM_WILD_LEGENDARIES]
   newList=[]
   for encounter in encountersList
     oldPokemon = encounter[1]
     if customOnly
-      newPokemon = getNewCustomSpecies(oldPokemon,customsList,bstRange,false)
+      newPokemon = getNewCustomSpecies(oldPokemon,customsList,bstRange,false,includeLegendaries)
     else
-      newPokemon = getNewSpecies(oldPokemon,bstRange,false,maxSpecies)
+      newPokemon = getNewSpecies(oldPokemon,bstRange,false,maxSpecies,includeLegendaries)
     end
     newEntry =[]
     newEntry << encounter[0]

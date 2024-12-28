@@ -40,12 +40,35 @@ class Game_Player < Game_Character
       meta = GameData::Metadata.get_player($Trainer.character_ID)
       if meta && !$PokemonGlobal.bicycle && !$PokemonGlobal.diving && !$PokemonGlobal.surfing
         charset = 1   # Display normal character sprite
-        if pbCanRun? && (moving? || @wasmoving) && Input.dir4!=0 && meta[4] && meta[4]!=""
+
+
+        player_is_moving = moving?
+        if pbCanRun? && (player_is_moving || @wasmoving) && Input.dir4!=0 && meta[4] && meta[4]!=""
           charset = 4   # Display running character sprite
         end
+
         newCharName = pbGetPlayerCharset(meta,charset)
+
+        if newCharName
+          # echoln caller
+          # echoln newCharName
+          # echoln "moving: " + moving?.to_s
+          # echoln "was moving: " + @wasmoving.to_s
+          #
+          # echoln "can run: " + pbCanRun?.to_s
+          # echoln "Input.dir4 " + Input.dir4.to_s
+          #
+          #
+          # echoln (moving? || @wasmoving)
+          # echoln charset
+          # echoln ""
+        end
+
+
+
+
         @character_name = newCharName if newCharName
-        @wasmoving = moving?
+        @wasmoving = player_is_moving
       end
     end
     return @character_name

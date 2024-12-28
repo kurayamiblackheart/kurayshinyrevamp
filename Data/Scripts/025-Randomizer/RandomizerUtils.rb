@@ -31,9 +31,9 @@ def getRandomGivenTM(item)
     newItem = $PokemonGlobal.randomTMsHash[item.id]
     return GameData::Item.get(newItem) if newItem != nil
   end
-  if $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC]
-    return pbGetRandomTM
-  end
+  # if $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC]
+  #   return pbGetRandomTM
+  # end
   return item
 end
 
@@ -57,30 +57,31 @@ def getMappedRandomItem(item)
 end
 
 def getDynamicRandomItem(item)
-  #keyItem ou HM -> on randomize pas
-  return item if item.is_key_item?
-  return item if item.is_HM?
-  return item if NON_RANDOMIZE_ITEMS.include?(item.id)
+  return item
+  # #keyItem ou HM -> on randomize pas
+  # return item if item.is_key_item?
+  # return item if item.is_HM?
+  # return item if NON_RANDOMIZE_ITEMS.include?(item.id)
 
-  #TM
-  if (item.is_TM?)
-    return $game_switches[SWITCH_RANDOM_TMS] ? pbGetRandomTM() : item
-  end
-  #item normal
-  return item if !$game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC] || !$game_switches[SWITCH_RANDOM_ITEMS]
+  # #TM
+  # if (item.is_TM?)
+  #   return $game_switches[SWITCH_RANDOM_TMS] ? pbGetRandomTM() : item
+  # end
+  # #item normal
+  # return item if !$game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC] || !$game_switches[SWITCH_RANDOM_ITEMS]
 
 
-  #berries
-  return pbGetRandomBerry() if item.is_berry?
+  # #berries
+  # return pbGetRandomBerry() if item.is_berry?
 
-  items_list = GameData::Item.list_all
-  newItem_id = items_list.keys.sample
-  newItem = GameData::Item.get(newItem_id)
-  while (newItem.is_machine? || newItem.is_key_item? || INVALID_ITEMS.include?(newItem))
-    newItem_id = items_list.keys.sample
-    newItem = GameData::Item.get(newItem_id)
-  end
-  return newItem
+  # items_list = GameData::Item.list_all
+  # newItem_id = items_list.keys.sample
+  # newItem = GameData::Item.get(newItem_id)
+  # while (newItem.is_machine? || newItem.is_key_item? || INVALID_ITEMS.include?(newItem))
+  #   newItem_id = items_list.keys.sample
+  #   newItem = GameData::Item.get(newItem_id)
+  # end
+  # return newItem
 end
 
 def pbGetRandomItem(item_id)
@@ -89,8 +90,8 @@ def pbGetRandomItem(item_id)
   return item if !($game_switches[SWITCH_RANDOM_ITEMS] || $game_switches[SWITCH_RANDOM_TMS])
   if $game_switches[SWITCH_RANDOM_ITEMS_MAPPED]
     return getMappedRandomItem(item)
-  elsif $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC]
-    return getDynamicRandomItem(item)
+  # elsif $game_switches[SWITCH_RANDOM_ITEMS_DYNAMIC]
+    # return getDynamicRandomItem(item)
   end
   return item
 end

@@ -108,6 +108,8 @@ class PokemonPauseMenu
     cmdBag = -1
     #KurayX Creating kuray shop
     cmdKurayShop = -1
+    #KurayX Creating kuray shop
+    cmdTutorNet = -1
     cmdTrainer = -1
     cmdSave = -1
     cmdOption = -1
@@ -133,6 +135,7 @@ class PokemonPauseMenu
     commands[cmdPC = commands.length] = _INTL("PC") if $PokemonSystem.kurayqol == 1
     commands[cmdKurayHeal = commands.length] = _INTL("Heal Pokémon") if $PokemonSystem.kurayqol == 1
     commands[cmdKurayShop = commands.length] = _INTL("Kuray Shop") if !pbInBugContest? && $PokemonSystem.kurayqol == 1
+    commands[cmdTutorNet = commands.length] = _INTL("Tutor.net") if !pbInBugContest? && $PokemonSystem.tutornet == 1
     commands[cmdPokegear = commands.length] = _INTL("Pokégear") if $Trainer.has_pokegear
     commands[cmdTrainer = commands.length] = $Trainer.name
     if pbInSafari?
@@ -174,19 +177,19 @@ class PokemonPauseMenu
         else
           #if $Trainer.pokedex.accessible_dexes.length == 1
           $PokemonGlobal.pokedexDex = $Trainer.pokedex.accessible_dexes[0]
+          # pbFadeOutIn {
+          #   scene = PokemonPokedex_Scene.new
+          #   screen = PokemonPokedexScreen.new(scene)
+          #   screen.pbStartScreen
+          #   @scene.pbRefresh
+          # }
+          # else
           pbFadeOutIn {
-            scene = PokemonPokedex_Scene.new
-            screen = PokemonPokedexScreen.new(scene)
+            scene = PokemonPokedexMenu_Scene.new
+            screen = PokemonPokedexMenuScreen.new(scene)
             screen.pbStartScreen
             @scene.pbRefresh
           }
-          # else
-          #   pbFadeOutIn {
-          #     scene = PokemonPokedexMenu_Scene.new
-          #     screen = PokemonPokedexMenuScreen.new(scene)
-          #     screen.pbStartScreen
-          #     @scene.pbRefresh
-          #   }
           # end
         end
       # cmdPC = KurayPC #KurayX PC
@@ -248,7 +251,7 @@ class PokemonPauseMenu
           722,723,724,720, #Dream sequence
           304,306,307       #Victory road
         ]
-        if invalidMaps.include?($game_map.map_id)
+        if invalidMaps.include?($game_map.map_id) && !File.exists?("DemICE.krs")
           @scene.pbHideMenu
           pbMessage(_INTL("Can't use that here."))
           break
@@ -258,7 +261,7 @@ class PokemonPauseMenu
       elsif cmdKurayShop >= 0 && command == cmdKurayShop
         # Prevent use in Elite 4 / Champion / Hall of Fame
         invalidMaps = [315, 316, 317, 318, 328, 341]
-        if invalidMaps.include?($game_map.map_id)
+        if invalidMaps.include?($game_map.map_id) && !File.exists?("DemICE.krs")
           @scene.pbHideMenu
           pbMessage(_INTL("Can't use that here."))
           break
@@ -369,12 +372,31 @@ class PokemonPauseMenu
         # 235 = Rage Candy Bar
         # 263 = Rare Candy
         # 264 = Master Ball
+        # 3 = Max Repel
         $game_temp.mart_prices[235] = [10000, 0] if $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[263] = [10000, 0] if $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[264] = [960000, 0] if $PokemonSystem.kuraystreamerdream == 0
+        $game_temp.mart_prices[3] = [700, 350] if $PokemonSystem.kuraystreamerdream == 0
         $game_temp.mart_prices[235] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         $game_temp.mart_prices[263] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
         $game_temp.mart_prices[264] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
+        $game_temp.mart_prices[3] = [-1, 0] if $PokemonSystem.kuraystreamerdream != 0
+        # 68 = Eviolite
+        $game_temp.mart_prices[68] = [4000, 2000]
+        # 623 = Rocket Ball
+        $game_temp.mart_prices[623] = [1000, 500]
+
+        # 2000 - 2032 = Modded Eggs
+        for i in 2000..2032
+          if $PokemonSystem.kuraystreamerdream == 0
+            tmp_sellprice = ($KURAYEGGS_BASEPRICE[i-2000]/2.0).round
+            $game_temp.mart_prices[i] = [$KURAYEGGS_BASEPRICE[i-2000], tmp_sellprice]
+          else
+            $game_temp.mart_prices[i] = [-1, 0]
+          end
+        end
+
+
         # allitems = [
         #   570, 604, 568, 569, 245, 247, 249, 246, 248, 250, 314, 371, 619, 618,
         #   114, 115, 116, 100
@@ -387,9 +409,33 @@ class PokemonPauseMenu
           657, 659,
           114, 115, 116, 100,
           194,
-          235, 263, 264
+          235, 263, 264, 3,
+          68
         ]
         # allitems.push(568) if $game_switches[SWITCH_GOT_BADGE_8]
+        allitems.push(623) if $PokemonSystem.rocketballsteal && $PokemonSystem.rocketballsteal > 0
+        # for i in 2000..2021
+          # allitems.push(i)
+        # end
+        # 2000 Random
+        # 2001 Sparkling
+        # 2020 Fusion
+        # 2021 Base
+        # 2032 Legendary
+        newitems = [2000, 2001, 2032, 2021, 2020,
+          2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
+          2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
+          2022]
+        allitems.concat(newitems)
+        allitems.push(2023) if $game_switches[SWITCH_GOT_BADGE_1]
+        allitems.push(2024) if $game_switches[SWITCH_GOT_BADGE_2]
+        allitems.push(2025) if $game_switches[SWITCH_GOT_BADGE_3]
+        allitems.push(2026) if $game_switches[SWITCH_GOT_BADGE_4]
+        allitems.push(2027) if $game_switches[SWITCH_GOT_BADGE_5]
+        allitems.push(2028) if $game_switches[SWITCH_GOT_BADGE_6]
+        allitems.push(2029) if $game_switches[SWITCH_GOT_BADGE_7]
+        allitems.push(2030) if $game_switches[SWITCH_GOT_BADGE_8]
+        allitems.push(2031) if $game_variables[VAR_STAT_NB_ELITE_FOUR] >= 1
         pbFadeOutIn {
           scene = PokemonMart_Scene.new
           screen = PokemonMartScreen.new(scene,allitems)
@@ -398,6 +444,22 @@ class PokemonPauseMenu
         $game_temp.mart_prices = oldmart.clone
         $game_temp.fromkurayshop = nil
         oldmart = []
+      elsif cmdTutorNet >= 0 && command == cmdTutorNet
+        # Prevent use in Elite 4 / Champion / Hall of Fame
+        invalidMaps = [315, 316, 317, 318, 328, 341]
+        if invalidMaps.include?($game_map.map_id)
+          @scene.pbHideMenu
+          pbMessage(_INTL("Can't use that here."))
+          break
+        end
+        pbPlayDecisionSE
+        pbFadeOutIn {
+          tmtutor_convert
+          scene = PokemonTutorNet_Scene.new
+          screen = PokemonTutorNetScreen.new(scene)
+          screen.pbStartScreen
+          @scene.pbRefresh
+        }
       elsif cmdPokegear >= 0 && command == cmdPokegear
         pbPlayDecisionSE
         pbFadeOutIn {

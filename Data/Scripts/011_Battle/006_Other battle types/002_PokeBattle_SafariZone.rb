@@ -302,7 +302,7 @@ class PokeBattle_Scene
     rockAnim.dispose
   end
 
-  alias __safari__pbThrowSuccess pbThrowSuccess
+  alias __safari__pbThrowSuccess pbThrowSuccess unless method_defined?(:__safari__pbThrowSuccess)
   def pbThrowSuccess
     __safari__pbThrowSuccess
     pbWildBattleSuccess if @battle.is_a?(PokeBattle_SafariZone)

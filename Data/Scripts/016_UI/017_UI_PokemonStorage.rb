@@ -90,6 +90,10 @@ class PokemonBoxIcon < IconSprite
     else
       if dex_number >= Settings::ZAPMOLCUNO_NB
         specialPath = getSpecialIconName(dex_number)
+        if !pbResolveBitmap(specialPath)
+          specialPath = sprintf("Graphics/Battlers/special/000")
+        end
+        # puts specialPath.inspect
         return pbResolveBitmap(specialPath)
         head_id=nil
       else
@@ -104,63 +108,7 @@ class PokemonBoxIcon < IconSprite
 
   #KurayX Custom icons
   def getSpecialIconName(dexNum)
-    base_path = "Graphics/Battlers/special/"
-    case dexNum
-    when Settings::ZAPMOLCUNO_NB..Settings::ZAPMOLCUNO_NB + 1
-      return sprintf(base_path + "144.145.146")
-    when Settings::ZAPMOLCUNO_NB + 2
-      return sprintf(base_path + "243.244.245")
-    when Settings::ZAPMOLCUNO_NB + 3
-      return sprintf(base_path +"340.341.342")
-    when Settings::ZAPMOLCUNO_NB + 4
-      return sprintf(base_path +"343.344.345")
-    when Settings::ZAPMOLCUNO_NB + 5
-      return sprintf(base_path +"349.350.351")
-    when Settings::ZAPMOLCUNO_NB + 6
-      return sprintf(base_path +"151.251.381")
-    when Settings::ZAPMOLCUNO_NB + 11
-      return sprintf(base_path +"150.348.380")
-      #starters
-    when Settings::ZAPMOLCUNO_NB + 7
-      return sprintf(base_path +"3.6.9")
-    when Settings::ZAPMOLCUNO_NB + 8
-      return sprintf(base_path +"154.157.160")
-    when Settings::ZAPMOLCUNO_NB + 9
-      return sprintf(base_path +"278.281.284")
-    when Settings::ZAPMOLCUNO_NB + 10
-      return sprintf(base_path +"318.321.324")
-      #starters prevos
-    when Settings::ZAPMOLCUNO_NB + 12
-      return sprintf(base_path +"1.4.7")
-    when Settings::ZAPMOLCUNO_NB + 13
-      return sprintf(base_path +"2.5.8")
-    when Settings::ZAPMOLCUNO_NB + 14
-      return sprintf(base_path +"152.155.158")
-    when Settings::ZAPMOLCUNO_NB + 15
-      return sprintf(base_path +"153.156.159")
-    when Settings::ZAPMOLCUNO_NB + 16
-      return sprintf(base_path +"276.279.282")
-    when Settings::ZAPMOLCUNO_NB + 17
-      return sprintf(base_path +"277.280.283")
-    when Settings::ZAPMOLCUNO_NB + 18
-      return sprintf(base_path +"316.319.322")
-    when Settings::ZAPMOLCUNO_NB + 19
-      return sprintf(base_path +"317.320.323")
-    when Settings::ZAPMOLCUNO_NB + 20 #birdBoss Left
-      return sprintf(base_path +"invisible")
-    when Settings::ZAPMOLCUNO_NB + 21 #birdBoss middle
-      return sprintf(base_path + "144.145.146")
-    when Settings::ZAPMOLCUNO_NB + 22 #birdBoss right
-      return sprintf(base_path +"invisible")
-    when Settings::ZAPMOLCUNO_NB + 23 #sinnohboss left
-      return sprintf(base_path +"invisible")
-    when Settings::ZAPMOLCUNO_NB + 24 #sinnohboss middle
-      return sprintf(base_path +"343.344.345")
-    when Settings::ZAPMOLCUNO_NB + 25 #sinnohboss right
-      return sprintf(base_path +"invisible")
-    else
-      return sprintf(base_path + "000")
-    end
+    return kuray_global_triples(dexNum)
   end
 
   #Just in case (KurayX) KurayX Custom icons
@@ -210,7 +158,7 @@ class PokemonBoxIcon < IconSprite
 
     #KurayX Github
     directory_name = "Graphics/Pokemon/FusionIcons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     dexNum = getDexNumberForSpecies(pokemon.species)
     #KurayX Custom icons
     if dexNum.is_a?(Symbol)
@@ -840,9 +788,27 @@ class PokemonBoxSprite < SpriteWrapper
       @contents.blt(0, 0, @boxbitmap.bitmap, Rect.new(0, 0, 324, 296))
       pbSetSystemFont(@contents)
       widthval = @contents.text_size(boxname).width
-      xval = 162 - (widthval / 2)
-      pbDrawShadowText(@contents, xval, 8, widthval, 32,
-                       boxname, Color.new(248, 248, 248), Color.new(40, 48, 48))
+      # Calculate the width of the "S" and "E" indicators
+      indicator_width = 32 # 32 for "S" and 32 for "E"
+
+      # Calculate the total width of the box name and the indicators
+      total_width = widthval + indicator_width
+
+      # Calculate the starting x-coordinate for the text
+      xval = 162 - (total_width / 2)
+
+      # Draw "S" in red if sortlock is true, green otherwise
+      color = @storage[@boxnumber].sortlock? ? Color.new(200, 15, 15) : Color.new(0, 200, 0)
+      pbDrawShadowText(@contents, xval, 8, 32, 32, "S", color, Color.new(40, 48, 48))
+      xval += 16
+
+      # Draw "E" in red if exportlock is true, green otherwise
+      color = @storage[@boxnumber].exportlock? ? Color.new(200, 15, 15) : Color.new(0, 200, 0)
+      pbDrawShadowText(@contents, xval, 8, 32, 32, "E", color, Color.new(40, 48, 48))
+      xval += 16
+
+      # Draw the box name
+      pbDrawShadowText(@contents, xval, 8, widthval, 32, boxname, Color.new(248, 248, 248), Color.new(40, 48, 48))
       @refreshBox = false
     end
     yval = self.y + 30
@@ -1816,6 +1782,18 @@ class PokemonStorageScene
     return pbShowCommands(msg, commands, @storage.currentBox)
   end
 
+  def pbToggleSortBox()
+    @storage[@storage.currentBox].sortlock = !@storage[@storage.currentBox].sortlock?
+    @sprites["box"].refreshBox = true
+    pbRefresh
+  end
+
+  def pbToggleExportBox()
+    @storage[@storage.currentBox].exportlock = !@storage[@storage.currentBox].exportlock?
+    @sprites["box"].refreshBox = true
+    pbRefresh
+  end
+
   def pbBoxName(helptext, minchars, maxchars)
     oldsprites = pbFadeOutAndHide(@sprites)
     ret = pbEnterBoxName(helptext, minchars, maxchars)
@@ -1886,7 +1864,7 @@ class PokemonStorageScene
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG || canExportImport
     commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
     commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
-    if $DEBUG && File.file?("Kurayami.krs")
+    if $DEBUG && File.file?(RTP.getSaveFolder + "\\Kurayami.krs")
       commands[cmdCarpFill = commands.length] = _INTL("CarpFill")
       commands[cmdToggleShiny = commands.length] = _INTL("Toggle Shiny")
       commands[cmdDebug1 = commands.length] = _INTL("Print EggGroups")
@@ -1929,6 +1907,11 @@ class PokemonStorageScene
   end
 
   def pbRerollSprite(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     while true
       pricenow = 5000
       pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
@@ -1964,7 +1947,7 @@ class PokemonStorageScene
           end
           if newfile != pokemon.kuraycustomfile? && newfile != nil
             pokemon.kuraycustomfile = newfile
-            pbHardRefresh
+            pbKurayRefresh(overlayvar1, overlayvar2)
             pbDisplay(_INTL("Oh! Its sprite changed!"))
             #Best option to refresh sprites so far \/
             break
@@ -1982,6 +1965,11 @@ class PokemonStorageScene
   end
 
   def pbDefaultSprite(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     pricenow = 500
     pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
     if $Trainer.money < pricenow
@@ -2010,7 +1998,7 @@ class PokemonStorageScene
           pbDisplay(_INTL("No Custom Sprite!"))
         else
           pokemon.kuraycustomfile = "none"
-          pbHardRefresh
+          pbKurayRefresh(overlayvar1, overlayvar2)
           pbDisplay(_INTL("It now uses default sprite!"))
           # if isKurayDefaultSprite(pokemon.dexNum, pokemon.kuraycustomfile)
             # newfile = kurayGetCustomSprite(pokemon.dexNum, 1)
@@ -2037,11 +2025,14 @@ class PokemonStorageScene
   end
 
   def pbBlackList(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2062,7 +2053,7 @@ class PokemonStorageScene
             pbDisplay(_INTL("Cannot blacklist default!"))
           else
             pokemon.kuraycustomfile = kurayPlayerBlackList(pokemon.dexNum, pokemon.kuraycustomfile)
-            pbHardRefresh
+            pbKurayRefresh(overlayvar1, overlayvar2)
             pbDisplay(_INTL("Sprite blacklisted!"))
           end
         end
@@ -2113,11 +2104,14 @@ class PokemonStorageScene
   end
 
   def pbShinySell(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2141,13 +2135,18 @@ class PokemonStorageScene
         # pokemon.shinyR=kurayRNGforChannels
         # pokemon.shinyG=kurayRNGforChannels
         # pokemon.shinyB=kurayRNGforChannels
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Shiny, no more!"))
       end
     end
   end
 
   def pbKuraShinify(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     pricenow = 1000
     pricenow = 0 if $PokemonSystem.kuraystreamerdream != 0
     while true
@@ -2197,14 +2196,14 @@ class PokemonStorageScene
               pokemon.shinyG=kurayRNGforChannels
               pokemon.shinyB=kurayRNGforChannels
               pokemon.shinyKRS=kurayKRSmake
-              pbHardRefresh
+              pbKurayRefresh(overlayvar1, overlayvar2)
               pbDisplay(_INTL("Wait... Its shiny color changed!"))
             else
               pokemon.shiny=true
-              pbHardRefresh
+              pbKurayRefresh(overlayvar1, overlayvar2)
               pbDisplay(_INTL("Wait... It became shiny!"))
             end
-            break
+            # break
           else
             pbDisplay(_INTL("Not this time :c Try again!"))
           end
@@ -2215,12 +2214,25 @@ class PokemonStorageScene
     end
   end
 
+  def pbKurayRefresh(selectid, useparty=nil)#This refresh the entire box storage (refresh the sprites in the box, and the displayed sprite on the left for the selected Pokemon as well)
+    if useparty
+      pbUpdateOverlay(selectid, useparty)
+    else
+      pbUpdateOverlay(selectid)
+    end
+    pbHardRefresh
+  end
+
   def pbDefineShinycolor(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2238,7 +2250,7 @@ class PokemonStorageScene
       if qty > -1
         newvalue = qty - 180
         pokemon.shinyValue=newvalue
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed Shiny Hue!"))
       end
     end
@@ -2259,7 +2271,7 @@ class PokemonStorageScene
     if qty < 26
       if qty > -1
         pokemon.shinyR=qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed Red Channel!"))
       end
     end
@@ -2279,7 +2291,7 @@ class PokemonStorageScene
     if qty < 26
       if qty > -1
         pokemon.shinyG=qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed Green Channel!"))
       end
     end
@@ -2299,7 +2311,7 @@ class PokemonStorageScene
     if qty < 26
       if qty > -1
         pokemon.shinyB=qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed Blue Channel!"))
       end
     end
@@ -2319,7 +2331,7 @@ class PokemonStorageScene
       qty = @scene.pbChooseNumber(helptext, params)
       if qty < maxdoing + 1 && qty > -1
         pokemon.shinyKRS[iddoing] = qty-200
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Increment!"))
       end
     end
@@ -2341,7 +2353,7 @@ class PokemonStorageScene
       qty = @scene.pbChooseNumber(helptext, params)
       if qty < maxdoing + 1 && qty > -1
         pokemon.shinyKRS[currslot] = qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Semi-Inverted!"))
       end
     end
@@ -2363,7 +2375,7 @@ class PokemonStorageScene
       qty = @scene.pbChooseNumber(helptext, params)
       if qty < maxdoing + 1 && qty > -1
         pokemon.shinyKRS[currslot] = qty
-        pbHardRefresh
+        pbKurayRefresh(overlayvar1, overlayvar2)
         pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Timid-Black!"))
       end
     end
@@ -2372,11 +2384,14 @@ class PokemonStorageScene
 
   #KurayX - KURAYX_ABOUT_SHINIES
   def pbRerollShiny(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2386,7 +2401,7 @@ class PokemonStorageScene
     pokemon.shinyG=kurayRNGforChannels
     pokemon.shinyB=kurayRNGforChannels
     pokemon.shinyKRS=kurayKRSmake
-    pbHardRefresh
+    pbKurayRefresh(overlayvar1, overlayvar2)
     pbDisplay(_INTL("Re-rolled into " + pokemon.shinyValue.to_s + ";" + pokemon.shinyR.to_s + ";" + pokemon.shinyG.to_s + ";" + pokemon.shinyB.to_s + "!"))
   end
 
@@ -2408,25 +2423,10 @@ class PokemonStorageScene
     end
   end
 
-  def shinyPNGMake(pokemon, pathexport)
-    if pokemon.kuraycustomfile? == nil
-      exportbitmap = GameData::Species.sprite_bitmap_from_pokemon(pokemon)
-    else
-      if pbResolveBitmap(pokemon.kuraycustomfile?) && !pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
-        filename = pokemon.kuraycustomfile?
-        exportbitmap = (filename) ? AnimatedBitmap.new(filename) : nil
-        if pokemon.shiny?
-          exportbitmap.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?, pokemon.shinyKRS?)
-        end
-      else
-        exportbitmap = GameData::Species.sprite_bitmap_from_pokemon(pokemon)
-      end
-    end
-    exportbitmap.bitmap_to_png(pathexport)
-  end
-
   #KurayX
   def pbExport(selected, heldpoke, dodelete=0)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     deletepkm = false
     if $PokemonSystem.exportdelete
       if $PokemonSystem.exportdelete == 1
@@ -2434,12 +2434,13 @@ class PokemonStorageScene
       end
     end
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
@@ -2456,14 +2457,16 @@ class PokemonStorageScene
     end
     # importname = directory_name + "/" + pokemon.speciesName + "-" + cleaned_name + "-" + pokemon.gender + "-" + pokemon.shiny? + "-" + pokemon.totalhp + "-" + pokemon.level + ".pkm"
     
+    giveback=false
     # Marshal not working anymore !
     # File.open(importname + ".pkm", 'wb') { |f| f.write(Marshal.dump(pokemon)) }
-    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
+    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2 && pokemon.shiny?
       pokemon.shiny=false
       pokemon.fakeshiny=true
+      giveback=true
     end
     File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
-    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
+    if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2 && giveback
       # give shininess back after export
       pokemon.shiny=true
       pokemon.fakeshiny=false
@@ -2477,7 +2480,7 @@ class PokemonStorageScene
       else
         @storage.pbDelete(selected[0], selected[1])
       end
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
     end
     pbDisplay(_INTL("Pokemon Exported!"))
   end
@@ -2507,7 +2510,7 @@ class PokemonStorageScene
       copyfile = pokemon.kuraycustomfile?
     end
     begin
-      if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2
+      if $PokemonSystem.nopngexport != nil && $PokemonSystem.nopngexport == 2 && pokemon.shiny?
         shinyPNGMake(pokemon, importname + ".png")
       else
         File.copy(copyfile, importname + ".png")
@@ -2526,7 +2529,7 @@ class PokemonStorageScene
       end
     end
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     if @storage[box].empty?
       pbPlayBuzzerSE
       pbDisplay(_INTL("Box is empty!"))
@@ -2565,11 +2568,12 @@ class PokemonStorageScene
       end
     end
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     for j in 0...@storage.maxBoxes
       if @storage[j].empty?
         next
       end
+      next if @storage[j].exportlock?
       for k in 0..29
         if @storage[j, k]
           pokemon = @storage[j, k]
@@ -2587,7 +2591,7 @@ class PokemonStorageScene
           File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
           logic_png(pokemon, importname)
           if deletepkm
-            @storage.pbDelete(box, k)
+            @storage.pbDelete(j, k)
           end
         end
       end
@@ -2609,7 +2613,7 @@ class PokemonStorageScene
         File.open(importname + ".json", 'w') { |f| f.write(pokemon.to_json) }
         logic_png(pokemon, importname)
         if deletepkm
-          @storage.pbDelete(box, k)
+          @storage.pbDelete(j, k)
         end
       end
     end
@@ -2618,32 +2622,44 @@ class PokemonStorageScene
 
   #KurayX
   def pbToggleShiny(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
     pokemon = heldpoke
     if heldpoke
       pokemon = heldpoke
     elsif selected[0] == -1
       pokemon = @storage.party[selected[1]]
+      overlayvar2 = @storage.party
     else
       pokemon = @storage.boxes[selected[0]][selected[1]]
     end
     if pokemon.shiny?
       pokemon.shiny=false
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
       pbDisplay(_INTL("Pokemon now Normal!"))
     else
       pokemon.shiny=true
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
       pbDisplay(_INTL("Pokemon now Shiny!"))
     end
   end
 
   #KurayX
   def pbCarpFill(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     importname = directory_name + "/" + "CarpFill.json"
     if File.file?(importname)
       importunevo = false
+      importegg = false
+      if $PokemonSystem.importegg && $PokemonSystem.importegg == 1
+        importegg = true
+      end
       importlevel = 0
       if $PokemonSystem.importlvl
         if $PokemonSystem.importlvl == 1
@@ -2669,6 +2685,13 @@ class PokemonStorageScene
       end
       if importlevel != 0
         pokemon.level = importlevel
+        # pokemon.calc_stats
+      end
+      if importegg
+        pokemon.name           = _INTL("Egg")
+        pokemon.steps_to_hatch = pokemon.species_data.hatch_steps
+        pokemon.hatched_map    = 0
+        pokemon.obtain_method  = 1
       end
       # pokemon.calc_stats
       relta = 0
@@ -2708,7 +2731,7 @@ class PokemonStorageScene
           belta = 0
         end
       end
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
       pbDisplay(_INTL("CarpFill done!"))
     else
       pbPlayBuzzerSE
@@ -2718,11 +2741,20 @@ class PokemonStorageScene
 
   #KurayX
   def pbImportJson(selected, heldpoke)
+    overlayvar1 = selected[1]
+    overlayvar2 = nil
+    if selected[0] == -1
+      overlayvar2 = @storage.party
+    end
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     importname = directory_name + "/" + "Exported.json"
     if File.file?(importname)
       importunevo = false
+      importegg = false
+      if $PokemonSystem.importegg && $PokemonSystem.importegg == 1
+        importegg = true
+      end
       importlevel = 0
       if $PokemonSystem.importlvl
         if $PokemonSystem.importlvl == 1
@@ -2755,10 +2787,17 @@ class PokemonStorageScene
       end
       if importlevel != 0
         pokemon.level = importlevel
+        # pokemon.calc_stats
+      end
+      if importegg
+        pokemon.name           = _INTL("Egg")
+        pokemon.steps_to_hatch = pokemon.species_data.hatch_steps
+        pokemon.hatched_map    = 0
+        pokemon.obtain_method  = 1
       end
       # pokemon.calc_stats
       @storage.pbImportKuray(selected[0], selected[1], pokemon)
-      pbHardRefresh
+      pbKurayRefresh(overlayvar1, overlayvar2)
       pbDisplay(_INTL("Pokemon Imported!"))
     else
       pbPlayBuzzerSE
@@ -2782,6 +2821,7 @@ class PokemonStorageScene
       pbUpdateOverlay(@selection)
     end
     pbFadeInAndShow(@sprites, oldsprites)
+    pbHardRefresh
   end
 
   def pbMarkingSetArrow(arrow, selection)
@@ -3498,6 +3538,14 @@ class PokemonStorageScreen
     @scene.pbHardRefresh
   end
 
+  def pbKurayRefresh # For debug
+    @scene.pbKurayRefresh
+  end
+
+  def pbUpdateOverlay(selection, party = nil) # For debug
+    @scene.pbUpdateOverlay(selection, party)
+  end
+
   def pbRefreshSingle(i)
     # For debug
     @scene.pbUpdateOverlay(i[1], (i[0] == -1) ? @storage.party : nil)
@@ -3919,7 +3967,7 @@ class PokemonStorageScreen
   def navigationSystem(base_name, messagechoice)
     directory_name = base_name
     # directory_name = "ExportedPokemons"  # Replace with the actual path to your folder
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     cancelled = false
     havingjsons = []
     randomized = false
@@ -4134,6 +4182,8 @@ class PokemonStorageScreen
       else#we already have an array in this variable!
         next unless index
         tmppkm = index.clone
+        # puts tmppkm.species
+        # puts tmppkm.species_data
         tempclone = tmppkm.to_json
         pokemon = Pokemon.new(:BULBASAUR, 1)
         pokemon.load_json(tempclone)
@@ -4190,9 +4240,9 @@ class PokemonStorageScreen
       for i in 0...finaleparty.length
         # player level setup
         $Trainer.party[i] = finaleparty[i].clone
-        if i >= playernum
-          break
-        end
+        # if i >= playernum
+          # break
+        # end
         if $PokemonSystem.sb_level
           if $PokemonSystem.sb_level == 1
             $Trainer.party[i].level = 1
@@ -4292,7 +4342,7 @@ class PokemonStorageScreen
   #KurayX
   def pbExportSelected(box, frombox=false)
     directory_name = "ExportedPokemons"
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    checkDirectory(directory_name)
     unless frombox
       selected = getMultiSelection(box, nil)
     end
@@ -4472,12 +4522,236 @@ class PokemonStorageScreen
     end
   end
 
+  def sort_box(box, kurayid, attribute, sortingkuray, all_sorting)
+    for k in 0..29
+      if pokekuray = box[k]
+        case attribute
+        when :shiny
+          shinykur = pokekuray.shiny? ? 1 : 0
+          sortingkuray.append([shinykur, kurayid])
+        when :OT
+          otname = pokekuray.owner.name.empty? ? "0" : pokekuray.owner.name
+          sortingkuray.append([otname, kurayid])
+        when :gender
+          actualgender = pokekuray.pizza? ? 3 : pokekuray.gender
+          sortingkuray.append([actualgender, kurayid])
+        when :ability
+          sortingkuray.append([pokekuray.ability.name, kurayid])
+        when :nature
+          sortingkuray.append([pokekuray.nature.name, kurayid])
+        when :item
+          sortingkuray.append([pokekuray.item ? pokekuray.item.name : "0", kurayid])
+        when :type1
+          kuraytype = GameData::Type.get(pokekuray.type1).id_number
+          sortingkuray.append([kuraytype, kurayid])
+        when :type2
+          kuraytype = GameData::Type.get(pokekuray.type2).id_number
+          sortingkuray.append([kuraytype, kurayid])
+        when :totalivs
+          sumivs = pokekuray.iv[:HP] + pokekuray.iv[:ATTACK] + pokekuray.iv[:DEFENSE] + pokekuray.iv[:SPECIAL_ATTACK] + pokekuray.iv[:SPECIAL_DEFENSE] + pokekuray.iv[:SPEED]
+          sortingkuray.append([sumivs, kurayid])
+        when :totalevs
+          sumevs = pokekuray.ev[:HP] + pokekuray.ev[:ATTACK] + pokekuray.ev[:DEFENSE] + pokekuray.ev[:SPECIAL_ATTACK] + pokekuray.ev[:SPECIAL_DEFENSE] + pokekuray.ev[:SPEED]
+          sortingkuray.append([sumevs, kurayid])
+        else
+          sortingkuray.append([pokekuray.send(attribute), kurayid])
+        end
+      end
+      if all_sorting && pokekuray
+        kurayid += 1
+      elsif !all_sorting
+        kurayid += 1
+      end
+    end
+    kurayid
+  end
+  
+  def sort_boxes(attribute, all_sorting=false, sortingkuray)
+    kurayid = 0
+    if all_sorting
+      for j in 0...@storage.maxBoxes
+        next if @storage[j].empty?
+        next if @storage[j].sortlock?
+        kurayid = sort_box(@storage[j], kurayid, attribute, sortingkuray, all_sorting)
+      end
+    else
+      kurayid = sort_box(@storage[@storage.currentBox], kurayid, attribute, sortingkuray, all_sorting)
+    end
+  end
+
+  def pre_sort_boxes(all_sorting=false)
+    kuraychoices = [
+      _INTL("Sort by Name"),
+      _INTL("Sort by Nickname"),
+      _INTL("Sort by Dex Number"),
+      _INTL("Sort by Level"),
+      _INTL("Sort by HP"),
+      _INTL("Sort by Atk"),
+      _INTL("Sort by Def"),
+      _INTL("Sort by SpA"),
+      _INTL("Sort by SpD"),
+      _INTL("Sort by Spe"),
+      _INTL("Sort by Caught Date"),
+      _INTL("Sort by Shiny"),
+      _INTL("Sort by OT"),
+      _INTL("Sort by Gender"),
+      _INTL("Sort by Ability"),
+      _INTL("Sort by Nature"),
+      _INTL("Sort by Held Item"),
+      _INTL("Sort by 1st Type"),
+      _INTL("Sort by 2nd Type"),
+      _INTL("Sort by Caught Map"),
+      _INTL("Sort by Happiness"),
+      _INTL("Sort by EXP"),
+      _INTL("Sort by Markings"),
+      _INTL("Sort by Total IVs"),
+      _INTL("Sort by Total EVs"),
+      _INTL("Nevermind"),
+    ]
+    kuraychoice = pbShowCommands(
+      _INTL("Sort box how ?"), kuraychoices)
+    sortingkuray = []
+    case kuraychoice
+    when 0 # by name
+      sort_boxes(:speciesName, all_sorting, sortingkuray)
+    when 1 # by nickname
+      sort_boxes(:name, all_sorting, sortingkuray)
+    when 2 # by dexnum
+      sort_boxes(:dexNum, all_sorting, sortingkuray)
+    when 3 # by level
+      sort_boxes(:level, all_sorting, sortingkuray)
+    when 4 # by HP
+      sort_boxes(:totalhp, all_sorting, sortingkuray)
+    when 5 # by atk
+      sort_boxes(:attack, all_sorting, sortingkuray)
+    when 6 # by def
+      sort_boxes(:defense, all_sorting, sortingkuray)
+    when 7 # by spA
+      sort_boxes(:spatk, all_sorting, sortingkuray)
+    when 8 # by spD
+      sort_boxes(:spdef, all_sorting, sortingkuray)
+    when 9 # by spe
+      sort_boxes(:speed, all_sorting, sortingkuray)
+    when 10 # by received
+      sort_boxes(:timeReceived, all_sorting, sortingkuray)
+    when 11 # by shiny
+      sort_boxes(:shiny, all_sorting, sortingkuray)
+    when 12 # by OT
+      sort_boxes(:OT, all_sorting, sortingkuray)
+    when 13 # by gender
+      sort_boxes(:gender, all_sorting, sortingkuray)
+    when 14 # by ability
+      sort_boxes(:ability, all_sorting, sortingkuray)
+    when 15 # by nature
+      sort_boxes(:nature, all_sorting, sortingkuray)
+    when 16 # by item
+      sort_boxes(:item, all_sorting, sortingkuray)
+    when 17 # by first type
+      sort_boxes(:type1, all_sorting, sortingkuray)
+    when 18 # by last type
+      sort_boxes(:type2, all_sorting, sortingkuray)
+    when 19 # by obtain map
+      sort_boxes(:obtain_map, all_sorting, sortingkuray)
+    when 20 # by happiness
+      sort_boxes(:happiness, all_sorting, sortingkuray)
+    when 21 # by exp
+      sort_boxes(:exp, all_sorting, sortingkuray)
+    when 22 # by markings
+      sort_boxes(:markings, all_sorting, sortingkuray)
+    when 23 # by IVS
+      sort_boxes(:totalivs, all_sorting, sortingkuray)
+    when 24 # by EVS
+      sort_boxes(:totalevs, all_sorting, sortingkuray)
+    end
+
+    if !sortingkuray.empty?
+      sorted = 0
+      kuraychoices = [
+          _INTL("Normal Order"),
+          _INTL("Reverse Order"),
+          _INTL("Nevermind"),
+        ]
+      kuraychoice = pbShowCommands(
+        _INTL("Sort box how ?"), kuraychoices)
+      case kuraychoice
+      when 0 # by normal
+        # sortingkuray.sort!
+        sortingkuray = sortingkuray.sort_by { |h| h[0]}
+        sorted = 1
+      when 1 # by reverse
+        sortingkuray = sortingkuray.sort_by { |h| h[0]}
+        sortingkuray = sortingkuray.reverse
+        sorted = 1
+      end
+      if sorted == 1
+        copytmp = []
+        if all_sorting
+          for j in 0...@storage.maxBoxes
+            next if @storage[j].sortlock?
+            for k in 0..29
+              copytmp.push(*@storage[j, k])
+              @storage[j, k] = nil
+            end
+          end
+          boxhere = 0
+          while @storage[boxhere].sortlock?
+            boxhere += 1
+          end
+          boxcheck = -1
+        else
+          for k in 0..29
+            copytmp.push(@storage[@storage.currentBox, k])
+            @storage[@storage.currentBox, k] = nil
+          end
+        end
+        for k in 0..sortingkuray.size-1
+          dealwith = sortingkuray[k, 1].flatten
+          if all_sorting
+            if boxcheck > 28
+              boxhere += 1
+              boxcheck = -1
+              while @storage[boxhere].sortlock?
+                boxhere += 1
+              end
+            end
+            boxcheck += 1
+            @storage[boxhere, boxcheck] = copytmp[dealwith[1].to_i]
+          else
+            @storage[@storage.currentBox, k] = copytmp[dealwith[1].to_i]
+          end
+        end
+        # puts "copytmp: #{copytmp.inspect}"
+        # puts "sortingkuray: #{sortingkuray.inspect}"
+        # puts "dealwith: #{dealwith.inspect}"
+        pbHardRefresh
+        # pbUpdateOverlay(@selection)
+        # @scene.pbRefresh
+        # pbRefresh
+        pbDisplay(_INTL("Pokemons sorted!"))
+      end
+    end
+  end
+
   #KurayBoxesS
   def pbBoxCommands
     commands = [
       _INTL("Jump"),
       _INTL("Wallpaper"),
-      _INTL("Name"),
+      _INTL("Name")
+    ]
+    if @storage[@storage.currentBox].sortlock?
+      tmp_txt = "Unlock Sorting"
+    else
+      tmp_txt = "Lock Sorting"
+    end
+    if @storage[@storage.currentBox].exportlock?
+      tmp_txt2 = "Unlock Exporting"
+    else
+      tmp_txt2 = "Lock Exporting"
+    end
+    commands[commands.length] = _INTL(tmp_txt)#Allows to exempt a box from sorting
+    commands[commands.length] = _INTL(tmp_txt2)#Allows to exempt a box from exporting
+    additional_commands = [
       _INTL("Buy Box"),
       # _INTL("Export All"),
       # _INTL("Import"),
@@ -4487,6 +4761,7 @@ class PokemonStorageScreen
       _INTL("Battle"),
       # _INTL("Cancel"),
     ]
+    commands += additional_commands
     canExportImport = true
     if $PokemonSystem.debugfeature
       if $PokemonSystem.debugfeature == 1
@@ -4520,9 +4795,13 @@ class PokemonStorageScreen
       if wpaper >= 0
         @scene.pbChangeBackground(papers[1][wpaper])
       end
-    when 2
+    when 2#name
       @scene.pbBoxName(_INTL("Box name?"), 0, 12)
-    when 3
+    when 3#sort lock
+      @scene.pbToggleSortBox()
+    when 4#export lock
+      @scene.pbToggleExportBox()
+    when 5
       pricenow = @storage.maxBoxes * 300
       if pricenow > 100000
         pricenow = 100000
@@ -4546,814 +4825,19 @@ class PokemonStorageScreen
           pbDisplay(_INTL("Bought a new box!"))
         end
       end
-    when 4
-      #Sort Pokemons
-      # box = selected[0]
-      # index = selected[1]
-      # if @storage[box, index]
-      kuraychoices = [
-          _INTL("Sort by Name"),
-          _INTL("Sort by Nickname"),
-          _INTL("Sort by Dex Number"),
-          _INTL("Sort by Level"),
-          _INTL("Sort by HP"),
-          _INTL("Sort by Atk"),
-          _INTL("Sort by Def"),
-          _INTL("Sort by SpA"),
-          _INTL("Sort by SpD"),
-          _INTL("Sort by Spe"),
-          _INTL("Sort by Caught Date"),
-          _INTL("Sort by Shiny"),
-          _INTL("Sort by OT"),
-          _INTL("Sort by Gender"),
-          _INTL("Sort by Ability"),
-          _INTL("Sort by Nature"),
-          _INTL("Sort by Held Item"),
-          _INTL("Sort by 1st Type"),
-          _INTL("Sort by 2nd Type"),
-          _INTL("Sort by Caught Map"),
-          _INTL("Sort by Happiness"),
-          _INTL("Sort by EXP"),
-          _INTL("Sort by Markings"),
-          _INTL("Sort by Total IVs"),
-          _INTL("Sort by Total EVs"),
-          _INTL("Nevermind"),
-        ]
-      kuraychoice = pbShowCommands(
-        _INTL("Sort box how ?"), kuraychoices)
-      cansort = 0
-      sortingkuray = []
-      case kuraychoice
-      when 0 # by name
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.speciesName, k])
-          end
-        end
-      when 1 # by nickname
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.name, k])
-          end
-        end
-      when 2 # by dexnum
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.dexNum, k])
-          end
-        end
-      when 3 # by level
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.level, k])
-          end
-        end
-      when 4 # by HP
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.totalhp, k])
-          end
-        end
-      when 5 # by atk
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.attack, k])
-          end
-        end
-      when 6 # by def
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.defense, k])
-          end
-        end
-      when 7 # by spA
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.spatk, k])
-          end
-        end
-      when 8 # by spD
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.spdef, k])
-          end
-        end
-      when 9 # by spe
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.speed, k])
-          end
-        end
-      when 10 # by received
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.timeReceived, k])
-          end
-        end
-      when 11 # by shiny
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            if pokekuray.shiny?
-                # Not working, just sorting by if shiny or not now
-                # shinykur = (pokekuray.shinyValue?+1)+(pokekuray.shinyB?+1)*361+(pokekuray.shinyG?+1)*361*12+(pokekuray.shinyR?+1)*361*12*12
-                # Not working, just sorting by if shiny or not now
-                shinykur = 1
-            #   shinykur = pokekuray.shinyValue?
-            #   if shinykur < 10
-            #     shinykur = '00' + shinykur.to_s
-            #   elsif shinykur < 100
-            #     shinykur = '0' + shinykur.to_s
-            #   end
-            #   reskur = pokekuray.shinyR?.to_s + pokekuray.shinyG?.to_s + pokekuray.shinyB?.to_s + shinykur.to_s
-            #   shinykur = reskur.to_i
-            else
-              shinykur = 0
-            end
-            cansort = 1
-            sortingkuray.append([shinykur, k])
-          end
-        end
-      when 12 # by OT
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            if pokekuray.owner.name.empty?
-              sortingkuray.append(["0", k])
-            else
-              sortingkuray.append([pokekuray.owner.name, k])
-            end
-          end
-        end
-      when 13 # by gender
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            if pokekuray.pizza?
-              actualgender = 3
-            else
-              actualgender = pokekuray.gender
-            end
-            sortingkuray.append([actualgender, k])
-          end
-        end
-      when 14 # by ability
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.ability.name, k])
-          end
-        end
-      when 15 # by nature
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.nature.name, k])
-          end
-        end
-      when 16 # by item
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            if pokekuray.item
-              sortingkuray.append([pokekuray.item.name, k])
-            else
-              sortingkuray.append(["0", k])
-            end
-          end
-        end
-      when 17 # by first type
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            kuraytype = GameData::Type.get(pokekuray.type1).id_number
-            sortingkuray.append([kuraytype, k])
-          end
-        end
-      when 18 # by last type
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            kuraytype = GameData::Type.get(pokekuray.type2).id_number
-            sortingkuray.append([kuraytype, k])
-          end
-        end
-      when 19 # by obtain map
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.obtain_map, k])
-          end
-        end
-      when 20 # by happiness
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.happiness, k])
-          end
-        end
-      when 21 # by exp
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.exp, k])
-          end
-        end
-      when 22 # by markings
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            cansort = 1
-            sortingkuray.append([pokekuray.markings, k])
-          end
-        end
-      when 23 # by IVS
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            sumivs = pokekuray.iv[:HP] + pokekuray.iv[:ATTACK] + pokekuray.iv[:DEFENSE] + pokekuray.iv[:SPECIAL_ATTACK] + pokekuray.iv[:SPECIAL_DEFENSE] + pokekuray.iv[:SPEED]
-            cansort = 1
-            sortingkuray.append([sumivs, k])
-          end
-        end
-      when 24 # by EVS
-        for k in 0..29
-          if @storage[@storage.currentBox, k]
-            pokekuray = @storage[@storage.currentBox, k]
-            sumivs = pokekuray.ev[:HP] + pokekuray.ev[:ATTACK] + pokekuray.ev[:DEFENSE] + pokekuray.ev[:SPECIAL_ATTACK] + pokekuray.ev[:SPECIAL_DEFENSE] + pokekuray.ev[:SPEED]
-            cansort = 1
-            sortingkuray.append([sumivs, k])
-          end
-        end
-        # pbDisplay(_INTL("Sorted"))
-      end
-      if cansort == 1
-        sorted = 0
-        kuraychoices = [
-            _INTL("Normal Order"),
-            _INTL("Reverse Order"),
-            _INTL("Nevermind"),
-          ]
-        kuraychoice = pbShowCommands(
-          _INTL("Sort box how ?"), kuraychoices)
-        case kuraychoice
-        when 0 # by normal
-          # sortingkuray.sort!
-          sortingkuray = sortingkuray.sort_by { |h| h[0]}
-          sorted = 1
-        when 1 # by reverse
-          sortingkuray = sortingkuray.sort_by { |h| h[0]}
-          sortingkuray = sortingkuray.reverse
-          sorted = 1
-        end
-        if sorted == 1
-          copytmp = []
-          for k in 0..29
-            copytmp.push(@storage[@storage.currentBox, k])
-            @storage[@storage.currentBox, k] = nil
-          end
-          for k in 0..sortingkuray.size-1
-            dealwith = sortingkuray[k, 1].flatten
-            @storage[@storage.currentBox, k] = copytmp[dealwith[1].to_i]
-          end
-          pbHardRefresh
-          # @scene.pbRefresh
-          # pbRefresh
-          pbDisplay(_INTL("Pokemons sorted!"))
-        end
-      end
-    when 5
-      #Sort Pokemons
-      # box = selected[0]
-      # index = selected[1]
-      # if @storage[box, index]
-      kuraychoices = [
-          _INTL("Sort by Name"),
-          _INTL("Sort by Nickname"),
-          _INTL("Sort by Dex Number"),
-          _INTL("Sort by Level"),
-          _INTL("Sort by HP"),
-          _INTL("Sort by Atk"),
-          _INTL("Sort by Def"),
-          _INTL("Sort by SpA"),
-          _INTL("Sort by SpD"),
-          _INTL("Sort by Spe"),
-          _INTL("Sort by Caught Date"),
-          _INTL("Sort by Shiny"),
-          _INTL("Sort by OT"),
-          _INTL("Sort by Gender"),
-          _INTL("Sort by Ability"),
-          _INTL("Sort by Nature"),
-          _INTL("Sort by Held Item"),
-          _INTL("Sort by 1st Type"),
-          _INTL("Sort by 2nd Type"),
-          _INTL("Sort by Caught Map"),
-          _INTL("Sort by Happiness"),
-          _INTL("Sort by EXP"),
-          _INTL("Sort by Markings"),
-          _INTL("Sort by Total IVs"),
-          _INTL("Sort by Total EVs"),
-          _INTL("Nevermind"),
-        ]
-      kuraychoice = pbShowCommands(
-        _INTL("Sort boxes how ?"), kuraychoices)
-      cansort = 0
-      sortingkuray = []
-      case kuraychoice
-      when 0 # by name
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.speciesName, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 1 # by nickname
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.name, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 2 # by dexnum
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.dexNum, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 3 # by level
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.level, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 4 # by HP
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.totalhp, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 5 # by atk
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          # if @storage[j].length 
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.attack, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 6 # by def
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.defense, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 7 # by spA
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.spatk, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 8 # by spD
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.spdef, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 9 # by spe
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.speed, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 10 # by received
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.timeReceived, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 11 # by shiny
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              if pokekuray.shiny?
-                # shinykur = pokekuray.shinyValue?
-                # Not working, just sorting by if shiny or not now
-                # shinykur = (pokekuray.shinyValue?+1)+(pokekuray.shinyB?+1)*361+(pokekuray.shinyG?+1)*361*12+(pokekuray.shinyR?+1)*361*12*12
-                # Not working, just sorting by if shiny or not now
-                shinykur = 1
-
-                #   shinykur = pokekuray.shinyValue?
-              #   if shinykur < 10
-              #     shinykur = '00' + shinykur.to_s
-              #   elsif shinykur < 100
-              #     shinykur = '0' + shinykur.to_s
-              #   end
-              #   reskur = pokekuray.shinyR?.to_s + pokekuray.shinyG?.to_s + pokekuray.shinyB?.to_s + shinykur.to_s
-              #   shinykur = reskur.to_i
-              else
-                shinykur = 0
-              end
-              cansort = 1
-              sortingkuray.append([shinykur, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 12 # by OT
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              if pokekuray.owner.name.empty?
-                sortingkuray.append(["0", kurayid])
-              else
-                sortingkuray.append([pokekuray.owner.name, kurayid])
-              end
-              kurayid += 1
-            end
-          end
-        end
-      when 13 # by gender
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              if pokekuray.pizza?
-                actualgender = 3
-              else
-                actualgender = pokekuray.gender
-              end
-              sortingkuray.append([actualgender, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 14 # by ability
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.ability.name, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 15 # by nature
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.nature.name, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 16 # by item
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              if pokekuray.item
-                sortingkuray.append([pokekuray.item.name, kurayid])
-              else
-                sortingkuray.append(["0", kurayid])
-              end
-              kurayid += 1
-            end
-          end
-        end
-      when 17 # by 1 type
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              kuraytype = GameData::Type.get(pokekuray.type1).id_number
-              sortingkuray.append([kuraytype, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 18 # by 2 type
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              kuraytype = GameData::Type.get(pokekuray.type2).id_number
-              sortingkuray.append([kuraytype, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 19 # by obtain map
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.obtain_map, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 20 # by happiness
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.happiness, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 21 # by EXP
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.exp, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 22 # by markings
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sortingkuray.append([pokekuray.markings, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 23 # by IVs
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              cansort = 1
-              sumivs = pokekuray.iv[:HP] + pokekuray.iv[:ATTACK] + pokekuray.iv[:DEFENSE] + pokekuray.iv[:SPECIAL_ATTACK] + pokekuray.iv[:SPECIAL_DEFENSE] + pokekuray.iv[:SPEED]
-              cansort = 1
-              sortingkuray.append([sumivs, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-      when 24 # by EVs
-        kurayid = 0
-        for j in 0...@storage.maxBoxes
-          if @storage[j].empty?
-            next
-          end
-          for k in 0..29
-            if @storage[j, k]
-              pokekuray = @storage[j, k]
-              sumivs = pokekuray.ev[:HP] + pokekuray.ev[:ATTACK] + pokekuray.ev[:DEFENSE] + pokekuray.ev[:SPECIAL_ATTACK] + pokekuray.ev[:SPECIAL_DEFENSE] + pokekuray.ev[:SPEED]
-              cansort = 1
-              sortingkuray.append([sumivs, kurayid])
-              kurayid += 1
-            end
-          end
-        end
-        # pbDisplay(_INTL("Sorted"))
-      end
-      if cansort == 1
-        sorted = 0
-        kuraychoices = [
-            _INTL("Normal Order"),
-            _INTL("Reverse Order"),
-            _INTL("Nevermind"),
-          ]
-        kuraychoice = pbShowCommands(
-          _INTL("Sort boxes how ?"), kuraychoices)
-        case kuraychoice
-        when 0 # by normal
-          # sortingkuray.sort!
-          sortingkuray = sortingkuray.sort_by { |h| h[0]}
-          sorted = 1
-        when 1 # by reverse
-          sortingkuray = sortingkuray.sort_by { |h| h[0]}
-          sortingkuray = sortingkuray.reverse
-          sorted = 1
-        end
-        if sorted == 1
-          copytmp = []
-          # copytmp = @storage.boxes
-          # @storage.undefineboxes
-          for j in 0...@storage.maxBoxes
-            for k in 0..29
-              copytmp.push(*@storage[j, k])
-              @storage[j, k] = nil
-            end
-          end
-          boxhere = 0
-          boxcheck = -1
-          for k in 0..sortingkuray.size-1
-            if boxcheck > 28
-              boxhere += 1
-              boxcheck = -1
-            end
-            boxcheck += 1
-            dealwith = sortingkuray[k, 1].flatten
-            @storage[boxhere, boxcheck] = copytmp[dealwith[1].to_i]
-          end
-          pbHardRefresh
-          # @scene.pbRefresh
-          # pbRefresh
-          pbDisplay(_INTL("Pokemons sorted!"))
-        end
-      end
-      
     when 6
+      #Sort Pokemons
+      # box = selected[0]
+      # index = selected[1]
+      # if @storage[box, index]
+      pre_sort_boxes()
+    when 7
+      #Sort Pokemons
+      # box = selected[0]
+      # index = selected[1]
+      # if @storage[box, index]
+      pre_sort_boxes(true)
+    when 8
       #battle
       battlerchoice = 1
       if $PokemonSystem.sb_battlesize
@@ -5731,7 +5215,7 @@ class PokemonStorageScreen
           end
         end
       end
-      when 7
+      when 9
       # Export (box)
       if !$DEBUG && !canExportImport
         pbPlayBuzzerSE
@@ -5739,7 +5223,7 @@ class PokemonStorageScreen
       else
         pbExportBox(@storage.currentBox)
       end
-    when 8
+    when 10
       #Export (all)
       if !$DEBUG && !canExportImport
         pbPlayBuzzerSE
@@ -5747,7 +5231,7 @@ class PokemonStorageScreen
       else
         pbExportAll()
       end
-    when 9
+    when 11
       if !$DEBUG && !canExportImport
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))
@@ -5783,6 +5267,10 @@ class PokemonStorageScreen
           pbDisplay(_INTL("No Pokemon to Import!"))
         else
           importunevo = false
+          importegg = false
+          if $PokemonSystem.importegg && $PokemonSystem.importegg == 1
+            importegg = true
+          end
           importlevel = 0
           if $PokemonSystem.importlvl
             if $PokemonSystem.importlvl == 1
@@ -5811,6 +5299,13 @@ class PokemonStorageScreen
             end
             if importlevel != 0
               pokemon.level = importlevel
+              # pokemon.calc_stats
+            end
+            if importegg
+              pokemon.name           = _INTL("Egg")
+              pokemon.steps_to_hatch = pokemon.species_data.hatch_steps
+              pokemon.hatched_map    = 0
+              pokemon.obtain_method  = 1
             end
             # pokemon.calc_stats
             while @storage[x, y]
@@ -5855,14 +5350,16 @@ class PokemonStorageScreen
           if outofspace == 1
             pbPlayBuzzerSE
             pbHardRefresh
+            # pbUpdateOverlay(@selection)
             pbDisplay(_INTL("Out of place!"))
           else
             pbHardRefresh
+            # pbUpdateOverlay(@selection)
             pbDisplay(_INTL("Pokemon(s) Imported!"))
           end
         end
       end
-    when 10
+    when 12
       if !$DEBUG && !canExportImport
         pbPlayBuzzerSE
         pbDisplay(_INTL("DEBUG needed!"))
@@ -5899,6 +5396,10 @@ class PokemonStorageScreen
           pbDisplay(_INTL("No Pokemon to Import!"))
         else
           importunevo = false
+          importegg = false
+          if $PokemonSystem.importegg && $PokemonSystem.importegg == 1
+            importegg = true
+          end
           importlevel = 0
           if $PokemonSystem.importlvl
             if $PokemonSystem.importlvl == 1
@@ -5927,6 +5428,13 @@ class PokemonStorageScreen
           end
           if importlevel != 0
             pokemon.level = importlevel
+            # pokemon.calc_stats
+          end
+          if importegg
+            pokemon.name           = _INTL("Egg")
+            pokemon.steps_to_hatch = pokemon.species_data.hatch_steps
+            pokemon.hatched_map    = 0
+            pokemon.obtain_method  = 1
           end
           # pokemon.calc_stats
           while @storage[x, y]
@@ -5954,9 +5462,11 @@ class PokemonStorageScreen
           if outofspace == 1
             pbPlayBuzzerSE
             pbHardRefresh
+            # pbUpdateOverlay(@selection)
             pbDisplay(_INTL("Out of place!"))
           else
             pbHardRefresh
+            # pbUpdateOverlay(@selection)
             pbDisplay(_INTL("Pokemon(s) Imported!"))
           end
         end

@@ -6,6 +6,7 @@
 class Scene_Map
   attr_reader :spritesetGlobal
   attr_reader :map_renderer
+  attr_accessor :spritesets
 
   def spriteset
     for i in @spritesets.values
@@ -209,10 +210,11 @@ class Scene_Map
         unless $game_system.menu_disabled || $game_player.moving?
           $game_temp.menu_calling = true
           $game_temp.menu_beep = true
-          $scene.spriteset.addUserSprite(LocationWindow.new($game_map.name+ "\n"+ pbGetTimeNow.strftime("%I:%M %p")))
+          dayOfWeek = getDayOfTheWeek().to_s
+          $scene.spriteset.addUserSprite(LocationWindow.new($game_map.name+ "\n"+ pbGetTimeNow.strftime("%I:%M %p") + "\n" + dayOfWeek))
         end
       elsif Input.trigger?(Input::SPECIAL)
-        unless $game_player.moving?
+        unless $game_system.menu_disabled || $game_player.moving?
           $PokemonTemp.keyItemCalling = true
         end
       elsif Input.press?(Input::F9)
@@ -234,6 +236,10 @@ class Scene_Map
         Events.onAction.trigger(self)
       end
     end
+  end
+
+  def reset_player_sprite
+    @spritesetGlobal.playersprite.updateBitmap
   end
 
   def reset_map(fadeout = false)

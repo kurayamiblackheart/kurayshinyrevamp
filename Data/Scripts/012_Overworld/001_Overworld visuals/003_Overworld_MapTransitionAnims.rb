@@ -83,6 +83,10 @@ end
 #===============================================================================
 def pbStartOver(gameover=false)
   $game_variables[VAR_CURRENT_GYM_TYPE]=-1
+  $game_switches[SWITCH_LOCK_PLAYER_MOVEMENT]=false
+  clear_all_images()
+  $game_player.set_opacity(255)
+  $game_system.menu_disabled=false
   if pbInBugContest?
     pbBugContestStartOver
     return

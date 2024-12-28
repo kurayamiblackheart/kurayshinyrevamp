@@ -1,3 +1,5 @@
+require 'zlib'
+
 #===============================================================================
 # Records which file, section and line are currently being read
 #===============================================================================
@@ -737,6 +739,8 @@ module Compiler
 
 
   def main
+    #skipping return will force the game to recompile from PBS folder each time it launches, so return had to be turned back on
+    # import_new_maps
     return
     return if !$DEBUG
     begin

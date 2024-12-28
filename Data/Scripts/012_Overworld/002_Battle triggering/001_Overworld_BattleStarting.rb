@@ -153,6 +153,8 @@ def pbPrepareBattle(battle)
       battle.defaultWeather = :Sandstorm
     when :Sun
       battle.defaultWeather = :Sun
+    when :StrongWinds
+      battle.defaultWeather = :StrongWinds
     end
   else
     battle.defaultWeather = battleRules["defaultWeather"]
@@ -242,6 +244,8 @@ def pbCanTripleBattle?
   return $PokemonGlobal.partner && $Trainer.able_pokemon_count >= 2
 end
 
+
+
 #===============================================================================
 # Start a wild battle
 #===============================================================================
@@ -257,6 +261,7 @@ def pbWildBattleCore(*args)
     $PokemonGlobal.nextBattleME        = nil
     $PokemonGlobal.nextBattleCaptureME = nil
     $PokemonGlobal.nextBattleBack      = nil
+    $PokemonTemp.forced_alt_sprites=nil
     pbMEStop
     return 1   # Treat it as a win
   end
@@ -332,17 +337,49 @@ def pbWildBattleCore(*args)
   return decision
 end
 
+#
+#
+# ??? PIF added those functions, but they are not being used (WIP maybe)
+def pbWildDoubleBattleSpecific(pokemon1,pokemon2, outcomeVar=1, canRun=true, canLose=false)
+  # Set some battle rules
+  setBattleRule("outcomeVar",outcomeVar) if outcomeVar!=1
+  setBattleRule("cannotRun") if !canRun
+  setBattleRule("canLose") if canLose
+  setBattleRule("double")
+  # Perform the battle
+  decision = pbWildBattleCore(pokemon1, pokemon2)
+  return (decision!=2 && decision!=5)
+end
+
+def pbWildBattleSpecific(pokemon, outcomeVar=1, canRun=true, canLose=false)
+  # Set some battle rules
+  setBattleRule("outcomeVar",outcomeVar) if outcomeVar!=1
+  setBattleRule("cannotRun") if !canRun
+  setBattleRule("canLose") if canLose
+  # Perform the battle
+  decision = pbWildBattleCore(pokemon)
+  # Used by the Poké Radar to update/break the chain
+  #Events.onWildBattleEnd.trigger(nil,species,level,decision)
+  # Return false if the player lost or drew the battle, and true if any other result
+  return (decision!=2 && decision!=5)
+end
+# ??? PIF added those functions, but they are not being used (WIP maybe)
+#
+#
+
 #===============================================================================
 # Standard methods that start a wild battle of various sizes
 #===============================================================================
 # Used when walking in tall grass, hence the additional code.
-def pbWildBattle(species, level, outcomeVar=1, canRun=true, canLose=false)
+
+def pbKurayRandomize(species)
   if !species
     displayRandomizerErrorMessage()
-    return
+    return nil
   end
   species = GameData::Species.get(species).id
   dexnum = getDexNumberForSpecies(species)
+  # if dexnum <= NB_POKEMON
   if $game_switches[SWITCH_RANDOM_STATIC_ENCOUNTERS] && dexnum <= NB_POKEMON
     newSpecies = $PokemonGlobal.psuedoBSTHash[dexnum]
     if !newSpecies
@@ -350,6 +387,14 @@ def pbWildBattle(species, level, outcomeVar=1, canRun=true, canLose=false)
     else
       species = getSpecies(newSpecies)
     end
+  end
+  return species
+end
+
+def pbWildBattle(species, level, outcomeVar=1, canRun=true, canLose=false)
+  species = pbKurayRandomize(species)
+  if !species
+    return
   end
 
   # Potentially call a different pbWildBattle-type method instead (for roaming
@@ -371,6 +416,14 @@ end
 
 def pbDoubleWildBattle(species1, level1, species2, level2,
                        outcomeVar=1, canRun=true, canLose=false)
+  species1 = pbKurayRandomize(species1)
+  if !species1
+    return
+  end
+  species2 = pbKurayRandomize(species2)
+  if !species2
+    return
+  end
   # Set some battle rules
   setBattleRule("outcomeVar",outcomeVar) if outcomeVar!=1
   setBattleRule("cannotRun") if !canRun
@@ -384,6 +437,18 @@ end
 
 def pbTripleWildBattle(species1, level1, species2, level2, species3, level3,
                        outcomeVar=1, canRun=true, canLose=false)
+  species1 = pbKurayRandomize(species1)
+  if !species1
+    return
+  end
+  species2 = pbKurayRandomize(species2)
+  if !species2
+    return
+  end
+  species3 = pbKurayRandomize(species3)
+  if !species3
+    return
+  end
   # Set some battle rules
   setBattleRule("outcomeVar",outcomeVar) if outcomeVar!=1
   setBattleRule("cannotRun") if !canRun
@@ -424,6 +489,7 @@ def pbTrainerBattleCore(*args)
     $PokemonGlobal.nextBattleME        = nil
     $PokemonGlobal.nextBattleCaptureME = nil
     $PokemonGlobal.nextBattleBack      = nil
+    $PokemonTemp.forced_alt_sprites=nil
     pbMEStop
     return ($Trainer.able_pokemon_count == 0) ? 0 : 1   # Treat it as undecided/a win
   end

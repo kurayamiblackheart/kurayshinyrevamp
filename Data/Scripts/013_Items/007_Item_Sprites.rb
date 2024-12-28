@@ -66,6 +66,11 @@ class ItemIconSprite < SpriteWrapper
     end
   end
 
+  def animbitmap=(path="")
+    @animbitmap = AnimatedBitmap.new(path)
+    changeOrigin
+  end
+
   def item=(value)
     return if @item==value && !@forceitemchange
     @item = value

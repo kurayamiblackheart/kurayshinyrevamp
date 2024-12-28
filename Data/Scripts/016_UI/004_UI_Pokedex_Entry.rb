@@ -190,7 +190,8 @@ class PokemonPokedexInfo_Scene
     end
     # species_data = pbGetSpeciesData(@species)
     species_data = GameData::Species.get_species_form(@species, @form)
-    @sprites["infosprite"].setSpeciesBitmap(@species, @gender, @form)
+    @sprites["infosprite"].setSpeciesBitmap(@species)#, @gender, @form)
+
     # if @sprites["formfront"]
     #   @sprites["formfront"].setSpeciesBitmap(@species,@gender,@form)
     # end
@@ -278,6 +279,8 @@ class PokemonPokedexInfo_Scene
     overlay = @sprites["overlay"].bitmap
     base = Color.new(88, 88, 80)
     shadow = Color.new(168, 184, 184)
+    shadowCustom = Color.new(160, 200, 150)
+
     imagepos = []
     if @brief
       imagepos.push([_INTL("Graphics/Pictures/Pokedex/overlay_info"), 0, 0])
@@ -313,8 +316,16 @@ class PokemonPokedexInfo_Scene
         textpos.push([_ISPRINTF("{1:.1f} kg", weight / 10.0), 482, 184, 1, base, shadow])
       end
       # Draw the Pokédex entry text
+      # drawTextEx(overlay, 40, 244, Graphics.width - (40 * 2), 4, # overlay, x, y, width, num lines
+      #            species_data.pokedex_entry, base, shadow)
+      #
+      #
+      customEntry = getCustomEntryText(species_data)
+      entryText = customEntry ? customEntry : species_data.pokedex_entry
+      shadowColor = customEntry ? shadowCustom : shadow
+
       drawTextEx(overlay, 40, 244, Graphics.width - (40 * 2), 4, # overlay, x, y, width, num lines
-                 species_data.pokedex_entry, base, shadow)
+                 entryText, base, shadowColor)
       # Draw the footprint
       footprintfile = GameData::Species.footprint_filename(@species, @form)
       if footprintfile
@@ -350,6 +361,43 @@ class PokemonPokedexInfo_Scene
     # Draw all images
     pbDrawImagePositions(overlay, imagepos)
   end
+
+
+  def reloadDexEntry()
+    overlay = @sprites["overlay"].bitmap
+    overlay.clear
+    drawPageInfo
+  end
+  
+    def isAutogenSprite(sprite_path)
+      return !sprite_path.include?(Settings::CUSTOM_BATTLERS_FOLDER)
+    end
+  
+    def getCustomEntryText(species_data)
+      sprite_bitmap= GameData::Species.sprite_bitmap(species_data.species)
+      return nil if isAutogenSprite(sprite_bitmap.path)
+      spritename = sprite_bitmap.filename
+      possibleCustomEntries = getCustomDexEntry(spritename)
+      if possibleCustomEntries && possibleCustomEntries.length > 0
+        customEntry = possibleCustomEntries.sample
+        customEntry = customEntry.gsub(Settings::CUSTOM_ENTRIES_NAME_PLACEHOLDER,species_data.name)
+      end
+      return customEntry
+    end
+  
+    def getCustomDexEntry(sprite)
+      json_data = File.read(Settings::CUSTOM_DEX_ENTRIES_PATH)
+      parsed_data = HTTPLite::JSON.parse(json_data)
+  
+      entries = parsed_data.select { |entry| entry["sprite"] == sprite }
+      if entries.any?
+        return entries.map { |entry| entry["entry"] }
+      else
+        echoln "No custom entry found for sprite " + sprite.to_s
+        return nil
+      end
+    end
+
 
   def pbFindEncounter(enc_types, species)
     return false if !enc_types
@@ -526,6 +574,7 @@ class PokemonPokedexInfo_Scene
       dorefresh = false
       if Input.trigger?(Input::ACTION)
         pbSEStop
+        #reloadDexEntry()
         Pokemon.play_cry(@species, @form) if @page == 1
       elsif Input.trigger?(Input::BACK)
         pbPlayCloseMenuSE
@@ -544,6 +593,7 @@ class PokemonPokedexInfo_Scene
         oldindex = @index
         pbGoToPrevious
         if @index != oldindex
+          @selected_index=0
           pbUpdateDummyPokemon
           @available = pbGetAvailableForms
           pbSEStop
@@ -554,6 +604,7 @@ class PokemonPokedexInfo_Scene
         oldindex = @index
         pbGoToNext
         if @index != oldindex
+          @selected_index=0
           pbUpdateDummyPokemon
           @available = pbGetAvailableForms
           pbSEStop

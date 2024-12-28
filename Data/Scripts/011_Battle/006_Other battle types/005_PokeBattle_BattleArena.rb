@@ -209,7 +209,7 @@ end
 class PokeBattle_AI
   attr_accessor :battleArena
 
-  alias _battleArena_pbEnemyShouldWithdraw? pbEnemyShouldWithdraw?
+  alias _battleArena_pbEnemyShouldWithdraw? pbEnemyShouldWithdraw? unless method_defined?(:_battleArena_pbEnemyShouldWithdraw?)
 
   def pbEnemyShouldWithdraw?(idxBattler)
     return _battleArena_pbEnemyShouldWithdraw?(idxBattler) if !@battleArena

@@ -44,8 +44,8 @@ module GameData
       @egg_moves = calculate_egg_moves() # hash[:egg_moves] || []
 
       #Abilities
-      @abilities = calculate_abilities(@body_pokemon, @head_pokemon) # hash[:abilities] || []
-      @hidden_abilities = calculate_hidden_abilities(@body_pokemon, @head_pokemon) # hash[:hidden_abilities] || []
+      @abilities = calculate_abilities() # hash[:abilities] || []
+      @hidden_abilities = calculate_hidden_abilities() # hash[:hidden_abilities] || []
 
       #wild held items
       @wild_item_common = get_wild_item(@head_pokemon.wild_item_common, @body_pokemon.wild_item_common) # hash[:wild_item_common]
@@ -96,6 +96,15 @@ module GameData
     def get_head_number_from_symbol(id)
       return id.to_s.match(/(?<=H)\d+/)[0].to_i
     end
+
+    def get_body_species
+      return @body_pokemon
+    end
+
+    def get_head_species
+      return @head_pokemon
+    end
+
 
     def adjust_stats_with_evs
       GameData::Stat.each_main do |s|
@@ -168,28 +177,49 @@ module GameData
       return fused_stats
     end
 
-    def calculate_base_stats_custom()
+    def calculate_base_stats_custom(bst_option, bst_sliders)
       head_stats = @head_pokemon.base_stats
       body_stats = @body_pokemon.base_stats
-
       fused_stats = {}
-
-      if $PokemonSystem.custom_bst == 1 # Head
-        head_stats.each{|stat, head_value| fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat], $PokemonSystem.custom_bst_sliders["#{stat}_BODY".to_sym])}
-      elsif $PokemonSystem.custom_bst == 2 # Better
-        head_stats.each{|stat, head_value|
-          if head_value > body_stats[stat] then
-            fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], $PokemonSystem.custom_bst_sliders[stat], $PokemonSystem.custom_bst_sliders["#{stat}_BODY".to_sym])
+    
+      case bst_option
+      when 1  # "Head" mode
+        # For each stat, use the HEAD slider vs. BODY slider
+        head_stats.each do |stat, head_value|
+          body_value   = body_stats[stat]
+          slider_head  = bst_sliders[stat]                # e.g. HP => 67
+          slider_body  = bst_sliders["#{stat}_BODY".to_sym] # e.g. HP_BODY => 33
+          fused_stats[stat] = calculate_fused_stats_custom(
+            head_value, body_value, slider_head, slider_body
+          )
+        end
+    
+      when 2  # "Better" mode
+        # Whichever stat is higher is the "dominantStat"
+        head_stats.each do |stat, head_value|
+          body_value   = body_stats[stat]
+          slider_head  = bst_sliders[stat]
+          slider_body  = bst_sliders["#{stat}_BODY".to_sym]
+    
+          if head_value >= body_value
+            fused_stats[stat] = calculate_fused_stats_custom(
+              head_value, body_value, slider_head, slider_body
+            )
           else
-            fused_stats[stat] = calculate_fused_stats_custom(body_stats[stat], head_value, $PokemonSystem.custom_bst_sliders[stat], $PokemonSystem.custom_bst_sliders["#{stat}_BODY".to_sym])
+            fused_stats[stat] = calculate_fused_stats_custom(
+              body_value, head_value, slider_head, slider_body
+            )
           end
-        }
+        end
+    
       else
+        # 0 => "Off" => normal 2/3–1/3 fused stats
         fused_stats = calculate_base_stats
       end
-
+    
       return fused_stats
     end
+    
 
     def calculate_base_exp()
       head_exp = @head_pokemon.base_exp
@@ -226,25 +256,50 @@ module GameData
       end
     end
 
-    def calculate_abilities(pokemon1, pokemon2)
+    def calculate_abilities()
       abilities_hash = []
 
-      ability1 = pokemon1.abilities[0]
-      ability2 = pokemon2.abilities[1]
-      if !ability2
-        ability2 = pokemon2.abilities[0]
-      end
+      ability1 = @body_pokemon.abilities[0]
+      ability2 = @head_pokemon.abilities[0]
       abilities_hash << ability1
       abilities_hash << ability2
       return abilities_hash
     end
 
-    def calculate_hidden_abilities(pokemon1, pokemon2)
+    # def calculate_abilities(pokemon1, pokemon2)
+    #   abilities_hash = []
+    #
+    #   ability1 = pokemon1.abilities[0]
+    #   ability2 = pokemon2.abilities[1]
+    #   if !ability2
+    #     ability2 = pokemon2.abilities[0]
+    #   end
+    #   abilities_hash << ability1
+    #   abilities_hash << ability2
+    #   return abilities_hash
+    # end
+
+    def calculate_hidden_abilities()
+      abilities_hash = []
+
       #First two spots are the other abilities of the two pokemon
-      abilities_hash = calculate_abilities(pokemon2, pokemon1)
+      ability1 = @body_pokemon.abilities[1]
+      ability2 = @head_pokemon.abilities[1]
+      ability1 = @body_pokemon.abilities[0] if !ability1
+      ability2 = @head_pokemon.abilities[0] if !ability2
+
+      abilities_hash << ability1
+      abilities_hash << ability2
+
       #add the hidden ability for the two base pokemon
-      abilities_hash << @body_pokemon.hidden_abilities[0]
-      abilities_hash << @head_pokemon.hidden_abilities[0]
+      hiddenAbility1 = @body_pokemon.hidden_abilities[0]
+      hiddenAbility1 = ability1 if !hiddenAbility1
+
+      hiddenAbility2 = @head_pokemon.hidden_abilities[0]
+      hiddenAbility2 = ability2 if !hiddenAbility2
+
+      abilities_hash << hiddenAbility1
+      abilities_hash << hiddenAbility2
       return abilities_hash
     end
 
@@ -338,7 +393,7 @@ module GameData
       growth_rate_priority = [:Slow, :Erratic, :Fluctuating, :Parabolic, :Medium, :Fast] #todo rearrange order for balance?
       body_growth_rate = @body_pokemon.growth_rate
       head_growth_rate = @head_pokemon.growth_rate
-      base_growth_rates =[body_growth_rate,head_growth_rate]
+      base_growth_rates = [body_growth_rate, head_growth_rate]
       for rate in growth_rate_priority
         return rate if base_growth_rates.include?(rate)
       end
@@ -348,7 +403,11 @@ module GameData
     #TODO
     # ################## UNFINISHED ####################
     def calculate_gender
-      return :Genderless
+      # We want to give a random gender based on the possibilities of the head and the body.
+      # We return randomly either @head_pokemon.gender_ratio or @body_pokemon.gender_ratio, turning both of them into an array of 2 values before returning one of the value at random.
+      # return [@head_pokemon.gender_ratio, @body_pokemon.gender_ratio].sample
+      return @body_pokemon.gender_ratio
+      # return :Genderless
     end
 
     #############################  UTIL METHODS ###############################

@@ -11,6 +11,17 @@ Events.onTrainerPartyLoad += proc { |_sender, e|
   trainer = e[0]
   party = e[2]
 
+  if $PokemonSystem.shiny_trainer_pkmn < 3
+    # For each member of the party, has $PokemonSystem.shinyodds chance out of 65536 of being shiny
+    trainer.party.each do |pokemon|
+      foeParty.push(pokemon)
+      if rand(65536) < $PokemonSystem.shinyodds
+        pokemon.shiny = true
+      end
+      # pokemon.shiny = true
+      # pokemon.debug_shiny = true
+    end
+  end
   if $PokemonSystem.shiny_trainer_pkmn == 1
     # Determine the ace pokemon
     last_pokemon = trainer.party.last

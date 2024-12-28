@@ -208,6 +208,8 @@ PokemonDebugMenuCommands.register("setlevel", {
          _INTL("Set the Pokémon's level (max. {1}).", params.maxNumber), params) { screen.pbUpdate }
       if level != pkmn.level
         pkmn.level = level
+        # should fix lv / exp issue
+        # pkmn.exp = pkmn.growth_rate.minimum_exp_for_level(pkmn.level)
         pkmn.calc_stats
         screen.pbRefreshSingle(pkmnid)
       end
@@ -833,6 +835,17 @@ PokemonDebugMenuCommands.register("setgender", {
         screen.pbRefreshSingle(pkmnid)
       end
     end
+    next false
+  }
+})
+
+
+PokemonDebugMenuCommands.register("printInfo", {
+  "parent"      => "main",
+  "name"        => _INTL("Dump info"),
+  "always_show" => true,
+  "effect"      => proc { |pkmn, pkmnid, heldpoke, settingUpBattle, screen|
+    pkmn.print_all_attributes
     next false
   }
 })

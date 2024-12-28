@@ -7,9 +7,11 @@ end
 
 def pbNickname(pkmn)
   species_name = pkmn.speciesName
-  if pbConfirmMessage(_INTL("Would you like to give a nickname to {1}?", species_name))
-    pkmn.name = pbEnterPokemonName(_INTL("{1}'s nickname?", species_name),
-                                   0, Pokemon::MAX_NAME_SIZE, "", pkmn)
+  if $PokemonSystem.skipcaughtnickname != 1
+    if pbConfirmMessage(_INTL("Would you like to give a nickname to {1}?", species_name))
+      pkmn.name = pbEnterPokemonName(_INTL("{1}'s nickname?", species_name),
+                                    0, Pokemon::MAX_NAME_SIZE, "", pkmn)
+    end
   end
 end
 
@@ -20,7 +22,7 @@ def pbStorePokemon(pkmn)
     return
   end
   pkmn.record_first_moves
-  if $Trainer.party_full?
+  if ($Trainer.party_full? && $PokemonGlobal.pokemonSelectionOriginalParty==nil) || ($PokemonGlobal.pokemonSelectionOriginalParty!=nil && $PokemonGlobal.pokemonSelectionOriginalParty.length >= Settings::MAX_PARTY_SIZE)
     oldcurbox = $PokemonStorage.currentBox
     storedbox = $PokemonStorage.pbStoreCaught(pkmn)
     curboxname = $PokemonStorage[oldcurbox].name
@@ -43,7 +45,11 @@ def pbStorePokemon(pkmn)
       pbMessage(_INTL("It was stored in box \"{1}.\"", boxname))
     end
   else
-    $Trainer.party[$Trainer.party.length] = pkmn
+    if $PokemonGlobal.pokemonSelectionOriginalParty!=nil
+      $PokemonGlobal.pokemonSelectionOriginalParty.push(pkmn)
+    else
+      $Trainer.party[$Trainer.party.length] = pkmn
+    end
   end
 end
 
@@ -56,7 +62,9 @@ def pbNicknameAndStore(pkmn)
   $Trainer.pokedex.set_seen(pkmn.species)
   $Trainer.pokedex.set_owned(pkmn.species)
   pbNickname(pkmn)
-  pbStorePokemon(pkmn)
+  promptCaughtPokemonAction(pkmn)
+  
+  # pbStorePokemon(pkmn)
 end
 
 #===============================================================================
@@ -264,7 +272,7 @@ def pbHasEgg?(species)
   evoSpecies = species_data.get_evolutions(true)
   compatSpecies = (evoSpecies && evoSpecies[0]) ? evoSpecies[0][0] : species
   species_data = GameData::Species.try_get(compatSpecies)
-  compat = species_data.egg_groups
+  compat = Array(species_data.egg_groups)#make sure it's an array
   return false if compat.include?(:Undiscovered) || compat.include?(:HeadUndiscovered) || compat.include?(:Ditto)
   baby = GameData::Species.get(species).get_baby_species
   return true if species == baby   # Is a basic species

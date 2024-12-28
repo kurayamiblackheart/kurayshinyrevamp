@@ -97,7 +97,8 @@ class PokemonDataBox < SpriteWrapper
       # @spriteY += [-18, -6, 16, 28][@battler.index]     #overlap
     when 3
       @spriteX += [-12,  12, -6,  6,  0,  0][@battler.index]
-      @spriteY += [-42, -46,  4,  0, 50, 46][@battler.index]
+      # @spriteY += [-42, -46,  4,  0, 50, 46][@battler.index]#infinite fusion backup
+      @spriteY += [-52, -46,  -6,  0, 40, 46][@battler.index]
       #@spriteY += [-74, -8,  -28,  38, 16, 84][@battler.index]    #standard
       # @spriteY += [-54, -8,  -18,  26, 16, 58][@battler.index]    #overlap
     end
@@ -135,6 +136,8 @@ class PokemonDataBox < SpriteWrapper
       when 3
         @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/TypeIcons_Square"))
       when 4
+        @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/TypeIcons_FairyGodmother"))
+      when 5
         @typeDisplayBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types_display"))
       end
     end
@@ -152,7 +155,7 @@ class PokemonDataBox < SpriteWrapper
     @expBar.bitmap = @expBarBitmap.bitmap
     @sprites["expBar"] = @expBar
     # Trapstarr's Type Display: Create a sprite wrapper that displays Opponents Type
-    if [1,2,3,4].include?($PokemonSystem.typedisplay)
+    if [1,2,3,4,5].include?($PokemonSystem.typedisplay)
       typeDisplayBitmap = Bitmap.new(Graphics.width, Graphics.height)  
       @typeDisplay = SpriteWrapper.new(viewport)  
       @typeDisplay.bitmap = typeDisplayBitmap  
@@ -316,29 +319,29 @@ class PokemonDataBox < SpriteWrapper
       type2_number = GameData::Type.get(type2).id_number
 
       case $PokemonSystem.typedisplay
-      when 1,2,3
+      when 1,2,3,4#icons
         type1rect = Rect.new(0, type1_number * 20, 24, 20)
         type2rect = Rect.new(0, type2_number * 20, 24, 20)
-      when 4
+      when 5#text
         type1rect = Rect.new(0, type1_number * 28, 64, 28)
         type2rect = Rect.new(0, type2_number * 28, 64, 28)
       end
 
-      scale = ($PokemonSystem.typedisplay == 4) ? 0.65 : 1
+      scale = ($PokemonSystem.typedisplay == 5) ? 0.65 : 1
       scaled_width = (type1rect.width * scale).to_i
       case $PokemonSystem.typedisplay
-      when 1,2,3
+      when 1,2,3,4#icons
         scaled_height = (type1rect.height * (scale)).to_i
-      when 4
+      when 5#text
         scaled_height = (type1rect.height * (scale * 1.2)).to_i
       end
 	  
       type_x = @spriteBaseX + (@hpBar.x + 185)
       case $PokemonSystem.typedisplay
-      when 1,2,3
+      when 1,2,3,4#icons
         type_y = @hpBar.y + @hpBar.src_rect.height - 43
         type2_y = type_y + 5 # Spacing
-      when 4
+      when 5#text
         type_y = @hpBar.y + @hpBar.src_rect.height - 40
       end
 	  
@@ -355,13 +358,13 @@ class PokemonDataBox < SpriteWrapper
           type1rect
         )
         case $PokemonSystem.typedisplay
-        when 1,2,3
+        when 1,2,3,4#icons
           typeDisplay.stretch_blt(
             Rect.new(type_x, type2_y + scaled_height, scaled_width, scaled_height),
             @typeDisplayBitmap.bitmap,
             type2rect
          )
-        when 4
+        when 5#text
           typeDisplay.stretch_blt(
             Rect.new(type_x, type_y + scaled_height, scaled_width, scaled_height),
             @typeDisplayBitmap.bitmap,
@@ -414,8 +417,12 @@ class PokemonDataBox < SpriteWrapper
     end
     pbDrawTextPositions(self.bitmap,textPos)
     # Draw Pokémon's level
-    imagePos.push(["Graphics/Pictures/Battle/overlay_lv",@spriteBaseX+140,16]) if !$game_switches[SWITCH_NO_LEVELS_MODE]
-    pbDrawNumber(@battler.level,self.bitmap,@spriteBaseX+162,16) if !$game_switches[SWITCH_NO_LEVELS_MODE]
+    show_level = true
+    if $game_switches[SWITCH_NO_LEVELS_MODE] && ($PokemonSystem.showlevel_nolevelmode && $PokemonSystem.showlevel_nolevelmode == 0)
+      show_level = false
+    end
+    imagePos.push(["Graphics/Pictures/Battle/overlay_lv",@spriteBaseX+140,16]) if show_level
+    pbDrawNumber(@battler.level,self.bitmap,@spriteBaseX+162,16) if show_level
     # Draw shiny icon
     if @battler.shiny? || @battler.fakeshiny?
       shinyX = (@battler.opposes?(0)) ? 206 : -6   # Foe's/player's
@@ -515,7 +522,9 @@ class PokemonDataBox < SpriteWrapper
       # Handle other cases if needed
       scaling_factor = default_scaling_factor
     end
-    if exp_fraction != 0 && @expBarBitmap.width != 0
+    # if exp_fraction != 0 && @expBarBitmap.width != 0
+    if exp_fraction != 0 && @expBarBitmap.width != 0 && !exp_fraction.nan?
+    # if !exp_fraction.nan? && !@expBarBitmap.width && exp_fraction != 0 && @expBarBitmap.width != 0
       width = exp_fraction * @expBarBitmap.width
       # Apply scaling by multiplying 'width' by the scaling factor
       width *= scaling_factor
@@ -847,13 +856,13 @@ class PokemonBattlerSprite < RPG::Sprite
     @pkmn = pkmn
     @_iconBitmap.dispose if @_iconBitmap
     @_iconBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pkmn, back)
-    if @back
-      @_iconBitmap.scale_bitmap(Settings::BACKRPSPRITE_SCALE)
-    else
-      @_iconBitmap.scale_bitmap(Settings::FRONTSPRITE_SCALE)
-    end
+    scale =Settings::FRONTSPRITE_SCALE
+    scale = Settings::BACKRPSPRITE_SCALE if @back
+    @_iconBitmap.scale_bitmap(scale)
 
     self.bitmap = (@_iconBitmap) ? @_iconBitmap.bitmap : nil
+    add_hat_to_bitmap(self.bitmap,pkmn.hat,pkmn.hat_x,pkmn.hat_y,scale,self.mirror) if self.bitmap && pkmn.hat
+
     pbSetPosition
   end
 
