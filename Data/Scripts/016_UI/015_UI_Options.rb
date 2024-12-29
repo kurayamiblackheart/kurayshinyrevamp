@@ -252,9 +252,6 @@ class PokemonSystem
     @ch_berserker = 0
 
     @custom_bst = 0
-
-    @custom_bst_npc = 0
-
     @custom_bst_sliders = {
       :HP => 67,
       :HP_BODY => 33,
@@ -269,22 +266,21 @@ class PokemonSystem
       :SPEED => 33,
       :SPEED_BODY => 67
     }
-  
+    @custom_bst_npc = 0
     @custom_bst_sliders_npc = {
-      :HP => 67,
-      :HP_BODY => 33,
-      :ATTACK => 33,
-      :ATTACK_BODY => 67,
-      :DEFENSE => 33,
-      :DEFENSE_BODY => 67,
-      :SPECIAL_ATTACK => 67,
-      :SPECIAL_ATTACK_BODY => 33,
-      :SPECIAL_DEFENSE => 67,
-      :SPECIAL_DEFENSE_BODY => 33,
-      :SPEED => 33,
-      :SPEED_BODY => 67
+      :HP => 65,
+      :HP_BODY => 35,
+      :ATTACK => 35,
+      :ATTACK_BODY => 65,
+      :DEFENSE => 35,
+      :DEFENSE_BODY => 65,
+      :SPECIAL_ATTACK => 65,
+      :SPECIAL_ATTACK_BODY => 35,
+      :SPECIAL_DEFENSE => 65,
+      :SPECIAL_DEFENSE_BODY => 35,
+      :SPEED => 35,
+      :SPEED_BODY => 65
     }
-
     @pokeradarplus = 0
     @importnodelete = 0
 	@sb_stat_tracker = 0
@@ -2115,10 +2111,11 @@ class KurayOptSc_2 < PokemonOption_Scene
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
     end
-    @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(
-      _INTL("Battles & Pokemons settings"), 0, 0, Graphics.width, 64, @viewport
-    )
-    @sprites["textbox"].text = _INTL("Customize modded features")
+    @sprites["title"]=Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Battles & Pokemons settings"),0,0,Graphics.width,64,@viewport)
+    @sprites["textbox"].text=_INTL("Customize modded features")
+
+
     pbFadeInAndShow(@sprites) { pbUpdate }
   end
 
@@ -2130,81 +2127,68 @@ class KurayOptSc_2 < PokemonOption_Scene
   def pbGetOptions(inloadscreen = false)
     options = []
 
-    options << ButtonOption.new(_INTL("### GLOBAL ###"), proc {})
-
-    options << ButtonOption.new(_INTL("Powerful AI"), proc {})
-
-    options << EnumOption.new(_INTL("Ind. Custom Sprites"), [_INTL("On"), _INTL("Off")],
-      proc { $PokemonSystem.kurayindividcustomsprite },
-      proc { |value| $PokemonSystem.kurayindividcustomsprite = value },
-      [
-        "Two of the same Pokemons can use different sprites (mod)",
-        "Two of the same Pokemons will use the same sprite (vanilla)"
-      ]
+    options << ButtonOption.new(_INTL("### GLOBAL ###"),
+    proc {}
     )
 
-    # Only show the rest if you're in-game
-    if $scene && $scene.is_a?(Scene_Map)
-      options.concat(pbGetInGameOptions)
-    end
+    options << ButtonOption.new(_INTL("Powerful AI"),
+    proc {}
+    )
 
+    options << EnumOption.new(_INTL("Ind. Custom Sprites"), [_INTL("On"), _INTL("Off")],
+                      proc { $PokemonSystem.kurayindividcustomsprite },
+                      proc { |value| $PokemonSystem.kurayindividcustomsprite = value },
+                      ["Two of the same Pokemons can use different sprites (mod)",
+                      "Two of the same Pokemons will use the same sprite (vanilla)"]
+    )
+
+    if $scene && $scene.is_a?(Scene_Map)
+      options.concat(pbGetInGameOptions())
+    end
     return options
   end
 
-  # Merge your Body/Head sliders AND the NPC sliders here
-  def pbGetInGameOptions
+
+  def pbGetInGameOptions()
     options = []
-    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"), proc {})
+    options << ButtonOption.new(_INTL("### PER-SAVE FILE ###"),
+    proc {}
+    )
 
     options << EnumOption.new(_INTL("Wild Battles"), [_INTL("1v1"), _INTL("2v2"), _INTL("3v3")],
-      proc { $PokemonSystem.force_double_wild },
-      proc { |value| $PokemonSystem.force_double_wild = value },
-      [
-        "Wild battles always 1v1",
-        "Wild battles in 2v2 when possible",
-        "Wild battles in 3v3 'cause it's cool"
-      ]
+                      proc { $PokemonSystem.force_double_wild },
+                      proc { |value| $PokemonSystem.force_double_wild = value },
+                      ["Wild battles always 1v1",
+                      "Wild battles in 2v2 when possible",
+                      "Wild battles in 3v3 'cause it's cool"]
     )
-
     options << EnumOption.new(_INTL("Level Cap"), [_INTL("Off"), _INTL("Easy"), _INTL("Normal"), _INTL("Hard")],
-      proc { $PokemonSystem.kuraylevelcap },
-      proc { |value| $PokemonSystem.kuraylevelcap = value },
-      [
-        "No Forced Level Cap",
-        "Easy Level Cap, for children",
-        "Normal Level Cap, for normal people",
-        "Hard Level Cap, for nerds"
-      ]
+                      proc { $PokemonSystem.kuraylevelcap },
+                      proc { |value| $PokemonSystem.kuraylevelcap = value },
+                      ["No Forced Level Cap",
+                      "Easy Level Cap, for children",
+                      "Normal Level Cap, for normal people",
+                      "Hard Level Cap, for nerds"]
     )
-
     options << EnumOption.new(_INTL("Cap Behavior"), [_INTL("Smart"), _INTL("Lock"), _INTL("RC")],
-      proc { $PokemonSystem.levelcapbehavior },
-      proc { |value| $PokemonSystem.levelcapbehavior = value },
-      [
-        "Pokemons can still earn exp beyond the cap (but won't level up).",
-        "Pokemons cannot earn exp beyond the cap.",
-        "Pokemons earn Rare Candies for any exp beyond the cap."
-      ]
+                      proc { $PokemonSystem.levelcapbehavior },
+                      proc { |value| $PokemonSystem.levelcapbehavior = value },
+                      ["The Pokemons can still earn exp.",
+                      "The Pokemon can't earn exp.",
+                      "Earn rare candies instead of going over the cap."]
     )
-
     options << EnumOption.new(_INTL("Self-Fusion Stat Boost"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.self_fusion_boost },
-      proc { |value| $PokemonSystem.self_fusion_boost = value },
-      [
-        "Stat boost for self-fusions is disabled.",
-        "Stat boost for self-fusions is enabled."
-      ]
+                      proc { $PokemonSystem.self_fusion_boost },
+                      proc { |value| $PokemonSystem.self_fusion_boost = value },
+                      ["Stat boost for self-fusions is disabled.",
+                      "Stat boost for self-fusions is enabled."]
     )
-
-    # --- Player's Fusion Base Stats
     options << EnumOption.new(_INTL("Fusion BaseStats"), [_INTL("Off"), _INTL("Head"), _INTL("Better")],
-      proc { $PokemonSystem.custom_bst },
-      proc { |value| $PokemonSystem.custom_bst = value },
-      [
-        "Default fusion base stats.",
-        "Sliders determine % from the 'head' Pokémon (or from your HEAD stat).",
-        "Sliders determine % from whichever stat is better/worse."
-      ]
+                      proc { $PokemonSystem.custom_bst },
+                      proc { |value| $PokemonSystem.custom_bst = value },
+                      ["Default fusion base stats.",
+                      "Sliders determine what % of each stat comes from the head pokemon.",
+                      "Sliders determine what % of each stat comes from the better base stat."]
     )
     options << SliderOption.new(_INTL("    HP (Head/Btr)"), 0, 120, 1,
       proc { $PokemonSystem.custom_bst_sliders[:HP] },
@@ -2271,16 +2255,12 @@ class KurayOptSc_2 < PokemonOption_Scene
       proc { |value| $PokemonSystem.custom_bst_sliders[:SPEED_BODY] = value },
       "Percentage of base Speed contributed by Body/Worse."
     )
-
-    # --- NPC Fusion Base Stats
     options << EnumOption.new(_INTL("NPC Fusion BaseStats"), [_INTL("Off"), _INTL("Head"), _INTL("Better")],
-      proc { $PokemonSystem.custom_bst_npc },
-      proc { |value| $PokemonSystem.custom_bst_npc = value },
-      [
-        "Default NPC fusion base stats.",
-        "Sliders for NPC determine % from the 'head' Pokémon.",
-        "Sliders for NPC determine % from whichever stat is better/worse."
-      ]
+    proc { $PokemonSystem.custom_bst_npc },
+    proc { |value| $PokemonSystem.custom_bst_npc = value },
+    ["Default NPC fusion base stats.",
+    "Sliders determine what % of each stat comes from the head pokemon.",
+    "Sliders determine what % of each stat comes from the better base stat."]
     )
     options << SliderOption.new(_INTL("    HP (Head/Btr NPC)"), 0, 120, 1,
       proc { $PokemonSystem.custom_bst_sliders_npc[:HP] },
@@ -2347,268 +2327,195 @@ class KurayOptSc_2 < PokemonOption_Scene
       proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPEED_BODY] = value },
       "NPC's base Speed from Body/Worse."
     )
-
     options << EnumOption.new(_INTL("Dominant Fusion Types"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.dominant_fusion_types },
-      proc { |value| $PokemonSystem.dominant_fusion_types = value },
-      [
-        "Does not use dominant/inverse fusion types from pre-v6.",
-        "Brings back the old dominant/inverse fusion types from pre-v6."
-      ]
+                      proc { $PokemonSystem.dominant_fusion_types },
+                      proc { |value| $PokemonSystem.dominant_fusion_types = value },
+                      ["Brings back the dominant/inverse fusion types from pre-v6.",
+                      "Brings back the dominant/inverse fusion types from pre-v6."]
     )
 
     options << EnumOption.new(_INTL("Improved Pokedex"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.improved_pokedex },
-      proc { |value| $PokemonSystem.improved_pokedex = value },
-      [
-        "Don't use the Improved Pokedex",
-        "Registers fusions' base Pokémon in the Pokédex when caught/evolving"
-      ]
+                      proc { $PokemonSystem.improved_pokedex },
+                      proc { |value| $PokemonSystem.improved_pokedex = value },
+                      ["Don't use the Improved Pokedex",
+                      "Registers a fusions base Pokemon to the Pokedex when catching/evolving"]
     )
 
     options << EnumOption.new(_INTL("Enable EvoLock"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.kuray_no_evo },
-      proc { |value| $PokemonSystem.kuray_no_evo = value },
-      [
-        "Can't EvoLock a Pokemon without it holding an Everstone",
-        "Can freely EvoLock Pokemons in the PC (no stone needed)"
-      ]
+                      proc { $PokemonSystem.kuray_no_evo },
+                      proc { |value| $PokemonSystem.kuray_no_evo = value },
+                      ["Can't EvoLock a Pokemon without holding everstone",
+                      "Can EvoLock Pokemons in the PC"]
     )
-
     options << EnumOption.new(_INTL("Unfuse Traded"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.unfusetraded },
-      proc { |value| $PokemonSystem.unfusetraded = value },
-      [
-        "Cannot unfuse traded Pokemons",
-        "Can unfuse traded Pokemons"
-      ]
+                      proc { $PokemonSystem.unfusetraded },
+                      proc { |value| $PokemonSystem.unfusetraded = value },
+                      ["You cannot unfuse traded Pokemons.",
+                      "You can unfuse traded Pokemons."]
     )
 
     options << EnumOption.new(_INTL("Recover Consumables"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.recover_consumables },
-      proc { |value| $PokemonSystem.recover_consumables = value },
-      [
-        "Don't recover consumable items after battle",
-        "Recover consumable items after battle"
-      ]
+                      proc { $PokemonSystem.recover_consumables },
+                      proc { |value| $PokemonSystem.recover_consumables = value },
+                      ["Don't recover consumable items after battle",
+                      "Recover consumable items after battle"]
     )
-
     options << SliderOption.new(_INTL("ExpAll Redistribution"), 0, 10, 1,
-      proc { $PokemonSystem.expall_redist },
-      proc { |value| $PokemonSystem.expall_redist = value },
-      "0 = Off, 10 = Max | Redistributes total exp from ExpAll to low-level Pokémon"
+                      proc { $PokemonSystem.expall_redist },
+                      proc { |value| $PokemonSystem.expall_redist = value },
+                      "0 = Off, 10 = Max | Redistributes total exp from expAll to lower level pokemon"
     )
-
     options << EnumOption.new(_INTL("Auto-Battle"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.autobattler },
-      proc { |value| $PokemonSystem.autobattler = value },
-      [
-        "You fight your own battles",
-        "Computer fights for you automatically (Trapstarr AI)"
-      ]
+                      proc { $PokemonSystem.autobattler },
+                      proc { |value| $PokemonSystem.autobattler = value },
+                      ["You fight your own battles",
+                      "Allows Trapstarr to take control of your pokemon"]
     )
-
     options << EnumOption.new(_INTL("Auto-Battle Shortcut"), [_INTL("On"), _INTL("Off")],
-      proc { $PokemonSystem.autobattleshortcut },
-      proc { |value| $PokemonSystem.autobattleshortcut = value },
-      [
-        "Allows toggling auto-battle with the X key in-battle",
-        "Disable the auto-battle toggle in-battle"
-      ]
+                      proc { $PokemonSystem.autobattleshortcut },
+                      proc { |value| $PokemonSystem.autobattleshortcut = value },
+                      ["Allows to toggle Auto-Battle in battles with the X key.",
+                      "Disable the Auto-Battle toggle shortcut."]
     )
-
     options << EnumOption.new(_INTL("Auto-Battle Shiny Stop"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.autobattlershiny },
-      proc { |value| $PokemonSystem.autobattlershiny = value },
-      [
-        "Does NOT stop auto-battle if a wild Shiny appears",
-        "Stops auto-battle if a wild Shiny is detected"
-      ]
+                      proc { $PokemonSystem.autobattlershiny },
+                      proc { |value| $PokemonSystem.autobattlershiny = value },
+                      ["Do NOT stop Auto-Battle if a shiny enemy is detected.",
+                      "Automatically stops Auto-Battle if a shiny enemy is detected."]
     )
 
     options << EnumOption.new(_INTL("Damage Variance"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.damage_variance },
-      proc { |value| $PokemonSystem.damage_variance = value },
-      [
-        "No random damage variation (damage is consistent)",
-        "Random damage variation is enabled"
-      ]
+                      proc { $PokemonSystem.damage_variance },
+                      proc { |value| $PokemonSystem.damage_variance = value },
+                      ["Damage Variance is disabled.",
+                      "Damage Variance is enabled."]
     )
-
     options << EnumOption.new(_INTL("Head Legendary Breeding"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.legendarybreed },
-      proc { |value| $PokemonSystem.legendarybreed = value },
-      [
-        "Legendary Head cannot breed",
-        "Legendary Head can breed as in older versions"
-      ]
+                      proc { $PokemonSystem.legendarybreed },
+                      proc { |value| $PokemonSystem.legendarybreed = value },
+                      ["Legendary Head cannot breed (like new PIF).",
+                      "Legendary Head can breed (like old PIF)."]
     )
-
     options << EnumOption.new(_INTL("Event Moves"), [_INTL("Off"), _INTL("On")],
       proc { $PokemonSystem.eventmoves },
       proc { |value| $PokemonSystem.eventmoves = value },
-      "Event Moves become available at the Battle Factory Egg Move Tutor"
+      "Event Moves are available at the Battle Factory Egg Move Tutor."
     )
-
-    # Blue Wuppo's changes
+    # Made by Blue Woppo
     options << EnumOption.new(_INTL("Modern Hail"), [_INTL("Off"), _INTL("Hail"), _INTL("Snow")],
-      proc { $PokemonSystem.modernhail },
-      proc { |value| $PokemonSystem.modernhail = value },
-      [
-        "Vanilla hail",
-        "Ice types gain a defensive boost during hail",
-        "Hail is replaced by Snow (Gen 9 behavior)"
-      ]
+    proc { $PokemonSystem.modernhail },
+    proc { |value| $PokemonSystem.modernhail = value },
+    ["Vanilla hail.",
+    "Ice types receive a defensive boost during hail.",
+    "Hail becomes Snow, behaves like Gen 9+."]
     )
-
     options << EnumOption.new(_INTL("Frostbite"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.frostbite },
-      proc { |value| $PokemonSystem.frostbite = value },
-      [
-        "Classic Freeze mechanic",
-        "Freeze replaced by Frostbite (Gen 9 mechanic)"
-      ]
+    proc { $PokemonSystem.frostbite },
+    proc { |value| $PokemonSystem.frostbite = value },
+    ["Vanilla Frozen Status.",
+    "Frostbite Status from Gen 9+ replaces Frozen Status."]
     )
-
     options << EnumOption.new(_INTL("Drowsy"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.drowsy },
-      proc { |value| $PokemonSystem.drowsy = value },
-      [
-        "Classic Sleep mechanic",
-        "Sleep replaced by Drowsy (Gen 9 mechanic)"
-      ]
+    proc { $PokemonSystem.drowsy },
+    proc { |value| $PokemonSystem.drowsy = value },
+    ["Vanilla Sleep Status.",
+    "Drowsy Status from Gen 9+ replaces Sleep Status."]
     )
-
     options << EnumOption.new(_INTL("Bug Type Buffs"), [_INTL("Off"), _INTL("Defensive"), _INTL("+ Offensive")],
-      proc { $PokemonSystem.bugbuff },
-      proc { |value| $PokemonSystem.bugbuff = value },
-      [
-        "Vanilla Bug types",
-        "Bug resists Fairy, Psychic, and Dark",
-        "Also makes Fairy weak to Bug"
-      ]
+    proc { $PokemonSystem.bugbuff },
+    proc { |value| $PokemonSystem.bugbuff = value },
+    ["Vanilla Bug Types.",
+    "Bug Types resist Fairy, Psychic, and Dark.",
+    "Fairy Types are weak to Bug Type Moves."]
     )
-
     options << EnumOption.new(_INTL("Ice Type Buffs"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.icebuff },
-      proc { |value| $PokemonSystem.icebuff = value },
-      [
-        "Vanilla Ice types",
-        "Ice resists Water and Flying"
-      ]
+    proc { $PokemonSystem.icebuff },
+    proc { |value| $PokemonSystem.icebuff = value },
+    ["Vanilla Ice Types.",
+    "Ice Types now resist Water and Flying."]
     )
-    # End Blue Wuppo
+    # End of made By Blue Woppo
 
     options << EnumOption.new(_INTL("Skip Caught Prompt"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.skipcaughtprompt },
-      proc { |value| $PokemonSystem.skipcaughtprompt = value },
-      [
-        "Ask whether you want to swap a newly caught Pokémon into party",
-        "Always send newly caught Pokémon to PC if party is full"
-      ]
+    proc { $PokemonSystem.skipcaughtprompt },
+    proc { |value| $PokemonSystem.skipcaughtprompt = value },
+    ["If your party is full, allows you to put the caught pokemon on your party.",
+    "If your party is full, always send the caught pokemon to the PC."]
     )
-
     options << EnumOption.new(_INTL("Skip Caught Nickname"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.skipcaughtnickname },
-      proc { |value| $PokemonSystem.skipcaughtnickname = value },
-      [
-        "Prompt for a nickname when you catch a Pokémon",
-        "Never prompt for a nickname"
-      ]
+    proc { $PokemonSystem.skipcaughtnickname },
+    proc { |value| $PokemonSystem.skipcaughtnickname = value },
+    ["Prompts you to nickname newly caught pokemon.",
+    "Never prompts to nickname newly caught pokemon."]
     )
-
     options << EnumOption.new(_INTL("Show Lv. in BSM"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.showlevel_nolevelmode },
-      proc { |value| $PokemonSystem.showlevel_nolevelmode = value },
-      [
-        "Hide the displayed levels in battle",
-        "Still show levels in battle"
-      ]
+    proc { $PokemonSystem.showlevel_nolevelmode },
+    proc { |value| $PokemonSystem.showlevel_nolevelmode = value },
+    ["Base Stats Mode hides the level of Pokemons in battle.",
+    "Base Stats Mode shows the level of Pokemons (level don't reflect stats!)."]
     )
-
     options << EnumOption.new(_INTL("No-EVs Mode"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.noevsmode },
-      proc { |value| $PokemonSystem.noevsmode = value },
-      [
-        "Pokémon use normal EV mechanics",
-        "Disable EV gains entirely"
-      ]
+    proc { $PokemonSystem.noevsmode },
+    proc { |value| $PokemonSystem.noevsmode = value },
+    ["Pokemon EVs exist.",
+    "Pokemon EVs are disabled."]
     )
-
     options << EnumOption.new(_INTL("Max IVs Mode"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.maxivsmode },
-      proc { |value| $PokemonSystem.maxivsmode = value },
-      [
-        "Default IVs",
-        "All Pokémon have max IVs"
-      ]
+    proc { $PokemonSystem.maxivsmode },
+    proc { |value| $PokemonSystem.maxivsmode = value },
+    ["Disabled.",
+    "Pokemon IVs are always at max."]
     )
-
     options << EnumOption.new(_INTL("EVs Train Mode"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.evstrain },
-      proc { |value| $PokemonSystem.evstrain = value },
-      [
-        "Enemies yield normal EVs on defeat",
-        "Enemies do not yield EVs (except from Power Items)"
-      ]
+    proc { $PokemonSystem.evstrain },
+    proc { |value| $PokemonSystem.evstrain = value },
+    ["EVs yielding works as expected.",
+    "Enemies do not yield EVs (except yielding from held Power-items)."]
     )
-
     options << EnumOption.new(_INTL("Rocket Mode"), [_INTL("Off"), _INTL("On"), _INTL("All Balls")],
-      proc { $PokemonSystem.rocketballsteal },
-      proc { |value| $PokemonSystem.rocketballsteal = value },
-      [
-        "Rocket Balls won't steal Trainer’s Pokémon",
-        "Rocket Balls can steal Trainer’s Pokémon",
-        "Any Ball can steal Trainer’s Pokémon"
-      ]
+    proc { $PokemonSystem.rocketballsteal },
+    proc { |value| $PokemonSystem.rocketballsteal = value },
+    ["Rocket Balls don't steal Pokemons.",
+    "Rocket Balls can steal Pokemons.",
+    "Every Balls can steal Pokemons."]
     )
-
     options << SliderOption.new(_INTL("Trainer Exp. Boost"), 0, 1000, 50,
-      proc { $PokemonSystem.trainerexpboost },
-      proc { |value| $PokemonSystem.trainerexpboost = value },
-      "+x% | Boost Exp gained from Trainer battles (default +50%)"
+                      proc { $PokemonSystem.trainerexpboost },
+                      proc { |value| $PokemonSystem.trainerexpboost = value },
+                      "+x% | Boosts exp. gained in trainer battles (Default: +50%)"
     )
-
     options << EnumOption.new(_INTL("K-Eggs Fusion Pool"), [_INTL("Off"), _INTL("On")],
-      proc { $PokemonSystem.kurayeggs_fusionpool },
-      proc { |value| $PokemonSystem.kurayeggs_fusionpool = value },
-      [
-        "If a K-Egg hatches a fusion, the second half is random",
-        "If a K-Egg hatches a fusion, the second half is limited to K-Egg pool"
-      ]
+    proc { $PokemonSystem.kurayeggs_fusionpool },
+    proc { |value| $PokemonSystem.kurayeggs_fusionpool = value },
+    ["In case of fusion, the other Pokemon is random.",
+    "In case of fusion, the other Pokemon must be from k-egg's pool as well."]
     )
     options << EnumOption.new(_INTL("K-Eggs Rarity"), [_INTL("On"), _INTL("Off")],
-      proc { $PokemonSystem.kurayeggs_rarity },
-      proc { |value| $PokemonSystem.kurayeggs_rarity = value },
-      [
-        "Pokémon with lower catch rates are rarer from K-Eggs",
-        "All Pokémon have the same chance from K-Eggs"
-      ]
+    proc { $PokemonSystem.kurayeggs_rarity },
+    proc { |value| $PokemonSystem.kurayeggs_rarity = value },
+    ["Pokemons' rarity in k-eggs depend of their catch rate.",
+    "All Pokemons have the same odds to come from the k-eggs."]
     )
     options << SliderOption.new(_INTL("K-Eggs Fusion Odds"), 0, 100, 1,
-      proc { $PokemonSystem.kurayeggs_fusionodds },
-      proc { |value| $PokemonSystem.kurayeggs_fusionodds = value },
-      "x% chance a K-Egg spawns a fused Pokémon (default 20%)"
+                      proc { $PokemonSystem.kurayeggs_fusionodds },
+                      proc { |value| $PokemonSystem.kurayeggs_fusionodds = value },
+                      "x% | Probability that a fusion hatches from Kuray Eggs (Default: 20%)"
     )
     options << EnumOption.new(_INTL("K-Eggs Usage"), [_INTL("Pokemon"), _INTL("Egg")],
-      proc { $PokemonSystem.kurayeggs_instanthatch },
-      proc { |value| $PokemonSystem.kurayeggs_instanthatch = value },
-      [
-        "Using a Kuray Egg item directly spawns a Pokémon",
-        "Using a Kuray Egg item spawns an Egg that must be hatched"
-      ]
+    proc { $PokemonSystem.kurayeggs_instanthatch },
+    proc { |value| $PokemonSystem.kurayeggs_instanthatch = value },
+    ["When Kuray Egg item used, spawns a Pokemon.",
+    "When Kuray Egg item used, spawns an Egg that contains a Pokemon."]
     )
     options << SliderOption.new(_INTL("K-Eggs Rewards"), 0, 10, 1,
-      proc { $PokemonSystem.gymrewardeggs },
-      proc { |value| $PokemonSystem.gymrewardeggs = value },
-      "Number of free K-Eggs obtained from each Gym unlock (default 3)"
+                      proc { $PokemonSystem.gymrewardeggs },
+                      proc { |value| $PokemonSystem.gymrewardeggs = value },
+                      "Numbers of obtained K-Eggs upon unlocking each one through progression (Default: 3)"
     )
 
     return options
   end
-
 end
-
 
 
 #===============================================================================
