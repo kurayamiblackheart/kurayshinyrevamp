@@ -1,0 +1,674 @@
+[
+    {
+        "id": "activeblueF",
+        "name": "Blue Activewear (F)",
+        "description": "A feminine, blue, sporty outfit that's easy to move in. The perfect outfit for an athlete.",
+        "len": 90,
+        "done": "yes",
+        "price": 3500,
+        "tags": "goldenrod",
+        "howToGet": "triathlon quest?"
+    },
+    {
+        "id": "activeblueM",
+        "name": "Blue Activewear (M)",
+        "description": "A masculine, blue, sporty outfit that's easy to move in. The perfect outfit for an athlete.",
+        "len": 91,
+        "done": "yes",
+        "price": 3500,
+        "tags": "goldenrod",
+        "howToGet": "triathlon quest?"
+    },
+    {
+        "id": "activegreenF",
+        "name": "Green Activewear (F)",
+        "description": "A feminine, green, sporty outfit that's easy to move in. The perfect outfit for an athlete.",
+        "len": 91,
+        "done": "yes",
+        "price": 3500,
+        "tags": "goldenrod",
+        "howToGet": "triathlon quest?"
+    },
+    {
+        "id": "activegreenM",
+        "name": "Green Activewear (M)",
+        "description": "A masculine, green, sporty outfit that's easy to move in. The perfect outfit for an athlete.",
+        "len": 92,
+        "done": "yes",
+        "price": 3500,
+        "tags": "goldenrod",
+        "howToGet": "triathlon quest?"
+    },
+    {
+        "id": "activeredF",
+        "name": "Red Activewear (F)",
+        "description": "A feminine, red, sporty outfit that's easy to move in. The perfect outfit for an athlete.",
+        "len": 89,
+        "done": "yes",
+        "price": 3500,
+        "tags": "goldenrod",
+        "howToGet": "triathlon quest?"
+    },
+    {
+        "id": "activeredM",
+        "name": "Red Activewear (M)",
+        "description": "A masculine, red, sporty outfit that's easy to move in. The perfect outfit for an athlete.",
+        "len": 90,
+        "done": "yes",
+        "price": 3500,
+        "tags": "goldenrod",
+        "howToGet": "triathlon quest?"
+    },
+    {
+        "id": "adventurer_f",
+        "name": "Adventurer Gear (F)",
+        "description": "A rugged feminine outfit, perfect for adventuring out into the wilderness.",
+        "len": 74,
+        "done": "yes",
+        "price": 3500,
+        "tags": "fuchsia",
+        "howToGet": "city exclusive outfit"
+    },
+    {
+        "id": "adventurer_m",
+        "name": "Adventurer Gear (M)",
+        "description": "A rugged masculine outfit, perfect for adventuring out into the wilderness.",
+        "len": 75,
+        "done": "yes",
+        "price": 3500,
+        "tags": "fuchsia",
+        "howToGet": "city exclusive outfit"
+    },
+    {
+        "id": "bikertraineroutfit",
+        "name": "Biker Outfit",
+        "description": "A rugged outfit made of leather and jeans. It's often worn by bikers. ",
+        "len": 70,
+        "done": "yes",
+        "price": 4500,
+        "tags": "celadon",
+        "howToGet": "city exclusive outfit"
+    },
+    {
+        "id": "bughakama",
+        "name": "Bug Hakama Dress",
+        "description": "A traditionnal looking hakama dress, that captures the essence of bug-type Pokémon, complete with a bug-catching net!",
+        "done": "yes",
+        "price": 10000,
+        "tags": "azalea,special,",
+        "howToGet": "type trainer"
+    },
+    {
+        "id": "bughakamapants",
+        "name": "Bug Hakama Pants",
+        "description": "A traditionnal looking pair of hakama pants that capture the essence of bug-type Pokémon, complete with a bug-catching net!",
+        "done": "yes",
+        "price": 10000,
+        "tags": "azalea,special,",
+        "howToGet": "type trainer"
+    },
+    {
+        "id": "BusinessSuit",
+        "name": "Business Suit",
+        "description": "A classy, professional-looking business suit.",
+        "len": 45,
+        "done": "yes",
+        "price": 6000,
+        "tags": "saffron"
+    },
+    {
+        "id": "cardigandress",
+        "name": "Cardigan Dress",
+        "description": "A brown cardigan worn over a white shirt with a skirt for a clean and professional appearance.",
+        "done": "yes",
+        "price": 2000,
+        "tags": "default"
+    },
+    {
+        "id": "cloak",
+        "name": "Black Cloak Dress",
+        "description": "A mysterious long black cloak or dress, worn over black leggings.",
+        "len": 65,
+        "done": "yes",
+        "price": 10000,
+        "tags": "lavender,",
+        "howToGet": "city exclusive outfit"
+    },
+    {
+        "id": "cresseliadress",
+        "name": "Lunar Dress",
+        "description": "A whimsical dress that is inspired by the legendary Pokémon Cresselia.",
+        "done": "yes",
+        "price": 25000,
+        "tags": "pokemon-cresselia"
+    },
+    {
+        "id": "deadlypoisondanger",
+        "name": "Poison Outfit",
+        "description": "A noxious-looking outfit for those who handle deadly poisons. It captures the essence of Poison-type Pokémon.",
+        "price": 10000,
+        "tags": "type-poison,special"
+    },
+    {
+        "id": "delinquentoutfit",
+        "name": "Delinquent Outfit",
+        "price": 8000,
+        "tags": "violet,",
+        "howToGet": "city exclusive outfit"
+    },
+    {
+        "id": "dragonconqueror",
+        "name": "Dragon Outfit",
+        "description": "The extravagant outfit of a conquerer. It captures the essence of Dragon-type Pokémon.",
+        "price": 10000,
+        "tags": "type-dragon,special"
+    },
+    {
+        "id": "electriccasual",
+        "name": "Electric Outfit",
+        "description": "A casual outfit themed around the Electric type.",
+        "len": 48,
+        "done": "yes",
+        "price": 10000,
+        "tags": "type-electric,special"
+    },
+    {
+        "id": "emeraldSPE",
+        "name": "Emerald Gear",
+        "description": "A floaty jacket inspired by the color scheme of Spinarak.",
+        "done": "yes",
+        "price": 6000,
+        "tags": "azalea,pokemon-spinarak,pokemon-ariados,",
+        "howToGet": "found at sky pillar"
+    },
+    {
+        "id": "fantasyadventurersoutfit",
+        "name": "Traveller Outfit",
+        "done": "yes",
+        "price": 0,
+        "tags": "special,",
+        "howToGet": "Given by exotic pokemon quest npc after completing all the quests"
+    },
+    {
+        "id": "figthing",
+        "name": "Fighting Outfit",
+        "description": "A sportsy outfit that is liked by those who practice martial arts. It captures the essence of Fighting-type Pokémon.",
+        "done": "yes",
+        "tags": "type-fighting,special"
+    },
+    {
+        "id": "fire",
+        "name": "Fire Outfit",
+        "description": "A fire-proof outfit that captures the essence of fire-type Pokémon.",
+        "tags": "type-fire,special"
+    },
+    {
+        "id": "floraldress",
+        "name": "Floral Dress",
+        "description": "A sleeveless dress adorned with a vibrant floral pattern.",
+        "done": "yes",
+        "price": 3500,
+        "tags": "celadon",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "flowerjumper",
+        "name": "Flower Jumper",
+        "description": "A jumper suit with a beautiful floral pattern.",
+        "done": "yes",
+        "price": 4000,
+        "tags": "celadon",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "fusionnerd",
+        "name": "Fusion Outfit",
+        "done": "yes",
+        "price": 0,
+        "tags": "pokemon-fused,special,",
+        "howToGet": "cinnabar lab after fusing 100 times"
+    },
+    {
+        "id": "gothhoodie",
+        "name": "Goth Hoodie",
+        "description": "A dark, oversized hoodie with a skull emblem, paired with ripped leggings for expressing your inner rebel.",
+        "done": "yes",
+        "price": 3500,
+        "tags": "lavender"
+    },
+    {
+        "id": "groundcowboy",
+        "name": "Ground Outfit",
+        "description": "A rugged cowboy outfit with earthy tones that captures the essence of the Ground type.",
+        "price": 10000,
+        "tags": "type-ground",
+        "howToGet": "type trainer"
+    },
+    {
+        "id": "gymwear",
+        "name": "Gymwear",
+        "description": "Form fitting gym clothes that accentuate a trainer's rippling musculature.",
+        "len": 74,
+        "price": 15000,
+        "tags": "pokemon-machop,pokemon-machoke,pokemon-machamp",
+        "howToGet": "type trainer"
+    },
+    {
+        "id": "happinysuit",
+        "name": "Happiny Costume",
+        "description": "A pink outfit with white eggs, made to ressemble a Happiny costume.",
+        "len": 67,
+        "done": "yes",
+        "price": 15000,
+        "tags": "pokemon-happiny,pokemon-chansey,pokemon-blissey"
+    },
+    {
+        "id": "HexManiac",
+        "name": "Hex Maniac Dress",
+        "description": "A dark purple vintage dress. It's often worn by Hex Maniacs.",
+        "len": 60,
+        "done": "yes",
+        "price": 3500,
+        "tags": "lavender",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "ho-oh",
+        "name": "Rainbow Outfit",
+        "description": "A vibrant, colorfoul outfit inspired by the legendary Pokémon Ho-Oh.",
+        "done": "yes",
+        "price": 25000,
+        "tags": "pokemon-hooh",
+        "howToGet": "saffron boutique exclusive"
+    },
+    {
+        "id": "hoodie",
+        "name": "Hoodie",
+        "description": "A cozy hoodie, perfect for a laid-back trainer who likes to keep things casual.",
+        "done": "yes",
+        "price": 2000,
+        "tags": "default"
+    },
+    {
+        "id": "iceoutfit",
+        "name": "Ice Outfit",
+        "price": 10000,
+        "tags": "type-ice,"
+    },
+    {
+        "id": "indigoicebeams",
+        "name": "Hockey Jersey",
+        "description": "An outfit themed around the Indigo Ice Beams hockey team. Go Indigos!",
+        "len": 69,
+        "price": 4500,
+        "tags": "mahogany",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "lady",
+        "name": "Summer Dress",
+        "description": "An elegant white dress with a ribbon at the waist, radiating a sense of grace and sophistication.",
+        "done": "yes",
+        "price": 1500,
+        "tags": "cerulean",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "lass",
+        "name": "Yellow School Dress",
+        "description": "A yellow blouse with puffed sleeves and a black skirt, styled as a traditional school uniform.",
+        "done": "yes",
+        "price": 1500,
+        "tags": "pewter",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "lass2",
+        "name": "Blue School Dress",
+        "description": "A white blouse with puffed sleeves and a blue skirt, styled as a traditional school uniform.",
+        "done": "yes",
+        "price": 1500,
+        "tags": "cerulean",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "leaf",
+        "name": "Tank Top & Skirt",
+        "description": "Your favourite blue tank and red skirt that you always wear on adventures!",
+        "len": 74,
+        "done": "yes",
+        "price": 0,
+        "howToGet": "starting outfit"
+    },
+    {
+        "id": "longshirtskirt",
+        "name": "Long Shirt & Skirt",
+        "description": "A casual long shirt that's colored like a Pokéball, worn with a black frilled skirt.",
+        "done": "yes",
+        "price": 2000,
+        "tags": "default",
+        "howToGet": "default outfit in shops"
+    },
+    {
+        "id": "luluskirt",
+        "name": "Red Pinafore",
+        "description": "A bright red pinafore worn over a white shirt.",
+        "len": 46,
+        "done": "yes",
+        "price": 3500,
+        "tags": "vermillion",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "lycanrochooddown",
+        "name": "Lycanroc Coat (Hooded)",
+        "price": 18000,
+        "tags": "pokemon-rockruff,pokemon-lycanroc_d,pokemon-lycanroc_n,"
+    },
+    {
+        "id": "lycanrochoodup",
+        "name": "Lycanroc Coat",
+        "price": 18000,
+        "tags": "pokemon-rockruff,pokemon-lycanroc_d,pokemon-lycanroc_n,"
+    },
+    {
+        "id": "marshweater",
+        "name": "Marshweater",
+        "description": "A comfortable sweater designed to look like a Marshtomp.",
+        "done": "yes",
+        "price": 15000,
+        "tags": "pokemon-mudkip,pokemon-marshtomp,pokemon-swampert,"
+    },
+    {
+        "id": "mikufairyf",
+        "name": "Fairy Outfit (F)",
+        "description": "A whimsical pastel sweater and skirt that capture the essence of the Fairy type.",
+        "done": "yes",
+        "price": 10000,
+        "tags": "type-fairy,special,",
+        "howToGet": "type trainer (fairy)"
+    },
+    {
+        "id": "mikufairym",
+        "name": "Fairy Outfit (M)",
+        "description": "A light pastel sweater and tailored pants that capture the essence of the Fairy type.",
+        "done": "yes",
+        "price": 10000,
+        "tags": "type-fairy,special,",
+        "howToGet": "type trainer (fairy)"
+    },
+    {
+        "id": "normal",
+        "name": "Normal Outfit",
+        "description": "A brown jacket with a scarf that capture the essence of the Normal-type.",
+        "price": 10000,
+        "tags": "type-normal,special,"
+    },
+    {
+        "id": "officeworkerf",
+        "name": "Office Worker (F)",
+        "description": "A classy, professional-looking pink business suit and pencil skirt.",
+        "len": 67,
+        "done": "yes",
+        "price": 3000,
+        "howToGet": "found in silph. co"
+    },
+    {
+        "id": "officeworkerm",
+        "name": "Office Worker (M)",
+        "description": "A sharp white button-up shirt with a tie that offers a polished and professional look.",
+        "done": "yes",
+        "price": 3000,
+        "howToGet": "found in silph. co"
+    },
+    {
+        "id": "pajamas",
+        "name": "Pink Pyjamas",
+        "description": "Comfy pink pyjamas with a Poké Ball logo on the shirt.",
+        "len": 54,
+        "done": "yes",
+        "price": 2000,
+        "tags": "default",
+        "howToGet": "starting outfit?"
+    },
+    {
+        "id": "pikajamas",
+        "name": "Pikachu Pyjamas",
+        "description": "Comfy blue pyjamas with a Pikachu print.",
+        "len": 40,
+        "done": "yes",
+        "price": 0,
+        "tags": "pokemon-pichu,pokemon-pikachu,pokemon-raichu,",
+        "howToGet": "starting outfit?"
+    },
+    {
+        "id": "pikaonesie",
+        "name": "Pikachu Onesie",
+        "description": "A cozy onesie designed to look like Pikachu.",
+        "done": "yes",
+        "price": 4000,
+        "howToGet": "bill"
+    },
+    {
+        "id": "PKMBreeder",
+        "name": "Breeder Outfit",
+        "done": "yes",
+        "price": 15000,
+        "tags": "special,",
+        "howToGet": "Quest"
+    },
+    {
+        "id": "poison",
+        "name": "Venomous Vest (M)",
+        "done": "yes",
+        "price": 3500,
+        "tags": "azalea,",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "poison2",
+        "name": "Poison Outfit",
+        "price": 15000,
+        "tags": "fuchsia,",
+        "howToGet": "type trainer"
+    },
+    {
+        "id": "poisonf",
+        "name": "Venomous Vest (F)",
+        "done": "yes",
+        "price": 3500,
+        "tags": "azalea,",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "Ramos",
+        "name": "Gardener Outfit",
+        "description": "An outfit worn by gardeners. It was popularized by a certain Gym Leader from the Kalos region.",
+        "tags": "kalos,",
+        "howToGet": "regional set"
+    },
+    {
+        "id": "red",
+        "name": "Red jacket and Jeans",
+        "description": "Your favourite red jacket and jeans that you always wear on adventures!",
+        "len": 71,
+        "done": "yes",
+        "price": 0,
+        "howToGet": "starting outfit"
+    },
+    {
+        "id": "richboy",
+        "name": "Luxury Suit (Light)",
+        "description": "A sharp, white suit that screams luxury and confidence for trainers who likes to win in style.",
+        "done": "yes",
+        "price": 3500,
+        "tags": "goldenrod",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "richboy2",
+        "name": "Luxury Suit (Dark)",
+        "description": "A sharp, dark suit that screams luxury and confidence for trainers who likes to win in style.",
+        "done": "yes",
+        "price": 3500,
+        "tags": "goldenrod",
+        "howToGet": "city-exclusive outfit"
+    },
+    {
+        "id": "rocketf",
+        "name": "Team Rocket Uniform (F)",
+        "description": "The feminine version of the Team Rocket uniform every Grunt wears.",
+        "len": 66,
+        "done": "yes",
+        "price": 0,
+        "howToGet": "nugget bridge recruiter"
+    },
+    {
+        "id": "rocketm",
+        "name": "Team Rocket Uniform (M)",
+        "description": "The masculine version of the Team Rocket uniform every Grunt wears.",
+        "len": 67,
+        "done": "yes",
+        "price": 0,
+        "howToGet": "nugget bridge recruiter"
+    },
+    {
+        "id": "roseradeF",
+        "name": "Roserade Suit (F)",
+        "description": "A feminine green suit resembling a Roserade.",
+        "len": 44,
+        "done": "yes",
+        "price": 12000,
+        "tags": "pokemon-budew,pokemon-roserade,pokemon-roselia,celadon"
+    },
+    {
+        "id": "roseradeM",
+        "name": "Roserade Suit (M)",
+        "description": "A masculine green suit resembling a Roserade.",
+        "len": 45,
+        "done": "yes",
+        "price": 12000,
+        "tags": "pokemon-budew,pokemon-roserade,pokemon-roselia,celadon"
+    },
+    {
+        "id": "sandshrewoutfit",
+        "name": "Sandshrew Outfit",
+        "description": "A pants and cape set designed with a texture mimicking Sandshrew's hide that allows you to easily blend in with desert environments.",
+        "done": "yes",
+        "price": 12000,
+        "tags": "pokemon-sandshrew,pokemon-sandslash,"
+    },
+    {
+        "id": "slowsuit",
+        "name": "Slow Suit",
+        "description": "The ultimate chill costume, complete with a giant shell chomping on your tail.",
+        "done": "yes",
+        "price": 12000,
+        "tags": "pokemon-slowpoke,pokemon-slowbro,pokemon-slowking"
+    },
+    {
+        "id": "SnowCoatFemale",
+        "name": "Blue Snow Coat (F)",
+        "description": "A warm blue coat, red skirt, leggins and boots, perfect for cold weather.",
+        "len": 73,
+        "done": "yes",
+        "price": 5000,
+        "tags": "mahogany,crimson,",
+        "howToGet": "given by npc at the gap at the ice mountains, or sold at a lil stand there?"
+    },
+    {
+        "id": "SnowCoatMale",
+        "name": "Red Snow Coat (M)",
+        "description": "A warm red coat, jeans and boots, perfect for cold weather.",
+        "len": 59,
+        "done": "yes",
+        "price": 5000,
+        "tags": "mahogany,crimson,",
+        "howToGet": "given by npc at the gap at the ice mountains, or sold at a lil stand there?"
+    },
+    {
+        "id": "splicer",
+        "name": "Splicer Outfit",
+        "done": "yes",
+        "price": 10000,
+        "tags": "pokemon-fused"
+    },
+    {
+        "id": "startfit1",
+        "name": "Black Shirt & Jeans",
+        "description": "Black jeans and a black shirt with a Poké Ball on the front.",
+        "len": 60,
+        "done": "yes",
+        "price": 2000,
+        "tags": "default",
+        "howToGet": "starting outfit?"
+    },
+    {
+        "id": "steelworkerF",
+        "name": "Steel Outfit (F)",
+        "description": "A sturdy jumpsuit giving off a strong, industrial vibe that captures the essence of the Steel type.",
+        "done": "yes",
+        "price": 10000,
+        "tags": "type-steel,special",
+        "howToGet": "type trainer (steel)"
+    },
+    {
+        "id": "steelworkerM",
+        "name": "Steel Outfit (M)",
+        "description": "A rugged jumpsuit giving off a strong, industrial vibe that captures the essence of the Steel type.",
+        "done": "yes",
+        "price": 10000,
+        "tags": "type-steel,special",
+        "howToGet": "type trainer (steel)"
+    },
+    {
+        "id": "summerdress",
+        "name": "Summer Dress",
+        "description": "A light, breezy summer dress, perfect for strolls in sunny fields or along the beach.",
+        "done": "yes",
+        "price": 1500,
+        "tags": "default"
+    },
+    {
+        "id": "urbanelectric",
+        "name": "Electric Outfit",
+        "done": "yes",
+        "price": 10000,
+        "tags": "type-electric,special,",
+        "howToGet": "type trainer"
+    },
+    {
+        "id": "VeteranM",
+        "name": "Veteran Trenchcoat",
+        "description": "A heavy black trenchcoat, often worn by Veteran trainers.",
+        "len": 57,
+        "done": "yes",
+        "price": 22000,
+        "tags": "crimson"
+    },
+    {
+        "id": "waterdress",
+        "name": "Water Dress",
+        "description": "A stylish dress that captures the essence of Water-type Pokémon.",
+        "price": 10000,
+        "tags": "type-water,special",
+        "howToGet": "type trainer"
+    },
+    {
+        "id": "yellowSPEoutfit",
+        "name": "Yellow Qipao",
+        "description": "A yellow qipao worn over pants. It's popular with fledgling trainers in Kanto.",
+        "len": 78,
+        "done": "yes",
+        "price": 3000,
+        "tags": "pewter"
+    },
+    {
+        "id": "youngster",
+        "name": "Youngster Outfit",
+        "description": "An orange tank top and shorts that's often worn by youngsters around the region.",
+        "price": 1500,
+        "tags": "pewter",
+        "howToGet": "city-exclusive outfit"
+    }
+]

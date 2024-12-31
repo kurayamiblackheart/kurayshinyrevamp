@@ -22,8 +22,8 @@ Zeak6464 (Kanto Map pack) http://www.pokecommunity.com/showthread.php?t=345591
 #	Story / Dialogies	#
 #################################
 Frogman 
-The story and dialogues were based off Pokémon Red and Blue, as well as
-Pokémon Gold and Silver. Both games are made by Game Freak.
+The story and dialogues were based off Pokï¿½mon Red and Blue, as well as
+Pokï¿½mon Gold and Silver. Both games are made by Game Freak.
 
 ###########################################################
 ###	Fusion Sprites										###
@@ -83,7 +83,7 @@ CharIotte#8096, zitlezoan#9314, LordHDes#9807, Omasunner#1386, Hubercioch#2595, 
 Jaggedthorn#5446, coin coin#1267, DerD4nnY#6878, deetah#5572, Zypher31#5048, Yeticrossing#6549, 
 Teebreaker#2095, Romani Peace#5089, Bearmeme#1068, alexander1934#5599, Swagouille#3714, Rah_123#9893, 
 K3R0#8248, BungaloFury#7456, 1.Ghastly-Fox#6648, .panix#4390, Ulematome#0696, silvverserpent#9904, 
-Setteduetto#2592, Rhodric#8638, ClawsHDi#4608, Wœtrœ#4935, TimelessShrine#3671, Jordanos#4570, 
+Setteduetto#2592, Rhodric#8638, ClawsHDi#4608, Wï¿½trï¿½#4935, TimelessShrine#3671, Jordanos#4570, 
 Garhall#0148, Bromancer#7220, Torch#9606, toad#0892, Phoenix99125#0873, Mei ??????#8634, 
 Dafaillord#2870, Carolus#7694, Alic(ub(e))#5067, ZeoMaddox#7022, Yep, it's Caio#2377, TM#7724, 
 Sjoba_sheep#3338, Rath#5557, Newfi Cheese#0429, Kveykva#4921, Kumo (Uh-hmmm)#5974, Just_A_Husk#8070, 
@@ -91,10 +91,10 @@ Jigokuro#5094, Dynte#0539, Dree#6123, SpleensJuice#7677, Helium#0512, GimmeTheBe
 Chogolatine#0418, BrianTNT#0151, Persephone#6234, Okamical#7568, Kid Caliban#8938, DurchBurch#5530, 
 Vaporwave Capybara#2820, pursuji#8620, PinkPoffin#6403, Klutter#4451, H4R-P#0001, Blissful Moose#7601, 
 BigTimeAng#4614, wooloo#6925, Vietco#0665, TJTL33#9056, Sahxyel#2827, RubyRed1203#4517, Rice_Farmer#3642,
-Matéo#1983, Elle#7960, DanniWins#2794, CrazeBanana#6943, Aurange#8320, A_nnoying#9360, 
+Matï¿½o#1983, Elle#7960, DanniWins#2794, CrazeBanana#6943, Aurange#8320, A_nnoying#9360, 
 TheHackingRotom#7365, SpaceSR#5015, Serreor#6487, Scooch#5241, Risharcuterie#2982, Litanas#1153, 
 Kaegro#3029, Iustinus Tempus#9548, Holina#3742, Gor_Asgardian#8359, FatalFinish#0618, 1BadGTO#1642,
-?????????????? ????#9211, LuÐø.#1932, WarMonger#6579, Spriter#1548, Scrafter#5868, Prince De Lu#8567, 
+?????????????? ????#9211, Luï¿½ï¿½.#1932, WarMonger#6579, Spriter#1548, Scrafter#5868, Prince De Lu#8567, 
 Morphling#0001, Lie#2037, Jezza#0621, I'm Yoshi#9102, Fergul#0690, eblair#7032, BleuSnackBar#7428, 
 Ayko#3269, AndreOffline#6147, Romicron#9231, Pippington#5114, Muggins#0658, Mimikyuke#3868, 
 MikuGoya#5085, LoserUser359#1783, likouns#5496, LedianLover#4426, Jershal Ribbins#6163, HBleach#2567, 
@@ -114,7 +114,7 @@ Meowholic#5433, LuMiraWolf#3615, JopDone#3412, Jaters#2779, Felgrand#3490, Fanta
 Chrisnick64#8967, Bubbline#9700, bort#5617, BluePhoenixAlex#8696, amuseoffirebane#5527, Tenrec#8380, 
 Strix#6463, Snoot#0446, PenguinOfLife#1777, Marmotte5280#7658, KarottenKarl#8670, JunkShaman#7478, 
 Heaven Canceler#3755, FrozenReborns#2316, flabbergasted mega bee#0536, Dingo#0194, Crumbs#8513, 
-Amgis#6748, Zaloran#8106, YokoSpaghetti#5829, Xyrann#3916, Spârda#5449, Potato Q#8506, PlayerName#6665, 
+Amgis#6748, Zaloran#8106, YokoSpaghetti#5829, Xyrann#3916, Spï¿½rda#5449, Potato Q#8506, PlayerName#6665, 
 Monsieur Taser#6242, Misu#4074, leader of the nugget cult#0367, KewlKatKitten#9360, Kevinus98#4114, 
 inbox#1000, HampstaPig#8406, Gab#8558, Flattus Norvegicus#9850, FishyPriest#5286, EyeballSweat#0728, 
 Eisseele#3076, Cub#4366, Conansson#7524, cestlamo#3485, BossTyrant#7450, AzelGriff#8706, 
@@ -130,7 +130,7 @@ Ortheoz#7942, Nymano#6967, Nukes#4014, Nightmeer13#1454, Midnight#9871, MarkTheD
 luigisalad#8550, lizzledpink#6611, Law (The Bear of Bad News)#1653, Hellfalas#6999, Hades Hand#7069, 
 Griever99#1623, gowther#2086, getthedripp#1890, flanne#6632, Doomknight#2447, Developer Pelipper#8851, 
 cub but mildly stupid#4564, CrimsonTy#7051, Cjpid#7996, Chani von Karpa#7869, BWU-Antonio#2379, 
-BUm79#8112, bees#0427, Anzu#5119, AmokomA#5947, .Réserve.#3395, Zaldrick#1039, Yllan#4806, Vewz-#0205, 
+BUm79#8112, bees#0427, Anzu#5119, AmokomA#5947, .Rï¿½serve.#3395, Zaldrick#1039, Yllan#4806, Vewz-#0205, 
 Veegee#6635, Vaatry#1009, Tiamaet#4806, thighs#2408, softsweets#5338, Slappicus#3616, Skargoth#7306, 
 SailorScum#9858, sabrina_the_witch#4746, Riiwarin#2470, Rhys's Pieces#1882, r2-d3po#9944, 
 PopcornKing#0819, Pooshi#6702, Pinxed [HeHim]#5214, Odion#7851, Nynnapaninie#8374, Nadie#4641, 
@@ -140,11 +140,11 @@ JUICE#4388, Jolly (dapper) Prismeon#1104, HiraAkshay#8558, Gladiator_Kraken#4797
 DQL#6149, croag#8681, crankypunk#6640, Consuelo#0664, Chibi Gaming#4876, chaggie#0001, Blaxaroz#0217, 
 blake7x#3726, Biscuit#9560, Bardiel#0243, AntoineXXI#8454, AnOn55#6663, AMELIE#1210, Aloeva#0375, 
 Aelias#5124, Abe#0249, ?? ??????? ?? ???????x??#2558, YungPizzaroll#0195, XBagon#2918, Wonder#2598, 
-Williams#3584, VoryoMHWorld#4492, ULTDude#6421, Théo#4432, tert_14#4277, Solac#9353, sir ferali#4991, 
+Williams#3584, VoryoMHWorld#4492, ULTDude#6421, Thï¿½o#4432, tert_14#4277, Solac#9353, sir ferali#4991, 
 Sequoia#2312, Red#4851, Razhiel_master#9310, Perytoon#6394, OppaiDragon#9155, magnacrabb#1234, 
 ljdz#9595, Literally Mongolia#7111, Le Titou puissant#5687, kpu#6858, Kahan#6555, Hm#0965, gux#7816, 
 Grip#1058, gloy#3170, GebackeneBanane#3898, ExplosiveDruid#0049, Dankey#8323, 
-Chocolatine Révolutionnaire#4829, Blade Wolf#0033, Beniflex#9657, Baecundrop#7523, Amalgame#3432, 
+Chocolatine Rï¿½volutionnaire#4829, Blade Wolf#0033, Beniflex#9657, Baecundrop#7523, Amalgame#3432, 
 ????Alex????#9704, Yorushima#8545, UnicornPrince#4068, Tofuz#0629, Tododas#8917, TJman461#7146, 
 Team Haxley#4549, StarlyCactus#3665, Sarcastic barbarian#3562, Sanic#0823, RoughPuff#7501, Romu#6969, 
 QuiteAMess#9717, Professor C-Dawg#5414, Nagareru#9593, luca3370#2920, KyleThePirahna#3191, KOMAIN#7770,
@@ -205,6 +205,8 @@ with their respective authors' consent
 		Hankiro (Oak backsprite) 		http://s296.photobucket.com/user/Hankiro/media/ProfOakBackSprite.png.html
 		SailorVicious (Prof. Elm OW sprite) 	https://www.deviantart.com/sailorvicious
 		OceansLugiaSpirit (Koga OW sprite)  	http://oceanslugiaspirit.deviantart.com/
+		Wolfang62: https://www.deviantart.com/wolfang62/art/Wimpod-Sprite-Overworld-836704744
+		
 		Knuckles (Kurt OW sprite)
 		UnworthyPie (Bruno and Agatha OW sprites)
 	Battle sprites: 
@@ -214,7 +216,7 @@ with their respective authors' consent
 		UnworthyPie (Bruno battle sprite, Lance backsprite)
 		
 	Triple Fusion sprites
-		Tom spiste grønt
+		Tom spiste grï¿½nt
 		Scrapped Bones
 		Blackboot
 		Kiwi
@@ -244,10 +246,10 @@ with their respective authors' consent
 	TailDoll666100 (Lavender Tower) 	https://www.youtube.com/watch?v=9cijOh7i7KI
 	Team Rocket hideout: Kazune Sawatari 	http://kazune8390.g.ribbon.to/
 						https://www.youtube.com/watch?v=frcGm7DRWX8
-	Silph Co. : sentsinkantéun	https://soundcloud.com/sentsinkanteun/silph-co-remix
+	Silph Co. : sentsinkantï¿½un	https://soundcloud.com/sentsinkanteun/silph-co-remix
 	S.S. Anne			https://soundcloud.com/sentsinkanteun
 
-	Pokémon Infernal Red Natural Green OST - Vermilion City  : Nanashima 	https://www.youtube.com/user/nanashimagalaxy
+	Pokï¿½mon Infernal Red Natural Green OST - Vermilion City  : Nanashima 	https://www.youtube.com/user/nanashimagalaxy
 										https://www.youtube.com/watch?v=m9XKnGRmB18
 
 	Pokemon Powerplant & Pokemon mansion remix: CharizardTheMaster		https://www.youtube.com/watch?v=K3G73gGCabs
@@ -271,7 +273,7 @@ Move animations:
 ###			RPG Maker Scripts		###
 ###########################################################
 
-andracass (Pokémon Reborn)	Compiler optimization
+andracass (Pokï¿½mon Reborn)	Compiler optimization
 Luka S.J.			Elite Battle System
 				Animated Title Screen (modified):
 shiney570 			BW2 Summary script (+ graphics)	http://reliccastle.com/forums/showthread.php?tid=1090
@@ -293,7 +295,7 @@ bo4p5687			Multisave
 
 #### Data sources ###			  
 Bulbapedia (Movesets)
-Project: Generation 6 for Pokémon Essentials (PBS files)
+Project: Generation 6 for Pokï¿½mon Essentials (PBS files)
 	Project Organization:WorldSlayer
 	PBS file editing:
 	mej71,karstictrainer, WorldSlayer, TheDeKay, viperk1, SunakazeKun,Radical Raptr, RPD490, Takyon!, Pokegod7020
