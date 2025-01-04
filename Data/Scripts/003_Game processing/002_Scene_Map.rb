@@ -77,7 +77,12 @@ class Scene_Map
     return RPG::Cache.size >= 100
   end
 
+  def reset_switches_for_map_transfer
+    $game_switches[SWITCH_ILEX_FOREST_SPOOKED_POKEMON] = false
+  end
+
   def transfer_player(cancelVehicles = true)
+    reset_switches_for_map_transfer()
     $game_temp.player_transferring = false
     pbCancelVehicles($game_temp.player_new_map_id) if cancelVehicles
     autofade($game_temp.player_new_map_id)
@@ -242,7 +247,7 @@ class Scene_Map
     @spritesetGlobal.playersprite.updateBitmap
   end
 
-  def reset_map(fadeout = false)
+  def reset_map(fadeout = false,reset_music=true)
     $MapFactory.setup($game_map.map_id)
     $game_player.moveto($game_player.x, $game_player.y)
     $game_player.straighten
@@ -254,7 +259,7 @@ class Scene_Map
       $game_temp.transition_processing = false
       Graphics.transition(20)
     end
-    $game_map.autoplay
+    $game_map.autoplay if reset_music
     Graphics.frame_reset
     Input.update
   end

@@ -3,6 +3,8 @@
 # HTTP utility functions
 #
 #############################
+#
+
 def pbPostData(url, postdata, filename=nil, depth=0)
   if url[/^http:\/\/([^\/]+)(.*)$/]
     host = $1
@@ -38,6 +40,8 @@ def pbPostData(url, postdata, filename=nil, depth=0)
 end
 
 def pbDownloadData(url, filename = nil, authorization = nil, depth = 0, &block)
+  return nil if !downloadAllowed?()
+  echoln "downloading data from #{url}"
   headers = {
     "Proxy-Connection" => "Close",
     "Pragma" => "no-cache",
@@ -55,7 +59,8 @@ end
 def pbDownloadToString(url)
   begin
     data = pbDownloadData(url)
-    return data
+    return data if data
+    return ""
   rescue
     return ""
   end
@@ -83,3 +88,63 @@ def pbPostToFile(url, postdata, file)
   rescue
   end
 end
+
+def serialize_value(value)
+  if value.is_a?(Hash)
+    serialize_json(value)
+  elsif value.is_a?(String)
+    escaped_value = value.gsub(/\\/, '\\\\\\').gsub(/"/, '\\"').gsub(/\n/, '\\n').gsub(/\r/, '\\r')
+    "\"#{escaped_value}\""
+  else
+    value.to_s
+  end
+end
+
+
+def serialize_json(data)
+  #echoln data
+  # Manually serialize the JSON data into a string
+  parts = ["{"]
+  data.each_with_index do |(key, value), index|
+    parts << "\"#{key}\":#{serialize_value(value)}"
+    parts << "," unless index == data.size - 1
+  end
+  parts << "}"
+  return parts.join
+end
+
+
+def downloadAllowed?()
+  return $PokemonSystem.download_sprites==0
+end
+
+def clean_json_string(str)
+  #echoln str
+  #return str if $PokemonSystem.on_mobile
+  # Remove non-UTF-8 characters and unexpected control characters
+  #cleaned_str = str.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+  cleaned_str = str
+  # Remove literal \n, \r, \t, etc.
+  cleaned_str = cleaned_str.gsub(/\\n|\\r|\\t/, '')
+
+  # Remove actual newlines and carriage returns
+  cleaned_str = cleaned_str.gsub(/[\n\r]/, '')
+
+  # Remove leading and trailing quotes
+  cleaned_str = cleaned_str.gsub(/\A"|"\Z/, '')
+
+  # Replace Unicode escape sequences with corresponding characters
+  cleaned_str = cleaned_str.gsub(/\\u([\da-fA-F]{4})/) { |match|
+    [$1.to_i(16)].pack("U")
+  }
+  return cleaned_str
+end
+
+
+
+
+
+
+
+
+

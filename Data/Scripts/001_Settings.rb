@@ -5,8 +5,9 @@
 #==============================================================================#
 module Settings
   # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
-  GAME_VERSION = '6.2.4'
-  IF_VERSION = "6.2.4"
+  GAME_VERSION = '6.4.3'
+  IF_VERSION = "6.4.3"
+  LATEST_GAME_RELEASE = "6.4"
 
   # GAME_VERSION_NUMBER = "0.19.0"
   # Read the VERSION file inside Data folder to get the version number
@@ -27,7 +28,7 @@ module Settings
   FUSION_ICON_SPRITE_OFFSET = 10
 
   #Infinite fusion settings
-  NB_POKEMON = 470
+  NB_POKEMON = 501
   CUSTOM_BASE_SPRITES_FOLDER = "Graphics/BaseSprites/"
   # CUSTOM_BASE_SPRITES_FOLDER = "Graphics/CustomBattlers/customBaseSprites/"
   CUSTOM_BATTLERS_FOLDER = "Graphics/CustomBattlers/"
@@ -35,11 +36,13 @@ module Settings
   BATTLERS_FOLDER = "Graphics/Battlers/"
   DOWNLOADED_SPRITES_FOLDER = "Graphics/temp/"
   DEFAULT_SPRITE_PATH = "Graphics/Battlers/Special/000.png"
-  CREDITS_FILE_PATH = "Data/SPRITE_CREDS"
+  CREDITS_FILE_PATH = "Data/sprites/Sprite Credits.csv"
   VERSION_FILE_PATH = "Data/VERSION"
-  REMOTE_VERSION_FILE_PATH = "Data/REMOTE_VERSION"
-  CUSTOM_SPRITES_FILE_PATH = "Data/CUSTOM_SPRITES"
-  CUSTOM_DEX_ENTRIES_PATH = "Data/dex.json"
+  CUSTOM_SPRITES_FILE_PATH = "Data/sprites/CUSTOM_SPRITES"
+  BASE_SPRITES_FILE_PATH = "Data/sprites/BASE_SPRITES"
+  CUSTOM_DEX_ENTRIES_PATH = "Data/pokedex/dex.json"
+  AI_DEX_ENTRIES_PATH = "Data/pokedex/generated_entries.json"
+  POKEDEX_ENTRIES_PATH = "Data/pokedex/all_entries.json"
 
   BACK_ITEM_ICON_PATH = "Graphics/Items/back.png"
 
@@ -50,10 +53,9 @@ module Settings
   PLAYER_BALL_FOLDER = 'balls'
   PLAYER_TEMP_OUTFIT_FALLBACK = 'temp'
 
-
-  HATS_DATA_PATH = "Data/hats_data.json"
-  HAIRSTYLE_DATA_PATH = "Data/hairstyles_data.json"
-  CLOTHES_DATA_PATH = "Data/clothes_data.json"
+  HATS_DATA_PATH = "Data/outfits/hats_data.json"
+  HAIRSTYLE_DATA_PATH = "Data/outfits/hairstyles_data.json"
+  CLOTHES_DATA_PATH = "Data/outfits/clothes_data.json"
 
   PLAYER_SURFBASE_FOLDER = 'surf_base/'
   OW_SHINE_ANIMATION_ID=25
@@ -63,7 +65,11 @@ module Settings
 
   # HTTP_CONFIGS_FILE_PATH = "Data/Scripts/RemoteUrls.rb"
   HTTP_CONFIGS_FILE_PATH = "Data/Scripts/DownloadedSettings.rb"
-  BASE_POKEMON_SPRITES_REPO_URL = ""
+
+  SPRITES_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/CUSTOM_SPRITES"
+  BASE_SPRITES_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/BASE_SPRITES"
+
+  STARTUP_MESSAGES = ""
   
   MYSTERY_GIFT_KURAY_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/main/Data/MysteryGift.txt"
   MYSTERY_GIFT_KURAY_PATH = "MysteryGift.txt"
@@ -85,19 +91,34 @@ module Settings
   NO_LEVEL_MODE_LEVEL_INCR = 5.8
   NO_LEVEL_MODE_LEVEL_BASE = 6
 
+  SAVEFILE_NB_BACKUPS=10
+
   DISCORD_URL = "https://discord.gg/kuray-hub-1121345297352753243"
   
   PIF_DISCORD_URL = "https://discord.com/invite/infinitefusion"
   WIKI_URL = "https://infinitefusion.fandom.com/"
+
+  AI_ENTRIES_URL = "https://ai-entries.pkmninfinitefusion.workers.dev/"
+  AI_ENTRIES_RATE_MAX_NB_REQUESTS = 10  #Nb. requests allowed in each time window
+  AI_ENTRIES_RATE_TIME_WINDOW = 120    # In seconds
+  AI_ENTRIES_RATE_LOG_FILE = 'Data/pokedex/dex_rate_limit.log'  # Path to the log file
+
+  CUSTOMSPRITES_RATE_MAX_NB_REQUESTS = 15  #Nb. requests allowed in each time window
+  CUSTOMSPRITES_ENTRIES_RATE_TIME_WINDOW = 120    # In seconds
+  CUSTOMSPRITES_RATE_LOG_FILE = 'Data/sprites/sprites_rate_limit.log'  # Path to the log file
+  MAX_NB_SPRITES_TO_DOWNLOAD_AT_ONCE=5
+
+  CUSTOM_SPRITES_REPO_URL = "https://bitbucket.org/infinitefusionsprites/customsprites/raw/main/CustomBattlers/"
+  CUSTOM_SPRITES_NEW_URL = "https://infinitefusion.net/CustomBattlers/"
+
+  BASE_POKEMON_ALT_SPRITES_REPO_URL = "https://bitbucket.org/infinitefusionsprites/customsprites/raw/main/Other/BaseSprites/"
+  BASE_POKEMON_ALT_SPRITES_NEW_URL = "https://infinitefusion.net/Other/BaseSprites/"
 
   RIVAL_STARTER_PLACEHOLDER_SPECIES = :MEW #(MEW)
   VAR_1_PLACEHOLDER_SPECIES = :DIALGA
   VAR_2_PLACEHOLDER_SPECIES = :PALKIA
   VAR_3_PLACEHOLDER_SPECIES = :GIRATINA
   
-  CUSTOMSPRITES_RATE_MAX_NB_REQUESTS = 5  #Nb. requests allowed in each time window
-  CUSTOMSPRITES_ENTRIES_RATE_TIME_WINDOW = 120    # In seconds
-  CUSTOMSPRITES_RATE_LOG_FILE = 'Data/sprites/sprites_rate_limit.log'  # Path to the log file
   Dir.mkdir('Data/sprites') unless File.exists?('Data/sprites')#make sure that this dir exists
 
   RIVAL_STARTER_PLACEHOLDER_VARIABLE = 250
@@ -119,11 +140,10 @@ module Settings
   WONDERTRADE_PUBLIC_KEY = "http://localhost:8080"
 
   MAX_NB_OUTFITS=99
-  DEFAULT_OUTFIT_MALE = "red"
-  DEFAULT_OUTFIT_FEMALE = "leaf"
-  STARTING_OUTFIT = "pikajamas"
 
   OUTFIT_PREVIEW_PICTURE_ID=20
+
+  DEFAULT_TRAINER_CARD_BG="BLUE"
 
   # The generation that the battle system follows. Used throughout the battle
   # scripts, and also by some other settings which are used in and out of battle
@@ -167,6 +187,7 @@ module Settings
   JOHTO_STARTERS = [:CHIKORITA, :CYNDAQUIL, :TOTODILE]
   HOENN_STARTERS = [:TREECKO, :TORCHIC, :MUDKIP]
   SINNOH_STARTERS = [:TURTWIG, :CHIMCHAR, :PIPLUP]
+  KALOS_STARTERS = [:CHESPIN, :FENNEKIN, :FROAKIE]
 
 
   #=============================================================================
@@ -258,7 +279,7 @@ module Settings
   BADGE_FOR_FLY = 3
   BADGE_FOR_STRENGTH = 5
   BADGE_FOR_DIVE = 9
-  BADGE_FOR_WATERFALL = 8
+  BADGE_FOR_WATERFALL = 9
   BADGE_FOR_TELEPORT = 3
   BADGE_FOR_BOUNCE = 8
   BADGE_FOR_ROCKCLIMB = 16
@@ -358,9 +379,12 @@ module Settings
   #   * Name of the graphic, found in the Graphics/Pictures folder.
   #   * The graphic will always (true) or never (false) be shown on a wall map.
   REGION_MAP_EXTRAS = [
-    [0, 51, 16, 15, "mapHiddenBerth", false],
-    [0, 52, 20, 14, "mapHiddenFaraday", false]
+    #[0, 51, 16, 15, "mapHiddenBerth", false],
+    #[0, 52, 20, 14, "mapHiddenFaraday", false]
   ]
+
+  TRIPLE_TYPES = [:QMARKS,:ICEFIREELECTRIC,:FIREWATERELECTRIC,:WATERGROUNDFLYING,:GHOSTSTEELWATER,
+                  :FIREWATERGRASS,:GRASSSTEEL,:BUGSTEELPSYCHIC,:ICEROCKSTEEL]
 
   #=============================================================================
 
@@ -406,10 +430,12 @@ module Settings
   ROAMING_SPECIES = [
     [:ENTEI, 50, 350, 1, "Legendary Birds",ROAMING_AREAS,:Sunny],
     [:B245H243, 50, 341, 1, "Legendary Birds",ROAMING_AREAS,:Storm],
-    [:LATIOS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING,:StrongWinds],
-    [:LATIAS, 50, 602, 0, "Legendary Birds",SEVII_ROAMING,:StrongWinds],
+    [:B379H378, 50, 602, 0, "Legendary Birds",SEVII_ROAMING,:StrongWinds],
+    [:B378H379, 50, 602, 0, "Legendary Birds",SEVII_ROAMING,:StrongWinds],
     [:FEEBAS, 15, 4, 3, "Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)",SEVII_ROAMING,:Rain]
   ]
+
+  PINKAN_ISLAND_MAPS=[51,46,428,531]
 
   #=============================================================================
 
@@ -448,7 +474,8 @@ module Settings
     [484, 50, :AXEW,20,20],             #Safari zone 2
     [485, 50, :DEINO,20,20],            #Safari zone 3
     [486, 50, :LARVITAR,20,20],         #Safari zone 4
-    [487, 50, :BELDUM,20,20],           #Safari zone 5
+    # [487, 50, :BELDUM,20,20],           #Safari zone 5
+    [487, 50, :JANGMOO,20,20],           #Safari zone 5
     [59, 50,  :DUNSPARCE,25,30],        #Rt. 21
     [171, 50, :BIDOOF,2,5],             #Rt. 22
     [143, 50, :RIOLU,25,25],            #Rt. 23
@@ -464,7 +491,8 @@ module Settings
     [265, 50, :KIRLIA,25,30],           #Rt. 34
     [254, 50, :SMEARGLE,25,30],         #Rt. 35
     [267, 50, :SUDOWOODO,25,30],        #Rt. 36
-    [500, 50, :ROSELIA,30,30],          #National Park
+    # [500, 50, :ROSELIA,30,30],          #National Park
+    [500, 50, :FOMANTIS,30,30],          #National Park
     [266, 50, :BRELOOM,30,30],          #Ilex Forest
     [670, 50, :WEAVILE,50,50],          #Ice mountains
     [528, 50, :PYUKUMUKU,20,20],        #Treasure Beach

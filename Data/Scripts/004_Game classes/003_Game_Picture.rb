@@ -57,7 +57,7 @@ class Game_Picture
   #     opacity    : opacity level
   #     blend_type : blend method
   #-----------------------------------------------------------------------------
-  def show(name, origin, x, y, zoom_x, zoom_y, opacity, blend_type)
+  def show(name, origin, x, y, zoom_x=100, zoom_y=100, opacity=255, blend_type=0)
     @name = name
     @origin = origin
     @x = x.to_f

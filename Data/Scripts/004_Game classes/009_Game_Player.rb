@@ -9,7 +9,6 @@ class Game_Player < Game_Character
   attr_accessor :bump_se
   attr_accessor :charsetData
   attr_accessor :encounter_count
-  attr_accessor :outfit_changed
   attr_accessor :x
   attr_accessor :y
 

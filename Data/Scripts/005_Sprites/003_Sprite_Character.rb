@@ -1,10 +1,10 @@
 class BushBitmap
   def initialize(bitmap, isTile, depth)
-    @bitmaps  = []
-    @bitmap   = bitmap
-    @isTile   = isTile
+    @bitmaps = []
+    @bitmap = bitmap
+    @isTile = isTile
     @isBitmap = @bitmap.is_a?(Bitmap)
-    @depth    = depth
+    @depth = depth
     @manual_refresh=false
   end
 
@@ -54,30 +54,56 @@ class BushBitmap
   end
 end
 
-
 def event_is_trainer(event)
   return $game_map.events[event.id] && event.name[/trainer\((\d+)\)/i]
 end
 
-
 class Sprite_Character < RPG::Sprite
   attr_accessor :character
+  attr_accessor :pending_bitmap
+  attr_accessor :bitmap_override
+  attr_accessor :charbitmap
 
   def initialize(viewport, character = nil)
     super(viewport)
-    @character    = character
+    @character = character
     if darknessEffectOnCurrentMap()
       if @character.is_a?(Game_Event)
         $game_map.events[@character.id].erase if event_is_trainer(@character)
       end
     end
+
     @oldbushdepth = 0
     @spriteoffset = false
     if !character || character == $game_player || (character.name[/reflection/i] rescue false)
       @reflection = Sprite_Reflection.new(self, character, viewport)
     end
     @surfbase = Sprite_SurfBase.new(self, character, viewport) if character == $game_player
+    checkModifySpriteGraphics(@character) if @character
     update
+  end
+
+  def checkModifySpriteGraphics(character)
+    return if character == $game_player || !character.name
+    if TYPE_EXPERTS_APPEARANCES.keys.include?(character.name.to_sym)
+      typeExpert = character.name.to_sym
+      setSpriteToAppearance(TYPE_EXPERTS_APPEARANCES[typeExpert])
+    end
+  end
+
+
+
+  def setSpriteToAppearance(trainerAppearance)
+    #return if !@charbitmap || !@charbitmap.bitmap
+    new_bitmap = AnimatedBitmap.new(getBaseOverworldSpriteFilename())#@charbitmap
+    new_bitmap.bitmap = generateNPCClothedBitmapStatic(trainerAppearance)
+    @bitmap_override = new_bitmap
+    updateBitmap
+  end
+
+  def clearBitmapOverride()
+    @bitmap_override = nil
+    updateBitmap
   end
 
   def setSurfingPokemon(pokemonSpecies)
@@ -149,10 +175,14 @@ class Sprite_Character < RPG::Sprite
   end
 
   def refreshOutfit()
-    self.bitmap = getClothedPlayerSprite(true)
+    self.pending_bitmap = getClothedPlayerSprite(true)
   end
-  
+
   def update
+    if self.pending_bitmap
+      self.bitmap = self.pending_bitmap
+      self.pending_bitmap = nil
+    end
     return if @character.is_a?(Game_Event) && !@character.should_update?
     super
     if should_update?
@@ -179,6 +209,7 @@ class Sprite_Character < RPG::Sprite
         @charbitmap.dispose if @charbitmap
 
         @charbitmap = updateCharacterBitmap()
+        @charbitmap= @bitmap_override.clone if @bitmap_override
 
         RPG::Cache.retain('Graphics/Characters/', @character_name, @character_hue) if @charbitmapAnimated = true
         @bushbitmap.dispose if @bushbitmap

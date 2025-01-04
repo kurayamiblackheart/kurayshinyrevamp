@@ -263,3 +263,27 @@ GameData::TerrainTag.register({
                                 :id_number => 23,
                                 :sharpedoObstacle => true
                               })
+
+GameData::TerrainTag.register({
+                                :id => :Grass_alt1,
+                                :id_number => 24,
+                                :shows_grass_rustle => true,
+                                :land_wild_encounters => true,
+                                :battle_environment => :Grass
+                              })
+
+GameData::TerrainTag.register({
+                                :id => :Grass_alt2,
+                                :id_number => 25,
+                                :shows_grass_rustle => true,
+                                :land_wild_encounters => true,
+                                :battle_environment => :Grass
+                              })
+
+GameData::TerrainTag.register({
+                                :id => :Grass_alt3,
+                                :id_number => 26,
+                                :shows_grass_rustle => true,
+                                :land_wild_encounters => true,
+                                :battle_environment => :Grass
+                              })

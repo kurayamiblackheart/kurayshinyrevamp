@@ -141,6 +141,7 @@ end
 
 class DependentEvents
   attr_reader :lastUpdate
+  attr_reader :realEvents
   attr_writer :follows_player
 
   def createEvent(eventData)

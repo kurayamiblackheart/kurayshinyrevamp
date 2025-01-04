@@ -734,8 +734,10 @@ def pbMessageDisplay(msgwindow, message, letterbyletter = true, commandProc = ni
           head = getBasePokemonID(param.to_i, false)
           body = getBasePokemonID(param.to_i, true)
           facewindow.dispose if facewindow
-          path = obtainPokemonSpritePath(body, head, true)
-          facewindow = isFusion ? PictureWindow.new(path) : PictureWindow.new("Graphics/Battlers/#{head}/#{head}.png")
+          #path = obtainPokemonSpritePath(body, head, true) if isFusion
+
+          spriteLoader = BattleSpriteLoader.new
+          facewindow = isFusion ? PictureWindow.new(spriteLoader.load_fusion_sprite(head,body)) : PictureWindow.new(spriteLoader.load_base_sprite(head))
           pbPositionNearMsgWindow(facewindow, msgwindow, :left)
           facewindow.viewport = msgwindow.viewport
           facewindow.z = msgwindow.z
@@ -906,8 +908,10 @@ def pbMessageChooseNumber(message, params, &block)
   return ret
 end
 
+
 def pbShowCommands(msgwindow, commands = nil, cmdIfCancel = 0, defaultCmd = 0)
   return 0 if !commands
+  $PokemonTemp.speechbubble_arrow.visible =false if $PokemonTemp.speechbubble_arrow && !$PokemonTemp.speechbubble_arrow.disposed?
   if defaultCmd == 0 && ($game_variables && $game_variables[VAR_COMMAND_WINDOW_INDEX] != 0)
     defaultCmd = $game_variables[VAR_COMMAND_WINDOW_INDEX]
   end

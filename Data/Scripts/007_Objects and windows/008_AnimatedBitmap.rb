@@ -64,6 +64,19 @@ class AnimatedBitmap
     end
   end
 
+  def setup_from_bitmap(bitmap,hue=0)
+    @path = ""
+    @filename = ""
+    @bitmap = GifBitmap.new("", '', hue)
+    @bitmap.bitmap = bitmap;
+  end
+
+  def self.from_bitmap(bitmap, hue=0)
+    obj = allocate
+    obj.send(:setup_from_bitmap, bitmap, hue)
+    obj
+  end
+
   def pbSetColor(r = 0, g = 0, b = 0, a = 255)
     color = Color.new(r, g, b, a)
     pbSetColorValue(color)
@@ -1054,7 +1067,10 @@ class AnimatedBitmap
   end
   
   def shiftColors(offset = 0)
-    @bitmap = GifBitmap.new(@path, @filename, offset)
+    @bitmap.bitmap.hue_change(offset)
+    # @bitmap = GifBitmap.new(@path, @filename, offset)
+
+    
     # @bitmap = nil
     # newbitmap = GifBitmap.new(@path, @filename, offset)
     # @bitmap = newbitmap.clone
