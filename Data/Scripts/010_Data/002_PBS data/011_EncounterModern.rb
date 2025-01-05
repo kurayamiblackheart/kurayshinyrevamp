@@ -7,7 +7,7 @@ module GameData
     attr_reader :types
 
     DATA = {}
-    DATA_FILENAME = "encounters_modern.dat"
+    DATA_FILENAME = "encounters_remix.dat"
 
     extend ClassMethodsSymbols
     include InstanceMethods

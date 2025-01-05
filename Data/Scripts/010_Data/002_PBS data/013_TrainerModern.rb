@@ -10,7 +10,7 @@ module GameData
     attr_reader :pokemon
 
     DATA = {}
-    DATA_FILENAME = "trainers_modern.dat"
+    DATA_FILENAME = "trainers_remix.dat"
 
     SCHEMA = {
       "Items" => [:items, "*e", :Item],

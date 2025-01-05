@@ -59,16 +59,16 @@ Events.onWildPokemonCreate += proc { |_sender, e|
 # map depend on the levels of Pokémon in the player's party.
 # This is a simple method, and can/should be modified to account for evolutions
 # and other such details.  Of course, you don't HAVE to use this code.
-Events.onWildPokemonCreate += proc { |_sender, e|
-  pokemon = e[0]
-  if $game_map.map_id == 51
-    new_level = pbBalancedLevel($Trainer.party) - 4 + rand(5)   # For variety
-    new_level = new_level.clamp(1, GameData::GrowthRate.max_level)
-    pokemon.level = new_level
-    pokemon.calc_stats
-    pokemon.reset_moves
-  end
-}
+# Events.onWildPokemonCreate += proc { |_sender, e|
+#   pokemon = e[0]
+#   if $game_map.map_id == 51
+#     new_level = pbBalancedLevel($Trainer.party) - 4 + rand(5)   # For variety
+#     new_level = new_level.clamp(1, GameData::GrowthRate.max_level)
+#     pokemon.level = new_level
+#     pokemon.calc_stats
+#     pokemon.reset_moves
+#   end
+# }
 
 # This is the basis of a trainer modifier. It works both for trainers loaded
 # when you battle them, and for partner trainers when they are registered.

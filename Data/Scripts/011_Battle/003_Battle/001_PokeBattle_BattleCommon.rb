@@ -272,8 +272,12 @@ module PokeBattle_BattleCommon
     return 4 if x>=255 || BallHandlers.isUnconditional?(ball,self,battler)
     # Second half of the shakes calculation
     y = (65536 / ((255.0 / x) ** 0.1875)).floor
+
+    #Increased chances of catching if is on last ball
+    isOnLastBall = !$PokemonBag.pbHasItem?(ball)
+    echoln isOnLastBall
     # Critical capture check
-    if Settings::ENABLE_CRITICAL_CAPTURES
+    if isOnLastBall
       c = 0
       numOwned = $Trainer.pokedex.owned_count
       if numOwned > 600;
@@ -282,11 +286,14 @@ module PokeBattle_BattleCommon
         c = x * 4 / 12
       elsif numOwned > 300;
         c = x * 3 / 12
-      elsif numOwned > 150;
+      else;
         c = x * 2 / 12
-      elsif numOwned > 30;
-        c = x / 12
       end
+      # elsif numOwned > 150;
+      #   c = x * 2 / 12
+      # elsif numOwned > 30;
+      #   c = x / 12
+      # end
       # Calculate the number of shakes
       if c > 0 && pbRandom(256) < c
         @criticalCapture = true

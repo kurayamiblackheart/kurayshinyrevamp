@@ -59,7 +59,7 @@ def pbHiddenMoveEvent
 end
 
 def pbCheckHiddenMoveBadge(badge = -1, showmsg = true)
-  return true if badge < 0 # No badge requirement
+  return true if badge < 0 || isOnPinkanIsland() # No badge requirement
   return true if $DEBUG
   if (Settings::FIELD_MOVES_COUNT_BADGES) ? $Trainer.badge_count >= badge : $Trainer.badges[badge]
     return true
@@ -970,9 +970,14 @@ Events.onAction += proc { |_sender, _e|
 Events.onAction += proc { |_sender, _e|
   next if !$game_player.pbFacingTerrainTag.trashcan
   if $PokemonGlobal.stepcount % 25 == 0
-    pbMessage(_INTL("Woah! A Pokémon jumped out of the trashcan!"))
-    pbWildBattle(:TRUBBISH, 10)
-    $PokemonGlobal.stepcount += 1
+    if !hatUnlocked?(HAT_CARDBOARD_BOX) && rand(2) == 0
+      obtainHat(HAT_CARDBOARD_BOX)
+      $PokemonGlobal.stepcount += 1
+    else
+      pbMessage(_INTL("Woah! A Pokémon jumped out of the trashcan!"))
+      pbWildBattle(:TRUBBISH, 10)
+      $PokemonGlobal.stepcount += 1
+    end
   end
 }
 

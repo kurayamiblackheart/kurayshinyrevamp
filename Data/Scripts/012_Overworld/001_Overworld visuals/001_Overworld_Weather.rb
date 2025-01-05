@@ -283,7 +283,7 @@ module RPG
       weather_type = (is_new_sprite) ? @target_type : @type
       # Update visibility/position/opacity of sprite
       if @weatherTypes[weather_type][0].category == :Rain && (index % 2) != 0   # Splash
-        sprite.opacity = (lifetimes[index] < 0.2) ? 255 : 0   # 0.2 seconds
+        sprite.opacity = (lifetimes[index] < 0.4) ? 255 : 0   # 0.4 seconds
       else
         dist_x = @weatherTypes[weather_type][0].particle_delta_x * delta_t
         dist_y = @weatherTypes[weather_type][0].particle_delta_y * delta_t
@@ -321,6 +321,7 @@ module RPG
     end
 
     def update_tile_position(sprite, index)
+      return if $PokemonSystem.on_mobile
       return if !sprite || !sprite.bitmap || !sprite.visible
       sprite.x = (@ox + @tile_x + (index % @tiles_wide) * sprite.bitmap.width).round
       sprite.y = (@oy + @tile_y + (index / @tiles_wide) * sprite.bitmap.height).round

@@ -1678,7 +1678,8 @@ class PokeBattle_Move_0B6 < PokeBattle_Move
        :TECHNOBLAST,      # Genesect (Gen 5)
        :THOUSANDARROWS,   # Zygarde (Gen 6)
        :THOUSANDWAVES,    # Zygarde (Gen 6)
-       :VCREATE           # Victini (Gen 5)
+       :VCREATE,           # Victini (Gen 5)
+       :FAKEMOVE          #not a real move
     ]
   end
 

@@ -326,7 +326,11 @@ Events.onMapChange += proc { |_sender, e|
     $game_screen.weather(:None, 0, 0)
     next
   end
-  $game_screen.weather(new_weather[0], 9, 0) if rand(100) < new_weather[1]
+
+  echoln new_weather
+
+  $game_screen.weather(new_weather[0], 3, 0) if rand(100) < new_weather[1]
+}
 }
 
 # Events.onMapChange += proc { |_sender, e|
@@ -839,19 +843,24 @@ def pbItemBall(item, quantity = 1, item_name = "", canRandom = true)
   move = item.move
   if $PokemonBag.pbStoreItem(item, quantity) # If item can be picked up
     meName = (item.is_key_item?) ? "Key item get" : "Item get"
+    text_color = item.is_key_item? ? "\\c[3]" : "\\c[1]"
+
     if item == :LEFTOVERS
       pbMessage(_INTL("\\me[{1}]You found some \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
     elsif item.is_machine? # TM or HM
       pbMessage(_INTL("\\me[{1}]You found \\c[1]{2} {3}\\c[0]!\\wtnp[30]", meName, itemname, GameData::Move.get(move).name))
     elsif quantity > 1
-      pbMessage(_INTL("\\me[{1}]You found {2} \\c[1]{3}\\c[0]!\\wtnp[30]", meName, quantity, itemname))
+      pbMessage(_INTL("\\me[{1}]You found {2} #{text_color}{3}\\c[0]!\\wtnp[30]", meName, quantity, itemname))
     elsif itemname.starts_with_vowel?
-      pbMessage(_INTL("\\me[{1}]You found an \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
+      pbMessage(_INTL("\\me[{1}]You found an #{text_color}{2}\\c[0]!\\wtnp[30]", meName, itemname))
     else
-      pbMessage(_INTL("\\me[{1}]You found a \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
+      pbMessage(_INTL("\\me[{1}]You found a #{text_color}{2}\\c[0]!\\wtnp[30]", meName, itemname))
     end
     pbMessage(_INTL("You put the {1} away\\nin the <icon=bagPocket{2}>\\c[1]{3} Pocket\\c[0].",
                     itemname, pocket, PokemonBag.pocketNames()[pocket]))
+
+    promptRegisterItem(item)
+    updatePinkanBerryDisplay()
     return true
   end
   # Can't add the item
@@ -897,26 +906,38 @@ def pbReceiveItem(item, quantity = 1, item_name = "", music = nil, canRandom=tru
   pocket = item.pocket
   move = item.move
   meName = (item.is_key_item?) ? "Key item get" : "Item get"
+  text_color = item.is_key_item? ? "\\c[3]" : "\\c[1]"
   if item == :LEFTOVERS
     pbMessage(_INTL("\\me[{1}]You obtained some \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
   elsif item.is_machine? # TM or HM
     if $game_switches[SWITCH_RANDOMIZE_GYMS_SEPARATELY] && $game_switches[SWITCH_RANDOMIZED_GYM_TYPES] && $game_variables[VAR_CURRENT_GYM_TYPE]>-1
-      item=randomizeGymTM(item)
+      item = GameData::Item.get(randomizeGymTM(item))
     end
     pbMessage(_INTL("\\me[{1}]You obtained \\c[1]{2} {3}\\c[0]!\\wtnp[30]", meName, itemname, GameData::Move.get(move).name))
   elsif quantity > 1
-    pbMessage(_INTL("\\me[{1}]You obtained {2} \\c[1]{3}\\c[0]!\\wtnp[30]", meName, quantity, itemname))
+    pbMessage(_INTL("\\me[{1}]You obtained {2} #{text_color}{3}\\c[0]!\\wtnp[30]", meName, quantity, itemname))
   elsif itemname.starts_with_vowel?
-    pbMessage(_INTL("\\me[{1}]You obtained an \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
+    pbMessage(_INTL("\\me[{1}]You obtained an #{text_color}{2}\\c[0]!\\wtnp[30]", meName, itemname))
   else
-    pbMessage(_INTL("\\me[{1}]You obtained a \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
+    pbMessage(_INTL("\\me[{1}]You obtained a #{text_color}{2}\\c[0]!\\wtnp[30]", meName, itemname))
   end
+  promptRegisterItem(item)
   if $PokemonBag.pbStoreItem(item, quantity) # If item can be added
     pbMessage(_INTL("You put the {1} away\\nin the <icon=bagPocket{2}>\\c[1]{3} Pocket\\c[0].",
                     itemname, pocket, PokemonBag.pocketNames()[pocket]))
+    updatePinkanBerryDisplay()
     return true
   end
   return false # Can't add the item
+end
+
+def promptRegisterItem(item)
+  if item.is_key_item? && pbCanRegisterItem?(item)
+    if pbConfirmMessage(_INTL("Would you like to register the \\c[3]{1}\\c[0] in the quick actions menu?",item.name))
+      $PokemonBag.pbRegisterItem(item)
+      pbMessage(_INTL("\\se[{1}]The \\c[3]{2}\\c[0] was registered!", "GUI trainer card open", item.name))
+    end
+  end
 end
 
 def randomizeGymTM(old_item)

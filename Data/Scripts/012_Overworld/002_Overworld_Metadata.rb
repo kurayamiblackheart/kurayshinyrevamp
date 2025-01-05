@@ -56,6 +56,7 @@ class PokemonGlobalMetadata
   attr_accessor :safesave
   #Trainers rematch
   attr_accessor :rematchedTrainers
+  attr_accessor :questRewardsObtained
 
   def initialize
     # Movement
@@ -112,6 +113,7 @@ class PokemonGlobalMetadata
     @pokerusTime          = nil
     # Save file
     @safesave             = false
+    @questRewardsObtained = []
   end
 
   # @deprecated Use {Player#character_ID} instead. This alias is slated to be removed in v20.

@@ -118,8 +118,10 @@ module GameData
     def is_mulch?;           return @type == 11; end
     def is_mega_stone?;      return @type == 12; end   # Does NOT include Red Orb/Blue Orb
 
+    UNTOSSABLE_ITEMS =[:PINKANBERRY,:DYNAMITE, :TM00]
     def is_important?
       return true if is_key_item? || is_HM? || is_TM?
+      return true if UNTOSSABLE_ITEMS.include?(@id)
       return false
     end
 

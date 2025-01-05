@@ -765,5 +765,48 @@ class PokeBattle_Battler
       return @battle.battlers[i] if @battle.battlers[i]
     end
     return @battle.battlers[(@index^1)]
+  end  
+
+  #Changes the form VISUALLY in battles. The species is changed in the equivalent method in Pokemon class
+  def checkHPRelatedFormChange(new_hp)
+    if @ability_id == :SHIELDSDOWN
+      if @pokemon.isFusionOf(:MINIOR_M)
+        if new_hp <= (@totalhp / 2)
+          changeBattlerForm(:MINIOR_M, :MINIOR_C,nil, :SHELLSMASH)
+          @battle.pbDisplay(_INTL("{1} changed to the Core Form!", pbThis))
+        end
+      end
+      if @pokemon.isFusionOf(:MINIOR_C)
+        if new_hp > (@totalhp / 2)
+          changeBattlerForm(:MINIOR_C, :MINIOR_M,nil, :SHELLSMASH)
+          @battle.pbDisplay(_INTL("{1} changed to the Meteor Form!", pbThis))
+        end
+      end
+    end
+  end
+
+
+  def changeBattlerForm(oldForm, newForm,commonAnimation=nil,moveAnimation=nil)
+    @pokemon.changeFormSpecies(oldForm, newForm)
+    if moveAnimation
+      changeFormSpeciesMoveAnimation(oldForm, newForm,moveAnimation)
+    else
+      changeFormSpeciesCommonAnimation(oldForm, newForm, commonAnimation)
+    end
+  end
+
+
+  #These methods only play the animation and change the graphics.
+  # To also change the species, call changeFormSpecies() instead
+  def changeFormSpeciesCommonAnimation(oldForm, newForm, animation = "UltraBurst2")
+    @battle.scene.pbChangePokemon(self, @pokemon)
+    @battle.scene.pbCommonAnimation(animation, self)
+    @battle.scene.pbRefreshOne(@index)
+  end
+
+  def changeFormSpeciesMoveAnimation(oldForm, newForm, moveID=:REFRESH)
+    @battle.scene.pbChangePokemon(self, @pokemon)
+    @battle.scene.pbAnimation(moveID, self,self)
+    @battle.scene.pbRefreshOne(@index)
   end
 end

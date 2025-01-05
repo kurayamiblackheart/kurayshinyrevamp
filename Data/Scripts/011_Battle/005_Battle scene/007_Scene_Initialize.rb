@@ -193,7 +193,9 @@ class PokeBattle_Scene
     y = 410
 
     sprite = IconSprite.new(x,y,@viewport)
-    sprite.setBitmapDirectly(generate_front_trainer_sprite_bitmap())
+
+    allowEasterEggPokeball = pbInSafari? #Never allow except in Safari Zone - add more conditions if needed
+    sprite.setBitmapDirectly(generate_front_trainer_sprite_bitmap(allowEasterEggPokeball))
     sprite.zoom_x=2
     sprite.zoom_y=2
     sprite.z=100 + idxTrainer
@@ -230,6 +232,9 @@ class PokeBattle_Scene
 
     spriteX, spriteY = PokeBattle_SceneConstants.pbTrainerPosition(1, idxTrainer, numTrainers)
     trainer = pbAddSprite("trainer_#{idxTrainer + 1}", spriteX, spriteY, trainerFile, @viewport)
+    spriteOverrideBitmap = setTrainerSpriteOverrides(trainerType)
+    trainer.bitmap = spriteOverrideBitmap if spriteOverrideBitmap
+
     return if !trainer.bitmap
     # Alter position of sprite
     trainer.z = 7 + idxTrainer
@@ -237,6 +242,12 @@ class PokeBattle_Scene
     trainer.oy = trainer.bitmap.height
   end
 
+  def setTrainerSpriteOverrides(trainer_type)
+    if TYPE_EXPERTS_APPEARANCES.keys.include?(trainer_type)
+      return generate_front_trainer_sprite_bitmap_from_appearance(TYPE_EXPERTS_APPEARANCES[trainer_type]).bitmap
+    end
+  end
+  
   def pbCreatePokemonSprite(idxBattler)
     sideSize = @battle.pbSideSize(idxBattler)
     batSprite = PokemonBattlerSprite.new(@viewport, sideSize, idxBattler, @animations)

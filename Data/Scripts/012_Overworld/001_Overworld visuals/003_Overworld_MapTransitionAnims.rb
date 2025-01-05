@@ -84,14 +84,26 @@ end
 def pbStartOver(gameover=false)
   $game_variables[VAR_CURRENT_GYM_TYPE]=-1
   $game_switches[SWITCH_LOCK_PLAYER_MOVEMENT]=false
+  $game_switches[SWITCH_TEAMED_WITH_ERIKA_SEWERS]=false
+
   clear_all_images()
   $game_player.set_opacity(255)
   $game_system.menu_disabled=false
+
   if pbInBugContest?
     pbBugContestStartOver
     return
   end
   $Trainer.heal_party
+  if isOnPinkanIsland()
+    if $game_switches[SWITCH_PINKAN_SIDE_POLICE]
+      pbMessage(_INTL("\\w[]\\wm\\c[8]\\l[3]Hey, are you okay over there? Let me take you back to the dock."))
+    else
+      pbMessage(_INTL("\\w[]\\wm\\c[8]\\l[3]Hey, are you okay over there? Let me take you back to the beach."))
+    end
+    pinkanIslandWarpToStart()
+    return
+  end
   if $PokemonGlobal.pokecenterMapId && $PokemonGlobal.pokecenterMapId>=0
     if gameover
       pbMessage(_INTL("\\w[]\\wm\\c[8]\\l[3]After the unfortunate defeat, you scurry back to a Pokémon Center."))

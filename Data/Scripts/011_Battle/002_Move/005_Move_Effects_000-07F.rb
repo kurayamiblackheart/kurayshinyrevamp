@@ -1769,7 +1769,7 @@ class PokeBattle_Move_060 < PokeBattle_Move
     end
     if !checkedTerrain
       case @battle.environment
-      when :Grass, :TallGrass
+      when :Grass, :TallGrass, :Grass_alt1,:Grass_alt2,:Grass_alt3
         @newType = :GRASS
       when :MovingWater, :StillWater, :Puddle, :Underwater
         @newType = :WATER

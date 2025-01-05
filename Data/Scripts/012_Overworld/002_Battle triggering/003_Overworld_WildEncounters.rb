@@ -15,6 +15,7 @@ class PokemonEncounters
     @step_chances     = {}
     @encounter_tables = {}
     encounter_data = getEncounterMode().get(map_ID, $PokemonGlobal.encounter_version)
+    encounter_data = GameData::Encounter.get(map_ID, $PokemonGlobal.encounter_version) if !encounter_data
     if encounter_data
       encounter_data.step_chances.each { |type, value| @step_chances[type] = value }
       @encounter_tables = Marshal.load(Marshal.dump(encounter_data.types))
@@ -29,6 +30,7 @@ class PokemonEncounters
     if $game_switches && $game_switches[SWITCH_RANDOM_WILD] && $game_switches[SWITCH_RANDOM_WILD_AREA]
       mode= GameData::EncounterRandom
     end
+    echoln mode
     return mode
   end
 
@@ -267,12 +269,17 @@ class PokemonEncounters
   def encounter_type
     time = pbGetTimeNow
     ret = nil
+    terrain_tag = $game_map.terrain_tag($game_player.x, $game_player.y)
     if $PokemonGlobal.surfing
       ret = find_valid_encounter_type_for_time(:Water, time)
     else   # Land/Cave (can have both in the same map)
       if has_land_encounters? && $game_map.terrain_tag($game_player.x, $game_player.y).land_wild_encounters
         ret = :BugContest if pbInBugContest? && has_encounter_type?(:BugContest)
-        ret = find_valid_encounter_type_for_time(:Land, time) if !ret
+        baseType = :Land  #default grass
+        baseType = :Land1 if terrain_tag == :Grass_alt1
+        baseType = :Land2 if terrain_tag == :Grass_alt2
+        baseType = :Land3 if terrain_tag == :Grass_alt3
+        ret = find_valid_encounter_type_for_time(baseType, time) if !ret
       end
       if !ret && has_cave_encounters?
         ret = find_valid_encounter_type_for_time(:Cave, time)

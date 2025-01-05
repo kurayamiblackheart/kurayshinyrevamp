@@ -72,7 +72,7 @@ def pbFishing(hasEncounter,rodType=1)
         break
       end
 
-      itemChance = rand((rodType)*4)
+      itemChance = rand((rodType)*5)
       if itemChance<=1
         #ITEM
         items =  [:PEARL,
@@ -84,7 +84,20 @@ def pbFishing(hasEncounter,rodType=1)
                   :PEARL,
                   :WATERGEM
         ]
-        Kernel.pbItemBall(items[rand(items.size)],1,nil,false)
+        hats = [
+          HAT_SLOWKING_SHELL,
+        ]
+        hatChance = rand(5)
+        if true#hatChance == 0
+          hat = hats.sample
+          if !hasHat?(hat)
+            obtainHat(hat)
+          else
+            Kernel.pbItemBall(items[rand(items.size)],1,nil,false)
+          end
+        else
+          Kernel.pbItemBall(items[rand(items.size)],1,nil,false)
+        end
         Kernel.pbDisposeMessageWindow(msgWindow)
         pbFishingEnd
         $game_player.setDefaultCharName(nil,oldpattern)

@@ -295,7 +295,7 @@ class PokeBattle_Battle
     pbStartBattleSendOut(sendOuts)
     # Weather announcement
     weather_data = GameData::BattleWeather.try_get(@field.weather)
-    echoln @field.weather
+    echoln "Current weather: #{@field.weather}"
 
     pbCommonAnimation(weather_data.animation) if weather_data
     case @field.weather
