@@ -54,6 +54,8 @@ class PokemonEggHatch_Scene
 
   #KurayX sent hatched to PC asking
   def pbMain(eggindex)
+    nb_eggs_hatched = pbGet(VAR_NB_EGGS_HATCHED)
+    pbSet(VAR_NB_EGGS_HATCHED,nb_eggs_hatched+1)
     pbBGMPlay("Evolution")
     # Egg animation
     updateScene(Graphics.frame_rate*15/10)
@@ -255,6 +257,7 @@ Events.onStepTaken += proc { |_sender,_e|
     egglocation += 1
     next if egg.steps_to_hatch <= 0
     egg.steps_to_hatch -= 1
+    egg.steps_to_hatch -= 1 if isWearingClothes(CLOTHES_BREEDER)
     for i in $Trainer.pokemon_party
       next if !i.hasAbility?(:FLAMEBODY) && !i.hasAbility?(:MAGMAARMOR)
       egg.steps_to_hatch -= 1

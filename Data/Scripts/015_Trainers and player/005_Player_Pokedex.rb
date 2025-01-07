@@ -68,6 +68,7 @@ class Player < Trainer
     end
 
     def resync_pokedex
+      echoln "syncing pokedex"
       @seen_standard = resync_standard_pokedex_array(@seen_standard)
       @owned_standard = resync_standard_pokedex_array(@owned_standard)
 
@@ -141,6 +142,7 @@ class Player < Trainer
     end
 
     def set_seen(species, should_refresh_dexes = true)
+      try_resync_pokedex()
       dexNum = getDexNumberForSpecies(species)
       if isTripleFusion(dexNum)
         set_seen_triple(species)

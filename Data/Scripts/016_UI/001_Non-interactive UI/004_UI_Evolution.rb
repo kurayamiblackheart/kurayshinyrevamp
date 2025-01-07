@@ -619,10 +619,12 @@ class PokemonEvolutionScene
     # @pokemon
     # @pokemon.ability
 
-    oldAbility = @pokemon.ability.id
+    # oldAbility = @pokemon.ability.id
+
+    #oldAbility = @pokemon.ability.id if @pokemon.ability
     newSpecies = GameData::Species.get(@newspecies)
 
-    allNewPossibleAbilities = newSpecies.abilities + newSpecies.hidden_abilities
+    # allNewPossibleAbilities = newSpecies.abilities + newSpecies.hidden_abilities
 
     # Modify Pokémon to make it evolved
     if @pokemon.oldkuraycustomfile == @pokemon.kuraycustomfile

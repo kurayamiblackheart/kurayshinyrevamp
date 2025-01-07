@@ -17,9 +17,17 @@ class Player < Trainer
   attr_accessor :unlocked_clothes
   attr_accessor :unlocked_hats
   attr_accessor :unlocked_hairstyles
+  attr_accessor :unlocked_card_backgrounds
 
+  attr_accessor :last_worn_outfit
+  attr_accessor :last_worn_hat
 
   attr_accessor :surfing_pokemon
+
+
+  attr_accessor :card_background
+  attr_accessor :unlocked_card_backgrounds
+
 
   # @return [Array<Boolean>] the player's Gym Badges (true if owned)
   attr_accessor :badges
@@ -62,6 +70,22 @@ class Player < Trainer
     @money = value.clamp(0, Settings::MAX_MONEY)
   end
 
+  def last_worn_outfit
+    if !@last_worn_outfit
+      if pbGet(VAR_TRAINER_GENDER) == GENDER_MALE
+        @last_worn_outfit = DEFAULT_OUTFIT_MALE
+      else
+        @last_worn_outfit = DEFAULT_OUTFIT_FEMALE
+      end
+    end
+    return @last_worn_outfit
+  end
+
+
+  def last_worn_hat
+    return @last_worn_hat
+  end
+
   # Sets the player's coins amount. It can not exceed {Settings::MAX_COINS}.
   # @param value [Integer] new coins value
   def coins=(value)
@@ -71,7 +95,6 @@ class Player < Trainer
 
   def outfit=(value)
     @outfit=value
-    $game_player.outfit_changed=true
   end
 
   def hat=(value)
@@ -80,7 +103,6 @@ class Player < Trainer
     end
     @hat=value
     refreshPlayerOutfit()
-    $game_player.outfit_changed=true
   end
 
   def hair=(value)
@@ -89,7 +111,6 @@ class Player < Trainer
     end
     @hair=value
     refreshPlayerOutfit()
-    $game_player.outfit_changed=true
   end
 
   def clothes=(value)
@@ -98,7 +119,6 @@ class Player < Trainer
     end
     @clothes=value
     refreshPlayerOutfit()
-    $game_player.outfit_changed=true
   end
 
 
@@ -159,6 +179,7 @@ class Player < Trainer
     @surfing_pokemon = species
   end
 
+
   def skin_tone=(value)
     @skin_tone=value
     $scene.reset_player_sprite
@@ -209,6 +230,11 @@ class Player < Trainer
     return @pokedex.owned?(species)
   end
 
+  def can_change_outfit()
+    return false if isOnPinkanIsland()
+    return true
+  end
+
   #=============================================================================
 
   def initialize(name, trainer_type)
@@ -236,5 +262,10 @@ class Player < Trainer
     @new_game_plus_unlocked  =  false
     @new_game_plus         = false
     @surfing_pokemon = nil
+    @last_worn_outfit = nil
+    @last_worn_hat = nil
+
+    @card_background = Settings::DEFAULT_TRAINER_CARD_BG
+    @unlocked_card_backgrounds = [@card_background]
   end
 end

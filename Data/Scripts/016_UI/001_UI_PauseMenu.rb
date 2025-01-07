@@ -111,6 +111,7 @@ class PokemonPauseMenu
     #KurayX Creating kuray shop
     cmdTutorNet = -1
     cmdTrainer = -1
+    cmdOutfit = -1
     cmdSave = -1
     cmdOption = -1
     cmdPokegear = -1
@@ -138,6 +139,7 @@ class PokemonPauseMenu
     commands[cmdTutorNet = commands.length] = _INTL("Tutor.net") if !pbInBugContest? && $PokemonSystem.tutornet == 1
     commands[cmdPokegear = commands.length] = _INTL("Pokégear") if $Trainer.has_pokegear
     commands[cmdTrainer = commands.length] = $Trainer.name
+    commands[cmdOutfit = commands.length] = _INTL("Outfit") if $Trainer.can_change_outfit
     if pbInSafari?
       if Settings::SAFARI_STEPS <= 0
         @scene.pbShowInfo(_INTL("Balls: {1}", pbSafariState.ballcount))
@@ -476,6 +478,9 @@ class PokemonPauseMenu
           screen.pbStartScreen
           @scene.pbRefresh
         }
+      elsif cmdOutfit && cmdOutfit >= 0 && command == cmdOutfit
+        @scene.pbHideMenu
+        pbCommonEvent(COMMON_EVENT_OUTFIT)
       elsif cmdQuit >= 0 && command == cmdQuit
         @scene.pbHideMenu
         if pbInSafari?

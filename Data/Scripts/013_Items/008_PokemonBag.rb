@@ -3,6 +3,7 @@
 #===============================================================================
 class PokemonBag
   attr_accessor :lastpocket
+  attr_accessor :pockets
 
   def self.pocketNames
     return Settings.bag_pocket_names
@@ -176,6 +177,7 @@ class PokemonBag
     item = GameData::Item.get(item)
     pocket = item.pocket
     ret = ItemStorageHelper.pbDeleteItem(@pockets[pocket], item.id, qty)
+    updatePinkanBerryDisplay()
     return ret
   end
 
@@ -212,6 +214,18 @@ class PokemonBag
   def registeredIndex
     @registeredIndex = [0, 0, 1] if !@registeredIndex
     return @registeredIndex
+  end
+
+  def saveBagAndClear()
+    $PokemonGlobal.pokemonSelectionOriginalBag= @pockets.map(&:dup)
+    echoln $PokemonGlobal.pokemonSelectionOriginalBag
+    clear()
+  end
+
+  def restoreBag()
+    return if !$PokemonGlobal.pokemonSelectionOriginalBag
+    echoln $PokemonGlobal.pokemonSelectionOriginalBag
+    @pockets = $PokemonGlobal.pokemonSelectionOriginalBag
   end
 
   #Sylvi Items
