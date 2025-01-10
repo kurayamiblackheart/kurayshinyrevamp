@@ -5692,6 +5692,7 @@ class PokemonStorageScreen
 
 
     if (Kernel.pbConfirmMessage(_INTL("Fuse the two Pokémon?")))
+      playingBGM = $game_system.getPlayingBGM
       pbFuse(selectedHead, selectedBase, @fusionItem)
       if canDeleteItem(@fusionItem)
         $PokemonBag.pbDeleteItem(@fusionItem)
@@ -5705,6 +5706,7 @@ class PokemonStorageScreen
       @scene.setFusing(false)
       @fusionMode = false
       @scene.sprites["box"].enableFusions()
+      pbBGMPlay(playingBGM)
       return
     else
       # print "fusion cancelled"
