@@ -10,6 +10,7 @@ class PokemonPokedexInfo_Scene
     @index = index
     @region = region
     @page = 1
+    @entry_page = 0
     @typebitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Pokedex/icon_types"))
     @sprites = {}
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
@@ -19,6 +20,7 @@ class PokemonPokedexInfo_Scene
     @sprites["infosprite"].y = 136
     @sprites["infosprite"].zoom_x = Settings::FRONTSPRITE_SCALE
     @sprites["infosprite"].zoom_y = Settings::FRONTSPRITE_SCALE
+    @randomEntryText = nil
 
     # @mapdata = pbLoadTownMapData
     # map_metadata = GameData::MapMetadata.try_get($game_map.map_id)
@@ -279,7 +281,6 @@ class PokemonPokedexInfo_Scene
     overlay = @sprites["overlay"].bitmap
     base = Color.new(88, 88, 80)
     shadow = Color.new(168, 184, 184)
-    shadowCustom = Color.new(160, 200, 150)
 
     imagepos = []
     if @brief
@@ -320,12 +321,8 @@ class PokemonPokedexInfo_Scene
       #            species_data.pokedex_entry, base, shadow)
       #
       #
-      customEntry = getCustomEntryText(species_data)
-      entryText = customEntry ? customEntry : species_data.pokedex_entry
-      shadowColor = customEntry ? shadowCustom : shadow
-
-      drawTextEx(overlay, 40, 244, Graphics.width - (40 * 2), 4, # overlay, x, y, width, num lines
-                 entryText, base, shadowColor)
+      #$PokemonSystem.use_generated_dex_entries=true if $PokemonSystem.use_generated_dex_entries ==nil
+      drawEntryText(overlay, species_data)
       # Draw the footprint
       footprintfile = GameData::Species.footprint_filename(@species, @form)
       if footprintfile
@@ -363,10 +360,75 @@ class PokemonPokedexInfo_Scene
   end
 
 
+  def   drawEntryText(overlay, species_data)
+    baseColor = Color.new(88, 88, 80)
+    shadow = Color.new(168, 184, 184)
+    shadowCustom = Color.new(160, 200, 150)
+    shadowAI = Color.new(168, 184, 220)
+
+    if species_data.is_fusion
+      customEntry = getCustomEntryText(species_data)
+      if customEntry
+        entryText = customEntry
+        shadowColor = shadowCustom
+      else
+        if $PokemonSystem.use_generated_dex_entries && species_data.is_a?(GameData::FusedSpecies)
+          @randomEntryText = species_data.get_random_dex_entry if !@randomEntryText
+          entryText = @randomEntryText
+          shadowColor = shadow
+        else
+          entryText = "No custom Pokédex entry available for this Pokémon. Please consider submitting an entry for this Pokémon on the game's Discord."
+          shadowColor = shadow
+        end
+      end
+    else
+      entryText = species_data.pokedex_entry
+      shadowColor = shadow
+    end
+
+    max_chars_per_page = 150
+    pages = splitTextIntoPages(entryText, max_chars_per_page)
+    @entry_page = 0 if !@entry_page || pages.length == 1
+    displayedText = pages[@entry_page]
+    if pages.length > 1
+      page_indicator_text = "#{@entry_page + 1}/#{pages.length}"
+      drawTextEx(overlay, 425, 340, Graphics.width - (40 * 2), 4, # overlay, x, y, width, num lines
+                 page_indicator_text, baseColor, shadow)
+    end
+
+    drawTextEx(overlay, 40, 244, Graphics.width - (40 * 2), 4, # overlay, x, y, width, num lines
+               displayedText, baseColor, shadowColor)
+  end
+
+  def splitTextIntoPages(text, max_chars_per_page)
+    words = text.split
+    pages = []
+    current_page = ""
+
+    words.each do |word|
+      if current_page.length + word.length + 1 > max_chars_per_page
+        pages << current_page.strip
+        current_page = word
+      else
+        current_page += " " unless current_page.empty?
+        current_page += word
+      end
+    end
+
+    pages << current_page.strip unless current_page.empty?
+    pages
+  end
+
   def reloadDexEntry()
     overlay = @sprites["overlay"].bitmap
     overlay.clear
     drawPageInfo
+  end
+
+  def changeEntryPage()
+    pbSEPlay("GUI sel cursor")
+    @entry_page = @entry_page == 1 ? 0 : 1
+    reloadDexEntry
   end
   
     def isAutogenSprite(sprite_path)
@@ -398,6 +460,52 @@ class PokemonPokedexInfo_Scene
       end
     end
 
+    def getAIDexEntry(pokemonID, name)
+      begin
+        head_number = get_head_number_from_symbol(pokemonID).to_s
+        body_number = get_body_number_from_symbol(pokemonID).to_s
+  
+        # Ensure the file exists, if not, create it
+        unless File.exist?(Settings::AI_DEX_ENTRIES_PATH)
+          File.write(Settings::AI_DEX_ENTRIES_PATH, '{}')
+        end
+  
+        json_data = File.read(Settings::AI_DEX_ENTRIES_PATH)
+        data = HTTPLite::JSON.parse(json_data)
+  
+        # Check if the entry exists
+        unless data[head_number] && data[head_number][body_number]
+          # If not, fetch it from the API
+          url = Settings::AI_ENTRIES_URL + "?head=#{head_number}&body=#{body_number}"
+          if !requestRateExceeded?(Settings::AI_ENTRIES_RATE_LOG_FILE, Settings::AI_ENTRIES_RATE_TIME_WINDOW, Settings::AI_ENTRIES_RATE_MAX_NB_REQUESTS)
+            fetched_entry = clean_json_string(pbDownloadToString(url))
+          else
+            echoln "API rate exceeded for AI entries"
+          end
+          return nil if !fetched_entry || fetched_entry.empty?
+          # If the fetched entry is valid, update the JSON and save it
+          unless fetched_entry.empty?
+            data[head_number] ||= {}
+            data[head_number][body_number] = fetched_entry
+            serialized_data = serialize_json(data)
+            File.write(Settings::AI_DEX_ENTRIES_PATH, serialized_data)
+          else
+            echoln "No AI entry found for Pokemon " + pokemonID.to_s
+            return nil
+          end
+        end
+  
+        entry = data[head_number][body_number]
+        entry = entry.gsub(Settings::CUSTOM_ENTRIES_NAME_PLACEHOLDER, name)
+        entry = entry.gsub("\n", "")
+  
+        # Unescape any escaped quotes before returning the entry
+        entry = entry.gsub('\\"', '"')
+        return clean_json_string(entry)
+      rescue MKXPError
+        return nil
+      end
+    end
 
   def pbFindEncounter(enc_types, species)
     return false if !enc_types
@@ -505,6 +613,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def pbGoToPrevious
+    @entry_page = 0
     newindex = @index
     while newindex > 0
       newindex -= 1
@@ -516,6 +625,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def pbGoToNext
+    @entry_page = 0
     newindex = @index
     while newindex < @dexlist.length - 1
       newindex += 1
@@ -573,15 +683,13 @@ class PokemonPokedexInfo_Scene
       pbUpdate
       dorefresh = false
       if Input.trigger?(Input::ACTION)
-        pbSEStop
-        #reloadDexEntry()
-        Pokemon.play_cry(@species, @form) if @page == 1
+        changeEntryPage()
       elsif Input.trigger?(Input::BACK)
         pbPlayCloseMenuSE
         break
       elsif Input.trigger?(Input::USE)
-        if @page == 2 # Area
-          #          dorefresh = true
+        if @page == 1 # entry
+          changeEntryPage()
         elsif @page == 3 # Forms
           #if @available.length > 1
           pbPlayDecisionSE
@@ -644,7 +752,7 @@ class PokemonPokedexInfo_Scene
       Input.update
       pbUpdate
       if Input.trigger?(Input::ACTION)
-        pbSEStop
+        changeEntryPage()
         Pokemon.play_cry(@species, @form)
       elsif Input.trigger?(Input::BACK)
         pbPlayCloseMenuSE
@@ -652,6 +760,8 @@ class PokemonPokedexInfo_Scene
       elsif Input.trigger?(Input::USE)
         pbPlayDecisionSE
         break
+      elsif Input.trigger?(Input::RIGHT) || Input.trigger?(Input::LEFT)
+        changeEntryPage()
       end
     end
   end

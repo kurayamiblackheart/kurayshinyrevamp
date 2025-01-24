@@ -89,6 +89,28 @@ class PokemonMartAdapter
   def getShadowColorOverride(item)
     return nil
   end
+
+  #specialType is a symbol
+  def getSpecialItemCaption(specialType)
+    return nil
+  end
+
+  def getSpecialItemDescription(specialType)
+    return nil
+  end
+
+  def doSpecialItemAction(specialType)
+    return nil
+  end
+
+  def getSpecialItemBaseColor(specialType)
+    return nil
+  end
+
+  def getSpecialItemShadowColor(specialType)
+    return nil
+  end
+
 end
 
 #===============================================================================
@@ -117,6 +139,22 @@ class BuyAdapter
 
   def isSelling?
     return false
+  end
+
+  def getSpecialItemCaption(specialType)
+    return @adapter.getSpecialItemCaption(specialType)
+  end
+
+  def getSpecialItemBaseColor(specialType)
+    return @adapter.getSpecialItemBaseColor(specialType)
+  end
+
+  def getSpecialItemShadowColor(specialType)
+    return @adapter.getSpecialItemShadowColor(specialType)
+  end
+
+  def getAdapter()
+    return @adapter
   end
 end
 
@@ -183,19 +221,26 @@ class Window_PokemonMart < Window_DrawableCommand
       textpos.push([_INTL("CANCEL"), rect.x, ypos - 4, false, self.baseColor, self.shadowColor])
     else
       item = @stock[index]
-      itemname = @adapter.getDisplayName(item)
+      if item.is_a?(Symbol) && @adapter.getAdapter().is_a?(OutfitsMartAdapter)
+        itemname = @adapter.getSpecialItemCaption(item)
+        baseColor = @adapter.getSpecialItemBaseColor(item) ? @adapter.getSpecialItemBaseColor(item) : baseColor
+        shadowColor = @adapter.getSpecialItemShadowColor(item) ? @adapter.getSpecialItemShadowColor(item) : shadowColor
+        textpos.push([itemname, rect.x, ypos - 4, false, baseColor, shadowColor])
+      else
+        itemname = @adapter.getDisplayName(item)
 
-      baseColorOverride = @adapter.getBaseColorOverride(item)
-      shadowColorOverride = @adapter.getShadowColorOverride(item)
+        baseColorOverride = @adapter.getBaseColorOverride(item)
+        shadowColorOverride = @adapter.getShadowColorOverride(item)
 
-      baseColor = baseColorOverride ? baseColorOverride : self.baseColor
-      shadowColor = shadowColorOverride ? shadowColorOverride : self.shadowColor
+        baseColor = baseColorOverride ? baseColorOverride : self.baseColor
+        shadowColor = shadowColorOverride ? shadowColorOverride : self.shadowColor
 
-      qty = @adapter.getDisplayPrice(item)
-      sizeQty = self.contents.text_size(qty).width
-      xQty = rect.x + rect.width - sizeQty - 2 - 16
-      textpos.push([itemname, rect.x, ypos - 4, false, baseColor, shadowColor])
-      textpos.push([qty, xQty, ypos - 4, false, baseColor, shadowColor])
+        qty = @adapter.getDisplayPrice(item)
+        sizeQty = self.contents.text_size(qty).width
+        xQty = rect.x + rect.width - sizeQty - 2 - 16
+        textpos.push([itemname, rect.x, ypos - 4, false, baseColor, shadowColor])
+        textpos.push([qty, xQty, ypos - 4, false, baseColor, shadowColor])
+      end
     end
     pbDrawTextPositions(self.contents, textpos)
   end

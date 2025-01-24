@@ -1032,7 +1032,7 @@ class PokemonPartyScreen
     @scene.pbAnnotate(nil)
   end
 
-  def pbPokemonMultipleEntryScreenEx(ruleset)
+  def pbPokemonMultipleEntryScreenEx(ruleset,ableProc=nil)
     annot = []
     statuses = []
     ordinals = [_INTL("INELIGIBLE"), _INTL("NOT ENTERED"), _INTL("BANNED")]
@@ -1050,8 +1050,12 @@ class PokemonPartyScreen
     ret = nil
     addedEntry = false
     for i in 0...@party.length
-      statuses[i] = (ruleset.isPokemonValid?(@party[i])) ? 1 : 2
+      # statuses[i] = (ruleset.isPokemonValid?(@party[i])) ? 1 : 2
+      statuses[i] = (ruleset.isPokemonValid?(@party[i],ableProc)) ? 1 : 2
     end
+
+
+    
     for i in 0...@party.length
       annot[i] = ordinals[statuses[i]]
     end

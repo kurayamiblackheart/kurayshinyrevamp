@@ -9,16 +9,15 @@ end
 
 def pbWarpToMapId
   params = ChooseNumberParams.new
-  params.setRange(1,pbMapTree().length)
+  # params.setRange(1,pbMapTree().length)
+  params.setRange(1,999)
   params.setDefaultValue($game_map.map_id)
   map_id = pbMessageChooseNumber("map id?",params)
   return [map_id,0,0]
 end
 
 def pbWarpToMapFly
-  pbBetterRegionMap(0,true,true,false,nil,true)
-  $game_screen.weather(:None,0,0)
-  $game_map.refresh
+  return pbBetterRegionMap(-1, true, true,false,nil,true)
 end
 
 def pbWarpToMap

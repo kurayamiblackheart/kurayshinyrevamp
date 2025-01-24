@@ -3735,7 +3735,10 @@ class PokemonStorageScreen
     index = selected[1]
     pokemon = (heldpoke) ? heldpoke : @storage[box, index]
     return if !pokemon
-    if pokemon.egg?
+    if pokemon.owner.name  == "RENTAL"
+      pbDisplay(_INTL("This Pokémon cannot be released"))
+      return
+    elsif pokemon.egg?
       pbDisplay(_INTL("You can't release an Egg."))
       return false
     elsif pokemon.mail
@@ -4380,7 +4383,10 @@ class PokemonStorageScreen
     for index in selected
       pokemon = @storage[box, index]
       next if !pokemon
-      if pokemon.egg?
+      if pokemon.owner.name  == "RENTAL"
+        pbDisplay(_INTL("This Pokémon cannot be released"))
+        return
+      elsif pokemon.egg?
         pbDisplay(_INTL("You can't release an Egg."))
         return false
       elsif pokemon.mail

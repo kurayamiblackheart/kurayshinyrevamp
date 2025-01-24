@@ -20,6 +20,8 @@ class PokemonSystem
   attr_accessor :download_sprites
   attr_accessor :max_nb_sprites_download
   attr_accessor :on_mobile
+  attr_accessor :type_icons
+  attr_accessor :use_generated_dex_entries
   # Per-save file
   attr_accessor :battlestyle
   attr_accessor :battle_type
@@ -181,7 +183,9 @@ class PokemonSystem
     @quicksurf = 0
     @download_sprites = 0
     @max_nb_sprites_download = 5
-    @on_mobile = 0
+    @on_mobile = false
+    @type_icons = true
+    @use_generated_dex_entries = true
     @quicksave = 1
     # Vanilla Per-save file
     @battlestyle = 0 # Battle style (0=switch, 1=set)

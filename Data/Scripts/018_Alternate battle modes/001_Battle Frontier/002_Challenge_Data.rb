@@ -67,7 +67,21 @@ end
 #===============================================================================
 #
 #===============================================================================
-def pbEntryScreen(*arg)
+def pbEntryScreen(ableproc=nil)
+  retval = false
+  pbFadeOutIn {
+    scene = PokemonParty_Scene.new
+    screen = PokemonPartyScreen.new(scene, $Trainer.party)
+    ret = screen.pbPokemonMultipleEntryScreenEx(pbBattleChallenge.rules.ruleset,ableproc)
+    # Set party
+    pbBattleChallenge.setParty(ret) if ret
+    # Continue (return true) if Pokémon were chosen
+    retval = (ret != nil && ret.length > 0)
+  }
+  return retval
+end
+
+def pbEntryScreenArgs(*arg)
   retval = false
   pbFadeOutIn {
     scene = PokemonParty_Scene.new
@@ -103,15 +117,62 @@ class Game_Event
   end
 end
 
+def getTrainerTypeGraphic(trainerType)
+  case trainerType
+  when :YOUNGSTER       then return "BW (19)"
+  when :LASS            then return "BW (23)"
+  when :POKEMANIAC      then return "BW (30)"
+  when :PSYCHIC_F       then return "BW (30)"
+  when :GENTLEMAN       then return "BW (55)"
+  when :LADY            then return "BW (28)"
+  when :CAMPER          then return "BW (59)"
+  when :PICNICKER       then return "BW (60)"
+  when :TUBER_M         then return "BWTuber_male"
+  when :TUBER_F         then return "BWTuber_female"
+  when :SWIMMER_M       then return "BWSwimmerLand"
+  when :SWIMMER_F       then return "BWSwimmer_female2"
+  when :COOLTRAINER_F   then return "BW024"
+  when :JUGGLER         then return "BWHarlequin"
+  when :POKEMONBREEDER  then return "BW028"
+  when :BUGCATCHER      then return "BWBugCatcher_male"
+  when :BLACKBELT       then return "BWBlackbelt"
+  when :FISHERMAN       then return "BW (71)"
+  when :RUINMANIAC      then return "BW (72)"
+  when :TAMER           then return "BW (69)"
+  when :BEAUTY          then return "BW015"
+  when :AROMALADY       then return "BWAomalady"
+  when :ROCKER          then return "BWPunkGuy"
+  when :BIRDKEEPER      then return "BW (29)"
+  when :SAILOR          then return "BWSailor"
+  when :HIKER           then return "BWHiker"
+  when :ENGINEER        then return "BW (75)"
+  when :COOLTRAINER_M   then return "BW023"
+  when :BIKER           then return "BW055"
+  when :CRUSHGIRL       then return "BWBattleGirl"
+  when :POKEMONRANGER_M then return "BW (47)"
+  when :POKEMONRANGER_F then return "BW (48)"
+  when :PSYCHIC_M       then return "BW (30)"
+  when :CHANNELER       then return "BW (40)"
+  when :GAMBLER         then return "BW (111)"
+  when :SCIENTIST       then return "BW (81)"
+  when :SUPERNERD       then return "BW (81)"
+  when :CUEBALL         then return "BWRoughneck"
+  end
+end
+
+
+
 #===============================================================================
 #
 #===============================================================================
 def pbBattleChallengeGraphic(event)
   nextTrainer = pbBattleChallenge.nextTrainer
   bttrainers = pbGetBTTrainers(pbBattleChallenge.currentChallenge)
-  filename = GameData::TrainerType.charset_filename_brief((bttrainers[nextTrainer][0] rescue nil))
+
+  trainerType = (bttrainers[nextTrainer][0] rescue nil)
+  filename = getTrainerTypeGraphic(trainerType)
   begin
-    filename = "NPCpbAddForeignPokemon 01" if nil_or_empty?(filename)
+    filename = "" if nil_or_empty?(filename)
     bitmap = AnimatedBitmap.new("Graphics/Characters/" + filename)
     bitmap.dispose
     event.character_name = filename

@@ -1357,12 +1357,14 @@ class PokemonSummary_Scene
     cmdTakeItem = -1
     cmdPokedex = -1
     cmdMark = -1
+    cmdHat = -1
     if !@pokemon.egg?
       if pbBattleChallenge.currentChallenge == -1
         commands[cmdGiveItem = commands.length] = _INTL("Give item")
         commands[cmdTakeItem = commands.length] = _INTL("Take item") if @pokemon.hasItem?
+        commands[cmdHat = commands.length] = _INTL("Hat") if !@pokemon.egg? && $game_switches[SWITCH_UNLOCKED_POKEMON_HATS]
       end
-      commands[cmdPokedex = commands.length]  = _INTL("View Pokédex") if $Trainer.has_pokedex
+      commands[cmdPokedex = commands.length] = _INTL("View Pokédex") if $Trainer.has_pokedex
     end
     commands[cmdMark = commands.length] = _INTL("Mark")
     commands[commands.length] = _INTL("Cancel")
@@ -1379,6 +1381,8 @@ class PokemonSummary_Scene
       end
     elsif cmdTakeItem >= 0 && command == cmdTakeItem
       dorefresh = pbTakeItemFromPokemon(@pokemon, self)
+    elsif cmdHat >= 0 && command == cmdHat
+      pbPokemonHatFromSummary(@pokemon)
     elsif cmdPokedex >= 0 && command == cmdPokedex
       $Trainer.pokedex.register_last_seen(@pokemon)
       pbFadeOutIn {
@@ -1394,6 +1398,47 @@ class PokemonSummary_Scene
     return dorefresh
   end
 
+  def pbOpenHatScreenSummary(pokemon)
+    #oldsprites = pbFadeOutAndHide(@sprites)
+    x_pos = -8 #todo: Set as relative position instead of hardcoded value
+    y_pos = 94#
+
+    scene = PokemonHatView.new(x_pos,y_pos,false)
+    screen = PokemonHatPresenter.new(scene, pokemon)
+    screen.pbStartScreen()
+    yield if block_given?
+    #pbFadeInAndShow(@sprites, oldsprites)
+  end
+
+  def pbPokemonHatFromSummary(pokemon)
+    echoln pokemon.hat
+    cmd = 0
+    msg = "What should you do?"
+    loop do
+      cmd = pbShowCommands([
+        _INTL("Put on hat"),
+        _INTL("Remove hat"),
+        _INTL("Back")])
+      break if cmd == -1
+      if cmd == 0   #Put on hat
+        @sprites["pokemon"].visible=false
+        pbOpenHatScreenSummary(pokemon)
+        @sprites["pokemon"].visible=true
+        pbDisplay(_INTL("{1} put on a hat!",pokemon.name))
+        #@sprites["pokemon"].visible=false
+
+      elsif cmd == 1 #remove hat
+        if pbConfirm(_INTL("Remove {1}'s hat?",pokemon.name))
+          pokemon.hat=nil
+          pbDisplay(_INTL("{1}'s hat was removed",pokemon.name))
+        end
+      else
+        break
+      end
+      pbChangePokemon()
+    end
+  end
+  
   def pbChooseMoveToForget(move_to_learn)
     new_move = (move_to_learn) ? Pokemon::Move.new(move_to_learn) : nil
     selmove = 0

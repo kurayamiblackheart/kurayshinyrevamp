@@ -235,8 +235,23 @@ def pbTrainerPC
   pbSEPlay("PC close")
 end
 
+def checkPorygonEncounter
+  porygon_chance = 200
+  if $PokemonGlobal.stepcount % porygon_chance == 0
+    pbSEPlay("Paralyze3")
+    pbWait(12)
+    pbMessage(_INTL("Huh? The PC glitched for a second while it booted."))
+    pbMessage(_INTL("Did something make its way into the PC?"))
+    pbWait(8)
+    pbAddPokemonSilent(:PORYGON,1)
+    $PokemonGlobal.stepcount += 1
+  end
+    # code here
+end
+
 def pbPokeCenterPC
   pbMessage(_INTL("\\se[PC open]{1} booted up the PC.",$Trainer.name))
+  checkPorygonEncounter()
   command = 0
   loop do
     commands = PokemonPCList.getCommandList
