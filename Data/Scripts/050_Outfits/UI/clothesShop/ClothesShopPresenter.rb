@@ -44,14 +44,10 @@ class ClothesShopPresenter < PokemonMartScreen
                           itemname, price.to_s_formatted))
         next
       end
-      quantity = 1
-
       if @adapter.getMoney < price
         pbDisplayPaused(_INTL("You don't have enough money."))
         next
       end
-      added = 0
-
       @adapter.setMoney(@adapter.getMoney - price)
       @stock.compact!
       pbDisplayPaused(_INTL("Here you are! Thank you!")) { pbSEPlay("Mart buy item") }

@@ -429,14 +429,14 @@ class PokemonFusionScene
     dna_splicer.z = 0
     duration = Graphics.frame_rate * nb_seconds
     direction = 1
-    dna_splicer.bitmap = pbBitmap("Graphics/Items/POTION")
+    # dna_splicer.bitmap = pbBitmap("Graphics/Items/POTION")
 
     for j in 0...Graphics.frame_rate * 50
-      if j % 2 ==0
-        dna_splicer.bitmap = pbBitmap("Graphics/Items/SUPERSPLICERS")
-      else
-        dna_splicer.bitmap = pbBitmap("Graphics/Items/DNASPLICERS")
-      end
+      # if j % 2 ==0
+      #   dna_splicer.bitmap = pbBitmap("Graphics/Items/SUPERSPLICERS")
+      # else
+      #   dna_splicer.bitmap = pbBitmap("Graphics/Items/DNASPLICERS")
+      # end
 
       if j % 5 == 0
         dna_splicer.y += direction
@@ -499,9 +499,15 @@ class PokemonFusionScene
   #
   #     #sprite_body.mirror if sprite_body_angle == 0 || sprite_body_angle == Math::PI
   #
+  #     update_sprite_color(sprite_body,j)
+  #     update_sprite_color(sprite_head,j)
+  #
   #     sprite_head.update
   #     sprite_fused.update
   #     sprite_body.update
+  #
+  #
+  #
   #   end
   #   sprite_head.opacity = 0
   #   sprite_body.opacity = 0
@@ -512,9 +518,21 @@ class PokemonFusionScene
   #   @metafile3 = sprite_body
   # end
 
+  def update_sprite_color(sprite,current_frame)
+    start_tone_change = 100  #frame at which the tone starts to change
+    return if current_frame < start_tone_change
+    new_tone = current_frame-start_tone_change
+    sprite.tone=Tone.new(new_tone,new_tone,new_tone)
+    if current_frame %2 ==0
+      #sprite.opacity-= 1
+    end
+  end
+
   # def pbGenerateMetafiles(nb_seconds,ellipse_center_x,ellipse_center_y,ellipse_major_axis_length,ellipse_minor_axis_length)
 
   #def pbGenerateMetafiles(s1x, s1y, s2x, s2y, s3x, s3y, sxx, s3xx)
+
+  #OLD ANIMATION
   def pbGenerateMetafiles(nb_seconds,ellipse_center_x,ellipse_center_y,ellipse_major_axis_length,ellipse_minor_axis_length)
 
     @sprites["rsprite1"].ox = @sprites["rsprite1"].bitmap.width / 2
@@ -810,7 +828,7 @@ class PokemonFusionScene
     metaplayer1.play
     metaplayer2.play
     metaplayer3.play
-    #metaplayer4.play
+    metaplayer4.play
 
     pbBGMStop()
     pbPlayCry(@pokemon)

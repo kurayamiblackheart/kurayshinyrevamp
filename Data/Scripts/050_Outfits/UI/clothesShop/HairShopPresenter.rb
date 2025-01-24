@@ -28,9 +28,11 @@ class HairShopPresenter < PokemonMartScreen
 
       itemname = @adapter.getDisplayName(item)
       price = @adapter.getPrice(item)
+
+      echoln price
       if !price.is_a?(Integer)
+        #@adapter.switchVersion(item,1)
         pbDisplayPaused(_INTL("This is your current hairstyle!"))
-        @adapter.putOnOutfit(item)
         next
       end
       if @adapter.getMoney < price

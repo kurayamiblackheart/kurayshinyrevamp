@@ -12,4 +12,8 @@ class Outfit
     @tags = tags
     @price = price
   end
+
+  def trainer_sprite_path()
+    return nil
+  end
 end

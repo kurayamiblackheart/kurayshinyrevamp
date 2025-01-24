@@ -253,13 +253,26 @@ class RandomizerWildPokemonOptionsScene < PokemonOption_Scene
                                   "Only legendaries can be randomized into legendaries"]
     )
 
+
     options << EnumOption.new(_INTL("Starters"), [_INTL("1st Stage"), _INTL("Any"), _INTL("Off")],
-                              proc { $game_switches[SWITCH_RANDOM_STARTERS] ? 0 : 2 },
+                              proc {
+                                getStarterRandomizerSelectedOption() },
                               proc { |value|
-                                $game_switches[SWITCH_RANDOM_STARTERS] = (value == 0 || value == 1)
-                                if value == 0
+                                case value
+                                when 0
+                                  $game_switches[SWITCH_RANDOM_STARTERS] = true
                                   $game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE] = true
+                                when 1
+                                  $game_switches[SWITCH_RANDOM_STARTERS] = true
+                                  $game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE] = false
+                                else
+                                  $game_switches[SWITCH_RANDOM_STARTERS] = false
+                                  $game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE] = false
                                 end
+
+                                echoln "random starters: #{$game_switches[SWITCH_RANDOM_STARTERS]}"
+                                echoln "random 1st stage: #{$game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE]}"
+
                               }, ["The starters will always be a first evolution Pokémon",
                                   "The starters can be any Pokémon",
                                   "The starters are not randomized"]
@@ -283,11 +296,20 @@ class RandomizerWildPokemonOptionsScene < PokemonOption_Scene
                               proc { $game_switches[REGULAR_TO_FUSIONS] ? 0 : 1 },
                               proc { |value|
                                 $game_switches[REGULAR_TO_FUSIONS] = value == 0
-                              }, "Include fused Pokémon in the randomize pool for wild Pokémon"
+                              }, "All wild Pokémon will already be pre-fused"
     )
     return options
   end
+
+
+  def getStarterRandomizerSelectedOption()
+    return 0 if $game_switches[SWITCH_RANDOM_STARTERS] && $game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE]
+    return 1 if $game_switches[SWITCH_RANDOM_STARTERS]
+    return 2
+  end
 end
+
+
 
 class RandomizerGymOptionsScene < PokemonOption_Scene
   RANDOM_GYM_TYPES = 921
@@ -329,7 +351,8 @@ class RandomizerGymOptionsScene < PokemonOption_Scene
                               proc { $game_switches[SWITCH_RANDOM_GYM_CUSTOMS] ? 0 : 1 },
                               proc { |value|
                                 $game_switches[SWITCH_RANDOM_GYM_CUSTOMS] = value == 0
-                              }, "Use only Pokémon that have custom sprites in gym trainers or gym leader teams"
+                              }, ["Use only Pokémon that have custom sprites in gym trainers or gym leader teams",
+                                  "Pick any possible fusion, including auto-generated sprites."]
     )
     options << EnumOption.new(_INTL("Gym types"), [_INTL("On"), _INTL("Off")],
                               proc { $game_switches[RANDOM_GYM_TYPES] ? 0 : 1 },

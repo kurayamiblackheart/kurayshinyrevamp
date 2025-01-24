@@ -8,6 +8,9 @@ class HatsMartAdapter < OutfitsMartAdapter
 
   def toggleEvent(item)
     if !@isShop
+      $Trainer.hat = nil
+      @worn_clothes = nil
+
       if pbConfirmMessage(_INTL("Do you want to take off your hat?"))
         $Trainer.hat = nil
         @worn_clothes = nil
@@ -17,9 +20,10 @@ class HatsMartAdapter < OutfitsMartAdapter
   end
 
   def toggleText()
-    return if @isShop
-    toggleKey = "D"#getMappedKeyFor(Input::SPECIAL)
-    return "Remove hat: #{toggleKey}"
+    return
+    # return if @isShop
+    # toggleKey = "D"#getMappedKeyFor(Input::SPECIAL)
+    # return "Remove hat: #{toggleKey}"
   end
 
   def getName(item)
@@ -42,15 +46,20 @@ class HatsMartAdapter < OutfitsMartAdapter
   end
 
   def updateTrainerPreview(item, previewWindow)
-    return if !item
-    previewWindow.hat = item.id
-    $Trainer.hat = item.id unless $Trainer.hat==nil
+    if item.is_a?(Outfit)
+      previewWindow.hat = item.id
+      $Trainer.hat = item.id# unless $Trainer.hat==nil
+    else
+      $Trainer.hat=nil
+      previewWindow.hat= nil
+    end
     pbRefreshSceneMap
     previewWindow.updatePreview()
   end
 
   def addItem(item)
-    changed_clothes = obtainNewHat(item.id)
+    return unless item.is_a?(Outfit)
+    changed_clothes = obtainHat(item.id)
     if changed_clothes
       @worn_clothes = item.id
     end
@@ -61,6 +70,7 @@ class HatsMartAdapter < OutfitsMartAdapter
   end
 
   def putOnOutfit(item)
+    return unless item.is_a?(Outfit)
     putOnHat(item.id)
     @worn_clothes = item.id
   end
@@ -71,5 +81,39 @@ class HatsMartAdapter < OutfitsMartAdapter
 
   def get_unlocked_items_list()
     return $Trainer.unlocked_hats
+  end
+
+  def getSpecialItemCaption(specialType)
+    case specialType
+    when :REMOVE_HAT
+      return "Remove hat"
+    end
+    return nil
+  end
+
+  def getSpecialItemBaseColor(specialType)
+    case specialType
+    when :REMOVE_HAT
+      return MessageConfig::BLUE_TEXT_MAIN_COLOR
+    end
+    return nil
+  end
+
+  def getSpecialItemShadowColor(specialType)
+    case specialType
+    when :REMOVE_HAT
+      return MessageConfig::BLUE_TEXT_SHADOW_COLOR
+    end
+    return nil
+  end
+
+  def getSpecialItemDescription(specialType)
+    echoln $Trainer.hair
+    hair_situation = !$Trainer.hair || getSimplifiedHairIdFromFullID($Trainer.hair) == HAIR_BALD ? "bald head" : "fabulous hair"
+    return "Go without a hat and show off your #{hair_situation}!"
+  end
+
+  def doSpecialItemAction(specialType)
+    toggleEvent(nil)
   end
 end

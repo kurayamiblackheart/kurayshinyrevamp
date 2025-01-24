@@ -22,6 +22,66 @@ class OutfitSelector
     return list_folders(get_hair_sets_list_path())
   end
 
+  def generate_hats_choice(baseOptions=true,additionalIds=[],additionalTags=[],filterOutTags=[])
+    list = []
+    list += additionalIds
+    list += search_hats(additionalTags)
+    if baseOptions
+      list += get_hats_base_options()
+      list += search_hats(get_regional_sets_tags())
+    end
+    return list
+  end
+
+  def generate_clothes_choice(baseOptions=true,additionalIds=[],additionalTags=[],filterOutTags=[])
+    list = []
+    list += additionalIds
+    list += search_clothes(additionalTags)
+    if baseOptions
+      list += get_clothes_base_options()
+      list += search_clothes(get_regional_sets_tags())
+    end
+    return list
+  end
+
+  def generate_hairstyle_choice(baseOptions=true,additionalIds=[],additionalTags=[],filterOutTags=[])
+    list = []
+    list += additionalIds
+    list += search_hairstyles(additionalTags)
+    if baseOptions
+      list += get_hairstyle_salon_base_options()
+      list += search_hairstyles(get_regional_sets_tags())
+    end
+    list << HAIR_BALD
+    return list
+  end
+
+  def get_regional_sets_tags()
+    regional_tags = []
+    regional_tags << "kanto" if $game_switches[SWITCH_KANTO_HAIR_COLLECTION]
+    regional_tags << "johto" if $game_switches[SWITCH_JOHTO_HAIR_COLLECTION]
+    regional_tags << "hoenn" if $game_switches[SWITCH_HOENN_HAIR_COLLECTION]
+    regional_tags << "sinnoh" if $game_switches[SWITCH_SINNOH_HAIR_COLLECTION]
+    regional_tags << "unova" if $game_switches[SWITCH_UNOVA_HAIR_COLLECTION]
+    regional_tags << "kalos" if $game_switches[SWITCH_KALOS_HAIR_COLLECTION]
+    regional_tags << "alola" if $game_switches[SWITCH_ALOLA_HAIR_COLLECTION]
+    regional_tags << "galar" if $game_switches[SWITCH_GALAR_HAIR_COLLECTION]
+    regional_tags << "paldea" if $game_switches[SWITCH_PALDEA_HAIR_COLLECTION]
+    return regional_tags
+  end
+
+  def get_hairstyle_salon_base_options()
+    return search_hairstyles(["default"])
+  end
+
+  def get_clothes_base_options()
+    return search_clothes(["default"])
+  end
+
+  def get_hats_base_options()
+    return search_hats(["default"])
+  end
+
   def parse_hairstyles_folder
     hairstyle_types= list_folders(get_hair_sets_list_path())
     max_versions_number = 10

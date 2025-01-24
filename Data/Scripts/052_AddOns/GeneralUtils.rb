@@ -456,57 +456,103 @@ def generateSimpleTrainerParty(teamSpecies, level)
   return team
 end
 
+def isInKantoGeneration(dexNumber)
+  return dexNumber <= 151
+end
+
+def isKantoPokemon(species)
+  dexNum = getDexNumberForSpecies(species)
+  poke = getPokemon(species)
+  head_dex = getDexNumberForSpecies(poke.get_head_species())
+  body_dex = getDexNumberForSpecies(poke.get_body_species())
+  return isInKantoGeneration(dexNum) || isInKantoGeneration(head_dex) || isInKantoGeneration(body_dex)
+end
+
+def isInJohtoGeneration(dexNumber)
+  return dexNumber > 151 && dexNumber <= 251
+end
+
+def isJohtoPokemon(species)
+  dexNum = getDexNumberForSpecies(species)
+  poke = getPokemon(species)
+  head_dex = getDexNumberForSpecies(poke.get_head_species())
+  body_dex = getDexNumberForSpecies(poke.get_body_species())
+  return isInJohtoGeneration(dexNum) || isInJohtoGeneration(head_dex) || isInJohtoGeneration(body_dex)
+end
+
 def isAlolaPokemon(species)
   dexNum = getDexNumberForSpecies(species)
+  poke = getPokemon(species)
+  head_dex = getDexNumberForSpecies(poke.get_head_species())
+  body_dex = getDexNumberForSpecies(poke.get_body_species())
   list = [
-    370, 373, 430,431,432,433,450, 451,452,
-    453,454,455, 459,460, 463, 464, 465
+    370, 373, 430, 431, 432, 433, 450, 451, 452,
+    453, 454, 455, 459, 460, 463, 464, 465, 469, 470,
+    471, 472, 473, 474, 475, 476, 477, 498, 499,
   ]
-  return list.include?(dexNum)
+  return list.include?(dexNum) || list.include?(head_dex) || list.include?(body_dex)
 end
 
 def isKalosPokemon(species)
   dexNum = getDexNumberForSpecies(species)
+  poke = getPokemon(species)
+  head_dex = getDexNumberForSpecies(poke.get_head_species())
+  body_dex = getDexNumberForSpecies(poke.get_body_species())
   list =
-    [327,328,329,339,371,372,417,418,
-     425,426,438,439, 440,441,444,445,446,
-     456,461,462
+    [327, 328, 329, 339, 371, 372, 417, 418,
+     425, 426, 438, 439, 440, 441, 444, 445, 446,
+     456, 461, 462, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487,
+     489, 490, 491, 492, 500,
+
     ]
-  return list.include?(dexNum)
+  return list.include?(dexNum) || list.include?(head_dex) || list.include?(body_dex)
 end
 
 def isUnovaPokemon(species)
   dexNum = getDexNumberForSpecies(species)
+  poke = getPokemon(species)
+  head_dex = getDexNumberForSpecies(poke.get_head_species())
+  body_dex = getDexNumberForSpecies(poke.get_body_species())
   list =
     [
-      330,331,337,338,348,349,350,351,359,360,361,
-      362,363,364,365,366,367,368,369,374,375,376,377,
-      397,398,399,406,407,408,409,410,411,412,413,414,
-      415,416,419,420,
-      422,423,424,434,345
+      330, 331, 337, 338, 348, 349, 350, 351, 359, 360, 361,
+      362, 363, 364, 365, 366, 367, 368, 369, 374, 375, 376, 377,
+      397, 398, 399, 406, 407, 408, 409, 410, 411, 412, 413, 414,
+      415, 416, 419, 420,
+      422, 423, 424, 434, 345,
+      466, 467, 494, 493,
     ]
-  return list.include?(dexNum)
+  return list.include?(dexNum) || list.include?(head_dex) || list.include?(body_dex)
 end
 
 def isSinnohPokemon(species)
   dexNum = getDexNumberForSpecies(species)
+  poke = getPokemon(species)
+  head_dex = getDexNumberForSpecies(poke.get_head_species())
+  body_dex = getDexNumberForSpecies(poke.get_body_species())
   list =
     [254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265,
      266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 288, 294,
      295, 296, 297, 298, 299, 305, 306, 307, 308, 315, 316, 317,
      318, 319, 320, 321, 322, 323, 324, 326, 332, 343, 344, 345,
-     346, 347, 352, 353, 354, 358, 383, 384, 388, 389, 400, 402, 403]
-  return list.include?(dexNum)
+     346, 347, 352, 353, 354, 358, 383, 384, 388, 389, 400, 402,
+     403, 429, 468]
+
+  return list.include?(dexNum) || list.include?(head_dex) || list.include?(body_dex)
 end
 
 def isHoennPokemon(species)
   dexNum = getDexNumberForSpecies(species)
+  poke = getPokemon(species)
+  head_dex = getDexNumberForSpecies(poke.get_head_species())
+  body_dex = getDexNumberForSpecies(poke.get_body_species())
   list = [252, 253, 276, 277, 278, 279, 280, 281, 282, 283, 284,
           285, 286, 287, 289, 290, 291, 292, 293, 300, 301, 302, 303,
           304, 309, 310, 311, 312, 313, 314, 333, 334, 335, 336, 340,
           341, 342, 355, 356, 357, 378, 379, 380, 381, 382, 385, 386, 387, 390,
-          391, 392, 393, 394, 395, 396, 401, 404, 405]
-  return list.include?(dexNum)
+          391, 392, 393, 394, 395, 396, 401, 404, 405, 421, 427, 428, 436,
+          437, 442, 443, 447, 448, 449, 457, 458, 488, 495, 496, 497, 501]
+  return list.include?(dexNum) || list.include?(head_dex) || list.include?(body_dex)
 end
 
 def pbBitmap(path)
@@ -870,4 +916,16 @@ def listPokemonIDs()
     echoln id.to_s + ": " + "\"" + pokemon.to_s + "\"" + ", "
   end
 
+  def getLatestSpritepackDate()
+    return Time.new(Settings::NEWEST_SPRITEPACK_YEAR, Settings::NEWEST_SPRITEPACK_MONTH)
+  end
+  
+  def new_spritepack_was_released()
+    current_spritepack_date = $PokemonGlobal.current_spritepack_date
+    latest_spritepack_date = getLatestSpritepackDate()
+    if !current_spritepack_date || (current_spritepack_date < latest_spritepack_date)
+      $PokemonGlobal.current_spritepack_date = latest_spritepack_date
+      return true
+    end
+    return false
 end

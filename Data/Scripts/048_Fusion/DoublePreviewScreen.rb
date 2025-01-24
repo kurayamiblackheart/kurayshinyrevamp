@@ -114,7 +114,8 @@ class DoublePreviewScreen
     bitmap.scale_bitmap(Settings::FRONTSPRITE_SCALE)
 
     #hasCustom = picturePath.include?("CustomBattlers")
-    hasCustom = customSpriteExistsBase(body_pokemon,head_pokemon)
+    #hasCustom = customSpriteExistsBase(body_pokemon,head_pokemon)
+    hasCustom = customSpriteExists(body_pokemon,head_pokemon)
 
     previewwindow = PictureWindow.new(bitmap)
     previewwindow.x = x

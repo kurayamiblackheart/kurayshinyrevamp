@@ -35,7 +35,7 @@ class ClothesMartAdapter < OutfitsMartAdapter
 
 
   def addItem(item)
-    changed_clothes = obtainNewClothes(item.id)
+    changed_clothes = obtainClothes(item.id)
     if changed_clothes
       @worn_clothes = item.id
     end

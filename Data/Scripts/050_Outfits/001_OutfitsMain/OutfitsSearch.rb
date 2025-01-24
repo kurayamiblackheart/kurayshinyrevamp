@@ -20,16 +20,33 @@ def filter_clothes(filter_tags = [], only_unlocked = false)
   return filter_outfits_by_tag(full_data_list, filter_tags, existing_files_list, unlocked_list, only_unlocked)
 end
 
+def filter_clothes_only_not_owned(clothes_ids_list)
+  filtered_list = []
+  clothes_ids_list.each do|clothe_id|
+    filtered_list << clothe_id if !$Trainer.unlocked_clothes.include?(clothe_id)
+  end
+  return filtered_list
+end
+
+def filter_clothes_only_owned(clothes_ids_list)
+  filtered_list = []
+  clothes_ids_list.each do|clothe_id|
+    filtered_list << clothe_id if $Trainer.unlocked_clothes.include?(clothe_id)
+  end
+  return filtered_list
+end
+
+
 #HATS
 
-def search_hats(matching_tags = [], only_unlocked = false)
+def search_hats(matching_tags = [],excluding_tags=[], only_unlocked = false)
   update_global_outfit_lists()
   selector = OutfitSelector.new
 
   full_data_list = $PokemonGlobal.hats_data
   existing_files_list = selector.parse_hats_folder()
   unlocked_list = $Trainer.unlocked_hats
-  return search_outfits_by_tag(full_data_list, matching_tags, existing_files_list, unlocked_list, only_unlocked)
+  return search_outfits_by_tag(full_data_list, matching_tags, existing_files_list, unlocked_list, only_unlocked,excluding_tags)
 end
 
 def filter_hats(filter_tags = [], only_unlocked = false)
@@ -38,18 +55,58 @@ def filter_hats(filter_tags = [], only_unlocked = false)
 
   full_data_list = $PokemonGlobal.hats_data
   existing_files_list = selector.parse_hats_folder()
-  echoln existing_files_list
   unlocked_list = $Trainer.unlocked_hats
   return filter_outfits_by_tag(full_data_list, filter_tags, existing_files_list, unlocked_list, only_unlocked)
 end
+
+def filter_hats_only_not_owned(hats_ids_list)
+  filtered_list = []
+  hats_ids_list.each do|hat_id|
+    filtered_list << hat_id if !$Trainer.unlocked_hats.include?(hat_id)
+  end
+  return filtered_list
+end
+
+def filter_hats_only_owned(hats_ids_list)
+  filtered_list = []
+  hats_ids_list.each do|hat_id|
+    filtered_list << hat_id if $Trainer.unlocked_hats.include?(hat_id)
+  end
+  return filtered_list
+end
+
+
+
+#HAIRSTYLES
+
+def search_hairstyles(matching_tags = [], only_unlocked = false)
+  update_global_outfit_lists()
+  selector = OutfitSelector.new
+
+  full_data_list = $PokemonGlobal.hairstyles_data
+  existing_files_list = selector.parse_hairstyle_types_folder()
+  return search_outfits_by_tag(full_data_list, matching_tags, existing_files_list, [], false)
+end
+
+def filter_out_hairstyles(filter_tags = [],base_list = [],require_unlocked=false)
+  update_global_outfit_lists()
+  selector = OutfitSelector.new
+
+  data_list = $PokemonGlobal.hairstyles_data
+  existing_files_list = selector.parse_hairstyle_types_folder()
+  return exclude_outfits_by_tag(data_list, filter_tags, existing_files_list, base_list, false)
+end
+
+
 
 
 # Generic searching methods
 
 #Get outfits that have ANY of the tags
-def search_outfits_by_tag(outfits_map, matching_tags = [], physical_files_list = [], unlocked_list = [], require_unlocked = false)
+def search_outfits_by_tag(outfits_map, matching_tags = [], physical_files_list = [], unlocked_list = [], require_unlocked = false, excluding_tags=[])
   filtered_list = []
   outfits_map.each do |outfit_id, outfit|
+    next if outfit.tags.any? { |tag| excluding_tags.include?(tag) }
     if outfit.tags.any? { |tag| matching_tags.include?(tag) }
       filtered_list << outfit_id if outfit_is_valid?(outfit_id, physical_files_list, unlocked_list, require_unlocked)
     end
@@ -64,6 +121,19 @@ def filter_outfits_by_tag(outfits_map, filter_tags = [], physical_files_list = [
   filtered_list = []
   outfits_map.each do |outfit_id, outfit|
     if filter_tags.all? { |tag| outfit.tags.include?(tag) }
+      filtered_list << outfit_id if outfit_is_valid?(outfit_id, physical_files_list, unlocked_list, require_unlocked)
+    end
+  end
+  return filtered_list
+end
+
+#Get all outfits from list that DON'T have a tag
+def exclude_outfits_by_tag(outfits_map, filter_tags = [], physical_files_list = [], unlocked_list = [], require_unlocked = false)
+  update_global_outfit_lists()
+
+  filtered_list = []
+  outfits_map.each do |outfit_id, outfit|
+    if filter_tags.any? { |tag| !outfit.tags.include?(tag) }
       filtered_list << outfit_id if outfit_is_valid?(outfit_id, physical_files_list, unlocked_list, require_unlocked)
     end
   end
@@ -85,6 +155,7 @@ end
 
 def get_clothes_by_id(id)
   update_global_outfit_lists()
+  echoln $PokemonGlobal.clothes_data
   return $PokemonGlobal.clothes_data.has_key?(id) ? $PokemonGlobal.clothes_data[id] : nil
 end
 

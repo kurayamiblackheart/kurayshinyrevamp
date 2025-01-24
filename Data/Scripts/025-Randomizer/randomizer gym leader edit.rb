@@ -184,30 +184,30 @@ end
 
 #summarize random options
 def Kernel.sumRandomOptions()
-  answer = $game_switches[954] ? "On" : "Off"
+  answer = $game_switches[SWITCH_RANDOM_STARTERS] ? "On" : "Off"
   stringOptions = "\nStarters: " << answer
 
-  answer = $game_switches[778] ? "On" : "Off"
+  answer = $game_switches[SWITCH_RANDOM_WILD] ? "On" : "Off"
   stringOptions << "\nWild Pokémon: " << answer << " "
-  if $game_switches[777]
+  if $game_switches[SWITCH_RANDOM_WILD_AREA]
     stringOptions << "(Area)"
   else
     stringOptions << "(Global)"
   end
 
-  answer = $game_switches[987] ? "On" : "Off"
+  answer = $game_switches[SWITCH_RANDOM_TRAINERS] ? "On" : "Off"
   stringOptions << "\nTrainers: " << answer
 
-  answer = $game_switches[955] ? "On" : "Off"
+  answer = $game_switches[SWITCH_RANDOM_STATIC_ENCOUNTERS] ? "On" : "Off"
   stringOptions << "\nStatic encounters: " << answer
 
-  answer = $game_switches[780] ? "On" : "Off"
+  answer = $game_switches[SWITCH_RANDOM_GIFT_POKEMON] ? "On" : "Off"
   stringOptions << "\nGift Pokémon: " << answer
 
-  answer = $game_switches[958] ? "On" : "Off"
+  answer = $game_switches[SWITCH_RANDOM_ITEMS] ? "On" : "Off"
   stringOptions << "\nItems: " << answer
 
-  answer = $game_switches[959] ? "On" : "Off"
+  answer = $game_switches[SWITCH_RANDOM_TMS] ? "On" : "Off"
   stringOptions << "\nTMs: " << answer
 
   return stringOptions
@@ -227,14 +227,14 @@ def Kernel.sumGameStats()
   stringStats << "Seen " << $Trainer.pokedexSeen.to_s << " Pokémon"
   stringStats << "\nCaught " << $Trainer.pokedexOwned.to_s << " Pokémon"
 
-  stringStats << "\nBeaten the Elite Four " << $game_variables[VAR_STAT_NB_ELITE_FOUR].to_s << " times"
+  stringStats << "\nBeat the Elite Four " << $game_variables[VAR_STAT_NB_ELITE_FOUR].to_s << " times"
   stringStats << "\nFused " << $game_variables[VAR_STAT_NB_FUSIONS].to_s << " Pokémon"
 
-  nbGymRematches = $game_variables[VAR_STAT_LEADER_REMATCH]
-  stringStats << "\nRematched " << nbGymRematches.to_s << " Gym Leaders" if nbGymRematches > 0
+
+  stringStats << "\nRematched " << $game_variables[VAR_STAT_LEADER_REMATCH].to_s << " Gym Leaders"
   stringStats << "\nTook " << $PokemonGlobal.stepcount.to_s << " steps"
   stringStats << "\nVisited " << countVisitedMaps.to_s << " different areas"
-  stringStats << "\nUsed " << $game_variables[VAR_STAT_RARE_CANDY].to_s << " Rare Candies"
+  stringStats << "\nUsed " << $game_variables[VAR_STAT_RARE_CANDY] << " Rare Candies"
 
   if $game_switches[910]
     stringStats << "\nMade " << $game_variables[VAR_STAT_NB_WONDERTRADES].to_s << " Wonder Trades"
@@ -242,6 +242,8 @@ def Kernel.sumGameStats()
 
   stringStats << "\nTipped $" << $game_variables[VAR_STAT_CLOWN_TIP_TOTAL].to_s << " to clowns"
   stringStats << "\nDestroyed " << $game_variables[VAR_STAT_NB_SANDCASTLES].to_s << " sandcastles"
+  stringStats << "\nReported " << $game_variables[VAR_NB_CRIMES_REPORTED].to_s << " crimes" if $game_variables[VAR_NB_CRIMES_REPORTED] > 0
+
 
   if $game_variables[VAR_STAT_GAMBLER_WINS] > 0 || $game_variables[VAR_STAT_GAMBLER_LOSSES] > 0
     stringStats << "\nWon $" << $game_variables[VAR_STAT_GAMBLER_WINS].to_s << " against gamblers"

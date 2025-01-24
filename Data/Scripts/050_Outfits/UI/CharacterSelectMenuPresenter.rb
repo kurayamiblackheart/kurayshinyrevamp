@@ -79,6 +79,7 @@ class CharacterSelectMenuPresenter
       @name = getDefaultName() if @name == ''
       pbSEPlay("GUI trainer card open", 80, 100)
       updateDisplayedName(current_index)
+      applyHair() #for easter egg lol
     when OPTION_CONFIRM
       pbSEPlay("GUI save choice", 80, 100)
       @current_index = @options.length - 1
@@ -111,7 +112,8 @@ class CharacterSelectMenuPresenter
 
   def applyAllSelectedValues
     applyGender(@gender)
-    pbSet(VAR_TRAINER_AGE, @gender)
+    echoln @age
+    pbSet(VAR_TRAINER_AGE, @age)
     $Trainer.skin_tone = @skinTone
     $Trainer.name = @name
   end
@@ -214,9 +216,17 @@ class CharacterSelectMenuPresenter
   end
 
   def applyHair()
+    applyHairEasterEggs()
     hairColorId = HAIR_COLOR_IDS[@hairColor]
     hairId = hairColorId.to_s + "_" + @hairstyle.to_s
     $Trainer.hair = hairId
+  end
+
+  def applyHairEasterEggs()
+    @hairstyle = HAIR_RIVAL if @name == "Gary" && @gender == 1
+    @hairstyle = HAIR_BROCK if @name == "Brock" && @gender == 1
+    @hairstyle = HAIR_MISTY if @name == "Misty" && @gender == 0
+
   end
 
   def applyGender(gender_index)

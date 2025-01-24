@@ -13,7 +13,7 @@ def update_global_hats_list()
 
   # Iterate through the JSON data and create Hat objects
   hat_data.each do |data|
-    tags = data['tags'] ? data['tags'].split(',') : []
+    tags = data['tags'] ? data['tags'].split(',').map(&:strip) : []
     hat = Hat.new(
       data['id'],
       data['name'],
@@ -34,7 +34,7 @@ def update_global_hairstyles_list()
 
   # Iterate through the JSON data and create Hat objects
   hair_data.each do |data|
-    tags = data['tags'] ? data['tags'].split(',') : []
+    tags = data['tags'] ? data['tags'].split(',').map(&:strip) : []
     hair = Hairstyle.new(
       data['id'],
       data['name'],
@@ -55,7 +55,7 @@ def update_global_clothes_list()
 
   # Iterate through the JSON data and create Hat objects
   outfits_data.each do |data|
-    tags = data['tags'] ? data['tags'].split(',') : []
+    tags = data['tags'] ? data['tags'].split(',').map(&:strip) : []
     outfit = Clothes.new(
       data['id'],
       data['name'],

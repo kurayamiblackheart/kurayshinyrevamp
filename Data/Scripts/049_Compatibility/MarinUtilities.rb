@@ -980,45 +980,45 @@ class SpriteHash
   end
 end
 
-# class ByteWriter
-#   def initialize(filename)
-#     @file = File.new(filename, "wb")
-#   end
-#
-#   def <<(*data)
-#     write(*data)
-#   end
-#
-#   def write(*data)
-#     data.each do |e|
-#       if e.is_a?(Array)
-#         e.each { |item| write(item) }
-#       elsif e.is_a?(Numeric)
-#         @file.putc e
-#       else
-#         raise "Invalid data for writing."
-#       end
-#     end
-#   end
-#
-#   def write_int(int)
-#     self << ByteWriter.to_bytes(int)
-#   end
-#
-#   def close
-#     @file.close
-#     @file = nil
-#   end
-#
-#   def self.to_bytes(int)
-#     return [
-#       (int >> 24) & 0xFF,
-#       (int >> 16) & 0xFF,
-#       (int >> 8) & 0xFF,
-#       int & 0xFF
-#     ]
-#   end
-# end
+class ByteWriter
+  def initialize(filename)
+    @file = File.new(filename, "wb")
+  end
+
+  def <<(*data)
+    write(*data)
+  end
+
+  def write(*data)
+    data.each do |e|
+      if e.is_a?(Array)
+        e.each { |item| write(item) }
+      elsif e.is_a?(Numeric)
+        @file.putc e
+      else
+        raise "Invalid data for writing."
+      end
+    end
+  end
+
+  def write_int(int)
+    self << ByteWriter.to_bytes(int)
+  end
+
+  def close
+    @file.close
+    @file = nil
+  end
+
+  def self.to_bytes(int)
+    return [
+      (int >> 24) & 0xFF,
+      (int >> 16) & 0xFF,
+      (int >> 8) & 0xFF,
+      int & 0xFF
+    ]
+  end
+end
 
 class Bitmap
   def save_to_png(filename)
@@ -1058,7 +1058,13 @@ class Bitmap
       end
     end
     # Zlib deflation
-    smoldata = Zlib::Deflate.deflate(data.pack("C*")).bytes.map
+
+    #OLD KIF used that line below
+    # smoldata = Zlib::Deflate.deflate(data.pack("C*")).bytes.map
+    #NEW PIF OPTIMIZED
+    smoldata = Zlib::Deflate.deflate(data.pack("C*"))
+    smoldata = smoldata.bytes
+    #END OF NEW PIF OPTIMIZED
     # data chunk length
     f.write_int smoldata.size
     # IDAT
@@ -1074,9 +1080,11 @@ class Bitmap
     f << [0x49, 0x45, 0x4E, 0x44]
     # CRC32 checksum
     f.write_int Zlib::crc32([0x49, 0x45, 0x4E, 0x44].pack("C*"))
+
     f.close
     return nil
   end
+  
 end
 
 # Stand-alone methods

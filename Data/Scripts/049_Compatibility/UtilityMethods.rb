@@ -62,7 +62,7 @@ def extract_custom_sprites_that_evolve_into_non_customs(includeOnlyNextEvos=true
       next if nextEvolutions.empty?
       for evolution in nextEvolutions
         evoSpecies = evolution[0]
-        if !customSpriteExists(evoSpecies) && !alreadyWritten.include?(evoSpecies)
+        if !customSpriteExistsSpecies(evoSpecies) && !alreadyWritten.include?(evoSpecies)
                   body = getBodyID(evoSpecies)
                   head = getHeadID(evoSpecies,body)
                   f.write((evoSpecies.to_s) +";")
@@ -108,7 +108,7 @@ def extract_pokes_with_non_custom_final_evos(includeOnlyNextEvos=true)
       for evolution in nextEvolutions
         evoSpecies = evolution[0]
         isFinalEvo = GameData::Species.get(evoSpecies).get_evolutions.empty?
-        if !customSpriteExists(evoSpecies) && !alreadyWritten.include?(evoSpecies) && isFinalEvo
+        if !customSpriteExistsSpecies(evoSpecies) && !alreadyWritten.include?(evoSpecies) && isFinalEvo
           body = getBodyID(evoSpecies)
           head = getHeadID(evoSpecies,body)
           f.write((evoSpecies.to_s) +";")
@@ -158,7 +158,7 @@ def extract_incomplete_evolution_lines
       non_customs = []
       nbCustoms=0
       for stage in evolutions
-        if !customSpriteExists(stage)
+        if !customSpriteExistsSpecies(stage)
           non_customs << stage
         else
           nbCustoms+=1

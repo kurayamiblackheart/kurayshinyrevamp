@@ -46,7 +46,18 @@ def get_hair_sets_list_path()
 end
 
 
-# Input: red_a
+def getSimplifiedHairIdFromFullID(full_id)
+  split_id = getSplitHairFilenameAndVersionFromID(full_id)
+  return split_id[1] if split_id.length > 1
+  return ""
+end
+
+def getVersionFromFullID(full_id)
+  split_id = getSplitHairFilenameAndVersionFromID(full_id)
+  return split_id[0]
+end
+
+# Input: 1_red
 # Output: ["1","red"]
 def getSplitHairFilenameAndVersionFromID(hairstyle_id)
   return "" if !hairstyle_id
@@ -60,44 +71,28 @@ def getFullHairId(hairstyle,version)
 end
 
 def getOverworldHairFilename(hairstyle_id)
-  # matches = hairstyle_id.to_s.match(/\A(\d+)([A-Za-z])?\z/)
-  # return "" if !matches
-  # hair_id = matches[1]
-  # version = matches.length > 1 ? matches[2] : "a"
   hairstyle_split = getSplitHairFilenameAndVersionFromID(hairstyle_id)
   name= hairstyle_split[-1]
   version= hairstyle_split[-2]
 
-  # match_data = hairstyle_id.match(/(\d+)_/)
-  # version = match_data[0].to_i if match_data
-
-
   base_path = Settings::PLAYER_GRAPHICS_FOLDER + Settings::PLAYER_HAIR_FOLDER
   dynamic_path = _INTL("/{1}/", name)
   filename = _INTL(Settings::PLAYER_HAIR_FOLDER + "_{1}_{2}",version, name)
-  #filename += version if version
   full_path = base_path + dynamic_path + filename
   return full_path
 end
 
 def getTrainerSpriteHairFilename(hairstyle_id)
-  # matches = hairstyle_id.to_s.match(/\A(\d+)([A-Za-z])?\z/)
-  # return "" if !matches
-  # hair_id = matches[1]
-  # version = matches.length > 1 ? matches[2] : "a"
   return "" if !hairstyle_id
   hairstyle_id= hairstyle_id.to_s
   hairstyle_split= hairstyle_id.split("_")
   name= hairstyle_split[-1]
   version= hairstyle_split[-2]
 
-  # match_data = hairstyle_id.match(/(\d+)_/)
-  # version = match_data[0].to_i if match_data
 
   base_path = Settings::PLAYER_GRAPHICS_FOLDER + Settings::PLAYER_HAIR_FOLDER
   dynamic_path = _INTL("/{1}/", name)
   filename = _INTL(Settings::PLAYER_HAIR_FOLDER + "_trainer_{1}_{2}",version, name)
-  #filename += version if version
   full_path = base_path + dynamic_path + filename
   return full_path
 end

@@ -32,6 +32,10 @@ class PokemonHatView
 
   end
 
+  def getWindowWidth()
+    return @previewwindow.width/2
+  end
+
   def initialize_arrows()
     middle_horizontal = 100
     width_horizontal = 90
