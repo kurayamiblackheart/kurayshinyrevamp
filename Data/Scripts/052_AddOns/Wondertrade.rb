@@ -94,7 +94,7 @@ def pbWonderTrade(lvl, except = [], except2 = [], premiumWonderTrade = true)
       end
       species = 0 if bst > bstLimit
       if species > 0 && premiumWonderTrade
-        species = 0 if !customSpriteExists(species)
+        species = 0 if !customSpriteExistsSpecies(species)
       end
       if species > 0
         skipLegendaryCheck = premiumWonderTrade && rand(100) < luck

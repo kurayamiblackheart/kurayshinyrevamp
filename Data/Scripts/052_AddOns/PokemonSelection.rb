@@ -61,14 +61,15 @@ module PokemonSelection
     return ret
   end
 
-  def self.choose(min=1, max=6, canCancel=false, acceptFainted=false)
+  def self.choose(min=1, max=6, canCancel=false, acceptFainted=false, ableproc=nil)
     if $PokemonGlobal.pokemonSelectionOriginalParty
-      raise "Can't choose a new party until restore the old one"
+      PokemonSelection.restore
+      echoln "Can't choose a new party until restore the old one"
     end
     validPartyChosen=false
     pbBattleChallenge.set("pokemonSelectionRules",7,self.rules(min,max))
     loop do
-      pbEntryScreen
+      pbEntryScreen(ableproc)
       validPartyChosen=(pbBattleChallenge.getParty!=nil)
       break if(canCancel || validPartyChosen)
       Kernel.pbMessage(_INTL("Choose a Pokémon."))
@@ -82,6 +83,10 @@ module PokemonSelection
     end
     pbBattleChallenge.pbCancel
     return validPartyChosen
+  end
+
+  def self.saveParty()
+    $PokemonGlobal.pokemonSelectionOriginalParty=$Trainer.party
   end
 
 
@@ -125,4 +130,8 @@ end
 
 class BattleChallenge; def getParty; return @bc.party; end; end
 
-class PokemonGlobalMetadata; attr_accessor :pokemonSelectionOriginalParty; end
+class PokemonGlobalMetadata
+  attr_accessor :pokemonSelectionOriginalParty
+  attr_accessor :pokemonSelectionOriginalBag
+
+end

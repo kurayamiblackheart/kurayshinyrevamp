@@ -178,6 +178,10 @@ def getDayOfTheWeek()
   return UnrealTime::WEEK_DAYS[day_of_week]
 end
 
+def isDayOfTheWeek(day)
+  return day == getDayOfTheWeek()
+end
+
 def pbGetTimeNow
   return Time.now if !$PokemonGlobal || !UnrealTime::ENABLED
   day_seconds = 60 * 60 * 24

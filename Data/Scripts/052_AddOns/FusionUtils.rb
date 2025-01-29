@@ -143,15 +143,15 @@ def get_fusion_spritename(head_id, body_id, alt_letter = "")
   return "#{head_id}.#{body_id}#{alt_letter}"
 end
 
-def customSpriteExistsSpecies(species)
-  head = getBasePokemonID(species, false)
-  body = getBasePokemonID(species, true)
-  return customSpriteExists(body, head)
-  # pathCustom = getCustomSpritePath(body, head)
-  #
-  # return true if pbResolveBitmap(pathCustom) != nil
-  # return download_custom_sprite(head, body) != nil
-end
+# def customSpriteExistsSpecies(species)
+#   head = getBasePokemonID(species, false)
+#   body = getBasePokemonID(species, true)
+#   return customSpriteExists(body, head)
+#   # pathCustom = getCustomSpritePath(body, head)
+#   #
+#   # return true if pbResolveBitmap(pathCustom) != nil
+#   # return download_custom_sprite(head, body) != nil
+# end
 
 
 # old code
@@ -230,8 +230,12 @@ def customSpriteExistsSpecies(species)
 end
 
 def customSpriteExists(body, head)
-  fusion_id = get_fusion_symbol(head, body)
-  return $game_temp.custom_sprites_list.include?(fusion_id)
+  # fusion_id = get_fusion_symbol(head, body)
+  # return $game_temp.custom_sprites_list.include?(fusion_id)
+  pathCustom = getCustomSpritePath(body,head)
+
+  return true if pbResolveBitmap(pathCustom) != nil
+  return download_custom_sprite(head, body) != nil
 end
 
 #shortcut for using in game events because of script characters limit

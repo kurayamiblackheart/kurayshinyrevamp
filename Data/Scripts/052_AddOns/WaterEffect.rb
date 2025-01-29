@@ -5,7 +5,7 @@ Events.onStepTakenFieldMovement += proc { |_sender, e|
     event.each_occupied_tile do |x, y|
       mapTerrainTag = $MapFactory.getTerrainTag(event.map.map_id, x, y, false)
       if $PokemonGlobal.surfing
-        if isWaterTerrain?(mapTerrainTag)
+        if isWaterTerrain?(mapTerrainTag) #&& $PokemonGlobal.stepcount % 2 ==0
           $scene.spriteset.addUserAnimation(PUDDLE_ANIMATION_ID, event.x, event.y, true, 0)
         end
       else

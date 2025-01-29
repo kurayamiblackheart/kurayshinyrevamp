@@ -15,9 +15,7 @@ end
 
 
 def isNightmareEffect()
-  #return false
-  #return true
-  return $game_switches[SWITCH_NIGHTMARE_EFFECT] && pbGet(VAR_KARMA)<= 0 && PBDayNight.isNight?
+  return $game_switches[SWITCH_NIGHTMARE_EFFECT] && PBDayNight.isNight?
 end
 
 
@@ -53,6 +51,7 @@ Events.onStepTaken += proc { |sender, e|
   steps_nb = rand(steps_chance)+pbGet(VAR_KARMA)+steps_constant_offset
   steps_nb = minimum_steps if steps_nb<minimum_steps
   next if $PokemonGlobal.stepcount % steps_nb != 0
+  next if !isOutdoor()
   $PokemonTemp.pbClearSilhouetteEvents
   spawnSilhouette()
 }

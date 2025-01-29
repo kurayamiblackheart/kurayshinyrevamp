@@ -680,7 +680,7 @@ class PokeBattle_Battler
     ensure_form_has_sprite(@pokemon,spriteform_body,spriteform_head)
 
     if self.isFusion?
-      current_form_has_custom = customSpriteExists(@pokemon.species)
+      current_form_has_custom = customSpriteExistsSpecies(@pokemon.species)
       new_form_has_custom = customSpriteExistsForm(@pokemon.species, spriteform_head, spriteform_body)
       should_change_sprite = (current_form_has_custom && new_form_has_custom) || !current_form_has_custom
     else

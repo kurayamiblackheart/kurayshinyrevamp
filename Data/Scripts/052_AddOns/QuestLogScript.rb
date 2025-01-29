@@ -31,7 +31,7 @@ class Quest
     self.npc = npc
     self.sprite = sprite
     self.location = location
-    self.color = self.npc == "Hotel Quests" ? pbColor(:BLUE) : pbColor(color)
+    self.color = pbColor(color)
     self.time = time
     self.completed = completed
   end
@@ -66,120 +66,134 @@ def pbColor(color)
   return Color.new(63, 6, 121) if color == :DARKPURPLE
   return Color.new(113, 16, 209) if color == :PURPLE
   return Color.new(219, 183, 37) if color == :ORANGE
+  return Color.new(255, 255, 255,0) if color == :INVISIBLE
   return Color.new(255, 255, 255)
 end
 
-defaultQuestColor = :PURPLE
-specialQuestColor = :DARKRED
-questBranchHotels = "Hotel Quests"
-questBranchField = "Field Quests"
 
-QUESTS = [
+HotelQuestColor = :GOLD
+FieldQuestColor = :PURPLE
+LegendaryQuestColor = :GOLD
+TRQuestColor = :DARKRED
+
+QuestBranchHotels = "Hotel Quests"
+QuestBranchField = "Field Quests"
+QuestBranchRocket = "Team Rocket Quests"
+QuestBranchLegendary = "Legendary Quests"
+
+#todo: convert to non-numerical ids like team rocket quests
+QUESTS = {
   #Pewter hotel
-  Quest.new(0, "Mushroom Gathering", "A lady in Pewter City wants you to bring her 3 TinyMushroom from Viridian Forest to make a stew.", questBranchHotels, "BW (74)", "Pewter City", defaultQuestColor),
-  Quest.new(1, "Lost Medicine", "A youngster in Pewter City needs your help to find a lost Revive. He lost it by sitting on a bench somewhere in Pewter City.", questBranchHotels, "BW (19)", "Pewter City", defaultQuestColor),
-  Quest.new(2, "Bug Evolution", "A Bug Catcher in Pewter City wants you to show him a fully-evolved Bug Pokémon.", questBranchHotels, "BWBugCatcher_male", "Pewter City", defaultQuestColor),
+  "pewter_1" => Quest.new("pewter_1", "Mushroom Gathering", "A lady in Pewter City wants you to bring her 3 TinyMushroom from Viridian Forest to make a stew.", QuestBranchHotels, "BW (74)", "Pewter City", HotelQuestColor),
+  "pewter_2" =>Quest.new("pewter_2", "Lost Medicine", "A youngster in Pewter City needs your help to find a lost Revive. He lost it by sitting on a bench somewhere in Pewter City.", QuestBranchHotels, "BW (19)", "Pewter City", HotelQuestColor),
+  "pewter_3" =>Quest.new("pewter_3", "Bug Evolution ", "A Bug Catcher in Pewter City wants you to show him a fully-evolved Bug Pokémon.", QuestBranchHotels, "BWBugCatcher_male", "Pewter City", HotelQuestColor),
+  63 => Quest.new(63, "I Choose You!", "A Pikachu in the PokéMart has lost its official Pokémon League Hat. Find one and give it to the Pikachu!", QuestBranchField, "YOUNGSTER_LeagueHat", "Pewter City", FieldQuestColor),
 
   #Cerulean hotel
-  Quest.new(3, "Playing Cupid", "A boy in Cerulean City wants you bring a love letter to a Pokémon Breeder named Maude. She's probably somewhere in one of the routes near Cerulean City", questBranchHotels, "BW (18)", "Cerulean City", defaultQuestColor),
-  Quest.new(4, "Fishing for Sole", "A fisherman wants you to fish up an old boot. Hook it up with the old rod in any body of water.", questBranchHotels, "BW (71)", "Cerulean City", defaultQuestColor),
-  Quest.new(5, "Johto Pokémon", "A woman in Cerulean City wants you to show her a Pokémon native to the Johto region.", questBranchHotels, "BW (37)", "Cerulean City", defaultQuestColor),
+  3 => Quest.new(3, "Playing Cupid", "A boy in Cerulean City wants you bring a love letter to a Pokémon Breeder named Maude. She's probably somewhere in one of the routes near Cerulean City", QuestBranchHotels, "BW (18)", "Cerulean City", HotelQuestColor),
+  4 => Quest.new(4, "Fishing for Sole", "A fisherman wants you to fish up an old boot. Hook it up with the old rod in any body of water.", QuestBranchHotels, "BW (71)", "Cerulean City", HotelQuestColor),
+  5 => Quest.new(5, "Johto Pokémon", "An traveller in the PokéMart wants you to show him a Pokémon native to the Johto region.", QuestBranchHotels, "traveller_johto", "Cerulean City", HotelQuestColor),
+  "cerulean_2" => Quest.new(5, "Type Experts", "Defeat all of the Type Experts scattered around the Kanto region (#{pbGet(VAR_TYPE_EXPERTS_BEATEN)}/#{TOTAL_NB_TYPE_EXPERTS})", QuestBranchHotels, "expert-normal", "Cerulean City", HotelQuestColor),
 
   #Route 24
-  Quest.new(6, "Field Research (Part 1)", "Professor Oak's aide wants you to catch an Abra.", questBranchField, "BW (82)", "Route 24", defaultQuestColor),
-  Quest.new(7, "Field Research (Part 2)", "Professor Oak's aide wants you to encounter every Pokémon on Route 24.", questBranchField, "BW (82)", "Route 24", defaultQuestColor),
-  Quest.new(8, "Field Research (Part 3)", "Professor Oak's aide wants you to catch a Buneary using the Pokéradar.", questBranchField, "BW (82)", "Route 24", defaultQuestColor),
+  6 => Quest.new(6, "Field Research (Part 1)", "Professor Oak's aide wants you to catch an Abra.", QuestBranchField, "BW (82)", "Route 24", FieldQuestColor),
+  7 => Quest.new(7, "Field Research (Part 2)", "Professor Oak's aide wants you to encounter every Pokémon on Route 24.", QuestBranchField, "BW (82)", "Route 24", FieldQuestColor),
+  8 => Quest.new(8, "Field Research (Part 3)", "Professor Oak's aide wants you to catch a Buneary using the Pokéradar.", QuestBranchField, "BW (82)", "Route 24", FieldQuestColor),
 
   #Vermillion City
-  Quest.new(9, "Unusual Types 1", "A woman at the hotel wants you to show her a Water/Fire-type Pokémon", questBranchHotels, "BW (58)", "Vermillion City", defaultQuestColor),
-  Quest.new(10, "Trainer House", "Earn 10 Trainer Points at the Trainer House in Viridian City", questBranchHotels, "BW (55)", "Vermillion City", defaultQuestColor),
-  Quest.new(11, "Powering the Lighthouse", "Catch some Voltorb to power up the lighthouse", questBranchHotels, "BW (43)", "Vermillion City", defaultQuestColor),
-  Quest.new(12, "Seafood Cocktail ", "Get some steamed Krabby legs from the S.S. Anne's kitchen and bring them back to the hotel before they get cold", questBranchHotels, "BW (36)", "Vermillion City", defaultQuestColor),
-  Quest.new(13, "Building Materials ", "Get some wooden planks from Viridian City and some Bricks from Pewter City.", questBranchField, "BW (36)", "Vermillion City", defaultQuestColor),
+  9 => Quest.new(9, "Unusual Types 1", "A woman at the hotel wants you to show her a Water/Fire-type Pokémon", QuestBranchHotels, "BW (58)", "Vermillion City", HotelQuestColor),
+  10 => Quest.new(10, "Trainer House", "Earn 10 Trainer Points at the Trainer House in Viridian City", QuestBranchHotels, "BW (55)", "Vermillion City", HotelQuestColor),
+  11 => Quest.new(11, "Powering the Lighthouse", "Catch some Voltorb to power up the lighthouse", QuestBranchHotels, "BW (43)", "Vermillion City", HotelQuestColor),
+  12 => Quest.new(12, "Seafood Cocktail ", "Get some steamed Krabby legs from the S.S. Anne's kitchen and bring them back to the hotel before they get cold", QuestBranchHotels, "BW (36)", "Vermillion City", HotelQuestColor),
+  13 => Quest.new(13, "Building Materials ", "Get some wooden planks from Viridian City and some Bricks from Pewter City.", QuestBranchField, "BW (36)", "Vermillion City", FieldQuestColor),
+  64 => Quest.new(64, "Waiter on the Water", "The S.S. Anne waiter wants you to take restaurant orders while he went to get a replacement cake.", QuestBranchField, "BW (53)", "S.S. Anne", FieldQuestColor),
 
   #Celadon City
-  Quest.new(14, "Sun or Moon", "Show the Pokémon that Eevee evolves when exposed to a Moon or Sun stone to help the scientist with her research.", questBranchHotels, "BW (82)", "Celadon City", defaultQuestColor),
-  Quest.new(15, "For Whom the Bell Tolls", "Ring Lavender Town's bell when the time is right to reveal its secret.", questBranchHotels, "BW (40)", "Lavender Town", defaultQuestColor),
-  Quest.new(16, "Hardboiled", "A lady wants you to give her an egg to make an omelette.", questBranchHotels, "BW (24)", "Celadon City", defaultQuestColor),
-  Quest.new(17, "A stroll with Eevee!", "Walk Eevee around for a while until it gets tired.", questBranchField, "BW (37)", "Celadon City", defaultQuestColor),
+  14 => Quest.new(14, "Sun or Moon", "Show the Pokémon that Eevee evolves when exposed to a Moon or Sun stone to help the scientist with her research.", QuestBranchHotels, "BW (82)", "Celadon City", HotelQuestColor),
+  15 => Quest.new(15, "For Whom the Bell Tolls", "Ring Lavender Town's bell when the time is right to reveal its secret.", QuestBranchHotels, "BW (40)", "Lavender Town", HotelQuestColor),
+  16 => Quest.new(16, "Hardboiled", "A lady wants you to give her an egg to make an omelette.", QuestBranchHotels, "BW (24)", "Celadon City", HotelQuestColor),
+  17 => Quest.new(17, "A stroll with Eevee!", "Walk Eevee around for a while until it gets tired.", QuestBranchField, "BW (37)", "Celadon City", FieldQuestColor),
 
   #Fuchsia City
-  Quest.new(18, "Cleaning up the Cycling Road", "Get rid of all the Pokémon dirtying up the Cycling Road.", questBranchHotels, "BW (77)", "Fuchsia City", defaultQuestColor),
-  Quest.new(19, "Lost Pokémon!", "Find the lost Chansey's trainer!", questBranchHotels, "113", "Fuchsia City", defaultQuestColor),
-  Quest.new(20, "Bicycle Race!", "Go meet the Cyclist at the bottom of Route 17 and beat her time up the Cycling Road!", questBranchHotels, "BW032", "Cycling Road", defaultQuestColor),
+  18 => Quest.new(18, "Cleaning up the Cycling Road", "Get rid of all the Pokémon dirtying up the Cycling Road.", QuestBranchHotels, "BW (77)", "Fuchsia City", HotelQuestColor),
+  19 => Quest.new(19, "Lost Pokémon!", "Find the lost Chansey's trainer!", QuestBranchHotels, "113", "Fuchsia City", HotelQuestColor),
+  20 => Quest.new(20, "Bicycle Race!", "Go meet the Cyclist at the bottom of Route 17 and beat her time up the Cycling Road!", QuestBranchHotels, "BW032", "Cycling Road", HotelQuestColor),
 
   #Crimson City
-  Quest.new(21, "Shellfish Rescue", "Put all the stranded Shellders back in the water on the route to Crimson City.", questBranchHotels, "BW (48)", "Crimson City", defaultQuestColor),
-  Quest.new(22, "Fourth Round Rumble", "Defeat Jeanette and her high-level Bellsprout in a Pokémon Battle", questBranchHotels, "BW024", "Crimson City", defaultQuestColor),
-  Quest.new(23, "Unusual Types 2", "A woman at the hotel wants you to show her a Normal/Ghost-type Pokémon", questBranchHotels, "BW (58)", "Crimson City", defaultQuestColor),
+  21 => Quest.new(21, "Shellfish Rescue", "Put all the stranded Shellders back in the water on the route to Crimson City.", QuestBranchHotels, "BW (48)", "Crimson City", HotelQuestColor),
+  22 => Quest.new(22, "Fourth Round Rumble", "Defeat Jeanette and her high-level Bellsprout in a Pokémon Battle", QuestBranchHotels, "BW024", "Crimson City", HotelQuestColor),
+  23 => Quest.new(23, "Unusual Types 2", "A woman at the hotel wants you to show her a Normal/Ghost-type Pokémon", QuestBranchHotels, "BW (58)", "Crimson City", HotelQuestColor),
 
   #Saffron City
-  Quest.new(24, "Dancing Queen!", "Dance with the Copycat Girl!", questBranchField, "BW (24)", "Saffron City (nightclub)", defaultQuestColor),
-  Quest.new(25, "Sinnoh Pokémon", "A woman wants you to show her a Pokémon native to the Sinnoh region.", questBranchHotels, "BW (37)", "Saffron City", defaultQuestColor),
-  Quest.new(26, "Lost Puppies", "Find all of the missing Growlithe in the routes around Saffron City.", questBranchHotels, "BW (73)", "Saffron City", defaultQuestColor),
-  Quest.new(27, "Invisible Pokémon", "Find an invisible Pokémon in the eastern part of Saffron City.", questBranchHotels, "BW (57)", "Saffron City", defaultQuestColor),
-  Quest.new(28, "Bad to the Bone!", "Find a Rare Bone using Rock Smash.", questBranchHotels, "BW (72)", "Saffron City", defaultQuestColor),
+  24 => Quest.new(24, "Dancing Queen!", "Dance with the Copycat Girl!", QuestBranchField, "BW (24)", "Saffron City (nightclub)", FieldQuestColor),
+    #celadon
+  25 => Quest.new(25, "Sinnoh Pokémon", "A traveller in the Department Center wants you to show him a Pokémon native to the Sinnoh region.", QuestBranchHotels, "traveller_sinnoh", "Celadon City", HotelQuestColor),
+  26 => Quest.new(26, "Lost Puppies", "Find all of the missing Growlithe in the routes around Saffron City.", QuestBranchHotels, "BW (73)", "Saffron City", HotelQuestColor),
+  27 => Quest.new(27, "Invisible Pokémon", "Find an invisible Pokémon in the eastern part of Saffron City.", QuestBranchHotels, "BW (57)", "Saffron City", HotelQuestColor),
+  28 => Quest.new(28, "Bad to the Bone!", "Find a Rare Bone using Rock Smash.", QuestBranchHotels, "BW (72)", "Saffron City", HotelQuestColor),
 
   #Cinnabar Island
-  Quest.new(29, "The transformation Pokémon", "The scientist wants you to find some Quick Powder that can sometimes be found with wild Ditto in the mansion's basement.", questBranchHotels, "BW (82)", "Cinnabar Island", defaultQuestColor),
-  Quest.new(30, "Diamonds and Pearls", "Find a Diamond Necklace to save the man's marriage.", questBranchHotels, "BW (71)", "Cinnabar Island", defaultQuestColor),
+  29 => Quest.new(29, "The transformation Pokémon", "The scientist wants you to find some Quick Powder that can sometimes be found with wild Ditto in the mansion's basement.", QuestBranchHotels, "BW (82)", "Cinnabar Island", HotelQuestColor),
+  30 => Quest.new(30, "Diamonds and Pearls", "Find a Diamond Necklace to save the man's marriage.", QuestBranchHotels, "BW (71)", "Cinnabar Island", HotelQuestColor),
+  62 => Quest.new(62, "Alola Pokémon", "A traveller in the PokéMart wants you to show him a Pokémon native to the Alola region.", QuestBranchHotels, "traveller_alola", "Cinnabar Island", HotelQuestColor),
 
+  #Vermillion City
+  31 => Quest.new(31, "Hoenn Pokémon", "A traveller in the PokéMart you to show him a Pokémon native to the Hoenn region.", QuestBranchHotels, "traveller_hoenn", "Vermillion City", HotelQuestColor),
   #Goldenrod City
-  Quest.new(31, "Hoenn Pokémon", "A woman wants you to show her a Pokémon native to the Hoenn region.", questBranchHotels, "BW (48)", "Goldenrod City", defaultQuestColor),
-  Quest.new(32, "Safari Souvenir!", "Bring back a souvenir from the Fuchsia City Safari Zone", questBranchHotels, "BW (28)", "Goldenrod City", defaultQuestColor),
+  32 => Quest.new(32, "Safari Souvenir!", "Bring back a souvenir from the Fuchsia City Safari Zone", QuestBranchHotels, "BW (28)", "Goldenrod City", HotelQuestColor),
+  65 => Quest.new(65, "Undercover police work!", "Go see the police in Goldenrod City to help them with an important police operation.", QuestBranchField, "BW (80)", "Goldenrod City", FieldQuestColor),
+  66 => Quest.new(66, "Pinkan Island!", "Team Rocket is planning a heist on Pinkan Island. You joined forces with the police to stop them!", QuestBranchField, "BW (80)", "Goldenrod City", FieldQuestColor),
 
   #Violet City
-  Quest.new(33, "Defuse the Pinecones!", "Get rid of all the Pineco on Route 31 and Route 30", questBranchHotels, "BW (64)", "Violet City", defaultQuestColor),
-  Quest.new(34, "Find Slowpoke's Tail!", "Find a SlowpokeTail in some flowers, somewhere around Violet City!", questBranchHotels, "BW (19)", "Violet City", defaultQuestColor),
+  33 => Quest.new(33, "Defuse the Pinecones!", "Get rid of all the Pineco on Route 31 and Route 30", QuestBranchHotels, "BW (64)", "Violet City", HotelQuestColor),
+  34 => Quest.new(34, "Find Slowpoke's Tail!", "Find a SlowpokeTail in some flowers, somewhere around Violet City!", QuestBranchHotels, "BW (19)", "Violet City", HotelQuestColor),
 
   #Blackthorn City
-  Quest.new(35, "Dragon Evolution", "A Dragon Tamer in Blackthorn City wants you to show her a fully-evolved Dragon Pokémon.", questBranchHotels, "BW014", "Blackthorn City", defaultQuestColor),
-  Quest.new(36, "Sunken Treasure!", "Find an old memorabilia on a sunken ship near Cinnabar Island.", questBranchHotels, "BW (28)", "Blackthorn City", defaultQuestColor),
-  Quest.new(37, "The Largest Carp", "A fisherman wants you to fish up a Magikarp that's exceptionally high-level at Dragon's Den.", questBranchHotels, "BW (71)", "Blackthorn City", defaultQuestColor),
+  35 => Quest.new(35, "Dragon Evolution", "A Dragon Tamer in Blackthorn City wants you to show her a fully-evolved Dragon Pokémon.", QuestBranchHotels, "BW014", "Blackthorn City", HotelQuestColor),
+  36 => Quest.new(36, "Sunken Treasure!", "Find an old memorabilia on a sunken ship near Cinnabar Island.", QuestBranchHotels, "BW (28)", "Blackthorn City", HotelQuestColor),
+  37 => Quest.new(37, "The Largest Carp", "A fisherman wants you to fish up a Magikarp that's exceptionally high-level at Dragon's Den.", QuestBranchHotels, "BW (71)", "Blackthorn City", HotelQuestColor),
 
+    #saffron
+  38 => Quest.new(38, "Kalos Pokémon", "A traveller in the PokéMart wants you to show him a Pokémon native to the Kalos region.", QuestBranchHotels, "traveller_kalos", "Saffron City", HotelQuestColor),
   #Ecruteak City
-  Quest.new(38, "Kalos Pokémon", "A woman wants you to show her a Pokémon native to the Kalos region.", questBranchHotels, "BW (348)", "Ecruteak City", defaultQuestColor),
-  Quest.new(39, "Ghost Evolution", "A girl in Ecruteak City wants you to show her a fully-evolved Ghost Pokémon.", questBranchHotels, "BW014", "Ecruteak City", defaultQuestColor),
+  39 => Quest.new(39, "Ghost Evolution", "A girl in Ecruteak City wants you to show her a fully-evolved Ghost Pokémon.", QuestBranchHotels, "BW014", "Ecruteak City", HotelQuestColor),
 
   #Kin Island
-  Quest.new(40, "Banana Slamma!", "Collect 30 bananas", questBranchHotels, "BW059", "Kin Island", defaultQuestColor),
-  Quest.new(41, "Unova Pokémon", "A woman wants you to show her a Pokémon native to the Unova region.", questBranchHotels, "BW (48)", "Kin Island", defaultQuestColor),
-  Quest.new(42, "Stolen artifact", "Recover a stolen vase from a burglar in the Pokémon Mansion", questBranchHotels, "BW (21)", "Cinnabar Island", defaultQuestColor),
-  Quest.new(43, "Fallen Meteor", "Investigate a crater near Bond Bridge.", questBranchHotels, "BW009", "Kin Island", defaultQuestColor),
-  Quest.new(44, "First Contact", "Find the missing pieces of a fallen alien spaceship", questBranchHotels, "BW (92)", "Bond Bridge", specialQuestColor),
-  Quest.new(45, "First Contact (Part 2)", "Ask the sailor at Cinnabar Island's harbour to take you to the uncharted island where the spaceship might be located", questBranchHotels, "BW (92)", "Bond Bridge", specialQuestColor),
-  Quest.new(46, "The rarest fish", "A fisherman wants you to show him a Feebas. Apparently they can be fished around the Sevii Islands when it rains.", questBranchField, "BW056", "Kin Island", specialQuestColor),
+  40 => Quest.new(40, "Banana Slamma!", "Collect 30 bananas", QuestBranchHotels, "BW059", "Kin Island", HotelQuestColor),
+    #fuchsia
+  41 => Quest.new(41, "Unova Pokémon", "A traveller in the PokéMart wants you to show him a Pokémon native to the Unova region.", QuestBranchHotels, "traveller_unova", "Fuchsia City", HotelQuestColor),
+  42 => Quest.new(42, "Stolen artifact", "Recover a stolen vase from a burglar in the Pokémon Mansion", QuestBranchHotels, "BW (21)", "Cinnabar Island", HotelQuestColor),
+  43 => Quest.new(43, "Fallen Meteor", "Investigate a crater near Bond Bridge.", QuestBranchHotels, "BW009", "Kin Island", HotelQuestColor),
+  44 => Quest.new(44, "First Contact", "Find the missing pieces of a fallen alien spaceship", QuestBranchHotels, "BW (92)", "Bond Bridge", LegendaryQuestColor),
+  45 => Quest.new(45, "First Contact (Part 2)", "Ask the sailor at Cinnabar Island's harbour to take you to the uncharted island where the spaceship might be located", QuestBranchHotels, "BW (92)", "Bond Bridge", LegendaryQuestColor),
+  46 => Quest.new(46, "The rarest fish", "A fisherman wants you to show him a Feebas. Apparently they can be fished around the Sevii Islands when it rains.", QuestBranchField, "BW056", "Kin Island", FieldQuestColor),
 
   #Necrozma quest
-  Quest.new(47, "Mysterious prisms", "You found a pedestal with a mysterious prism on it. There seems to be room for more prisms.", questBranchField, "BW_Sabrina", "Pokémon Tower", specialQuestColor),
+  47 => Quest.new(47, "Mysterious prisms", "You found a pedestal with a mysterious prism on it. There seems to be room for more prisms.", QuestBranchLegendary, "BW_Sabrina", "Pokémon Tower", LegendaryQuestColor),
 
-  Quest.new(48, "The long night (Part 1)", "A mysterious darkness has shrouded some of the region. Meet Sabrina outside of Saffron City's western gate to investigate.", questBranchField, "BW_Sabrina", "Lavender Town", specialQuestColor),
-  Quest.new(49, "The long night (Part 2)", "The mysterious darkness has expended. Meet Sabrina on top of Celadon City's Dept. Store to figure out the source of the darkness.", questBranchField, "BW_Sabrina", "Route 7", specialQuestColor),
-  Quest.new(50, "The long night (Part 3)", "Fuchsia City appears to be unaffected by the darkness. Go investigate to see if you can find out more information.", questBranchField, "BW_Sabrina", "Celadon City", specialQuestColor),
-  Quest.new(51, "The long night (Part 4)", "The mysterious darkness has expended yet again and strange plants have appeared. Follow the plants to see where they lead.", questBranchField, "BW_koga", "Fuchsia City", specialQuestColor),
-  Quest.new(52, "The long night (Part 5)", "You found a strange fruit that appears to be related to the mysterious darkness. Go see professor Oak to have it analyzed.", questBranchField, "BW029", "Safari Zone", specialQuestColor),
-  Quest.new(53, "The long night (Part 6)", "The strange plant you found appears to glow in the mysterious darkness that now covers the entire region. Try to follow the glow to find out the source of the disturbance.", questBranchField, "BW-oak", "Pallet Town", specialQuestColor),
+  48 => Quest.new(48, "The long night (Part 1)", "A mysterious darkness has shrouded some of the region. Meet Sabrina outside of Saffron City's western gate to investigate.", QuestBranchLegendary, "BW_Sabrina", "Lavender Town", LegendaryQuestColor),
+  49 => Quest.new(49, "The long night (Part 2)", "The mysterious darkness has expended. Meet Sabrina on top of Celadon City's Dept. Store to figure out the source of the darkness.", QuestBranchLegendary, "BW_Sabrina", "Route 7", LegendaryQuestColor),
+  50 => Quest.new(50, "The long night (Part 3)", "Fuchsia City appears to be unaffected by the darkness. Go investigate to see if you can find out more information.", QuestBranchLegendary, "BW_Sabrina", "Celadon City", LegendaryQuestColor),
+  51 => Quest.new(51, "The long night (Part 4)", "The mysterious darkness has expended yet again and strange plants have appeared. Follow the plants to see where they lead.", QuestBranchLegendary, "BW_koga", "Fuchsia City", LegendaryQuestColor),
+  52 => Quest.new(52, "The long night (Part 5)", "You found a strange fruit that appears to be related to the mysterious darkness. Go see professor Oak to have it analyzed.", QuestBranchLegendary, "BW029", "Safari Zone", LegendaryQuestColor),
+  53 => Quest.new(53, "The long night (Part 6)", "The strange plant you found appears to glow in the mysterious darkness that now covers the entire region. Try to follow the glow to find out the source of the disturbance.", QuestBranchLegendary, "BW-oak", "Pallet Town", LegendaryQuestColor),
 
-  Quest.new(54, "Nectar garden", "An old man wants you to bring differently colored flowers for the city's garden.", questBranchField, "BW (039)", "Pewter City", defaultQuestColor),
-  Quest.new(55, "The Cursed Forest", "A child wants you to find a floating tree stump in Ilex Forest. What could she be talking about?", questBranchHotels, "BW109", "Goldenrod City", defaultQuestColor),
-  Quest.new(56, "Bitey Pokémon", "A fisherman wants to know what is the sharp-toothed Pokémon that bit him in the Safari Zone's lake.", questBranchHotels, "BW (71)", "Fuchsia City", defaultQuestColor),
+  54 => Quest.new(54, "Nectar garden", "An old man wants you to bring differently colored flowers for the city's garden.", QuestBranchField, "BW (039)", "Pewter City", FieldQuestColor),
+  55 => Quest.new(55, "The Cursed Forest", "A child wants you to find a floating tree stump in Ilex Forest. What could she be talking about?", QuestBranchHotels, "BW109", "Goldenrod City", HotelQuestColor),
+  56 => Quest.new(56, "Bitey Pokémon", "A fisherman wants to know what is the sharp-toothed Pokémon that bit him in the Safari Zone's lake.", QuestBranchHotels, "BW (71)", "Fuchsia City", HotelQuestColor),
 
-  Quest.new(57, "A legendary band (Part 1)", "The singer of a band in Saffron City wants you to help them recruit a drummer. They think they've heard some drumming around Crimson City...", questBranchField, "BW107", "Saffron City", specialQuestColor),
-  Quest.new(58, "A legendary band (Part 2)", "The drummer from a legendary Pokéband wants you to find its former bandmates. The band manager talked about two former guitarists...", questBranchField, "band_drummer", "Saffron City", specialQuestColor),
-  Quest.new(59, "A legendary band (Part 3)", "The drummer from a legendary Pokéband wants you to find its former bandmates. There are rumors about strange music that was heard around the region.", questBranchField, "band_drummer", "Saffron City", specialQuestColor),
-  Quest.new(60, "A legendary band (Part 4)", "You assembled the full band! Come watch the show on Saturday night.", questBranchField, "BW117", "Saffron City", specialQuestColor),
+  57 => Quest.new(57, "A legendary band (Part 1)", "The singer of a band in Saffron City wants you to help them recruit a drummer. They think they've heard some drumming around Crimson City...", QuestBranchLegendary, "BW107", "Saffron City", LegendaryQuestColor),
+  58 => Quest.new(58, "A legendary band (Part 2)", "The drummer from a legendary Pokéband wants you to find its former bandmates. The band manager talked about two former guitarists...", QuestBranchLegendary, "band_drummer", "Saffron City", LegendaryQuestColor),
+  59 => Quest.new(59, "A legendary band (Part 3)", "The drummer from a legendary Pokéband wants you to find its former bandmates. There are rumors about strange music that was heard around the region.", QuestBranchLegendary, "band_drummer", "Saffron City", LegendaryQuestColor),
+  60 => Quest.new(60, "A legendary band (Part 4)", "You assembled the full band! Come watch the show on Saturday night.", QuestBranchLegendary, "BW117", "Saffron City", LegendaryQuestColor),
 
-  Quest.new(61, "Mysterious Lunar feathers", "A mysterious entity asked you to collect Lunar Feathers for them. It said that they will come at night to tell you where to look. Whoever that may be...", questBranchField, "lunarFeather", "Lavender Town", specialQuestColor),
-
-  # attention: c'est un array et non un hash... l'id est en fait l'index, donc il est important de garder l'ordre
-  #out of order quests
-  #42 (cinnabar)
-
-]
+  61 => Quest.new(61, "Mysterious Lunar feathers", "A mysterious entity asked you to collect Lunar Feathers for them. It said that they will come at night to tell you where to look. Whoever that may be...", QuestBranchLegendary, "lunarFeather", "Lavender Town", LegendaryQuestColor),
+}
 
 class PokeBattle_Trainer
   attr_accessor :quests
 end
+
 
 def pbAcceptNewQuest(id, bubblePosition = 20, show_description=true)
   return if isQuestAlreadyAccepted?(id)
@@ -188,16 +202,20 @@ def pbAcceptNewQuest(id, bubblePosition = 20, show_description=true)
 
   title = QUESTS[id].name
   description = QUESTS[id].desc
+  showNewQuestMessage(title,description,show_description)
 
+  pbAddQuest(id)
+end
+
+def showNewQuestMessage(title,description, show_description)
   pbMEPlay("Voltorb Flip Win")
 
-  pbCallBub(1, bubblePosition)
+  pbCallBub(3)
   Kernel.pbMessage("\\C[6]NEW QUEST: " + title)
   if show_description
-    pbCallBub(1, bubblePosition)
+    pbCallBub(3)
     Kernel.pbMessage("\\C[1]" + description)
   end
-  pbAddQuest(id)
 end
 
 def isQuestAlreadyAccepted?(id)
@@ -235,9 +253,8 @@ end
 
 def pbAddQuest(id)
   $Trainer.quests = [] if $Trainer.quests.class == NilClass
-  for q in QUESTS
-    $Trainer.quests << q if q.id == id
-  end
+  quest = QUESTS[id]
+  $Trainer.quests << quest if quest
 end
 
 def pbDeleteQuest(id)
@@ -312,9 +329,15 @@ class Questlog
     @completed = []
     @ongoing = []
     for q in $Trainer.quests
+      @ongoing << q if !q.completed && @ongoing.include?(q)
+      @completed << q if q.completed && @completed.include?(q)
+    end
+
+    for q in $Trainer.quests
       @ongoing << q if !q.completed
       @completed << q if q.completed
     end
+
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     @viewport.z = 99999
     @sprites = {}
@@ -342,7 +365,6 @@ class Questlog
     #pbDrawOutlineText(@main, 0, 198 - 178, 512, 384, "Completed: " + @completed.size.to_s, Color.new(255, 255, 255), Color.new(0, 0, 0), 1)
     pbDrawOutlineText(@main, 0, 142, 512, 384, "Ongoing: " + @ongoing.size.to_s, Color.new(255, 255, 255), Color.new(0, 0, 0), 1)
     pbDrawOutlineText(@main, 0, 198, 512, 384, "Completed: " + @completed.size.to_s, Color.new(255, 255, 255), Color.new(0, 0, 0), 1)
-
 
     12.times do |i|
       Graphics.update
