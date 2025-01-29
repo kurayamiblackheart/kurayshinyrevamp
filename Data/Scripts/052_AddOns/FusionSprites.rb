@@ -19,6 +19,7 @@ module GameData
           ret = self.front_sprite_bitmap(species, nil, nil, false, false, false)
         end
       end
+      ret.scale_bitmap(pkmn.sprite_scale) #for pokemon with size differences
       return ret
     end
 

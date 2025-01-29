@@ -42,10 +42,10 @@ class PokemonGlobalMetadata
 end
 
 class BetterRegionMap
-  KANTO_DEFAULT_POS=[37,7]
+  KANTO_DEFAULT_POS = [37, 7]
 
   CursorAnimateDelay = 12.0
-  CursorMoveSpeed = 4.0
+  CursorMoveSpeed = 2.0
   TileWidth = 16.0
   TileHeight = 16.0
 
@@ -65,9 +65,9 @@ class BetterRegionMap
       playerpos = [0, 0]
     end
     @fly_anywhere = fly_anywhere
-    @region = 0#(region < 0) ? playerpos[0] : region
+    @region = 0 #(region < 0) ? playerpos[0] : region
     @species = species
-    @show_player = show_player#(show_player && playerpos[0] == @region)
+    @show_player = show_player #(show_player && playerpos[0] == @region)
     @can_fly = can_fly
     @data = load_data("Data/town_map.dat")[@region]
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
@@ -89,8 +89,6 @@ class BetterRegionMap
     # @window["map"].bmp("Graphics/Pictures/#{@data[1]}")
     @window["map"].bmp("Graphics/Pictures/map/#{mapFilename}")
 
-
-
     # for hidden in REGION_MAP_EXTRAS
     #   if hidden[0] == @region && ((wallmap && hidden[5]) || # always show if looking at wall map, irrespective of switch
     #     (!wallmap && hidden[1] > 0 && $game_switches[hidden[1]]))
@@ -106,13 +104,13 @@ class BetterRegionMap
     if @show_player
       if map_metadata
         player = map_metadata.town_map_position
-        if true#player && player[0] == @region  #only use 1 region
+        if true #player && player[0] == @region  #only use 1 region
           $PokemonGlobal.regionMapSel = [0, 0]
           gender = $Trainer.gender.to_digits(3)
           # @window["player"].bmp("Graphics/Pictures/map/Player#{gender}")
           @window["player"].bmp("Graphics/Pictures/map/location_icon")
           @window["player"].x = TileWidth * player[1] + (TileWidth / 2.0) if player
-          @window["player"].y = TileHeight * player[2] + (TileHeight / 2.0)  if player
+          @window["player"].y = TileHeight * player[2] + (TileHeight / 2.0) if player
           @window["player"].center_origins
         end
       else
@@ -177,7 +175,6 @@ class BetterRegionMap
 
     @sprites["cursor"].z = 11
 
-
     # Center the window on the cursor
     # windowminx = -1 * (@window["map"].bmp.width - Settings::SCREEN_WIDTH)
     # windowminx = 0 if windowminx > 0
@@ -234,7 +231,7 @@ class BetterRegionMap
           healspot = pbGetHealingSpot(x, y)
           if can_fly_to_location(healspot)
             @window["point#{n}"] = Sprite.new(@mapvp)
-            @window["point#{n}"].bmp("Graphics/Pictures/mapFly")
+            @window["point#{n}"].bmp("Graphics/Pictures/map/mapFly")
             @window["point#{n}"].src_rect.width = @window["point#{n}"].bmp.height
             @window["point#{n}"].x = TileWidth * x + (TileWidth / 2)
             @window["point#{n}"].y = TileHeight * y + (TileHeight / 2)
@@ -248,7 +245,7 @@ class BetterRegionMap
     end
 
     initial_position = calculate_initial_position(player)
-    set_cursor_position(initial_position[0], initial_position[1])
+    init_cursor_position(initial_position[0], initial_position[1])
     center_window()
 
     hideBlk { update(false) }
@@ -259,21 +256,98 @@ class BetterRegionMap
     if player
       x_pos = player[1] if player[1]
       y_pos = player[2] if player[2]
-      return [x_pos,y_pos]
+      return [x_pos, y_pos]
     end
 
     return KANTO_DEFAULT_POS
 
   end
 
-  def set_cursor_position(x, y)
+  def findNearbyHealingSpot(current_x, current_y)
+    range = 5 # Area around each healing spot to check
+    closest_spot = nil
+    min_distance = Float::INFINITY
+
+    for new_x in current_x - range..current_x + range
+      for new_y in current_y - range..current_y + range
+        if can_fly_to_location(pbGetHealingSpot(new_x, new_y))
+          distance = Math.sqrt((new_x - current_x)**2 + (new_y - current_y)**2)
+          if distance < min_distance && !(new_x == current_x && new_y == current_y)
+            min_distance = distance
+            closest_spot = [new_x, new_y]
+          end
+        end
+      end
+    end
+
+    echoln "Closest spot: #{closest_spot.inspect}" if closest_spot
+    return closest_spot
+  end
+
+
+  def synchronize_cursor
+    # Sync logical position to visual cursor position
+    x = (($sprites["cursor"].x - 16) / TileWidth).round
+    y = (($sprites["cursor"].y - 32) / TileHeight).round
+
+    $PokemonGlobal.regionMapSel[0] = x
+    $PokemonGlobal.regionMapSel[1] = y
+
+    # Ensure the window is in the correct position
+    visual_cursor_x = 16 + TileWidth * x
+    visual_cursor_y = 32 + TileHeight * y
+    @sprites["cursor"].x = visual_cursor_x + @window.x
+    @sprites["cursor"].y = visual_cursor_y + @window.y
+  end
+
+
+  def move_cursor_to(x, y)
+    # Update the logical position
+    $PokemonGlobal.regionMapSel[0] = x
+    $PokemonGlobal.regionMapSel[1] = y
+
+    # Calculate the visual position of the cursor based on the logical position
+    visual_cursor_x = 16 + TileWidth * x
+    visual_cursor_y = 32 + TileHeight * y
+
+    # Ensure the map window scrolls to keep the cursor centered when needed
+    # Calculate bounds for the map window
+    window_min_x = -1 * (@window["map"].bmp.width - Settings::SCREEN_WIDTH)
+    window_min_x = 0 if window_min_x > 0
+    window_min_y = -1 * (@window["map"].bmp.height - Settings::SCREEN_HEIGHT)
+    window_min_y = 0 if window_min_y > 0
+
+    # Adjust the map window X-axis to center the cursor
+    if visual_cursor_x < 16  # Too far left
+      @window.x = [@window.x + (16 - visual_cursor_x), 0].min
+    elsif visual_cursor_x > Settings::SCREEN_WIDTH - 16  # Too far right
+      @window.x = [@window.x - (visual_cursor_x - (Settings::SCREEN_WIDTH - 16)), window_min_x].max
+    end
+
+    # Adjust the map window Y-axis to center the cursor
+    if visual_cursor_y < 32  # Too far up
+      @window.y = [@window.y + (32 - visual_cursor_y), 0].min
+    elsif visual_cursor_y > Settings::SCREEN_HEIGHT - 32  # Too far down
+      @window.y = [@window.y - (visual_cursor_y - (Settings::SCREEN_HEIGHT - 32)), window_min_y].max
+    end
+
+    # After adjusting the window, re-calculate the cursor position
+    # Ensure it's visually accurate relative to the adjusted map window
+    @sprites["cursor"].x = visual_cursor_x + @window.x
+    @sprites["cursor"].y = visual_cursor_y + @window.y
+    adjust_window_if_not_visited_regions
+  end
+
+
+
+
+
+  def init_cursor_position(x, y)
     $PokemonGlobal.regionMapSel[0] = x
     $PokemonGlobal.regionMapSel[1] = y
 
     @sprites["cursor"].x = 16 + TileWidth * $PokemonGlobal.regionMapSel[0]
     @sprites["cursor"].y = 32 + TileHeight * $PokemonGlobal.regionMapSel[1]
-
-
     # @sprites["cursor"].x = x + TileWidth * $PokemonGlobal.regionMapSel[0]
     # @sprites["cursor"].y = y + TileHeight * $PokemonGlobal.regionMapSel[1]
     #
@@ -300,14 +374,14 @@ class BetterRegionMap
     windowminy = 0 if windowminy > 0
 
     if @sprites["cursor"].x > (Settings::SCREEN_WIDTH / 2)
-      @window.x = (Settings::SCREEN_WIDTH / 2 ) - @sprites["cursor"].x
+      @window.x = (Settings::SCREEN_WIDTH / 2) - @sprites["cursor"].x
       if (@window.x < windowminx)
         @window.x = windowminx
       end
       @sprites["cursor"].x += @window.x
     end
     if @sprites["cursor"].y > (Settings::SCREEN_HEIGHT / 2)
-      @window.y = (Settings::SCREEN_HEIGHT / 2 ) - @sprites["cursor"].y
+      @window.y = (Settings::SCREEN_HEIGHT / 2) - @sprites["cursor"].y
       if @window.y < windowminy
         @window.y = windowminy
       end
@@ -321,9 +395,9 @@ class BetterRegionMap
       baseline = -352
       if @window.x >= baseline
         old_window_x = @window.x
-        @window.x=baseline
-        difference = baseline-old_window_x
-        @sprites["cursor"].x+= difference
+        @window.x = baseline
+        difference = baseline - old_window_x
+        @sprites["cursor"].x += difference
       end
     end
 
@@ -331,9 +405,9 @@ class BetterRegionMap
       baseline = 0
       if @window.y < baseline
         old_window_y = @window.y
-        @window.y =baseline
-        difference = baseline-old_window_y
-        @sprites["cursor"].y+= difference
+        @window.y = baseline
+        difference = baseline - old_window_y
+        @sprites["cursor"].y += difference
       end
     end
   end
@@ -404,12 +478,26 @@ class BetterRegionMap
           @mdirs << DIRECTION_UP
         end
       end
-      if Input.trigger?(Input::C)
+      if Input.trigger?(Input::AUX1)
         print_current_position()
+      end
+
+      if Input.trigger?(Input::C) && @dirs.empty?
         x, y = $PokemonGlobal.regionMapSel
         if @spots && @spots[[x, y]]
           @flydata = @spots[[x, y]]
           break
+        else
+          stickToPositions = findNearbyHealingSpot(x, y)
+          if stickToPositions
+            @sy = @sprites["cursor"].y
+            @sx = @sprites["cursor"].x
+            @my = @window.y
+            @mx = @window.x
+            move_cursor_to(stickToPositions[0], stickToPositions[1])
+            update_text
+            # synchronize_cursor  # Force sync
+          end
         end
       end
       break if Input.trigger?(Input::B)
@@ -563,20 +651,9 @@ class BetterRegionMap
   end
 
   def print_current_position()
-    echoln _INTL("({1}, {2})", $PokemonGlobal.regionMapSel[0],$PokemonGlobal.regionMapSel[1])
+    echoln _INTL("({1}, {2})", $PokemonGlobal.regionMapSel[0], $PokemonGlobal.regionMapSel[1])
   end
 
-  def setCursorStartingPosition()
-    #echoln @data
-
-    # @sprites["cursor"].x = 256
-    # @sprites["cursor"].y = 160
-    #
-    #
-    # @window.x=-256
-    # @window.y=0
-    # update_text
-  end
 
   def update_text
     location = @data[2].find do |e|
@@ -636,7 +713,7 @@ def calculatePointsAndCenter(mapwidth)
     if pbFindEncounter(enctypes, @species)
       mappos = GameData::MapMetadata.get(enc).town_map_position
 
-      if true#mappos && mappos[0] == @region  #only use 1 region heheh
+      if true #mappos && mappos[0] == @region  #only use 1 region heheh
         showpoint = true
         for loc in @mapdata[@region][2]
           showpoint = false if loc[0] == mappos[1] && loc[1] == mappos[2] &&

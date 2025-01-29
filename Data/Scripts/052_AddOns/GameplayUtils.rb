@@ -2,6 +2,10 @@
 def oricorioEventPickFlower(flower_color)
   quest_progression = pbGet(VAR_ORICORIO_FLOWERS)
   if flower_color == :PINK
+    if !$game_switches[SWITCH_ORICORIO_QUEST_PINK]
+      pbMessage(_INTL("Woah! A Pokémon jumped out of the flower!"))
+      pbWildBattle(:FOMANTIS, 10)
+    end
     $game_switches[SWITCH_ORICORIO_QUEST_PINK] = true
     pbMessage(_INTL("It's a flower with pink nectar."))
     pbSEPlay("MiningAllFound")
@@ -21,6 +25,16 @@ def oricorioEventPickFlower(flower_color)
 end
 
 def changeOricorioFlower(form = 1)
+  if $PokemonGlobal.stepcount % 25 == 0
+    if !hatUnlocked?(HAT_FLOWER) && rand(2) == 0
+      obtainHat(HAT_FLOWER)
+      $PokemonGlobal.stepcount += 1
+    else
+      pbMessage(_INTL("Woah! A Pokémon jumped out of the flower!"))
+      pbWildBattle(:FOMANTIS, 10)
+      $PokemonGlobal.stepcount += 1
+    end
+  end
   return if !($Trainer.has_species_or_fusion?(:ORICORIO_1) || $Trainer.has_species_or_fusion?(:ORICORIO_2) || $Trainer.has_species_or_fusion?(:ORICORIO_3) || $Trainer.has_species_or_fusion?(:ORICORIO_4))
   message = ""
   form_name = ""
@@ -708,45 +722,50 @@ def setForcedAltSprites(forcedSprites_map)
   $PokemonTemp.forced_alt_sprites = forcedSprites_map
 end
 
+def unlock_easter_egg_hats()
+  if $Trainer.name == "Ash"
+    $Trainer.hat = HAT_ASH
+    $Trainer.unlock_hat(HAT_ASH)
+  end
+  if $Trainer.name == "Frogman"
+    $Trainer.hat = HAT_FROG
+    $Trainer.unlock_hat(HAT_FROG)
+  end
+end
+
 
 def setupStartingOutfit()
-  $Trainer.hat=nil
-  $Trainer.clothes = Settings::STARTING_OUTFIT
-
+  $Trainer.hat = nil
+  $Trainer.clothes = STARTING_OUTFIT
+  unlock_easter_egg_hats()
   gender = pbGet(VAR_TRAINER_GENDER)
-  if gender== GENDER_FEMALE
-    $Trainer.unlock_clothes(Settings::DEFAULT_OUTFIT_FEMALE,true)
-    $Trainer.unlock_hat(Settings::DEFAULT_OUTFIT_FEMALE,true)
-    $Trainer.hair ="3_" + Settings::DEFAULT_OUTFIT_FEMALE if !$Trainer.hair #when migrating old savefiles
+  if gender == GENDER_FEMALE
+    $Trainer.unlock_clothes(DEFAULT_OUTFIT_FEMALE, true)
+    $Trainer.unlock_hat(DEFAULT_OUTFIT_FEMALE, true)
+    $Trainer.hair = "3_" + DEFAULT_OUTFIT_FEMALE if !$Trainer.hair #when migrating old savefiles
 
-      #todo TEMP REMOVE WHEN CC IS OFFICIALLY IMPLEMENTED - put pajamas instead & other gender clothes are to be unlocked bu taalking to sibling
-    $Trainer.clothes=Settings::DEFAULT_OUTFIT_FEMALE
-    $Trainer.hat=Settings::DEFAULT_OUTFIT_FEMALE
-    $Trainer.unlock_clothes(Settings::DEFAULT_OUTFIT_MALE,true)
-    $Trainer.unlock_hat(Settings::DEFAULT_OUTFIT_MALE,true)
-      ##
-
-  elsif gender== GENDER_MALE
-    $Trainer.unlock_clothes(Settings::DEFAULT_OUTFIT_MALE,true)
-    $Trainer.unlock_hat(Settings::DEFAULT_OUTFIT_MALE,true)
+  elsif gender == GENDER_MALE
+    $Trainer.unlock_clothes(DEFAULT_OUTFIT_MALE, true)
+    $Trainer.unlock_hat(DEFAULT_OUTFIT_MALE, true)
 
     echoln $Trainer.hair
-    $Trainer.hair = ("3_" +Settings::DEFAULT_OUTFIT_MALE) if !$Trainer.hair  #when migrating old savefiles
+    $Trainer.hair = ("3_" + DEFAULT_OUTFIT_MALE) if !$Trainer.hair #when migrating old savefiles
     echoln $Trainer.hair
-
-
-    #todo TEMP REMOVE WHEN CC IS OFFICIALLY IMPLEMENTED - put pajamas instead & other gender clothes are to be unlocked bu taalking to sibling
-    $Trainer.clothes=Settings::DEFAULT_OUTFIT_MALE
-    $Trainer.hat=Settings::DEFAULT_OUTFIT_MALE
-    $Trainer.unlock_clothes(Settings::DEFAULT_OUTFIT_FEMALE,true)
-    $Trainer.unlock_hat(Settings::DEFAULT_OUTFIT_FEMALE,true)
-    ##
-
   end
-  $Trainer.unlock_hair(Settings::DEFAULT_OUTFIT_MALE,true)
-  $Trainer.unlock_hair(Settings::DEFAULT_OUTFIT_FEMALE,true)
-  $Trainer.unlock_clothes(Settings::STARTING_OUTFIT,true)
+  $Trainer.unlock_hair(DEFAULT_OUTFIT_MALE, true)
+  $Trainer.unlock_hair(DEFAULT_OUTFIT_FEMALE, true)
+  $Trainer.unlock_clothes(STARTING_OUTFIT, true)
+end
 
+def give_date_specific_hats()
+  current_date = Time.new
+  if (current_date.day == 24 || current_date.day == 25) && current_date.month == 12
+    if !$Trainer.unlocked_hats.include?(HAT_SANTA)
+      pbCallBub(2,@event_id,true)
+      pbMessage("Hi! We're giving out a special hat today for the holidays season. Enjoy!")
+      obtainHat(HAT_SANTA)
+    end
+  end
 end
 
 def playMeloettaBandMusic()
@@ -825,16 +844,23 @@ def apply_concert_lighting(light, duration = 1)
 end
 
 def replaceFusionSpecies(pokemon, speciesToChange, newSpecies)
-  currentBody = pokemon.species_data.get_body_species()
-  currentHead = pokemon.species_data.get_head_species()
+  currentBody = pokemon.species_data.get_body_species_symbol()
+  currentHead = pokemon.species_data.get_head_species_symbol()
   should_update_body = currentBody == speciesToChange
   should_update_head = currentHead == speciesToChange
+
+  echoln speciesToChange
+  echoln currentBody
+  echoln currentHead
+
+
   return if !should_update_body && !should_update_head
 
   newSpeciesBody = should_update_body ? newSpecies : currentBody
   newSpeciesHead = should_update_head ? newSpecies : currentHead
 
   newSpecies = getFusionSpecies(newSpeciesBody, newSpeciesHead)
+  echoln newSpecies.id_number
   pokemon.species = newSpecies
 end
 
@@ -848,9 +874,9 @@ def getNextLunarFeatherHint()
   nb_feathers = pbGet(VAR_LUNAR_FEATHERS)
   case nb_feathers
   when 0
-    return "Find the first feather in the northernmost dwelling in the city of sunsets..."
+    return "Find the first feather in the northernmost dwelling in the port of exquisite sunsets..."
   when 1
-    return "Amidst a playground for Pokémon youngsters, the second feather hides, surrounded by innocence."
+    return "Amidst a nursery for Pokémon youngsters, the second feather hides, surrounded by innocence."
   when 2
     return "Find the next one in the inn where water meets rest"
   when 3
@@ -907,6 +933,7 @@ def promptCaughtPokemonAction(pokemon)
     return pbStorePokemon(pokemon)
   end
 
+  return promptKeepOrRelease(pokemon) if isOnPinkanIsland() && !$game_switches[SWITCH_PINKAN_FINISHED]
   while !pickedOption
     command = pbMessage(_INTL("\\ts[]Your team is full!"),
                         [_INTL("Add to your party"), _INTL("Store to PC"),], 2)
@@ -925,6 +952,23 @@ def promptCaughtPokemonAction(pokemon)
     end
   end
 
+end
+
+def promptKeepOrRelease(pokemon)
+  pickedOption = false
+  while !pickedOption
+    command = pbMessage(_INTL("\\ts[]Your team is full!"),
+                        [_INTL("Release a party member"), _INTL("Release this #{pokemon.name}"),], 2)
+    echoln ("command " + command.to_s)
+    case command
+    when 0 #SWAP
+      if swapReleaseCaughtPokemon(pokemon)
+        pickedOption = true
+      end
+    else
+      pickedOption = true
+    end
+  end
 end
 
 #def pbChoosePokemon(variableNumber, nameVarNumber, ableProc = nil, allowIneligible = false)
@@ -951,6 +995,25 @@ def swapCaughtPokemon(caughtPokemon)
   return true
 end
 
+def swapReleaseCaughtPokemon(caughtPokemon)
+  pbChoosePokemon(1, 2,
+                  proc { |poke|
+                    !poke.egg? &&
+                      !(poke.isShadow? rescue false)
+                  })
+  index = pbGet(1)
+  return false if index == -1
+  releasedPokemon = $Trainer.party[index]
+  pbMessage("#{releasedPokemon.name} was released.")
+  pbRemovePokemonAt(index)
+  pbStorePokemon(caughtPokemon)
+
+  tmp = $Trainer.party[index]
+  $Trainer.party[index] = $Trainer.party[-1]
+  $Trainer.party[-1] = tmp
+  return true
+end
+
 def constellation_add_star(pokemon)
   star_variables = get_constellation_variable(pokemon)
 
@@ -961,7 +1024,7 @@ end
 
 def clear_all_images()
   for i in 1..99
-    echoln i.to_s + " : " + $game_screen.pictures[i].name
+    # echoln i.to_s + " : " + $game_screen.pictures[i].name
     $game_screen.pictures[i].erase
   end
 end
@@ -1099,12 +1162,16 @@ def obtainStarter(starterIndex=0)
       startersList = Settings::HOENN_STARTERS
     elsif $game_switches[SWITCH_SINNOH_STARTERS]
       startersList = Settings::SINNOH_STARTERS
+    elsif $game_switches[SWITCH_KALOS_STARTERS]
+      startersList = Settings::KALOS_STARTERS
     end
     starter = startersList[starterIndex]
   end
   return GameData::Species.get(starter)
 end
 
+#body0
+# head 1
 def setRivalStarter(starterIndex1,starterIndex2)
   starter1 = obtainStarter(starterIndex1)
   starter2 = obtainStarter(starterIndex2)
@@ -1169,8 +1236,407 @@ end
 
 
 
+#time in seconds
+def idleHatEvent(hatId, time, switchToActivate = nil)
+  map = $game_map.map_id
+  i = 0
+  while i < (time / 5) do
+    # /5 because we update 5 times per second
+    return if $game_map.map_id != map
+    i += 1
+    pbWait(4)
+    i = 0 if $game_player.moving?
+    echoln i
+  end
+  $game_switches[switchToActivate] = true if switchToActivate
+  obtainHat(hatId)
+end
+
+#Necessary dor setting the various events within the pokemart map, uses the numbers as wondertrade
+def get_city_numerical_id(city_sym)
+  current_city_numerical = {
+    :PEWTER => 1,
+    :CERULEAN => 2,
+    :VERMILLION => 3,
+    :LAVENDER => 4,
+    :CELADON => 5,
+    :FUCHSIA => 6,
+    :SAFFRON => 7,
+    :CINNABAR => 8,
+    :LEAGUE => 9,
+    :VIOLET => 10,
+    :AZALEA => 11,
+    :GOLDENROD => 12,
+    :ECRUTEAK => 13,
+    :MAHOGANY => 14,
+    :BLACKTHORN => 15,
+    :OLIVINE => 16,
+    :CIANWOOD => 17,
+    :KNOTISLAND => 18,
+    :BOONISLAND => 19,
+    :KINISLAND => 20,
+    :CHRONOISLAND => 21,
+    :CRIMSON => 22,
+  }
+  return current_city_numerical[city_sym]
+end
+
+POKEMART_MAP_ID = 357
+POKEMART_DOOR_POS = [12, 12]
+#city -> Symbol
+def enter_pokemart(city)
+  pbSet(VAR_CURRENT_MART, city)
+  pbSet(VAR_CURRENT_CITY_NUMERICAL_ID, get_city_numerical_id(city))
+  echoln get_city_numerical_id(city)
+  pbFadeOutIn {
+    $game_temp.player_new_map_id = POKEMART_MAP_ID
+    $game_temp.player_new_x = POKEMART_DOOR_POS[0]
+    $game_temp.player_new_y = POKEMART_DOOR_POS[1]
+    $scene.transfer_player(true)
+    $game_map.autoplay
+    $game_map.refresh
+  }
+end
+
+def exit_pokemart()
+  pokemart_entrances = {
+    :PEWTER => [380, 43, 24],
+    :CERULEAN => [1, 19, 22],
+    :VERMILLION => [19, 32, 13],
+    :LAVENDER => [50, 20, 23],
+    :CELADON => [95, 18, 15], #not a real pokemart
+    :FUCHSIA => [472, 7, 17],
+    :SAFFRON => [108, 53, 24],
+    :CINNABAR => [98, 30, 30],
+    :CRIMSON => [167, 21, 36],
+    :GOLDENROD => [237, 36, 33], #not a real pokemart
+    :AZALEA => [278, 34, 17],
+    :AZALEA_FLOODED => [338, 34, 17],
+    :VIOLET => [230, 20, 31],
+    :BLACKTHORN => [329, 16, 36],
+    :MAHOGANY => [631, 19, 19], #not a real pokemart
+    :ECRUTEAK => [359, 46, 38],
+    :OLIVINE => [138, 33, 23],
+    :CIANWOOD => [709.8, 46],
+  }
+  current_city = pbGet(VAR_CURRENT_MART)
+  current_city = :PEWTER if !current_city.is_a?(Symbol)
+
+  entrance_map = pokemart_entrances[current_city][0]
+  entrance_x = pokemart_entrances[current_city][1]
+  entrance_y = pokemart_entrances[current_city][2]
+
+  pbSet(VAR_CURRENT_CITY_NUMERICAL_ID, 0)
+  pbSet(VAR_CURRENT_MART, 0)
+  pbFadeOutIn {
+    $game_temp.player_new_map_id = entrance_map
+    $game_temp.player_new_x = entrance_x
+    $game_temp.player_new_y = entrance_y
+    $scene.transfer_player(true)
+    $game_map.autoplay
+    $game_map.refresh
+  }
+
+end
+
+def pokemart_clothes_shop(current_city = nil, include_defaults = true)
+  current_city = pbGet(VAR_CURRENT_MART) if !current_city
+  echoln current_city
+  current_city = :PEWTER if !current_city.is_a?(Symbol)
+  current_city_tag = current_city.to_s.downcase
+  selector = OutfitSelector.new
+  list = selector.generate_clothes_choice(
+    baseOptions = include_defaults,
+    additionalIds = [],
+    additionalTags = [current_city_tag],
+    filterOutTags = [])
+  clothesShop(list)
+end
+
+def pokemart_hat_shop(include_defaults = true)
+  current_city = pbGet(VAR_CURRENT_MART)
+  current_city = :PEWTER if !current_city.is_a?(Symbol)
+  current_city_tag = current_city.to_s.downcase
+  selector = OutfitSelector.new
+  list = selector.generate_hats_choice(
+    baseOptions = include_defaults,
+    additionalIds = [],
+    additionalTags = [current_city_tag],
+    filterOutTags = [])
+
+  hatShop(list)
+end
+
+def get_mart_exclusive_items(city)
+  items_list = []
+  case city
+  when :PEWTER;
+    items_list = [:ROCKGEM, :NESTBALL]
+  when :VIRIDIAN;
+    items_list = []
+  when :CERULEAN;
+    items_list = [:WATERGEM, :NETBALL, :PRETTYWING]
+  when :VERMILLION;
+    items_list = [:LOVEBALL, :ELECTRICGEM]
+  when :LAVENDER;
+    items_list = [:GHOSTGEM, :DARKGEM, :DUSKBALL]
+  when :CELADON;
+    items_list = [:GRASSGEM, :FLYINGGEM, :QUICKBALL, :TIMERBALL,]
+  when :FUCHSIA;
+    items_list = [:POISONGEM, :REPEATBALL]
+  when :SAFFRON;
+    items_list = [:PSYCHICGEM, :FIGHTINGGEM, :FRIENDBALL]
+  when :CINNABAR;
+    items_list = [:FIREGEM, :ICEGEM, :HEAVYBALL]
+  when :GOLDENROD;
+    items_list = [:EVERSTONE, :MOONSTONE, :SUNSTONE, :DUSKSTONE, :DAWNSTONE, :SHINYSTONE]
+  when :AZALEA;
+    items_list = [:BUGGEM]
+  when :VIOLET;
+    items_list = [:FLYINGGEM, :STATUSBALL]
+  when :BLACKTHORN;
+    items_list = [:DRAGONGEM, :CANDYBALL]
+  when :CHERRYGROVE;
+    items_list = [:BUGGEM, :PUREBALL]
+  when :MAHOGANY;
+    items_list = []
+  when :ECRUTEAK;
+    items_list = [:GHOSTGEM, :DARKGEM]
+  when :OLIVINE;
+    items_list = []
+  when :CIANWOOD;
+    items_list = []
+  when :KNOTISLAND;
+    items_list = []
+  when :BOONISLAND;
+    items_list = []
+  when :KINISLAND;
+    items_list = []
+  when :CHRONOISLAND;
+    items_list = []
+  end
+  return items_list
+end
+
+def calculate_pokemon_weight(pokemon)
+
+  base_weight = pokemon.weight
+  ivs = []
+  pokemon.iv.each { |iv|
+    ivs << iv[1]
+  }
+  level = pokemon.level
+  # Ensure IVs is an array of 6 values and level is between 1 and 100
+  raise "IVs array must have 6 values" if ivs.length != 6
+  raise "Level must be between 1 and 100" unless (1..100).include?(level)
+
+  # Calculate the IV Factor
+  iv_sum = ivs.sum
+  iv_factor = (iv_sum.to_f / 186) * 30 * 10
+
+  # Calculate the Level Factor
+  level_factor = (level.to_f / 100) * 5 * 10
+
+  # Calculate the weight
+  weight = base_weight * (1 + (iv_factor / 100) + (level_factor / 100))
+  weight -= base_weight
+  # Enforce the weight variation limits
+  max_weight = base_weight * 4.00 # 400% increase
+  min_weight = base_weight * 0.5 # 50% decrease
+
+  # Cap the weight between min and max values
+  weight = [[weight, min_weight].max, max_weight].min
+
+  return weight.round(2) # Round to 2 decimal places
+end
+
+def generate_weight_contest_entries(species, level, resultsVariable)
+  #echoln "Generating Pokemon"
+  pokemon1 = pbGenerateWildPokemon(species, level) #Pokemon.new(species,level)
+  pokemon2 = pbGenerateWildPokemon(species, level) #Pokemon.new(species,level)
+  new_weights = []
+  new_weights << calculate_pokemon_weight(pokemon1)
+  new_weights << calculate_pokemon_weight(pokemon2)
+  echoln new_weights
+  pbSet(resultsVariable, new_weights.max)
+
+end
 
 #todo: implement
 def getMappedKeyFor(internalKey)
 
+  keybinding_fileName = "keybindings.mkxp1"
+  path = System.data_directory + keybinding_fileName
+
+  parse_keybindings(path)
+
+  #echoln Keybindings.new(path).bindings
 end
+
+#if need to play animation from event route
+def playAnimation(animationId, x, y)
+  return if !$scene.is_a?(Scene_Map)
+  $scene.spriteset.addUserAnimation(animationId, x, y, true)
+end
+
+def formatNumberToString(number)
+  return number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+end
+
+def playCry(pokemonSpeciesSymbol)
+  species = GameData::Species.get(pokemonSpeciesSymbol).species
+  GameData::Species.play_cry_from_species(species)
+end
+
+#chance: out of 100
+def lilypadEncounter(pokemon, minLevel, maxLevel, chance = 10)
+  minLevel, maxLevel = [minLevel, maxLevel].minmax
+  level = rand(minLevel..maxLevel)
+
+  event = $game_map.events[@event_id]
+  return if !event
+  if rand(0..100) <= chance
+    pbWildBattle(pokemon, level)
+  else
+    playAnimation(Settings::GRASS_ANIMATION_ID, event.x, event.y)
+  end
+  event.erase
+end
+
+def isPlayerMale()
+  return pbGet(VAR_TRAINER_GENDER) == GENDER_MALE
+end
+
+def isPlayerFemale()
+  return pbGet(VAR_TRAINER_GENDER) == GENDER_FEMALE
+end
+
+def optionsMenu(options = [], cmdIfCancel = -1, startingOption = 0)
+  cmdIfCancel = -1 if !cmdIfCancel
+  result = pbShowCommands(nil, options, cmdIfCancel, startingOption)
+  echoln "menuResult :#{result}"
+  return result
+end
+
+def getHiddenPowerName(pokemon)
+  hiddenpower = pbHiddenPower(pokemon)
+  hiddenPowerType = hiddenpower[0]
+
+  echoln hiddenPowerType
+  if Settings::TRIPLE_TYPES.include?(hiddenPowerType)
+    return "Neutral"
+  end
+  return PBTypes.getName(hiddenPowerType)
+end
+
+#Returns if the current map is an outdoor map
+def isOutdoor()
+  current_map = $game_map.map_id
+  map_metadata = GameData::MapMetadata.try_get(current_map)
+  return map_metadata && map_metadata.outdoor_map
+end
+
+#
+# Rewards given by hotel questman after a certain nb. of completed quests
+#
+QUEST_REWARDS = [
+  QuestReward.new(1, :HM08, 1, "This HM will allow you to illuminate dark caves and should help you to progress in your journey!"),
+  QuestReward.new(5, :AMULETCOIN, 1, "This item will allows you to get twice the money in a battle if the Pokémon holding it took part in it!"),
+  QuestReward.new(10, :LANTERN, 1, "This will allow you to illuminate caves without having to use a HM! Practical, isn't it?"),
+  QuestReward.new(15, :LINKINGCORD, 3, "This strange cable triggers the evolution of Pokémon that typically evolve via trade. I know you'll put it to good use!"),
+  QuestReward.new(20, :SLEEPINGBAG, 1, "This handy item will allow you to sleep anywhere you want. You won't even need hotels anymore!"),
+  QuestReward.new(30, :MISTSTONE, 1, "This rare stone can evolve any Pokémon, regardless of their level or evolution method. Use it wisely!"),
+  QuestReward.new(45, :MASTERBALL, 1, "This rare ball can catch any Pokémon. Don't waste it!"),
+  QuestReward.new(60, :GSBALL, 1, "This mysterious ball is rumored to be the key to call upon the protector of Ilex Forest.  It's a precious relic."),
+]
+
+
+def turnEventTowardsEvent(turning,turnedTowards)
+  event_x = turnedTowards.x
+  event_y = turnedTowards.y
+  if turning.x < event_x
+    turning.turn_right # Event is to the right of the player
+  elsif turning.x > event_x
+    turning.turn_left # Event is to the left of the player
+  elsif turning.y < event_y
+    turning.turn_down # Event is below the player
+  elsif turning.y > event_y
+    turning.turn_up # Event is above the player
+  end
+end
+
+def turnPlayerTowardsEvent(event)
+  event_x = event.x
+  event_y = event.y
+  if $game_player.x < event_x
+    $game_player.turn_right # Event is to the right of the player
+  elsif $game_player.x > event_x
+    $game_player.turn_left # Event is to the left of the player
+  elsif $game_player.y < event_y
+    $game_player.turn_down # Event is below the player
+  elsif $game_player.y > event_y
+    $game_player.turn_up # Event is above the player
+  end
+end
+
+def getQuestReward(eventId)
+  $PokemonGlobal.questRewardsObtained = [] if !$PokemonGlobal.questRewardsObtained
+  echoln $PokemonGlobal.questRewardsObtained
+  nb_quests_completed = pbGet(VAR_STAT_QUESTS_COMPLETED)
+  rewards_to_give = []
+  for reward in QUEST_REWARDS
+    rewards_to_give << reward if nb_quests_completed >= reward.nb_quests && !$PokemonGlobal.questRewardsObtained.include?(reward.item)
+  end
+
+  #Give rewards
+  for reward in rewards_to_give
+    if !reward.can_have_multiple
+      next if $PokemonBag.pbQuantity(reward.item) >= 1
+    end
+    pbCallBub(2, eventId)
+    pbMessage("Also, there's one more thing...")
+    pbCallBub(2, eventId)
+    pbMessage("As a gift for having helped so many people, I want to give you this.")
+    pbReceiveItem(reward.item, reward.quantity)
+    $PokemonGlobal.questRewardsObtained << reward.item
+  end
+
+  #Calculate how many until next reward
+  for reward in QUEST_REWARDS
+    nextReward = reward
+    break if !$PokemonGlobal.questRewardsObtained.include?(reward.item)
+  end
+  pbCallBub(2, eventId)
+  nb_to_next_reward = nextReward.nb_quests - nb_quests_completed
+  pbCallBub(2, eventId)
+  if nb_to_next_reward == 0
+    pbMessage("I have no more rewards to give you! Thanks for helping all these people!")
+  elsif nb_to_next_reward == 1
+    pbMessage("Help #{nb_to_next_reward} more person and I'll give you something good!")
+  else
+    pbMessage("Help #{nb_to_next_reward} more people and I'll give you something good!")
+  end
+end
+
+def displaySpriteWindowWithMessage(pif_sprite, message = "", x = 0, y = 0,z=0)
+  spriteLoader = BattleSpriteLoader.new
+  sprite_bitmap = spriteLoader.load_pif_sprite_directly(pif_sprite)
+  pictureWindow = PictureWindow.new(sprite_bitmap.bitmap)
+
+  pictureWindow.opacity = 0
+  pictureWindow.z = z
+  pictureWindow.x = x
+  pictureWindow.y = y
+  pbMessage(message)
+  pictureWindow.dispose
+end
+
+def select_any_pokemon()
+  commands = []
+  for dex_num in 1..NB_POKEMON
+    species = getPokemon(dex_num)
+    commands.push([dex_num - 1, species.real_name, species.id])
+  end
+  return pbChooseList(commands, 0, nil, 1)
+end
+

@@ -86,7 +86,6 @@ class FusionTutorService
   # FIRELASH
   # BEAKBLAST
   # CHATTER
-  # SOLARBLADE
   # LEAFAGE
   # HEADCHARGE
   # HYPERSPACEHOLE

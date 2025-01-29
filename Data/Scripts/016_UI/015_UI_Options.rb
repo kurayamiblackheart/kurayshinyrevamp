@@ -1784,17 +1784,31 @@ class VanillaOptSc_1 < PokemonOption_Scene
     #   )
     # end
     options <<
-      EnumOption.new(_INTL("Download sprites"), [_INTL("On"), _INTL("Off")],
-                     proc { $PokemonSystem.download_sprites},
+      EnumOption.new(_INTL("Download data"), [_INTL("On"), _INTL("Off")],
+                     proc { $PokemonSystem.download_sprites },
                      proc { |value|
                        $PokemonSystem.download_sprites = value
                      },
-                     "Automatically download custom sprites from the internet"
+                     "Automatically download missing custom sprites and Pokédex entries from the internet"
       )
+    #
+    generated_entries_option_selected=$PokemonSystem.use_generated_dex_entries ? 1 : 0
+    options << EnumOption.new(_INTL("Autogen dex entries"), [_INTL("Off"), _INTL("On")],
+                              proc { generated_entries_option_selected },
+                              proc { |value|
+                                $PokemonSystem.use_generated_dex_entries = value == 1
+                              },
+                              [
+                                "Fusions without a custom Pokédex entry display nothing.",
+                                "Fusions without a custom Pokédex entry display an auto-generated placeholder."
 
+                              ]
+    )
+
+    device_option_selected=$PokemonSystem.on_mobile ? 1 : 0
     options << EnumOption.new(_INTL("Device"), [_INTL("PC"), _INTL("Mobile")],
-                              proc { $PokemonSystem.on_mobile },
-                              proc { |value| $PokemonSystem.on_mobile = value },
+                              proc { device_option_selected },
+                              proc { |value| $PokemonSystem.on_mobile = value == 1 },
                               ["The intended device on which to play the game.",
                                 "Disables some options that aren't supported when playing on mobile."]
     )
@@ -1826,6 +1840,7 @@ class VanillaOptSc_1 < PokemonOption_Scene
                                 if $PokemonSystem.screensize != value
                                   $PokemonSystem.screensize = value
                                   pbSetResizeFactor($PokemonSystem.screensize)
+                                  echoln $PokemonSystem.screensize
                                 end
                               }, "Sets the size of the screen"
     )
@@ -1928,7 +1943,7 @@ class VanillaOptSc_1 < PokemonOption_Scene
     #   }
     # ),
     if $game_variables
-      options << EnumOption.new(_INTL("Fusion icons"), [_INTL("Combined"), _INTL("DNA")],
+      options << EnumOption.new(_INTL("Fusion Icons"), [_INTL("Combined"), _INTL("DNA")],
                                 proc { $game_variables[VAR_FUSION_ICON_STYLE] },
                                 proc { |value| $game_variables[VAR_FUSION_ICON_STYLE] = value },
                                 ["Combines both Pokémon's party icons",
