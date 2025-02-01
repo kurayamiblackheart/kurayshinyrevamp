@@ -671,17 +671,18 @@ def listPokemonIDs()
     pokemon = GameData::Species.get(id).species
     echoln id.to_s + ": " + "\"" + pokemon.to_s + "\"" + ", "
   end
+end
 
-  def getLatestSpritepackDate()
-    return Time.new(Settings::NEWEST_SPRITEPACK_YEAR, Settings::NEWEST_SPRITEPACK_MONTH)
+def getLatestSpritepackDate()
+  return Time.new(Settings::NEWEST_SPRITEPACK_YEAR, Settings::NEWEST_SPRITEPACK_MONTH)
+end
+
+def new_spritepack_was_released()
+  current_spritepack_date = $PokemonGlobal.current_spritepack_date
+  latest_spritepack_date = getLatestSpritepackDate()
+  if !current_spritepack_date || (current_spritepack_date < latest_spritepack_date)
+    $PokemonGlobal.current_spritepack_date = latest_spritepack_date
+    return true
   end
-  
-  def new_spritepack_was_released()
-    current_spritepack_date = $PokemonGlobal.current_spritepack_date
-    latest_spritepack_date = getLatestSpritepackDate()
-    if !current_spritepack_date || (current_spritepack_date < latest_spritepack_date)
-      $PokemonGlobal.current_spritepack_date = latest_spritepack_date
-      return true
-    end
-    return false
+  return false
 end

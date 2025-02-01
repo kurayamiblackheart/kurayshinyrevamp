@@ -331,7 +331,6 @@ Events.onMapChange += proc { |_sender, e|
 
   $game_screen.weather(new_weather[0], 3, 0) if rand(100) < new_weather[1]
 }
-}
 
 # Events.onMapChange += proc { |_sender, e|
 #   next if !Settings::SEVII_ROAMING.include?($game_map.map_id)

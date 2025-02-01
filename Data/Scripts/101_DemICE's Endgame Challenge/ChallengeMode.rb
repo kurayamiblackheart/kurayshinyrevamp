@@ -443,6 +443,7 @@ module GameData
 		Metadata.load
 		MapMetadata.load
 
+		# self.kuray_exportpokemondata(0)
 		# Kuray New Items (Kuray Eggs)
 		self.kurayeggs_loadsystem()
 		# self.kuraychests_loadchests()

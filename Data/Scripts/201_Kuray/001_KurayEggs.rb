@@ -486,8 +486,35 @@ module GameData
         # type = 0 -> All Pokemons (0-NB_POKEMON)
         # type = 1 -> Triple fusions
         strAllPokemons = ""
+        pokemontypes = {
+            :NORMAL => [],
+            :FIGHTING => [],
+            :FLYING => [],
+            :POISON => [],
+            :GROUND => [],
+            :ROCK => [],
+            :BUG => [],
+            :GHOST => [],
+            :STEEL => [],
+            :FIRE => [],
+            :WATER => [],
+            :GRASS => [],
+            :ELECTRIC => [],
+            :PSYCHIC => [],
+            :ICE => [],
+            :DRAGON => [],
+            :DARK => [],
+            :FAIRY => []
+        }
         if type == 0
             for i in 1..NB_POKEMON
+                poke1 = GameData::Species.get(i)
+                if poke1.type1 == poke1.type2
+                    pokemontypes[poke1.type1] << i
+                  else
+                    pokemontypes[poke1.type1] << i
+                    pokemontypes[poke1.type2] << i
+                  end
                 strAllPokemons = self.kuray_datafrompokemon(i, strAllPokemons)
             end
             kuray_writefile("AllPokemons.txt", strAllPokemons)
@@ -497,6 +524,10 @@ module GameData
             end
             kuray_writefile("AllTriples.txt", strAllPokemons)
         end
+        for i in pokemontypes
+            kuray_writefile("AllType_" + i[0].to_s + ".txt", i[1].to_s)
+        end
+
     end
 
     def self.kurayeggs_iteminject(egg_symbol, id_here, egg_name_display, egg_price, egg_description, itemtype=0)

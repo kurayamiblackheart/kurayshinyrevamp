@@ -2597,6 +2597,7 @@ class Pokemon
   #PIF added that empty function, idk why, what the hell? need investigation
   # KIF TODO
   def totalIv()
-
+    return
   end
+end
 end
