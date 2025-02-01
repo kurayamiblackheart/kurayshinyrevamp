@@ -125,7 +125,7 @@
         "done": "yes",
         "len": 64,
         "price": 0,
-        "tags": "headband,type-bug,special,",
+        "tags": "headband,azalea",
         "howToGet": "type trainer"
     },
     {
@@ -245,8 +245,8 @@
         "name": "Designer Headphones",
         "description": "Stylish headphones with an electrifying design that adds a spark to your look.",
         "done": "yes",
-        "price": 0,
-        "tags": "type-electric,special,",
+        "price": 30000,
+        "tags": "hat",
         "howToGet": "type trainer"
     },
     {
@@ -334,7 +334,7 @@
         "name": "Firefighter Hat",
         "description": "A safety helmet made for brave heroes who put their lives on the line every day.",
         "price": 0,
-        "tags": "type-fire,special,",
+        "tags": "hat, cinnabar,",
         "howToGet": "type trainer"
     },
     {
@@ -775,7 +775,7 @@
     {
         "id": "parashroom",
         "name": "Mushroom",
-        "description": "a Tochukaso mushroom that normally grows on Paras and Parasect. Wear it. WEAR IT.",
+        "description": "A Tochukaso mushroom that normally grows on Paras and Parasect. Wear it. WEAR IT.",
         "done": "yes",
         "len": 81,
         "price": 8000,
