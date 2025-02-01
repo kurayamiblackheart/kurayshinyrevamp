@@ -25,7 +25,7 @@ end
 
 TYPE_EXPERTS_APPEARANCES = {
   :TYPE_EXPERT_NORMAL => TrainerAppearance.new(5, "snorlaxhat", "normal", "1_painter", 0, 0, 0), #todo TEAM
-  :TYPE_EXPERT_FIGHTING => TrainerAppearance.new(1, "karateHeadband", "figthing", "4_samurai", 0, 0, 0), #OK
+  :TYPE_EXPERT_FIGHTING => TrainerAppearance.new(1, "karateHeadband", "fighting", "4_samurai", 0, 0, 0), #OK
   # TYPE_EXPERT_FLYING	=>#TODO NEEDS OUTFIT, LOCATION, TEAM
   :TYPE_EXPERT_POISON => TrainerAppearance.new(5, "parashroom", "deadlypoisondanger", "3_lowbraids", 270, 0, 0), #todo TEAM
   :TYPE_EXPERT_GROUND => TrainerAppearance.new(5, "sandshrewbeanie", "groundcowboy", "3_shortspike", 0, 0, 0), #todo TEAM

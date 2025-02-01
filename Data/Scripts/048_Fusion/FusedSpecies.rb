@@ -380,7 +380,9 @@ module GameData
       echoln body_entry
       echoln head_entry
 
-      return split_and_combine_text(body_entry, head_entry, ".")
+      combined_entry = split_and_combine_text(body_entry, head_entry, ".")
+      combined_entry += "." unless combined_entry.end_with?(".")
+      return combined_entry
     end
     
     def calculate_egg_groups

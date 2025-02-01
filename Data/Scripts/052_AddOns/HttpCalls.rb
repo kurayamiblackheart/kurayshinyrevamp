@@ -34,22 +34,23 @@ def test_http_get
 end
 
 def updateHttpSettingsFile
-  return if $PokemonSystem.download_sprites != 0
+  return if !downloadAllowed?()
+  echoln "UPDATING SETTINGS"
   download_file(Settings::HTTP_CONFIGS_FILE_URL, Settings::HTTP_CONFIGS_FILE_PATH,)
 end
 
 def updateKurayJsonSettings
-  return if $PokemonSystem.download_sprites != 0
+  return if !downloadAllowed?()
   download_file(Settings::GAME_REMOTE_SETTINGS_URL, Settings::GAME_REMOTE_SETTINGS_FILE_PATH,)
 end
 
 def updateCreditsFile
-  return if $PokemonSystem.download_sprites != 0
+  return if !downloadAllowed?()
   download_file(Settings::CREDITS_FILE_URL, Settings::CREDITS_FILE_PATH,)
 end
 
 def updateCustomDexFile
-  return if $PokemonSystem.download_sprites != 0
+  return if !downloadAllowed?()
   download_file(Settings::CUSTOM_DEX_FILE_URL, Settings::CUSTOM_DEX_ENTRIES_PATH,)
 end
 
@@ -73,7 +74,7 @@ def download_file(url, saveLocation)
       return saveLocation
     else
       # echoln _INTL("Tried to download file {1} . Got response  {2}",url,response[:body])
-      echoln _INTL("Tried to download file {1}.",url)
+      echoln _INTL("Failed to download file {1}", url)
     end
     return nil
   rescue MKXPError, Errno::ENOENT => error
@@ -254,7 +255,7 @@ end
 # with each new spritepack
 
 def updateOnlineCustomSpritesFile
-  return if $PokemonSystem.download_sprites != 0
+  return if !downloadAllowed?()
   download_file(Settings::SPRITES_FILE_URL, Settings::CUSTOM_SPRITES_FILE_PATH)
 end
 

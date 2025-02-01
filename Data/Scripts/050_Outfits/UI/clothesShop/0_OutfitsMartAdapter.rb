@@ -1,4 +1,6 @@
 class OutfitsMartAdapter < PokemonMartAdapter
+  attr_accessor :worn_clothes
+
   WORN_ITEM_BASE_COLOR = MessageConfig::BLUE_TEXT_MAIN_COLOR
   WORN_ITEM_SHADOW_COLOR = MessageConfig::BLUE_TEXT_SHADOW_COLOR
 

@@ -5,7 +5,7 @@ class BushBitmap
     @isTile = isTile
     @isBitmap = @bitmap.is_a?(Bitmap)
     @depth = depth
-    @manual_refresh=false
+    @manual_refresh = false
   end
 
   def dispose
@@ -91,14 +91,15 @@ class Sprite_Character < RPG::Sprite
     end
   end
 
-
-
   def setSpriteToAppearance(trainerAppearance)
     #return if !@charbitmap || !@charbitmap.bitmap
-    new_bitmap = AnimatedBitmap.new(getBaseOverworldSpriteFilename())#@charbitmap
-    new_bitmap.bitmap = generateNPCClothedBitmapStatic(trainerAppearance)
-    @bitmap_override = new_bitmap
-    updateBitmap
+    begin
+      new_bitmap = AnimatedBitmap.new(getBaseOverworldSpriteFilename()) #@charbitmap
+      new_bitmap.bitmap = generateNPCClothedBitmapStatic(trainerAppearance)
+      @bitmap_override = new_bitmap
+      updateBitmap
+    rescue
+    end
   end
 
   def clearBitmapOverride()
@@ -133,7 +134,7 @@ class Sprite_Character < RPG::Sprite
   end
 
   def updateBitmap
-    @manual_refresh=true
+    @manual_refresh = true
   end
 
   def pbLoadOutfitBitmap(outfitFileName)
@@ -148,7 +149,6 @@ class Sprite_Character < RPG::Sprite
       return nil
     end
   end
-
 
   def generateClothedBitmap()
     return
@@ -186,7 +186,7 @@ class Sprite_Character < RPG::Sprite
     return if @character.is_a?(Game_Event) && !@character.should_update?
     super
     if should_update?
-      @manual_refresh=false
+      @manual_refresh = false
       @tile_id = @character.tile_id
       @character_name = @character.character_name
       @character_hue = @character.character_hue
@@ -209,13 +209,13 @@ class Sprite_Character < RPG::Sprite
         @charbitmap.dispose if @charbitmap
 
         @charbitmap = updateCharacterBitmap()
-        @charbitmap= @bitmap_override.clone if @bitmap_override
+        @charbitmap = @bitmap_override.clone if @bitmap_override
 
         RPG::Cache.retain('Graphics/Characters/', @character_name, @character_hue) if @charbitmapAnimated = true
         @bushbitmap.dispose if @bushbitmap
         @bushbitmap = nil
         #@spriteoffset = @character_name[/offset/i]
-        @spriteoffset = @character_name[/fish/i] ||  @character_name[/dive/i] ||  @character_name[/surf/i]
+        @spriteoffset = @character_name[/fish/i] || @character_name[/dive/i] || @character_name[/surf/i]
         @cw = @charbitmap.width / 4
         @ch = @charbitmap.height / 4
         self.ox = @cw / 2
@@ -226,7 +226,7 @@ class Sprite_Character < RPG::Sprite
     bushdepth = @character.bush_depth
     if bushdepth == 0
       if @character == $game_player
-        self.bitmap = getClothedPlayerSprite()#generateClothedBitmap()
+        self.bitmap = getClothedPlayerSprite() #generateClothedBitmap()
       else
         self.bitmap = (@charbitmapAnimated) ? @charbitmap.bitmap : @charbitmap
       end

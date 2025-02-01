@@ -155,7 +155,6 @@ end
 
 def get_clothes_by_id(id)
   update_global_outfit_lists()
-  echoln $PokemonGlobal.clothes_data
   return $PokemonGlobal.clothes_data.has_key?(id) ? $PokemonGlobal.clothes_data[id] : nil
 end
 

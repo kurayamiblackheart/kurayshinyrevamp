@@ -49,22 +49,37 @@ def obtainNewHairstyle(full_outfit_id)
 end
 
 def putOnClothes(outfit_id, silent = false)
+  $Trainer.dyed_clothes= {} if ! $Trainer.dyed_clothes
   $Trainer.last_worn_outfit = $Trainer.clothes
   outfit = get_clothes_by_id(outfit_id)
   $Trainer.clothes = outfit_id
-  $Trainer.clothes_color = nil
+
+  dye_color = $Trainer.dyed_clothes[outfit_id]
+  if dye_color
+    $Trainer.clothes_color = dye_color
+  else
+    $Trainer.clothes_color = nil
+  end
+
   $game_map.update
   refreshPlayerOutfit()
   putOnOutfitMessage(outfit) if !silent
 end
 
 def putOnHat(outfit_id, silent = false)
+  $Trainer.dyed_hats= {} if ! $Trainer.dyed_hats
   $Trainer.last_worn_hat = $Trainer.hat
   outfit = get_hat_by_id(outfit_id)
   $Trainer.hat = outfit_id
-  $Trainer.hat_color = nil
-  $game_map.
-    refreshPlayerOutfit()
+
+  dye_color = $Trainer.dyed_hats[outfit_id]
+  if dye_color
+    $Trainer.hat_color = dye_color
+  else
+    $Trainer.hat_color = nil
+  end
+
+  $game_map.refreshPlayerOutfit()
   putOnOutfitMessage(outfit) if !silent
 end
 
@@ -299,4 +314,8 @@ def randomizePlayerOutfit()
   $Trainer.skin_tone = [1,2,3,4,5,6].sample
   $Trainer.hair = getFullHairId(hair_id,hair_color)
 
+end
+
+def canPutHatOnPokemon(pokemon)
+  return !pokemon.egg? && !pokemon.isTripleFusion? && $game_switches[SWITCH_UNLOCKED_POKEMON_HATS]
 end

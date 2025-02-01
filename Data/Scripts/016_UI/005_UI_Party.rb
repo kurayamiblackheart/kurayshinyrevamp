@@ -494,6 +494,7 @@ end
 # Pokémon party visuals
 #===============================================================================
 class PokemonParty_Scene
+  attr_accessor :viewport
   def pbStartScene(party, starthelptext, annotations = nil, multiselect = false)
     @sprites = {}
     @party = party
@@ -716,6 +717,15 @@ class PokemonParty_Scene
       yield if block_given?
     }
     return ret
+  end
+
+  def pbOpenHatScreen(pokemon)
+    #oldsprites = pbFadeOutAndHide(@sprites)
+    scene = PokemonHatView.new
+    screen = PokemonHatPresenter.new(scene, pokemon)
+    screen.pbStartScreen()
+    yield if block_given?
+    #pbFadeInAndShow(@sprites, oldsprites)
   end
 
   def pbUseItem(bag, pokemon)
@@ -1183,6 +1193,30 @@ class PokemonPartyScreen
     return ret
   end
 
+  def pbPokemonHat(pokemon)
+    cmd = 0
+    msg = "What should you do?"
+    loop do
+      cmd = @scene.pbShowCommands(msg, [
+        _INTL("Put on hat"),
+        _INTL("Remove hat"),
+        _INTL("Back")], cmd)
+      echoln cmd
+      break if cmd == -1
+      if cmd == 0   #Put on hat
+        @scene.pbOpenHatScreen(pokemon)
+        pbDisplay(_INTL("{1} put on a hat!",pokemon.name))
+      elsif cmd == 1 #remove hat
+        if pbConfirm(_INTL("Remove {1}'s hat?",pokemon.name))
+          pokemon.hat=nil
+          pbDisplay(_INTL("{1}'s hat was removed",pokemon.name))
+        end
+      else
+        break
+      end
+    end
+  end
+
   def pbPokemonRename(pkmn, pkmnid)
     cmd = 0
     loop do
@@ -1191,7 +1225,7 @@ class PokemonPartyScreen
              _INTL("{1} has no nickname.", speciesname)][pkmn.name == speciesname ? 1 : 0]
       cmd = @scene.pbShowCommands(msg, [
         _INTL("Rename"),
-        _INTL("Quit")], cmd)
+        _INTL("Back")], cmd)
       # Break
       if cmd == -1
         break
@@ -1232,6 +1266,8 @@ class PokemonPartyScreen
       cmdSwitch = -1
       cmdMail = -1
       cmdItem = -1
+      cmdHat = -1
+
       # Build the commands
       commands[cmdSummary = commands.length] = _INTL("Summary")
       commands[cmdDebug = commands.length] = _INTL("Debug") if $DEBUG
@@ -1245,6 +1281,7 @@ class PokemonPartyScreen
         end
       end
       commands[cmdSwitch = commands.length] = _INTL("Switch") if @party.length > 1
+      commands[cmdHat = commands.length] = _INTL("Hat") if canPutHatOnPokemon(pkmn)
       if !pkmn.egg?
         if pkmn.mail
           commands[cmdMail = commands.length] = _INTL("Mail")
@@ -1312,6 +1349,8 @@ class PokemonPartyScreen
         @scene.pbSummary(pkmnid) {
           @scene.pbSetHelpText((@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
         }
+      elsif cmdHat >= 0 && command == cmdHat
+        pbPokemonHat(pkmn)
       elsif cmdNickname >= 0 && command == cmdNickname
         pbPokemonRename(pkmn,pkmnid)
       elsif cmdDebug >= 0 && command == cmdDebug

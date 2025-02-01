@@ -126,9 +126,9 @@ class DoublePreviewScreen
 
     if !$Trainer.seen?(dexNumber) && $PokemonSystem.kurayfusepreview != 1
       if hasCustom
-        previewwindow.picture.pbSetColor(150, 255, 150, 200)
+        previewwindow.picture.pbSetColor(150, 255, 150, 200)  #green
       else
-        previewwindow.picture.pbSetColor(255, 255, 255, 200)
+        previewwindow.picture.pbSetColor(255, 255, 255, 200)  #white
       end
     end
     return previewwindow

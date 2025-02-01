@@ -93,6 +93,7 @@ class ClothesShopView < PokemonMart_Scene
 
   def pbChooseBuyItem
     itemwindow = @sprites["itemwindow"]
+    refreshStock(@adapter) if !itemwindow
     displayNewItem(itemwindow)
     @sprites["helpwindow"].visible = false
     pbActivateWindow(@sprites, "itemwindow") {
@@ -151,8 +152,10 @@ class ClothesShopView < PokemonMart_Scene
   end
 
   def pbEndBuyScene
-    @sprites["trainerPreview"].erase()
-    @sprites["trainerPreview"] = nil
+    if !@sprites.empty?
+      @sprites["trainerPreview"].erase()
+      @sprites["trainerPreview"] = nil
+    end
     pbDisposeSpriteHash(@sprites)
     @viewport.dispose
     Kernel.pbClearText()

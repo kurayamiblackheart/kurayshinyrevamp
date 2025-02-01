@@ -1362,7 +1362,7 @@ class PokemonSummary_Scene
       if pbBattleChallenge.currentChallenge == -1
         commands[cmdGiveItem = commands.length] = _INTL("Give item")
         commands[cmdTakeItem = commands.length] = _INTL("Take item") if @pokemon.hasItem?
-        commands[cmdHat = commands.length] = _INTL("Hat") if !@pokemon.egg? && $game_switches[SWITCH_UNLOCKED_POKEMON_HATS]
+        commands[cmdHat = commands.length] = _INTL("Hat") if canPutHatOnPokemon(@pokemon)
       end
       commands[cmdPokedex = commands.length] = _INTL("View Pokédex") if $Trainer.has_pokedex
     end

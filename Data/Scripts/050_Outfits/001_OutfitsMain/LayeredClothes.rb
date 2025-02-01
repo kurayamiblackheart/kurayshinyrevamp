@@ -173,14 +173,19 @@ def generate_front_trainer_sprite_bitmap(allowEasterEgg=true, pokeball = nil, cl
     raise "No temp clothes graphics available"
   end
 
-  outfitBitmap = AnimatedBitmap.new(outfitFilename, clothes_color_shift) # if pbResolveBitmap(outfitFilename) #pb
+  outfitBitmap = AnimatedBitmap.new(outfitFilename, clothes_color_shift) if pbResolveBitmap(outfitFilename) #pb
   hairBitmapWrapper = AnimatedBitmap.new(hairFilename, hair_color_shift) if pbResolveBitmap(hairFilename)
 
   hatBitmap = AnimatedBitmap.new(hatFilename, hat_color_shift) if pbResolveBitmap(hatFilename) #pbLoadOutfitBitmap(hatFilename) if pbResolveBitmap(hatFilename)
 
   baseBitmap.bitmap = baseBitmap.bitmap.clone
-  baseBitmap.bitmap.blt(0, 0, outfitBitmap.bitmap, outfitBitmap.bitmap.rect) if outfitBitmap
-
+  if outfitBitmap
+    baseBitmap.bitmap.blt(0, 0, outfitBitmap.bitmap, outfitBitmap.bitmap.rect)
+  else
+    outfitFilename = getTrainerSpriteOutfitFilename("temp")
+    outfitBitmap = AnimatedBitmap.new(outfitFilename, 0)
+    baseBitmap.bitmap.blt(0, 0, outfitBitmap.bitmap, outfitBitmap.bitmap.rect)
+  end
   baseBitmap.bitmap.blt(0, 0, hairBitmapWrapper.bitmap, hairBitmapWrapper.bitmap.rect) if hairBitmapWrapper
   baseBitmap.bitmap.blt(0, 0, hatBitmap.bitmap, hatBitmap.bitmap.rect) if hatBitmap
   baseBitmap.bitmap.blt(44, 42, ballBitmap, ballBitmap.rect) if ballBitmap

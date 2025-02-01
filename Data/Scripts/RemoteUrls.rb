@@ -9,8 +9,8 @@ module Settings
   CREDITS_FILE_URL = "https://infinitefusion.net/Sprite Credits.csv"
   # SPRITES_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/CUSTOM_SPRITES"
   # VERSION_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/VERSION"
-  SPRITES_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/release/Data/CUSTOM_SPRITES"
-  BASE_SPRITES_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/BASE_SPRITES"
+  SPRITES_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/pif-downloadables/refs/heads/master/CUSTOM_SPRITES"
+  BASE_SPRITES_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/pif-downloadables/refs/heads/master/BASE_SPRITES"
 
   VERSION_FILE_URL = "https://raw.githubusercontent.com/kurayamiblackheart/kurayshinyrevamp/release/Data/VERSION"
   CUSTOM_DEX_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/infinitefusion-e18/main/Data/dex.json"
@@ -25,6 +25,13 @@ module Settings
   
   BASE_POKEMON_ALT_SPRITES_REPO_URL = "https://bitbucket.org/infinitefusionsprites/customsprites/raw/main/Other/BaseSprites/"
   BASE_POKEMON_ALT_SPRITES_NEW_URL = "https://infinitefusion.net/Other/BaseSprites/"
+
+  # UNUSED IN KIF
+  # BASE_POKEMON_SPRITESHEET_URL = "https://infinitefusion.net/spritesheets/spritesheets_base/"
+  # CUSTOM_FUSIONS_SPRITESHEET_URL = "https://infinitefusion.net/spritesheets/spritesheets_custom/"
+  
+  # BASE_POKEMON_SPRITESHEET_RESIZED_URL = "https://infinitefusion.net/spritesheets_resized/spritesheets_base/"
+  # CUSTOM_FUSIONS_SPRITESHEET_RESIZED_URL = "https://infinitefusion.net/spritesheets_resized/spritesheets_custom/"
 
   
   CUSTOMSPRITES_RATE_MAX_NB_REQUESTS = 6  #Nb. requests allowed in each time window
@@ -42,7 +49,7 @@ module Settings
   # CUSTOM_SPRITES_REPO_URL = "https://gitlab.com/infinitefusion2/customSprites/-/raw/master/CustomBattlers/"
   # BASE_POKEMON_SPRITES_REPO_URL = "https://gitlab.com/infinitefusion2/autogen-fusion-sprites/-/raw/main/Battlers/"
   # BASE_POKEMON_ALT_SPRITES_REPO_URL = "https://gitlab.com/infinitefusion2/customSprites/-/raw/main/Other/BaseSprites/"
-  
+
   #Spritepack
   NEWEST_SPRITEPACK_MONTH = 12
   NEWEST_SPRITEPACK_YEAR = 2024

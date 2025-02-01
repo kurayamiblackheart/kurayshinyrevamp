@@ -19,6 +19,10 @@ class Player < Trainer
   attr_accessor :unlocked_hairstyles
   attr_accessor :unlocked_card_backgrounds
 
+  attr_accessor :dyed_hats
+  attr_accessor :dyed_clothes
+
+
   attr_accessor :last_worn_outfit
   attr_accessor :last_worn_hat
 
@@ -118,6 +122,24 @@ class Player < Trainer
       value = OUTFITS[value].id
     end
     @clothes=value
+    refreshPlayerOutfit()
+  end
+
+  def clothes_color=(value)
+    echoln value
+    echoln @clothes
+    echoln $Trainer.dyed_clothes
+    echoln caller
+
+    @clothes_color=value
+    $Trainer.dyed_clothes= {} if !$Trainer.dyed_clothes
+    $Trainer.dyed_clothes[@clothes] = value if value
+    refreshPlayerOutfit()
+  end
+  def hat_color=(value)
+    @hat_color=value
+    $Trainer.dyed_hats= {} if ! $Trainer.dyed_hats
+    $Trainer.dyed_hats[@hat] = value if value
     refreshPlayerOutfit()
   end
 
@@ -264,6 +286,10 @@ class Player < Trainer
     @surfing_pokemon = nil
     @last_worn_outfit = nil
     @last_worn_hat = nil
+
+    @dyed_hats = {}
+    @dyed_clothes = {}
+
 
     @card_background = Settings::DEFAULT_TRAINER_CARD_BG
     @unlocked_card_backgrounds = [@card_background]

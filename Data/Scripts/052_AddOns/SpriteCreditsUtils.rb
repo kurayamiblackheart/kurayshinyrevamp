@@ -248,6 +248,7 @@ end
 
 def display_specific_pokemon_statistics()
   species_id = select_any_pokemon()
+  return if !species_id
   species = GameData::Species.get(species_id)
   species_sprites = list_all_sprite_credits_for_pokemon(species)
   unique_sprites = filter_unique_sprites_nb_for_pokemon(species_sprites)

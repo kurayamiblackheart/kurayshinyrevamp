@@ -194,7 +194,7 @@ _END_
 # Stop Editing
 
   def main
-    #endCredits() if $PokemonSystem.on_mobile
+    endCredits() if $PokemonSystem.on_mobile
     #-------------------------------
     # Animated Background Setup
     #-------------------------------

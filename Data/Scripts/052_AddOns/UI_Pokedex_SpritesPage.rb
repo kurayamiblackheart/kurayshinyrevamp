@@ -337,7 +337,7 @@ class PokemonPokedexInfo_Scene
 
   def select_sprite(brief=false)
     if @available.length > 1
-      if is_main_sprite
+      if is_main_sprite()
         if brief
           pbMessage("This sprite will remain the displayed sprite")
           return true
