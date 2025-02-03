@@ -2334,6 +2334,7 @@ class Pokemon
     if json_ver > 7#V.8
       @sprite_scale = jsonparse['sprite_scale']
       @size_category = jsonparse['size_category']
+    end
   end
 
   def jsonload2(jsonparse)
@@ -2487,6 +2488,12 @@ class Pokemon
     return random_id
   end
 
+  #PIF added that empty function, idk why, what the hell? need investigation
+  # KIF TODO
+  def totalIv()  
+  
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES
   # Creates a new Pokémon object.
   # @param species [Symbol, String, Integer] Pokémon species
@@ -2593,11 +2600,4 @@ class Pokemon
       end
     end
   end
-
-  #PIF added that empty function, idk why, what the hell? need investigation
-  # KIF TODO
-  def totalIv()
-    return
-  end
-end
 end
