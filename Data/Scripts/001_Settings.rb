@@ -39,6 +39,7 @@ module Settings
   DEFAULT_SPRITE_PATH = "Graphics/Battlers/Special/000.png"
   CREDITS_FILE_PATH = "Data/sprites/Sprite Credits.csv"
   VERSION_FILE_PATH = "Data/VERSION"
+  REMOTE_VERSION_FILE_PATH = "Data/REMOTE_VERSION"
   CUSTOM_SPRITES_FILE_PATH = "Data/sprites/CUSTOM_SPRITES"
   BASE_SPRITES_FILE_PATH = "Data/sprites/BASE_SPRITES"
   CUSTOM_DEX_ENTRIES_PATH = "Data/pokedex/dex.json"
