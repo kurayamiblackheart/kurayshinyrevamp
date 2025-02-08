@@ -16,17 +16,17 @@ class PokemonHatPresenter
     @original_pokemon_bitmap = nil
   end
 
-  # def getPicturePath()
-  #   if @pokemon.isTripleFusion?
-  #     picturePath = GameData::Species::getSpecialSpriteName(@pokemon.species_data.id_number)
-  #   elsif @pokemon.isFusion?
-  #     picturePath = get_fusion_sprite_path(@pokemon.species_data.head_pokemon.id_number, @pokemon.species_data.body_pokemon.id_number)
-  #   else
-  #     picturePath = get_unfused_sprite_path(@pokemon.species_data.id_number)
-  #   end
-  #   echoln picturePath
-  #   return picturePath
-  # end
+  def getPicturePath()
+    if @pokemon.isTripleFusion?
+      picturePath = GameData::Species::getSpecialSpriteName(@pokemon.species_data.id_number)
+    elsif @pokemon.isFusion?
+      picturePath = get_fusion_sprite_path(@pokemon.species_data.head_pokemon.id_number, @pokemon.species_data.body_pokemon.id_number)
+    else
+      picturePath = get_unfused_sprite_path(@pokemon.species_data.id_number)
+    end
+    echoln picturePath
+    return picturePath
+  end
 
   def pbStartScreen
     @view.init_window(self)
@@ -90,25 +90,12 @@ class PokemonHatPresenter
   end
 
   def initialize_bitmap()
-    spriteLoader = BattleSpriteLoader.new
-
-    if @pokemon.isTripleFusion?
-      #todo
-    elsif @pokemon.isFusion?
-      @original_pokemon_bitmap = spriteLoader.load_fusion_sprite(@pokemon.head_id(),@pokemon.body_id())
+    picturePath = getPicturePath()
+    if picturePath
+      @original_pokemon_bitmap = AnimatedBitmap.new(picturePath)
     else
-      echoln @pokemon
-      echoln @pokemon.species_data
-      @original_pokemon_bitmap = spriteLoader.load_base_sprite(@pokemon.id_number)
+      @original_pokemon_bitmap = AnimatedBitmap.new(Settings::DEFAULT_SPRITE_PATH)
     end
-
-    # picturePath = getPicturePath()
-    # if picturePath
-    #   @original_pokemon_bitmap = AnimatedBitmap.new(picturePath)
-    # else
-    #   @original_pokemon_bitmap = GameData::Species.setAutogenSprite(@pokemon)
-    #   #autogen
-    # end
     @original_pokemon_bitmap.scale_bitmap(Settings::FRONTSPRITE_SCALE)
   end
 
