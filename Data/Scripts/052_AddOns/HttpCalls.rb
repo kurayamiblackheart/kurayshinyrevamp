@@ -84,7 +84,7 @@ def download_file(url, saveLocation)
 end
 
 def download_pokemon_sprite_if_missing(body, head)
-  return if $PokemonSystem.download_sprites != 0
+  return if !downloadAllowed?()
   get_fusion_sprite_path(head, body)
 end
 
@@ -125,7 +125,7 @@ def download_sprite(base_path, head_id, body_id, saveLocation = "Graphics/temp",
 end
 
 def download_autogen_sprite(head_id, body_id,spriteformBody_suffix=nil,spriteformHead_suffix=nil)
-  return nil if $PokemonSystem.download_sprites != 0
+  return nil if !downloadAllowed?()
   # url = Settings::AUTOGEN_SPRITES_REPO_URL + "{1}/{1}.{2}.png"
   template_url = Settings::AUTOGEN_SPRITES_REPO_URL + "{1}/{1}.{2}.png"
   head_id = (head_id.to_s) + "_" + spriteformHead_suffix.to_s if spriteformHead_suffix
@@ -139,10 +139,10 @@ def download_autogen_sprite(head_id, body_id,spriteformBody_suffix=nil,spritefor
 end
 
 def download_custom_sprite(head_id, body_id, spriteformBody_suffix = "", spriteformHead_suffix = "", alt_letter="")
+  return nil if !downloadAllowed?()
   return nil if requestRateExceeded?(Settings::CUSTOMSPRITES_RATE_LOG_FILE,Settings::CUSTOMSPRITES_ENTRIES_RATE_TIME_WINDOW,Settings::CUSTOMSPRITES_RATE_MAX_NB_REQUESTS)
   head_id = (head_id.to_s) + spriteformHead_suffix.to_s
   body_id = (body_id.to_s) + spriteformBody_suffix.to_s
-  return nil if $PokemonSystem.download_sprites != 0
   #base_path = "https://raw.githubusercontent.com/Aegide/custom-fusion-sprites/main/CustomBattlers/{1}.{2}.png"
   # url = "https://raw.githubusercontent.com/infinitefusion/sprites/main/CustomBattlers/{1}.{2}.png"
   url = Settings::CUSTOM_SPRITES_REPO_URL + "{1}.{2}{3}.png"
@@ -156,10 +156,10 @@ def download_custom_sprite(head_id, body_id, spriteformBody_suffix = "", spritef
 end
 
 def download_custom_sprite_filename(filename)
+  return nil if !downloadAllowed?()
   return nil if requestRateExceeded?(Settings::CUSTOMSPRITES_RATE_LOG_FILE,Settings::CUSTOMSPRITES_ENTRIES_RATE_TIME_WINDOW,Settings::CUSTOMSPRITES_RATE_MAX_NB_REQUESTS)
   head_id = (head_id.to_s) + spriteformHead_suffix.to_s
   body_id = (body_id.to_s) + spriteformBody_suffix.to_s
-  return nil if $PokemonSystem.download_sprites != 0
   url = Settings::CUSTOM_SPRITES_REPO_URL + "{1}.{2}{3}.png"
   destPath = _INTL("{1}{2}", Settings::CUSTOM_BATTLERS_FOLDER_INDEXED, head_id)
   if !Dir.exist?(destPath)
@@ -183,6 +183,7 @@ def download_unfused_main_sprite(dex_num, alt_letter="")
 end
 
 def download_all_unfused_alt_sprites(dex_num)
+  return if !downloadAllowed?()
   base_url = Settings::BASE_POKEMON_ALT_SPRITES_REPO_URL + "{1}"
   extension = ".png"
   destPath = _INTL("{1}", Settings::CUSTOM_BASE_SPRITES_FOLDER)
@@ -200,6 +201,7 @@ def download_all_unfused_alt_sprites(dex_num)
 end
 
 def download_all_alt_sprites(head_id, body_id)
+  return if !downloadAllowed?()
   base_url = "#{Settings::CUSTOM_SPRITES_REPO_URL}{1}.{2}"
   extension = ".png"
   destPath = _INTL("{1}{2}", Settings::CUSTOM_BATTLERS_FOLDER_INDEXED, head_id)
