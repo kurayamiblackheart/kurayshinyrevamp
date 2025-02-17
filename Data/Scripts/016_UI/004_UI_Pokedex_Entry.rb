@@ -304,6 +304,25 @@ class PokemonPokedexInfo_Scene
     if $Trainer.owned?(@species)
       # Write the category
       textpos.push([_INTL("{1} Pokémon", species_data.category), 246, 68, 0, base, shadow])
+      # Write the Evolutions
+      textpos.push([_INTL("Evolve"), 210, 112, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)])
+      evolutions = species_data.get_evolutions
+      item_evo = evolutions.any? { |evo| evo[1] == :Item }
+      other_evo = evolutions.any? { |evo| evo[1] != :Item && evo[1] != :Level }
+      evolutions.select! { |evo| evo[1] == :Level }
+      y_evo_offset = 140;
+      for evo in evolutions
+        next if !evo
+        textpos.push([_INTL("Lv {1}", evo[2]), 208, y_evo_offset, 0, base, shadow])
+        y_evo_offset += 24
+      end
+      if item_evo
+        textpos.push([_INTL("Item"), 208, y_evo_offset, 0, base, shadow])
+        y_evo_offset += 24
+      end
+      if other_evo
+        textpos.push([_INTL("Other"), 208, y_evo_offset, 0, base, shadow])
+      end
       # Write the height and weight
       height = species_data.height
       weight = species_data.weight
