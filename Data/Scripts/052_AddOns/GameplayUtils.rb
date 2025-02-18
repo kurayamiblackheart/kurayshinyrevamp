@@ -1584,9 +1584,11 @@ def turnPlayerTowardsEvent(event)
 end
 
 def displaySpriteWindowWithMessage(pif_sprite, message = "", x = 0, y = 0,z=0)
-  spriteLoader = BattleSpriteLoader.new
-  sprite_bitmap = spriteLoader.load_pif_sprite_directly(pif_sprite)
-  pictureWindow = PictureWindow.new(sprite_bitmap.bitmap)
+  # HungryPickle: Workaround for missing PIF Spritesheet class
+  #spriteLoader = BattleSpriteLoader.new
+  #sprite_bitmap = spriteLoader.load_pif_sprite_directly(pif_sprite)
+  sprite_bitmap = pbBitmap(pif_sprite.local_path)
+  pictureWindow = PictureWindow.new(sprite_bitmap)
 
   pictureWindow.opacity = 0
   pictureWindow.z = z
