@@ -749,6 +749,9 @@ module Game
     # if ngp_bag != nil
     #   $PokemonBag = ngp_clean_item_data(ngp_bag)
     # end
+    if ngp_trainer != nil
+      $Trainer.ngp_migrate_pokedex(ngp_trainer.pokedex)
+    end
     if ngp_storage != nil
       $PokemonStorage = ngp_clean_pc_data(ngp_storage, ngp_trainer.party)
     end

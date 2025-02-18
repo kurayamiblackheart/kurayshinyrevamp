@@ -238,6 +238,10 @@ class Player < Trainer
   def new_game_plus=(value)
     @new_game_plus = value
   end
+
+  def ngp_migrate_pokedex(old_dex)
+    @pokedex = old_dex
+  end
   #=============================================================================
 
   # (see Pokedex#seen?)

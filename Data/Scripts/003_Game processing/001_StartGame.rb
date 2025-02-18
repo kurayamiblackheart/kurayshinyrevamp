@@ -54,11 +54,12 @@ module Game
 
             echoln pokemon.owner.id#PIF is printing out the owner id for whatever reason, gonna leave it there for now
             pokemon.owner.id = $Trainer.id
-            pokemon.ot=$Trainer.name
+            # HungryPickle: $Trainer.name is Unnamed here. Pokedex migration moved to ngp_migrate_pokedex
+            # pokemon.ot=$Trainer.name
+            # $Trainer.pokedex.set_seen(pokemon.species)
+            # $Trainer.pokedex.set_owned(pokemon.species)
             pokemon.obtain_method = 0
             pokemon.species = GameData::Species.get(pokemon.species).get_baby_species(false)
-            $Trainer.pokedex.set_seen(pokemon.species)
-            $Trainer.pokedex.set_owned(pokemon.species)
             pokemon.kuraycustomfile = nil
             pokemon.reset_moves
             pokemon.calc_stats
