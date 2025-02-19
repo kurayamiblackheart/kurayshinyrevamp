@@ -107,6 +107,7 @@ def pbPokeRadarCancel
     $PokemonTemp.pokeradar_ui = nil
   end
   $PokemonTemp.pokeradar = nil
+  $PokemonGlobal.repel = 0 if $PokemonGlobal.repel <= 2
 end
 
 
