@@ -119,6 +119,9 @@ def listPokemonInCurrentRoute(encounterType, onlySeen = false, onlyUnseen = fals
   unseen = []
   for encounter in $PokemonEncounters.listPossibleEncounters(encounterType)
     species = $game_switches[SWITCH_RANDOM_WILD] && !$game_switches[SWITCH_RANDOM_WILD_AREA] ? getRandomizedTo(encounter[1]) : encounter[1]
+    if species.is_a?(Integer)
+      species = GameData::Species.get(species).id
+    end
 
     if !processed.include?(species)
       if $Trainer.seen?(species)
@@ -248,7 +251,11 @@ def pbPokeRadarGetEncounter(rarity = 0)
     end
   end
   # Didn't choose a Poké Radar-exclusive species, choose a regular encounter instead
-  return $PokemonEncounters.choose_wild_pokemon($PokemonEncounters.encounter_type, rarity + 1)
+  encounter = $PokemonEncounters.choose_wild_pokemon($PokemonEncounters.encounter_type, rarity + 1)
+  if $game_switches[SWITCH_RANDOM_WILD] && $game_switches[SWITCH_WILD_RANDOM_GLOBAL]
+    encounter[0] = getRandomizedTo(encounter[0])
+  end
+  return encounter
 end
 
 ################################################################################
