@@ -16,6 +16,8 @@ def pbAutoPositionAll
     Graphics.update if sp.id_number % 50 == 0
     bitmap1 = GameData::Species.sprite_bitmap(sp.species, sp.form, nil, nil, nil, true)
     bitmap2 = GameData::Species.sprite_bitmap(sp.species, sp.form)
+    bitmap1.recognizeDims()
+    bitmap2.recognizeDims()
     if bitmap1 && bitmap1.bitmap # Player's y
       sp.back_sprite_x = 0
       sp.back_sprite_y = (bitmap1.height - (findBottom(bitmap1.bitmap) + 1)) / 2

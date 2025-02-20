@@ -56,6 +56,7 @@ class PokemonSprite < SpriteWrapper
     @_iconbitmap = nil
     return if !pokemon
     base_bitmap = (pokemon) ? GameData::Species.sprite_bitmap_from_pokemon(pokemon, back) : nil
+    base_bitmap.recognizeDims()
     if pokemon.hat
       new_bitmap = Bitmap.new(base_bitmap.width, base_bitmap.height)
       new_bitmap.blt(0, 0, base_bitmap.bitmap, base_bitmap.bitmap.rect)
@@ -78,6 +79,7 @@ class PokemonSprite < SpriteWrapper
   def setPokemonBitmapFromId(id, back = false, shiny=false, bodyShiny=false, headShiny=false, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2, pokeKRS = [0, 0, 0, 0, 0, 0, 0, 0, 0])
     @_iconbitmap.dispose if @_iconbitmap
     @_iconbitmap = GameData::Species.sprite_bitmap_from_pokemon_id(id, back,shiny, bodyShiny,headShiny, pokeHue, pokeR, pokeG, pokeB, pokeKRS)
+    @_iconbitmap.recognizeDims()
     self.bitmap = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
     self.color = Color.new(0, 0, 0, 0)
     changeOrigin
@@ -86,6 +88,7 @@ class PokemonSprite < SpriteWrapper
   def setPokemonBitmapSpecies(pokemon, species, back = false)
     @_iconbitmap.dispose if @_iconbitmap
     @_iconbitmap = (pokemon) ? GameData::Species.sprite_bitmap_from_pokemon(pokemon, back, species) : nil
+    @_iconbitmap.recognizeDims()
     self.bitmap = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
     changeOrigin
   end
@@ -93,6 +96,7 @@ class PokemonSprite < SpriteWrapper
   def setSpeciesBitmap(species, gender = 0, form = 0, shiny = false, shadow = false, back = false, egg = false)
     @_iconbitmap.dispose if @_iconbitmap
     @_iconbitmap = GameData::Species.sprite_bitmap(species, form, gender, shiny, shadow, back, egg)
+    @_iconbitmap.recognizeDims()
     self.bitmap = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
     changeOrigin
   end
@@ -207,26 +211,32 @@ class PokemonIconSprite < SpriteWrapper
       if $PokemonSystem.shiny_icons_kuray == 1
         if @pokemon.kuraycustomfile? == nil
           @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+          @animBitmap.recognizeDims()
         else
           if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
             filename = @pokemon.kuraycustomfile?
             @animBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
+            @animBitmap.recognizeDims()
             if @pokemon.shiny?
               @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
             end
           else
             @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+            @animBitmap.recognizeDims()
           end
         end
       else
         if @pokemon.kuraycustomfile? == nil
           @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
+          @animBitmap.recognizeDims()
         else
           if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
             filename = @pokemon.kuraycustomfile?
             @animBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
+            @animBitmap.recognizeDims()
           else
             @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
+            @animBitmap.recognizeDims()
           end
         end
       end
@@ -240,6 +250,7 @@ class PokemonIconSprite < SpriteWrapper
     elsif useRegularIcon(@pokemon.species)
       # @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename(@pokemon.species, @pokemon.form, @pokemon.gender, @pokemon.shiny?))
       @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(@pokemon))
+      @animBitmap.recognizeDims()
       if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
         # @animBitmap.shiftColors(colorshifting)
         @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
@@ -364,6 +375,7 @@ class PokemonIconSprite < SpriteWrapper
       bitmapPath = sprintf("%s.png", bitmapFileName)
       IO.copy_stream(headPokeFileName, bitmapPath)
       result_icon = AnimatedBitmap.new(bitmapPath)
+      result_icon.recognizeDims()
 
       for i in 0..icon1.width-1
         for j in ((icon1.height / 2) + Settings::FUSION_ICON_SPRITE_OFFSET)..icon1.height-1

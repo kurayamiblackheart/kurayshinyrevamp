@@ -429,6 +429,15 @@ class AnimatedBitmap
     file.write([Zlib.crc32(type + data)].pack('N'))
   end
 
+  def recognizeDims()
+    puts "Width: #{@bitmap.bitmap.width}"
+    puts "Height: #{@bitmap.bitmap.height}"
+    # If the size are 96x96, we scale up the bitmap to 288x288 using nearest neighbor.
+    if @bitmap.bitmap.width == 96 && @bitmap.bitmap.height == 96
+      @bitmap.scale_bitmap(3)
+    end
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES Modified by ChatGPT
   def pbGiveFinaleColor(shinyR, shinyG, shinyB, offset, shinyKRS)
     # dontmodify = 0
@@ -1134,20 +1143,28 @@ class AnimatedBitmap
 
   def scale_bitmap(scale)
     return if scale == 1
-    new_width = (@bitmap.bitmap.width * scale).floor #Sylvi Big Icons
-    new_height = (@bitmap.bitmap.height * scale).floor #Sylvi Big Icons
-
-    return if new_width <= 0 || new_height <= 0 #Sylvi Big Icons
-
+  
+    # Determine the actual bitmap to use
+    actual_bitmap = @bitmap.respond_to?(:bitmap) ? @bitmap.bitmap : @bitmap
+  
+    # If `actual_bitmap` is still not valid, return early
+    return unless actual_bitmap.respond_to?(:width) && actual_bitmap.respond_to?(:height)
+  
+    new_width = (actual_bitmap.width * scale).floor # Sylvi Big Icons
+    new_height = (actual_bitmap.height * scale).floor # Sylvi Big Icons
+  
+    return if new_width <= 0 || new_height <= 0 # Sylvi Big Icons
+  
     destination_rect = Rect.new(0, 0, new_width, new_height)
-    source_rect = Rect.new(0, 0, @bitmap.bitmap.width, @bitmap.bitmap.height)
+    source_rect = Rect.new(0, 0, actual_bitmap.width, actual_bitmap.height)
     new_bitmap = Bitmap.new(new_width, new_height)
-    new_bitmap.stretch_blt(
-      destination_rect,
-      @bitmap.bitmap,
-      source_rect
-    )
-    @bitmap.bitmap = new_bitmap
+    new_bitmap.stretch_blt(destination_rect, actual_bitmap, source_rect)
+  
+    if @bitmap.respond_to?(:bitmap)
+      @bitmap.bitmap = new_bitmap
+    else
+      @bitmap = new_bitmap
+    end
   end
 
   # def mirror
@@ -1319,6 +1336,33 @@ class GifBitmap
     @bitmap = BitmapWrapper.new(32, 32) if @bitmap.nil?
     @bitmap.play if @bitmap&.animated?
   end
+
+  def scale_bitmap(scale)
+    return if scale == 1
+  
+    # Determine the actual bitmap to use
+    actual_bitmap = @bitmap.respond_to?(:bitmap) ? @bitmap.bitmap : @bitmap
+  
+    # If `actual_bitmap` is still not valid, return early
+    return unless actual_bitmap.respond_to?(:width) && actual_bitmap.respond_to?(:height)
+  
+    new_width = (actual_bitmap.width * scale).floor # Sylvi Big Icons
+    new_height = (actual_bitmap.height * scale).floor # Sylvi Big Icons
+  
+    return if new_width <= 0 || new_height <= 0 # Sylvi Big Icons
+  
+    destination_rect = Rect.new(0, 0, new_width, new_height)
+    source_rect = Rect.new(0, 0, actual_bitmap.width, actual_bitmap.height)
+    new_bitmap = Bitmap.new(new_width, new_height)
+    new_bitmap.stretch_blt(destination_rect, actual_bitmap, source_rect)
+  
+    if @bitmap.respond_to?(:bitmap)
+      @bitmap.bitmap = new_bitmap
+    else
+      @bitmap = new_bitmap
+    end
+  end
+  
 
   ##### KURAYX
 

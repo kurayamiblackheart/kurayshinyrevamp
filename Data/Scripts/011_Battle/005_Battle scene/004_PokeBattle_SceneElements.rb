@@ -856,6 +856,7 @@ class PokemonBattlerSprite < RPG::Sprite
     @pkmn = pkmn
     @_iconBitmap.dispose if @_iconBitmap
     @_iconBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pkmn, back)
+    @_iconBitmap.recognizeDims()
     scale =Settings::FRONTSPRITE_SCALE
     scale = Settings::BACKRPSPRITE_SCALE if @back
     @_iconBitmap.scale_bitmap(scale)

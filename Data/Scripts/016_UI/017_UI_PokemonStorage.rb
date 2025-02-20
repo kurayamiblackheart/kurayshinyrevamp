@@ -72,6 +72,7 @@ class PokemonBoxIcon < IconSprite
   def createRBGableShiny(pokemon)
     # result_icon = AnimatedBitmap.new(GameData::Species.icon_filename(pokemon.species, pokemon.form, pokemon.gender, pokemon.shiny?))
     result_icon = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(pokemon))
+    result_icon.recognizeDims()
     dexNum = getDexNumberForSpecies(pokemon.species)
     if pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
       # result_icon.shiftColors(colorshifting)
@@ -173,6 +174,7 @@ class PokemonBoxIcon < IconSprite
       bitmapPath = sprintf("%s.png", bitmapFileName)
       IO.copy_stream(headPokeFileName, bitmapPath)
       result_icon = AnimatedBitmap.new(bitmapPath)
+      result_icon.recognizeDims()
 
       for i in 0..icon1.width-1
         for j in ((icon1.height / 2) + Settings::FUSION_ICON_SPRITE_OFFSET)..icon1.height-1
@@ -209,26 +211,32 @@ class PokemonBoxIcon < IconSprite
       if $PokemonSystem.shiny_icons_kuray == 1
         if @pokemon.kuraycustomfile? == nil
           tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+          tempBitmap.recognizeDims()
         else
           if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
             filename = @pokemon.kuraycustomfile?
             tempBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
+            tempBitmap.recognizeDims()
             if @pokemon.shiny?
               tempBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
             end
           else
             tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
+            tempBitmap.recognizeDims()
           end
         end
       else
         if @pokemon.kuraycustomfile? == nil
           tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
+          tempBitmap.recognizeDims()
         else
           if pbResolveBitmap(@pokemon.kuraycustomfile?) && !@pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
             filename = @pokemon.kuraycustomfile?
             tempBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
+            tempBitmap.recognizeDims()
           else
             tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon, false, nil, false)
+            tempBitmap.recognizeDims()
           end
         end
       end

@@ -105,6 +105,7 @@ module GameData
         end
       end
       sprite = (filename) ? AnimatedBitmap.new(filename) : nil
+      sprite.recognizeDims()
       if isShiny
         # sprite.shiftColors(colorshifting)
         #KurayBringBackOldShinies
@@ -130,6 +131,7 @@ module GameData
         end
       end
       sprite = (filename) ? AnimatedBitmap.new(filename) : nil
+      sprite.recognizeDims()
       if isShiny
         # sprite.shiftColors(colorshifting)
         #KurayBringBackOldShinies

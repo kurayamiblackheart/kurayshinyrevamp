@@ -55,6 +55,7 @@ def shinyPNGMake(pokemon, pathexport="null")
   
   if filename && !pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     exportbitmap = AnimatedBitmap.new(filename)
+    exportbitmap.recognizeDims()
     if pokemon.shiny?
       exportbitmap.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?, pokemon.shinyKRS?)
     end
@@ -63,6 +64,7 @@ def shinyPNGMake(pokemon, pathexport="null")
     getnum = GameData::Species.get(getnum).id_number
     filename = GameData::Species.sprite_filename(getnum)
     exportbitmap = GameData::Species.sprite_bitmap_from_pokemon(pokemon)
+    exportbitmap.recognizeDims()
   end
   
   if pathexport == "null"
