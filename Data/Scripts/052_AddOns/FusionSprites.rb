@@ -211,11 +211,11 @@ def get_unfused_sprite_path(dex_number_id, spriteform = nil)
   random_alt = get_random_alt_letter_for_unfused(dex_number, true) #nil if no main
   random_alt = "" if !random_alt
 
-
-  filename = _INTL("{1}{2}{3}.png", dex_number, spriteform_letter,random_alt)
+  filename = _INTL("{1}{2}.png", dex_number, spriteform_letter)
+  filename_alt = _INTL("{1}{2}{3}.png", dex_number, spriteform_letter,random_alt)
 
   normal_path = Settings::BATTLERS_FOLDER + folder + spriteform_letter + "/" + filename
-  lightmode_path = Settings::BATTLERS_FOLDER + filename
+  lightmode_path = Settings::CUSTOM_BASE_SPRITES_FOLDER + filename_alt
 
   path = random_alt == "" ? normal_path : lightmode_path
 
