@@ -172,6 +172,7 @@ end
 
 #todo refactor & put custom base sprites in same folder as fusion sprites
 def download_unfused_main_sprite(dex_num, alt_letter="")
+  return nil if !downloadAllowed?()
   base_url = alt_letter == "" ? Settings::BASE_POKEMON_SPRITES_REPO_URL : Settings::BASE_POKEMON_ALT_SPRITES_REPO_URL
   filename = _INTL("{1}{2}.png",dex_num,alt_letter)
   url = base_url + filename
