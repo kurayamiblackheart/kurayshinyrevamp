@@ -20,7 +20,11 @@ class PokedexUtils
     dexNum = getDexNumberForSpecies(species)
     isFusion = dexNum > NB_POKEMON
     if !isFusion
-      ret << Settings::BATTLERS_FOLDER + dexNum.to_s + form_suffix + "/" + dexNum.to_s + form_suffix + ".png"
+      unfused_path = Settings::CUSTOM_BASE_SPRITE_FOLDER + dexNum.to_s + form_suffix + ".png"
+      if !pbResolveBitmap(unfused_path)
+        unfused_path = Settings::BATTLERS_FOLDER + dexNum.to_s + form_suffix + "/" + dexNum.to_s + form_suffix + ".png"
+      end
+      ret << unfused_path
 
       getAltLettersList().each { |alt_letter|
         altFilePath = Settings::CUSTOM_BASE_SPRITES_FOLDER + dexNum.to_s + form_suffix + alt_letter + ".png"
