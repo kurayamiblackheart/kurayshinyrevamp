@@ -101,6 +101,12 @@ def kuray_global_triples(dexNum)
       return sprintf(base_path + "cardboard")
     when Settings::ZAPMOLCUNO_NB + 27 #Triple regi
       return sprintf(base_path + "447.448.449")
+    when Settings::ZAPMOLCUNO_NB + 28
+      return sprintf(base_path + "479.482.485")
+    when Settings::ZAPMOLCUNO_NB + 29
+      return sprintf(base_path + "480.483.486")
+    when Settings::ZAPMOLCUNO_NB + 30
+      return sprintf(base_path + "481.484.487")
     when Settings::KURAY_NEW_TRIPLES + 1 # Ditto / Mewtwo / Mew
         return sprintf(base_path + "132.150.151")
     when Settings::KURAY_NEW_TRIPLES + 2 # Ekans / Sandshrew / Zubat
