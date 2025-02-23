@@ -86,15 +86,15 @@ class PokemonPokedexInfo_Scene
     @sprites["previousSprite"].z = 9999999
     @sprites["nextSprite"].z = 9999999
 
-    @sprites["selectedSprite"].setBitmap(altsList[@selected_index])
+    @sprites["selectedSprite"].bitmap = getAvailableBitmap(@selected_index)
 
     if altsList.size >= 2
-      @sprites["nextSprite"].setBitmap(altsList[@selected_index + 1])
+      @sprites["nextSprite"].bitmap = getAvailableBitmap(1)
       @sprites["nextSprite"].visible = true
     end
 
     if altsList.size >= 3
-      @sprites["previousSprite"].setBitmap(altsList[-1])
+      @sprites["previousSprite"].bitmap = getAvailableBitmap(-1)
       @sprites["previousSprite"].visible = true
     end
 
@@ -135,7 +135,22 @@ class PokemonPokedexInfo_Scene
       download_autogen_sprite(head_id, body_id)
       download_all_alt_sprites(head_id, body_id)
     end
-    return PokedexUtils.new.pbGetAvailableAlts(chosen_species, @formIndex)
+    available_alts = PokedexUtils.new.pbGetAvailableAlts(chosen_species, @formIndex)
+    setAvailableBitmaps(available_alts)
+    return available_alts
+  end
+
+  def setAvailableBitmaps(available_alts)
+    @available_bitmaps = available_alts.map { |path| AnimatedBitmap.new(path) }
+    @available_bitmaps.each { |b| b.recognizeDims()}
+  end
+
+  def getAvailableBitmap(index)
+    if @available_bitmaps[index] 
+      return @available_bitmaps[index].bitmap
+    end
+    echoln("nil bitmap. check @available and @available_bitmaps")
+    return nil
   end
 
   def hide_all_selected_windows
@@ -160,7 +175,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def update_displayed
-    @sprites["selectedSprite"].setBitmap(@available[@selected_index])
+    @sprites["selectedSprite"].bitmap = getAvailableBitmap(@selected_index)
     nextIndex = @selected_index + 1
     previousIndex = @selected_index - 1
     if nextIndex > @available.size - 1
@@ -172,12 +187,12 @@ class PokemonPokedexInfo_Scene
     @sprites["previousSprite"].visible = @available.size > 2
     @sprites["nextSprite"].visible = @available.size > 1
 
-    @sprites["previousSprite"].setBitmap(@available[previousIndex]) if previousIndex != nextIndex
+    @sprites["previousSprite"].bitmap = getAvailableBitmap(previousIndex) if previousIndex != nextIndex
+    
+    @sprites["selectedSprite"].bitmap = getAvailableBitmap(@selected_index)
+    @sprites["nextSprite"].bitmap = getAvailableBitmap(nextIndex)
 
-    @sprites["selectedSprite"].setBitmap(@available[@selected_index])
-    @sprites["nextSprite"].setBitmap(@available[nextIndex])
-
-    selected_bitmap = @sprites["selectedSprite"].getBitmap
+    selected_bitmap = @available_bitmaps[@selected_index] # AnimatedBitmap
     sprite_path = selected_bitmap.path
     isBaseSprite = isBaseSpritePath(@available[@selected_index])
     # is_generated = sprite_path.start_with?(Settings::BATTLERS_FOLDER)
