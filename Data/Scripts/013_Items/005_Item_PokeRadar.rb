@@ -328,7 +328,6 @@ Events.onWildBattleEnd += proc { |_sender, e|
 }
 
 Events.onStepTaken += proc { |_sender, _e|
-  echoln("Repel: #{$PokemonGlobal.repel}")
   if $PokemonTemp.pokeradar # autorepel
     $PokemonGlobal.repel += 1
   end
