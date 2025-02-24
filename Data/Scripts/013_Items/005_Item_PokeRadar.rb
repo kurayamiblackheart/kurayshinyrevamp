@@ -106,8 +106,10 @@ def pbPokeRadarCancel
     $PokemonTemp.pokeradar_ui.dispose
     $PokemonTemp.pokeradar_ui = nil
   end
+  if $PokemonTemp.pokeradar != nil && $PokemonGlobal.repel <= 2
+    $PokemonGlobal.repel = 0
+  end
   $PokemonTemp.pokeradar = nil
-  $PokemonGlobal.repel = 0 if $PokemonGlobal.repel <= 2
 end
 
 
@@ -326,6 +328,7 @@ Events.onWildBattleEnd += proc { |_sender, e|
 }
 
 Events.onStepTaken += proc { |_sender, _e|
+  echoln("Repel: #{$PokemonGlobal.repel}")
   if $PokemonTemp.pokeradar # autorepel
     $PokemonGlobal.repel += 1
   end
