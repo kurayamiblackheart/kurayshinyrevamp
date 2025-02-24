@@ -93,6 +93,7 @@ class PokemonHatPresenter
     picturePath = getPicturePath()
     if picturePath
       @original_pokemon_bitmap = AnimatedBitmap.new(picturePath)
+      @original_pokemon_bitmap.recognizeDims()
     else
       @original_pokemon_bitmap = AnimatedBitmap.new(Settings::DEFAULT_SPRITE_PATH)
     end
