@@ -939,6 +939,9 @@ def kurayeggs_triggereggitem(id, itemid)
     kurayegg_pokemon.form          = 0 if kurayegg_pokemon.isSpecies?(:SHAYMIN)
     kurayegg_pokemon.heal
     kurayegg_pokemon.obtain_text = item_name
+
+    $Trainer.pokedex.register_unfused_pkmn(kurayegg_pokemon)
+    
     # Check where we can place the pokemon
     pbAddPokemon(kurayegg_pokemon, 1, true, true)
     # if $Trainer.party_full?

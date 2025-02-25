@@ -71,25 +71,7 @@ module PokeBattle_BattleCommon
           @scene.pbShowPokedex(pkmn.species)
         end
       end
-      # Trapstarr - Add base pokemon to pokedex when catching fusion
-      if (pkmn.species_data.id_number > NB_POKEMON) && $PokemonSystem.improved_pokedex == 1
-        if pkmn.species_data.id_number > (NB_POKEMON * NB_POKEMON) + NB_POKEMON
-          # Triple Fusion Logic, skipping for now (not sure if supported yet)
-        else
-          bodyPoke = getBasePokemonID(pkmn.species_data.id_number, true)
-          headPoke = getBasePokemonID(pkmn.species_data.id_number, false)
-          # Iterate through bodyPoke and headPoke, checking and adding them to the Pokédex
-          [bodyPoke, headPoke].each do |poke|
-            if !$Trainer.pokedex.owned?(poke)
-              pbPlayer.pokedex.set_owned(poke)
-              if $Trainer.has_pokedex
-                pbPlayer.pokedex.register(poke)
-                @scene.pbShowPokedex(poke)
-              end
-            end
-          end
-        end
-      end
+      $Trainer.pokedex.register_unfused_pkmn(pkmn, true)
       # Record a Shadow Pokémon's species as having been caught
       pbPlayer.pokedex.set_shadow_pokemon_owned(pkmn.species) if pkmn.shadowPokemon?
       # Store caught Pokémon
