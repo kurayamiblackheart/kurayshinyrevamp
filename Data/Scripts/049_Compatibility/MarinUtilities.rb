@@ -1146,6 +1146,82 @@ def getkuraylevelcap()
   return Settings::MAXIMUM_LEVEL
 end
 
+def printGymLeaderLvls()
+  gym_leaders_classic = []
+  gym_leaders_classic << GameData::Trainer.get("POKEMONTRAINER_Gold","Gold")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Jasmine","Jasmine")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Morty","Morty")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Pryce","Pryce")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Clair","Clair")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Chuck","Chuck")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Falkner","Falkner")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Kurt","Kurt")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Whitney","Whitney")
+  gym_leaders_classic << GameData::Trainer.get("CHAMPION","Blue")
+  gym_leaders_classic << GameData::Trainer.get("CHAMPION","Blue",1)
+  gym_leaders_classic << GameData::Trainer.get("CHAMPION","Blue",2)
+  gym_leaders_classic << GameData::Trainer.get("ELITEFOUR_Lance","Lance",2)
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Giovanni","Giovanni")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Blaine","Blaine")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Sabrina","Sabrina")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Koga","Koga")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Erika","Erika")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Surge","Lt. Surge")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Misty","Misty")
+  gym_leaders_classic << GameData::Trainer.get("LEADER_Brock","Brock")
+
+  gym_leaders_modern = []
+  gym_leaders_modern << GameData::TrainerModern.get("POKEMONTRAINER_Gold","Gold")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Jasmine","Jasmine")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Morty","Morty")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Pryce","Pryce")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Clair","Clair")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Chuck","Chuck")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Falkner","Falkner")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Kurt","Kurt")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Whitney","Whitney")
+  gym_leaders_modern << GameData::TrainerModern.get("CHAMPION","Blue")
+  gym_leaders_modern << GameData::TrainerModern.get("CHAMPION","Blue",1)
+  gym_leaders_modern << GameData::TrainerModern.get("CHAMPION","Blue",2)
+  gym_leaders_modern << GameData::TrainerModern.get("ELITEFOUR_Lance","Lance",2)
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Giovanni","Giovanni")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Blaine","Blaine")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Sabrina","Sabrina")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Koga","Koga")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Erika","Erika")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Surge","Lt. Surge")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Misty","Misty")
+  gym_leaders_modern << GameData::TrainerModern.get("LEADER_Brock","Brock")
+
+  echoln("")
+  echoln("#----------Classic----------#")
+  gym_leaders_classic.each do |trainer|
+    ace_level = 0
+    trainer.pokemon.each do |pkmn|
+      ace_level = pkmn[:level] if pkmn[:level] > ace_level
+    end
+    if trainer.version > 0
+      echoln(sprintf("Lv %d [%s,%s,%d]", ace_level, trainer.trainer_type, trainer.real_name, trainer.version))
+    else
+      echoln(sprintf("Lv %d [%s,%s]", ace_level, trainer.trainer_type, trainer.real_name))
+    end
+  end
+
+  echoln("")
+  echoln("#----------Modern----------#")
+  gym_leaders_modern.each do |trainer|
+    ace_level = 0
+    trainer.pokemon.each do |pkmn|
+      ace_level = pkmn[:level] if pkmn[:level] > ace_level
+    end
+    if trainer.version > 0
+      echoln(sprintf("Lv %d [%s,%s,%d]", ace_level, trainer.trainer_type, trainer.real_name, trainer.version))
+    else
+      echoln(sprintf("Lv %d [%s,%s]", ace_level, trainer.trainer_type, trainer.real_name))
+    end
+  end
+end
+
 # Returns the percentage of exp the Pokémon has compared to the next level
 # def pbGetE
 #   xpPercentage(pokemon)

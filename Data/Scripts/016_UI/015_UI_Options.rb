@@ -2159,7 +2159,10 @@ class KurayOptSc_2 < PokemonOption_Scene
     )
     options << EnumOption.new(_INTL("Level Cap"), [_INTL("Off"), _INTL("Easy"), _INTL("Normal"), _INTL("Hard")],
                       proc { $PokemonSystem.kuraylevelcap },
-                      proc { |value| $PokemonSystem.kuraylevelcap = value },
+                      proc { |value| 
+                        $PokemonSystem.kuraylevelcap = value; 
+                        #printGymLeaderLvls(); 
+                      },
                       ["No Forced Level Cap",
                       "Easy Level Cap, for children",
                       "Normal Level Cap, for normal people",
