@@ -104,8 +104,7 @@ module GameData
           filename = self.sprite_filename(dex_number, spriteform_body, spriteform_head)
         end
       end
-      sprite = (filename) ? AnimatedBitmap.new(filename) : nil
-      sprite.recognizeDims()
+      sprite = (filename) ? AnimatedBitmap.new(filename).recognizeDims() : nil
       if isShiny
         # sprite.shiftColors(colorshifting)
         #KurayBringBackOldShinies
@@ -130,8 +129,7 @@ module GameData
           filename = self.sprite_filename(dex_number, spriteform_body, spriteform_head)
         end
       end
-      sprite = (filename) ? AnimatedBitmap.new(filename) : nil
-      sprite.recognizeDims()
+      sprite = (filename) ? AnimatedBitmap.new(filename).recognizeDims() : nil
       if isShiny
         # sprite.shiftColors(colorshifting)
         #KurayBringBackOldShinies
@@ -147,6 +145,13 @@ module GameData
     def self.egg_sprite_bitmap(dex_number, form = nil)
       filename = self.egg_sprite_filename(dex_number, form)
       return (filename) ? AnimatedBitmap.new(filename) : nil
+    end
+
+    #KurayX - KURAYX_ABOUT_SHINIES
+    def self.sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, back = false, egg = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0], cusFile=nil)
+      return self.egg_sprite_bitmap(species, form) if egg
+      return self.back_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB, shinyKRS, cusFile) if back
+      return self.front_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB, shinyKRS, cusFile)
     end
 
     def self.getSpecialSpriteName(dexNum)

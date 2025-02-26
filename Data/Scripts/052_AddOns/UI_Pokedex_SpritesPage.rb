@@ -141,8 +141,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def setAvailableBitmaps(available_alts)
-    @available_bitmaps = available_alts.map { |path| AnimatedBitmap.new(path) }
-    @available_bitmaps.each { |b| b.recognizeDims()}
+    @available_bitmaps = available_alts.map { |path| AnimatedBitmap.new(path).recognizeDims() }
   end
 
   def getAvailableBitmap(index)

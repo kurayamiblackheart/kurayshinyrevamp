@@ -183,7 +183,6 @@ module GameData
     def self.icon_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, shinyValue = 0, dex_number = 0, bodyShiny = false, headShiny = false, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0])
       filename = self.icon_filename(species, form, gender, shiny, shadow)
       spritemade = (filename) ? AnimatedBitmap.new(filename).deanimate : nil
-      spritemade.recognizeDims()
       if shiny && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
         # spritemade.shiftColors(colorshifting)
         spritemade.pbGiveFinaleColor(shinyR, shinyG, shinyB, shinyValue, shinyKRS)

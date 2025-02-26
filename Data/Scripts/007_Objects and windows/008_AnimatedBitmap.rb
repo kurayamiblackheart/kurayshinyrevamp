@@ -430,12 +430,17 @@ class AnimatedBitmap
   end
 
   def recognizeDims()
-    puts "Width: #{@bitmap.bitmap.width}"
-    puts "Height: #{@bitmap.bitmap.height}"
     # If the size are 96x96, we scale up the bitmap to 288x288 using nearest neighbor.
     if @bitmap.bitmap.width == 96 && @bitmap.bitmap.height == 96
       @bitmap.scale_bitmap(3)
+    elsif @bitmap.bitmap.width != 288 && @bitmap.bitmap.height != 288
+      echoln("not a 96x96 or 288x288 sprite")
+      puts "#{@path}#{@filename}"
+      puts "Width: #{@bitmap.bitmap.width}"
+      puts "Height: #{@bitmap.bitmap.height}"
+      #puts caller
     end
+    return self
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES Modified by ChatGPT
@@ -476,6 +481,7 @@ class AnimatedBitmap
     # puts "Loaded from cache: #{loadedfromcache}"
     newbitmap = GifBitmap.new(@path, @filename, usedoffset, shinyR, shinyG, shinyB)
     @bitmap = newbitmap.copy
+    recognizeDims()
     if ($PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 0) || loadedfromcache
       return
     end

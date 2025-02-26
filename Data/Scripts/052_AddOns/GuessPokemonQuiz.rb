@@ -209,7 +209,7 @@ class FusionQuiz
   def show_fusion_picture(obscured = false, x = nil, y = nil)
     hide_fusion_picture()
     picturePath = get_fusion_sprite_path(@head_id, @body_id)
-    bitmap = AnimatedBitmap.new(picturePath)
+    bitmap = AnimatedBitmap.new(picturePath).recognizeDims()
     bitmap.scale_bitmap(Settings::FRONTSPRITE_SCALE)
     @previewwindow = PictureWindow.new(bitmap)
     @previewwindow.y = y ? y : 30

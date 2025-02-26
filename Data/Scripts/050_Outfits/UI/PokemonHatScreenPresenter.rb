@@ -92,8 +92,7 @@ class PokemonHatPresenter
   def initialize_bitmap()
     picturePath = getPicturePath()
     if picturePath
-      @original_pokemon_bitmap = AnimatedBitmap.new(picturePath)
-      @original_pokemon_bitmap.recognizeDims()
+      @original_pokemon_bitmap = AnimatedBitmap.new(picturePath).recognizeDims()
     else
       @original_pokemon_bitmap = AnimatedBitmap.new(Settings::DEFAULT_SPRITE_PATH)
     end

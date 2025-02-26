@@ -458,7 +458,6 @@ class PokemonPokedexInfo_Scene
   
     def getCustomEntryText(species_data)
       sprite_bitmap= GameData::Species.sprite_bitmap(species_data.species)
-      sprite_bitmap.recognizeDims()
       return nil if isAutogenSprite(sprite_bitmap.path)
       spritename = sprite_bitmap.filename
       possibleCustomEntries = getCustomDexEntry(spritename)
