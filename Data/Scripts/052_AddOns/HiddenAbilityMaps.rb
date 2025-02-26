@@ -42,5 +42,6 @@ end
 
 def Kernel.getMapName(id)
   mapinfos = pbLoadMapInfos
-  return mapinfos[id].name
+  return mapinfos[id].name if mapinfos[id]
+  return "no where right now"
 end
