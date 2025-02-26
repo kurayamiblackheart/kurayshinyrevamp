@@ -130,7 +130,9 @@ class PokemonEggHatch_Scene
       pbMessage(_INTL("{1}'s data was added to the Pokédex", @pokemon.name))
       pbShowPokedex(@pokemon.species)
     end
-    $Trainer.pokedex.register_unfused_pkmn(@pokemon)
+    $Trainer.pokedex.register_unfused_pkmn(@pokemon).each do |unfused|
+      pbMessage(_INTL("{1}'s data was added to the Pokédex", GameData::Species.get(unfused).name))
+    end
   end
 
   def pbEndScene

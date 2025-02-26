@@ -71,7 +71,9 @@ module PokeBattle_BattleCommon
           @scene.pbShowPokedex(pkmn.species)
         end
       end
-      $Trainer.pokedex.register_unfused_pkmn(pkmn, true)
+      $Trainer.pokedex.register_unfused_pkmn(pkmn).each do |unfused| 
+        pbDisplayPaused(_INTL("{1}'s data was added to the Pokédex.", GameData::Species.get(unfused).name))
+      end
       # Record a Shadow Pokémon's species as having been caught
       pbPlayer.pokedex.set_shadow_pokemon_owned(pkmn.species) if pkmn.shadowPokemon?
       # Store caught Pokémon

@@ -430,27 +430,27 @@ class Player < Trainer
     end
 
     # @param pkmn [Pokemon] Pokemon to register unfused pkmn from
-    # @param show_pokedex [Boolean] Whether to show the pokedex screen for each unfused pkmn
-    def register_unfused_pkmn(pkmn, show_pokedex = false)
-      # Trapstarr
-      if (pkmn.species_data.id_number > NB_POKEMON) && $PokemonSystem.improved_pokedex == 1
-        if pkmn.species_data.id_number > (NB_POKEMON * NB_POKEMON) + NB_POKEMON
-          # Triple Fusion Logic, skipping for now (not sure if supported yet)
-        else
-          bodyPoke = getBasePokemonID(pkmn.species_data.id_number, true)
-          headPoke = getBasePokemonID(pkmn.species_data.id_number, false)
-          # Iterate through bodyPoke and headPoke, checking and adding them to the Pokédex
-          [bodyPoke, headPoke].each do |poke|
-            if !owned?(poke)
-              set_owned(poke)
-              if $Trainer.has_pokedex
-                register(poke)
-                @scene.pbShowPokedex(poke) if show_pokedex
-              end
+    # @return [Array<Integer>] Dex numbers of unfused pokemon
+    def register_unfused_pkmn(pkmn)
+      # Trapstarr & HungryPickle
+      registered = []
+      return registered if (pkmn.species_data.id_number < NB_POKEMON) || $PokemonSystem.improved_pokedex == 0
+      if pkmn.species_data.id_number > (NB_POKEMON * NB_POKEMON) + NB_POKEMON
+        # Triple Fusion Logic, skipping for now (not sure if supported yet)
+      else
+        bodyPoke = getBasePokemonID(pkmn.species_data.id_number, true)
+        headPoke = getBasePokemonID(pkmn.species_data.id_number, false)
+        [headPoke, bodyPoke].each do |poke|
+          if !owned?(poke)
+            set_owned(poke)
+            if $Trainer.has_pokedex
+              register(poke)
+              registered << poke
             end
           end
         end
       end
+      return registered
     end
 
     #===========================================================================

@@ -643,13 +643,16 @@ class PokemonEvolutionScene
       @scene.pbShowPokedex(@newspecies)
     end
 
-    $Trainer.pokedex.register_unfused_pkmn(@pokemon)
+    $Trainer.pokedex.register_unfused_pkmn(@pokemon).each do |unfused|
+      Kernel.pbMessageDisplay(@sprites["msgwindow"], 
+        _INTL("{1}'s data was added to the Pokédex", GameData::Species.get(unfused).name))
+    end
     
     # if allNewPossibleAbilities.include?(oldAbility)
     #   @pokemon.ability=oldAbility
     # end
-
     # Learn moves upon evolution for evolved species
+    Kernel.pbMessageDisplay(@sprites["msgwindow"], "\\wtnp[0]", false, nil, false) # clear text before learning moves
     movelist = @pokemon.getMoveList
     for i in movelist
       next if i[0]!=0 && i[0]!=@pokemon.level   # 0 is "learn upon evolution"

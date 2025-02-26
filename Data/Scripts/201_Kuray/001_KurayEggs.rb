@@ -940,10 +940,12 @@ def kurayeggs_triggereggitem(id, itemid)
     kurayegg_pokemon.heal
     kurayegg_pokemon.obtain_text = item_name
 
-    $Trainer.pokedex.register_unfused_pkmn(kurayegg_pokemon)
-    
     # Check where we can place the pokemon
     pbAddPokemon(kurayegg_pokemon, 1, true, true)
+
+    $Trainer.pokedex.register_unfused_pkmn(kurayegg_pokemon).each do |unfused|
+        pbMessage(_INTL("{1}'s data was added to the Pokédex", GameData::Species.get(unfused).name))
+    end
     # if $Trainer.party_full?
         # If the player's party is full, the Pokémon is sent to storage.
         # pbStorePokemon(kurayegg_pokemon)
