@@ -81,26 +81,26 @@ class PokemonDataBox < SpriteWrapper
     # Determine the co-ordinates of the data box and the left edge padding width
     if onPlayerSide
       @spriteX = Graphics.width - 244
-      @spriteY = Graphics.height - 192#176
+      @spriteY = Graphics.height - 180 #176#192
       @spriteBaseX = 34
     else
       @spriteX = 8 #-16
-      @spriteY = 36
-      @spriteBaseX = 8#0#16
+      @spriteY = 0 #36
+      @spriteBaseX = 8 #16
     end
     case sideSize
     when 2
       @spriteX += [-12,  12,  0,  0][@battler.index]
-      @spriteY += [-20, -34, 34, 20][@battler.index]
+
       #@spriteY += [-38, -6, 16, 48][@battler.index]    #standard
-      #@spriteY += [-32, -6, 16, 42][@battler.index]     #smaller gap
-      # @spriteY += [-18, -6, 16, 28][@battler.index]     #overlap
+      @spriteY += [-32, -6, 16, 42][@battler.index]     #smaller gap
+      #@spriteY += [-18, -6, 16, 28][@battler.index]     #overlap
+
     when 3
       @spriteX += [-12,  12, -6,  6,  0,  0][@battler.index]
-      # @spriteY += [-42, -46,  4,  0, 50, 46][@battler.index]#infinite fusion backup
-      @spriteY += [-52, -46,  -6,  0, 40, 46][@battler.index]
-      #@spriteY += [-74, -8,  -28,  38, 16, 84][@battler.index]    #standard
-      # @spriteY += [-54, -8,  -18,  26, 16, 58][@battler.index]    #overlap
+
+      @spriteY += [-74, -8,  -28,  38, 16, 84][@battler.index]    #standard
+      #@spriteY += [-54, -8,  -18,  26, 16, 58][@battler.index]    #overlap
     end
   end
 
@@ -856,7 +856,6 @@ class PokemonBattlerSprite < RPG::Sprite
     @pkmn = pkmn
     @_iconBitmap.dispose if @_iconBitmap
     @_iconBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pkmn, back)
-    @_iconBitmap.recognizeDims()
     scale =Settings::FRONTSPRITE_SCALE
     scale = Settings::BACKRPSPRITE_SCALE if @back
     @_iconBitmap.scale_bitmap(scale)
