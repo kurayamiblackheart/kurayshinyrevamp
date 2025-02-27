@@ -4,11 +4,11 @@ class PokedexUtils
   #                  "ai", "aj", "ak", "al", "am", "an", "ao", "ap", "aq", "ar", "as", "at", "au", "av", "aw", "ax",
   #                  "ay", "az"]
 
-  def getAltLettersList()
+  def self.getAltLettersList()
     return ('a'..'z').to_a + ('aa'..'az').to_a
   end
 
-  def pbGetAvailableAlts(species, form_index = 0)
+  def self.pbGetAvailableAlts(species, form_index = 0)
     if form_index
       form_suffix = form_index <= 0 ? "" : "_" + form_index.to_s
     else
@@ -55,7 +55,7 @@ class PokedexUtils
   end
 
   #todo: return array for split evolution lines that have multiple final evos
-  def getFinalEvolution(species)
+  def self.getFinalEvolution(species)
     #ex: [[B3H4,Level 32],[B2H5, Level 35]]
     evolution_line = species.get_evolutions
     return species if evolution_line.empty?

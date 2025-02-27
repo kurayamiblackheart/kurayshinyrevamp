@@ -190,22 +190,13 @@ class GenOneStyle
     @customPokeList = getCustomSpeciesList(false)
     #Get random Pokemon (1st gen orandPokenly, pas de legend la prmeiere fois)
 
-    randPoke = getRandomCustomFusionForIntro(true, @customPokeList, @maxPoke)
-    randpoke1 = randPoke[0] #rand(@maxPoke)+1
-    randpoke2 = randPoke[1] #rand(@maxPoke)+1
-
-    randpoke2s = randpoke2.to_s
-
-    path_s1 = get_unfused_sprite_path(randpoke1)
-    path_s2 = get_unfused_sprite_path(randpoke2)
-    path_f = get_fusion_sprite_path(randpoke1, randpoke2)
+    randPokes = getRandomCustomFusionForIntro(true, @customPokeList, @maxPoke)
+    randpoke1 = randPokes[0] #rand(@maxPoke)+1
+    randpoke2 = randPokes[1] #rand(@maxPoke)+1
+    randpokeF = getSpeciesIdForFusion(randpoke1,randpoke2)
 
     @prevPoke1 = randpoke1
     @prevPoke2 = randpoke2
-
-    #Get Fused Poke
-    fusedpoke = (randpoke2 * NB_POKEMON) + randpoke1
-    fusedpoke_s = fusedpoke.to_s
 
     @selector_pos = 0 #1: left, 0:right
 
@@ -257,17 +248,17 @@ class GenOneStyle
     @sprites["selector"].opacity = 0
 
     @sprites["poke"] = Sprite.new(@viewport)
-    @sprites["poke"].bitmap = pbBitmap(path_s1)
+    @sprites["poke"].bitmap = GameData::Species.sprite_bitmap_from_pokemon_id(randpoke1).bitmap
     @sprites["poke"].x = 400
     @sprites["poke"].y = 75
 
     @sprites["2poke"] = Sprite.new(@viewport)
-    @sprites["2poke"].bitmap = pbBitmap(path_s2)
+    @sprites["2poke"].bitmap = GameData::Species.sprite_bitmap_from_pokemon_id(randpoke2).bitmap
     @sprites["2poke"].x = -150
     @sprites["2poke"].y = 75
 
     @sprites["fpoke"] = Sprite.new(@viewport)
-    @sprites["fpoke"].bitmap = pbBitmap(path_f)
+    @sprites["fpoke"].bitmap = GameData::Species.sprite_bitmap_from_pokemon_id(randpokeF).bitmap
     @sprites["fpoke"].x = 125
     @sprites["fpoke"].y = 75
     @sprites["fpoke"].z = 999
@@ -425,28 +416,23 @@ class GenOneStyle
       if @maxPoke < NB_POKEMON - 1
         @maxPoke += 5 #-1 pour que ca arrive pile. tant pis pour kyurem
       end
-      randPoke = getRandomCustomFusionForIntro(true, @customPokeList, @maxPoke)
-      randpoke1 = randPoke[0] #rand(@maxPoke)+1
-      randpoke2 = randPoke[1] #rand(@maxPoke)+1
+      randPokes = getRandomCustomFusionForIntro(true, @customPokeList, @maxPoke)
+      randpoke1 = randPokes[0] #rand(@maxPoke)+1
+      randpoke2 = randPokes[1] #rand(@maxPoke)+1
+      #randpokeF = getFusedIdIntro(randpoke1,randpoke2)
 
-      path_s1 = get_unfused_sprite_path(randpoke1)
-      path_s2 = get_unfused_sprite_path(randpoke2)
-      path_f = getFusedPath(randpoke1, randpoke2)
-
-      path_fMod = getFusedPath(@prevPoke1, @prevPoke2)
-      @sprites["fpoke"].bitmap = pbBitmap(path_fMod)
+      randpokeF_Mod = getFusedIdIntro(@prevPoke1, @prevPoke2)
+      @sprites["fpoke"].bitmap = GameData::Species.sprite_bitmap_from_pokemon_id(randpokeF_Mod).bitmap
 
       @prevPoke1 = randpoke1
       @prevPoke2 = randpoke2
 
-      @sprites["poke"].bitmap = pbBitmap(path_s1)
-      @sprites["2poke"].bitmap = pbBitmap(path_s2)
+      @sprites["poke"].bitmap = GameData::Species.sprite_bitmap_from_pokemon_id(randpoke1).bitmap
+      @sprites["2poke"].bitmap = GameData::Species.sprite_bitmap_from_pokemon_id(randpoke2).bitmap
 
       wait(150)
 
-      #  fusedpoke = (randpoke2*151)+randpoke1
-      #fusedpoke_s =fusedpoke.to_s
-      @sprites["fpoke"].bitmap = pbBitmap(path_f)
+      #@sprites["fpoke"].bitmap = GameData::Species.sprite_bitmap_from_pokemon_id(randpokeF).bitmap
       #@sprites["effect"].opacity=155
       #@sprites["bg"].opacity=255
       #@sprites["bg2"].opacity=0
@@ -461,14 +447,14 @@ class GenOneStyle
   end
 
   #new version
-  def getFusedPath(randpoke1, randpoke2)
-    path = rand(2) == 0 ? get_fusion_sprite_path(randpoke1, randpoke2) : get_fusion_sprite_path(randpoke2, randpoke1)
+  def getFusedIdIntro(randpoke1, randpoke2)
+    id = rand(2) == 0 ? getSpeciesIdForFusion(randpoke1, randpoke2) : getSpeciesIdForFusion(randpoke2, randpoke1)
     if Input.press?(Input::RIGHT)
-      path = get_fusion_sprite_path(randpoke2, randpoke1)
+      id = getSpeciesIdForFusion(randpoke2, randpoke1)
     elsif Input.press?(Input::LEFT)
-      path = get_fusion_sprite_path(randpoke1, randpoke2)
+      id = getSpeciesIdForFusion(randpoke1, randpoke2)
     end
-    return path
+    return id
   end
 
 end

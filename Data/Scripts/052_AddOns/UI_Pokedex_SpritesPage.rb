@@ -135,7 +135,7 @@ class PokemonPokedexInfo_Scene
       download_autogen_sprite(head_id, body_id)
       download_all_alt_sprites(head_id, body_id)
     end
-    available_alts = PokedexUtils.new.pbGetAvailableAlts(chosen_species, @formIndex)
+    available_alts = PokedexUtils.pbGetAvailableAlts(chosen_species, @formIndex)
     setAvailableBitmaps(available_alts)
     return available_alts
   end

@@ -293,7 +293,8 @@ def get_fusion_sprite_path(head_id, body_id, spriteform_body = nil, spriteform_h
 
 
   #get altSprite letter
-  random_alt = get_random_alt_letter_for_custom(head_id, body_id) #nil if no main
+  #random_alt = get_random_alt_letter_for_custom(head_id, body_id) #nil if no main
+  random_alt = PokedexUtils.pbGetAvailableAlts(dex_num).sample.match(/[a-z]+(?=.png)/i)
   random_alt = "" if !random_alt
   forcingSprite=false
   if $PokemonTemp.forced_alt_sprites && $PokemonTemp.forced_alt_sprites.key?(pokemon_name)
@@ -320,7 +321,7 @@ def get_fusion_sprite_path(head_id, body_id, spriteform_body = nil, spriteform_h
   end
 
   #Try local generated sprite
-  local_generated_path = Settings::BATTLERS_FOLDER + head_id.to_s + spriteform_head_letter + "/" + filename
+  local_generated_path = Settings::BATTLERS_FOLDER + head_id.to_s + spriteform_head_letter + "/" + pokemon_name + ".png"
   if pbResolveBitmap(local_generated_path)
     add_to_autogen_cache(substitution_id,local_generated_path)
     return local_generated_path
