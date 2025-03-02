@@ -258,7 +258,7 @@ module PokeBattle_BattleCommon
     y = (65536 / ((255.0 / x) ** 0.1875)).floor
 
     #Increased chances of catching if is on last ball
-    isOnLastBall = !$PokemonBag.pbHasItem?(ball)
+    isOnLastBall = true #!$PokemonBag.pbHasItem?(ball)
     echoln isOnLastBall
     # Critical capture check
     if isOnLastBall
@@ -281,8 +281,7 @@ module PokeBattle_BattleCommon
       # Calculate the number of shakes
       if c > 0 && pbRandom(256) < c
         @criticalCapture = true
-        return 4 if pbRandom(65536) < y
-        return 0
+        return 4
       end
     end
     # Calculate the number of shakes
