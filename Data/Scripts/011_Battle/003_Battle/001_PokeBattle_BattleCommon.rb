@@ -257,11 +257,8 @@ module PokeBattle_BattleCommon
     # Second half of the shakes calculation
     y = (65536 / ((255.0 / x) ** 0.1875)).floor
 
-    #Increased chances of catching if is on last ball
-    isOnLastBall = !$PokemonBag.pbHasItem?(ball)
-    echoln isOnLastBall
     # Critical capture check
-    if isOnLastBall
+    if Settings::ENABLE_CRITICAL_CAPTURES
       c = 0
       numOwned = $Trainer.pokedex.owned_count
       if numOwned > 600;
@@ -279,6 +276,7 @@ module PokeBattle_BattleCommon
       #   c = x / 12
       # end
       # Calculate the number of shakes
+      #echoln("Crit Capture chance: #{c/256.to_f}")
       if c > 0 && pbRandom(256) < c
         @criticalCapture = true
         return 4
