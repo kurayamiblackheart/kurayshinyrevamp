@@ -258,7 +258,7 @@ module PokeBattle_BattleCommon
     y = (65536 / ((255.0 / x) ** 0.1875)).floor
 
     #Increased chances of catching if is on last ball
-    isOnLastBall = true #!$PokemonBag.pbHasItem?(ball)
+    isOnLastBall = !$PokemonBag.pbHasItem?(ball)
     echoln isOnLastBall
     # Critical capture check
     if isOnLastBall
