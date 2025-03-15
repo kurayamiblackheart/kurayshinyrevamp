@@ -525,7 +525,11 @@ end
 
 module Graphics
   def self.delta_s
-    return self.delta
+    if System::VERSION == "MKXPZ_VERSION" # if Game-compatibility.exe then don't break animated water tiles
+      return self.delta.to_f / 1_000_000
+    else
+      return self.delta
+    end
   end
 end
 
