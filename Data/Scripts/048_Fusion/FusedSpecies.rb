@@ -195,25 +195,46 @@ module GameData
     def calculate_base_stats_custom(bst_option, bst_sliders)
       head_stats = @head_pokemon.base_stats
       body_stats = @body_pokemon.base_stats
-
       fused_stats = {}
-
-      if bst_option == 1 # Head
-        head_stats.each{|stat, head_value| fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], bst_sliders[stat])}
-      elsif bst_option == 2 # Better
-        head_stats.each{|stat, head_value|
-          if head_value > body_stats[stat] then
-            fused_stats[stat] = calculate_fused_stats_custom(head_value, body_stats[stat], bst_sliders[stat])
+    
+      case bst_option
+      when 1  # "Head" mode
+        # For each stat, use the HEAD slider vs. BODY slider
+        head_stats.each do |stat, head_value|
+          body_value   = body_stats[stat]
+          slider_head  = bst_sliders[stat]                # e.g. HP => 67
+          slider_body  = bst_sliders["#{stat}_BODY".to_sym] # e.g. HP_BODY => 33
+          fused_stats[stat] = calculate_fused_stats_custom(
+            head_value, body_value, slider_head, slider_body
+          )
+        end
+    
+      when 2  # "Better" mode
+        # Whichever stat is higher is the "dominantStat"
+        head_stats.each do |stat, head_value|
+          body_value   = body_stats[stat]
+          slider_head  = bst_sliders[stat]
+          slider_body  = bst_sliders["#{stat}_BODY".to_sym]
+    
+          if head_value >= body_value
+            fused_stats[stat] = calculate_fused_stats_custom(
+              head_value, body_value, slider_head, slider_body
+            )
           else
-            fused_stats[stat] = calculate_fused_stats_custom(body_stats[stat], head_value, bst_sliders[stat])
+            fused_stats[stat] = calculate_fused_stats_custom(
+              body_value, head_value, slider_head, slider_body
+            )
           end
-        }
+        end
+    
       else
+        # 0 => "Off" => normal 2/3–1/3 fused stats
         fused_stats = calculate_base_stats
       end
-
+    
       return fused_stats
     end
+    
 
     def calculate_base_exp()
       head_exp = @head_pokemon.base_exp
@@ -448,9 +469,10 @@ module GameData
       return ((2 * dominantStat) / 3) + (otherStat / 3).floor
     end
 
-    def calculate_fused_stats_custom(dominantStat, otherStat, slider)
-      ratio = slider / 100.to_f
-      return ((dominantStat * ratio) + (otherStat * (1 - ratio))).floor
+    def calculate_fused_stats_custom(dominantStat, otherStat, slider, slider2)
+      dominatRatio = slider / 100.to_f
+      otherRatio = slider2 / 100.to_f
+      return ((dominantStat * dominatRatio) + (otherStat * otherRatio)).floor
     end
 
     def average_values(value1, value2)
