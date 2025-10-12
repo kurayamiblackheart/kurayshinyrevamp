@@ -212,7 +212,7 @@ class PokemonIconSprite < SpriteWrapper
             filename = @pokemon.kuraycustomfile?
             @animBitmap = (filename) ? AnimatedBitmap.new(filename) : nil
             if @pokemon.shiny?
-              @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
+              @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?, @pokemon.shinyOmega?)
             end
           else
             @animBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
@@ -241,9 +241,9 @@ class PokemonIconSprite < SpriteWrapper
     elsif useRegularIcon(@pokemon.species)
       # @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename(@pokemon.species, @pokemon.form, @pokemon.gender, @pokemon.shiny?))
       @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(@pokemon))
-      if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
+      if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && access_deprecated_kurayshiny() != 1
         # @animBitmap.shiftColors(colorshifting)
-        @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
+        @animBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?, @pokemon.shinyOmega?)
       end
     elsif useTripleFusionIcon(@pokemon.species)
       @animBitmap = AnimatedBitmap.new(pbResolveBitmap(sprintf("Graphics/Icons/iconDNA")))
@@ -373,9 +373,9 @@ class PokemonIconSprite < SpriteWrapper
         end
       end
     end
-    if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
+    if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && access_deprecated_kurayshiny() != 1
       # result_icon.shiftColors(colorshifting)
-      result_icon.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
+      result_icon.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?, @pokemon.shinyOmega?)
     end
     return result_icon
   end

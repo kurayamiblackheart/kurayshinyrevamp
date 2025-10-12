@@ -36,7 +36,7 @@ module RPG
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    def self.load_bitmap(folder_name, filename, hue = 0, rcode=0, gcode=1, bcode=2)
+    def self.load_bitmap(folder_name, filename, hue = 0, rcode=0, gcode=1, bcode=2, pifshiny=0, kifshiny=0)
       path = folder_name + filename
       cached = true
       ret = fromCache(path)
@@ -73,7 +73,7 @@ module RPG
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    def self.load_bitmap_path(path, hue = 0, rcode=0, gcode=1, bcode=2)
+    def self.load_bitmap_path(path, hue = 0, rcode=0, gcode=1, bcode=2, pifshiny=0, kifshiny=0)
       cached = true
       ret = fromCache(path)
       if !ret

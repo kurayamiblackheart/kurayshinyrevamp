@@ -73,9 +73,9 @@ class PokemonBoxIcon < IconSprite
     # result_icon = AnimatedBitmap.new(GameData::Species.icon_filename(pokemon.species, pokemon.form, pokemon.gender, pokemon.shiny?))
     result_icon = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(pokemon))
     dexNum = getDexNumberForSpecies(pokemon.species)
-    if pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
+    if pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && access_deprecated_kurayshiny() != 1
       # result_icon.shiftColors(colorshifting)
-      result_icon.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?, pokemon.shinyKRS?)
+      result_icon.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?, pokemon.shinyKRS?, pokemon.shinyOmega?)
     end
     return result_icon
   end
@@ -181,9 +181,9 @@ class PokemonBoxIcon < IconSprite
         end
       end
     end
-    if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && $PokemonSystem.kuraynormalshiny != 1
+    if @pokemon.shiny? && $PokemonSystem.shiny_icons_kuray == 1 && access_deprecated_kurayshiny() != 1
       # result_icon.shiftColors(colorshifting)
-      result_icon.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
+      result_icon.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?, @pokemon.shinyOmega?)
     end
     return result_icon
   end
@@ -214,7 +214,7 @@ class PokemonBoxIcon < IconSprite
             filename = @pokemon.kuraycustomfile?
             tempBitmap = (filename) ? AnimatedBitmap.new(filename).recognizeDims() : nil
             if @pokemon.shiny?
-              tempBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?)
+              tempBitmap.pbGiveFinaleColor(@pokemon.shinyR?, @pokemon.shinyG?, @pokemon.shinyB?, @pokemon.shinyValue?, @pokemon.shinyKRS?, @pokemon.shinyOmega?)
             end
           else
             tempBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pokemon)
@@ -1852,7 +1852,7 @@ class PokemonStorageScene
     commands[cmdEvoLock = commands.length] = _INTL("Lock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 0)
     commands[cmdEvoLock = commands.length] = _INTL("Unlock Evolution") if ($PokemonSystem.kuray_no_evo == 1 && pokemon.kuray_no_evo? == 1)
     commands[cmdShinify = commands.length] = _INTL("Gamble for Shiny") if !pokemon.shiny?
-    commands[cmdShinify = commands.length] = _INTL("Gamble for new Color") if pokemon.shiny? && $PokemonSystem.kuraynormalshiny != 1
+    commands[cmdShinify = commands.length] = _INTL("Gamble for new Color") if pokemon.shiny? && access_deprecated_kurayshiny() != 1
     commands[cmdShininessSell = commands.length] = _INTL("Sell Shininess") if pokemon.shiny?
     commands[cmdRerollSprite = commands.length] = _INTL("Re-roll Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     commands[cmdDefSprite = commands.length] = _INTL("Use Default Sprite") if (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
@@ -2163,7 +2163,7 @@ class PokemonStorageScene
         else
           pokemon = @storage.boxes[selected[0]][selected[1]]
         end
-        if pokemon.shiny? && $PokemonSystem.kuraynormalshiny == 1
+        if pokemon.shiny? && access_deprecated_kurayshiny() == 1
           pbPlayBuzzerSE
           pbDisplay(_INTL("Pokemon already Shiny!"))
           break
@@ -2196,6 +2196,7 @@ class PokemonStorageScene
               pokemon.shinyG=kurayRNGforChannels
               pokemon.shinyB=kurayRNGforChannels
               pokemon.shinyKRS=kurayKRSmake
+              pokemon.shinyimprovpif=rollimproveshiny()
               pbKurayRefresh(overlayvar1, overlayvar2)
               pbDisplay(_INTL("Wait... Its shiny color changed!"))
             else
@@ -2379,6 +2380,26 @@ class PokemonStorageScene
         pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Timid-Black!"))
       end
     end
+    helptext = pbDisplay(_INTL("0 = Nrm Spr | 1 = Shiny Spr"))
+    params = ChooseNumberParams.new
+    params.setMaxDigits(1)
+    params.setRange(0, 1)
+    #Before ChatGPT new
+    # params.setRange(0, 2)
+    params.setDefaultValue(pokemon.shinyimprovpif?)
+    params.setInitialValue(pokemon.shinyimprovpif?)
+    params.setCancelValue(pokemon.shinyimprovpif?)
+    params.setNegativesAllowed(false)
+    qty = @scene.pbChooseNumber(helptext,params)
+    #Before ChatGPT new
+    # if qty < 3
+    if qty < 2
+      if qty > -1
+        pokemon.shinyimprovpif=qty
+        pbKurayRefresh(overlayvar1, overlayvar2)
+        pbDisplay(_INTL("Changed Spr!"))
+      end
+    end
 
   end
 
@@ -2401,6 +2422,7 @@ class PokemonStorageScene
     pokemon.shinyG=kurayRNGforChannels
     pokemon.shinyB=kurayRNGforChannels
     pokemon.shinyKRS=kurayKRSmake
+    pokemon.shinyimprovpif=rollimproveshiny()
     pbKurayRefresh(overlayvar1, overlayvar2)
     pbDisplay(_INTL("Re-rolled into " + pokemon.shinyValue.to_s + ";" + pokemon.shinyR.to_s + ";" + pokemon.shinyG.to_s + ";" + pokemon.shinyB.to_s + "!"))
   end

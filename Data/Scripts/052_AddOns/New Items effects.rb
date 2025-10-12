@@ -613,6 +613,7 @@ def reverseFusion(pokemon)
   pokemon.exp_when_fused_head = body_exp
 
   #KurayX - KURAYX_ABOUT_SHINIES
+  pokemon.head_shinyimprovpif, pokemon.body_shinyimprovpif = pokemon.body_shinyimprovpif, pokemon.head_shinyimprovpif
   pokemon.head_shiny, pokemon.body_shiny = pokemon.body_shiny, pokemon.head_shiny
   pokemon.head_shinyr, pokemon.body_shinyr = pokemon.body_shinyr, pokemon.head_shinyr
   pokemon.head_shinyg, pokemon.body_shinyg = pokemon.body_shinyg, pokemon.head_shinyg
@@ -1656,6 +1657,7 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
         pokemon.shiny = false
         if pokemon.body_shinyhue == nil && pokemon.head_shinyhue == nil
             pokemon.head_shinyhue=pokemon.shinyValue?
+            pokemon.head_shinyimprovpif=pokemon.shinyimprovpif?
             pokemon.head_shinyr=pokemon.shinyR?
             pokemon.head_shinyg=pokemon.shinyG?
             pokemon.head_shinyb=pokemon.shinyB?
@@ -1679,11 +1681,13 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
           poke2.shiny = true
           #KurayX - KURAYX_ABOUT_SHINIES
           pokemon.shinyValue=pokemon.body_shinyhue?
+          pokemon.shinyimprovpif=pokemon.body_shinyimprovpif?
           pokemon.shinyR=pokemon.body_shinyr?
           pokemon.shinyG=pokemon.body_shinyg?
           pokemon.shinyB=pokemon.body_shinyb?
           pokemon.shinyKRS=pokemon.body_shinykrs?.clone
           poke2.shinyValue=pokemon.head_shinyhue?
+          poke2.shinyimprovpif=pokemon.head_shinyimprovpif?
           poke2.shinyR=pokemon.head_shinyr?
           poke2.shinyG=pokemon.head_shinyg?
           poke2.shinyB=pokemon.head_shinyb?
@@ -1695,6 +1699,7 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
           pokemon.shiny = true
           #KurayX - KURAYX_ABOUT_SHINIES
           pokemon.shinyValue=pokemon.body_shinyhue?
+          pokemon.shinyimprovpif=pokemon.body_shinyimprovpif?
           pokemon.shinyR=pokemon.body_shinyr?
           pokemon.shinyG=pokemon.body_shinyg?
           pokemon.shinyB=pokemon.body_shinyb?
@@ -1706,6 +1711,7 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
           poke2.shiny = true
           #KurayX - KURAYX_ABOUT_SHINIES
           poke2.shinyValue=pokemon.head_shinyhue?
+          poke2.shinyimprovpif=pokemon.head_shinyimprovpif?
           poke2.shinyR=pokemon.head_shinyr?
           poke2.shinyG=pokemon.head_shinyg?
           poke2.shinyB=pokemon.head_shinyb?
@@ -1764,6 +1770,9 @@ def pbUnfuse(pokemon, scene, supersplicers, pcPosition = nil)
 
       pokemon.body_shiny = false
       pokemon.head_shiny = false
+
+      # pokemon.body_shinyimprovpif = 0# reset
+      # pokemon.head_shinyimprovpif = 0# reset
 
       if !pokemon.shiny?
         pokemon.debug_shiny = false

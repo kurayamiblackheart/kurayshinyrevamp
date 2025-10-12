@@ -444,7 +444,67 @@ class AnimatedBitmap
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES Modified by ChatGPT
-  def pbGiveFinaleColor(shinyR, shinyG, shinyB, offset, shinyKRS)
+  def pbGiveFinaleColor(shinyR, shinyG, shinyB, offset, shinyKRS, shinyOmega)
+    # Nexus for shiny generation & displaying both for PIF & KIF.
+    # Any shiny go through this nexus to process the shinifying.
+
+    # $PokemonSystem.pifimprovedshinies |
+    # 0 = Hybrid, go through PIF first (50%) then KIF
+    # 1 = Half go through PIF, half go through KIF
+    # 2 = KIF is disabled
+    # 3 = PIF is disabled
+
+
+
+    shiny_mode = 0
+
+    # shiny_mode = $PokemonSystem.pifimprovedshinies
+    # would be prettier, but we want to hard-code it into this slop to make sure that a bad value don't go through
+    if $PokemonSystem
+      case $PokemonSystem.pifimprovedshinies
+        when 0
+          shiny_mode = 0
+        when 1
+          shiny_mode = 1
+        when 2
+          shiny_mode = 2
+        when 3
+          shiny_mode = 3
+        end
+      end
+    end
+
+    # 0 = FALSE | 1 = TRUE
+    use_pif = 0
+    if shinyOmega.has_key?("pif_shiny")
+      use_pif = shinyOmega.fetch("pif_shiny", 0)# failsafe that gives back 0 if unfound
+    end
+    use_kif = 1
+    if shiny_mode == 0
+      # hybrid, 50% PIF first, then KIF
+      use_kif = 1
+    elsif shiny_mode == 1
+      # split
+      if use_pif == 1
+        use_kif = 0
+      else
+        use_kif = 1
+      end
+    elsif shiny_mode == 2
+      # only PIF
+      use_pif = 1
+      use_kif = 0
+    elsif shiny_mode == 3
+      # only KIF
+      use_pif = 0
+      use_kif = 1
+    end
+
+    if use_kif == 0#fallback that ensures we use at least one method
+      use_pif = 1
+    end
+
+
     # dontmodify = 0
     # if shinyR == 0 && shinyG == 1 && shinyB == 2
     #   dontmodify = 1
@@ -465,6 +525,13 @@ class AnimatedBitmap
       for i in 0..shinyKRS.size-1
         shinyname += "_#{shinyKRS[i]}"
       end
+      if use_pif == 1 and use_kif == 1
+        shinyname += "_ps"
+      end
+      if use_kif == 0
+        checkDirectory("Cache/Shiny/vanilla") # PIF shiny cache
+        shinyname = "_ps"
+      end
       pathimport = "Cache/Shiny/"
       cleanname = @filename[0...-4]
       pathfilename = originfolder + cleanname + shinyname + ".png"
@@ -479,65 +546,75 @@ class AnimatedBitmap
     # puts "After Path: #{@path}"
     # puts "After Filename: #{@filename}"
     # puts "Loaded from cache: #{loadedfromcache}"
-    newbitmap = GifBitmap.new(@path, @filename, usedoffset, shinyR, shinyG, shinyB)
+
+    # if use_kif == 0, usedoffset should be changed to PIF's offset system
+    newbitmap = GifBitmap.new(@path, @filename, usedoffset, shinyR, shinyG, shinyB, use_pif, use_kif)
     @bitmap = newbitmap.copy
     recognizeDims()
     if ($PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 0) || loadedfromcache
       return
     end
 
-    greenShiny = []
-    redShiny = []
-    blueShiny = []
-  
-    # greeninclude = [1, 3, 5, 6, 7, 8, 11, 13, 15, 17, 18, 19, 20, 23]
-    # redinclude = [0, 3, 4, 6, 8, 9, 10, 12, 15, 16, 18, 20, 21, 22]
-    # blueinclude = [2, 4, 5, 7, 9, 10, 11, 14, 16, 17, 19, 21, 22, 23]
-    greeninclude = [1, 3, 5, 7, 9, 11, 12, 13, 14, 16, 17, 19, 20, 22, 23, 25]
-    redinclude = [0, 3, 4, 6, 9, 10, 12, 13, 14, 15, 17, 18, 20, 21, 23, 24]
-    blueinclude = [2, 4, 5, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25]
-    greenShiny = self.pbGetGreenChannel if greeninclude.include?(shinyR) || greeninclude.include?(shinyB) || greeninclude.include?(shinyG) || shinyKRS[4] > 0
-    redShiny = self.pbGetRedChannel if redinclude.include?(shinyR) || redinclude.include?(shinyB) || redinclude.include?(shinyG) || shinyKRS[3] > 0
-    blueShiny = self.pbGetBlueChannel if blueinclude.include?(shinyR) || blueinclude.include?(shinyB) || blueinclude.include?(shinyG) || shinyKRS[5] > 0
+    # PIF system goes here if use_pif == 1
 
-    if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 2
-      if shinyKRS[3] > 0
-        redShiny = self.krsapply(redShiny, shinyKRS[3], 0, shinyKRS)
-      end
-      if shinyKRS[4] > 0
-        greenShiny = self.krsapply(greenShiny, shinyKRS[4], 1, shinyKRS)
-      end
-      if shinyKRS[5] > 0
-        blueShiny = self.krsapply(blueShiny, shinyKRS[5], 2, shinyKRS)
-      end
-    end
 
-    # greenShiny = self.pbGetGreenChannel
-    # redShiny = self.pbGetRedChannel
-    # blueShiny = self.pbGetBlueChannel
-  
-    # if dontmodify == 0 || ($PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced != 0)
-    canalRed = self.getChannelGradient(shinyR, redShiny, greenShiny, blueShiny, shinyKRS, 0)
-    canalGreen = self.getChannelGradient(shinyG, redShiny, greenShiny, blueShiny, shinyKRS, 1)
-    canalBlue = self.getChannelGradient(shinyB, redShiny, greenShiny, blueShiny, shinyKRS, 2)
+    # KIF system goes here if use_kif == 1
+    if use_kif == 1
+      greenShiny = []
+      redShiny = []
+      blueShiny = []
+    
+      # greeninclude = [1, 3, 5, 6, 7, 8, 11, 13, 15, 17, 18, 19, 20, 23]
+      # redinclude = [0, 3, 4, 6, 8, 9, 10, 12, 15, 16, 18, 20, 21, 22]
+      # blueinclude = [2, 4, 5, 7, 9, 10, 11, 14, 16, 17, 19, 21, 22, 23]
+      greeninclude = [1, 3, 5, 7, 9, 11, 12, 13, 14, 16, 17, 19, 20, 22, 23, 25]
+      redinclude = [0, 3, 4, 6, 9, 10, 12, 13, 14, 15, 17, 18, 20, 21, 23, 24]
+      blueinclude = [2, 4, 5, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25]
+      greenShiny = self.pbGetGreenChannel if greeninclude.include?(shinyR) || greeninclude.include?(shinyB) || greeninclude.include?(shinyG) || shinyKRS[4] > 0
+      redShiny = self.pbGetRedChannel if redinclude.include?(shinyR) || redinclude.include?(shinyB) || redinclude.include?(shinyG) || shinyKRS[3] > 0
+      blueShiny = self.pbGetBlueChannel if blueinclude.include?(shinyR) || blueinclude.include?(shinyB) || blueinclude.include?(shinyG) || shinyKRS[5] > 0
 
-    for i in 0..@bitmap.bitmap.width
-      for j in 0..@bitmap.bitmap.height
-        # begin
-        if @bitmap.bitmap.get_pixel(i, j).alpha != 0
-          depth = i * (@bitmap.bitmap.height + 1) + j
-          @bitmap.bitmap.set_pixel(i, j, Color.new(canalRed[depth], canalGreen[depth], canalBlue[depth], @bitmap.bitmap.get_pixel(i, j).alpha))
+      if $PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced == 2
+        if shinyKRS[3] > 0
+          redShiny = self.krsapply(redShiny, shinyKRS[3], 0, shinyKRS)
         end
-        # rescue TypeError => e
-        #   puts "Caught TypeError: #{e.message}"
-        #   puts "i: #{i}, j: #{j}"
-        #   puts "Canal Red: #{canalRed[depth]}"
-        #   puts "Canal Green: #{canalGreen[depth]}"
-        #   puts "Canal Blue: #{canalBlue[depth]}"
-        #   puts "Depth: #{depth}"
-        # end
+        if shinyKRS[4] > 0
+          greenShiny = self.krsapply(greenShiny, shinyKRS[4], 1, shinyKRS)
+        end
+        if shinyKRS[5] > 0
+          blueShiny = self.krsapply(blueShiny, shinyKRS[5], 2, shinyKRS)
+        end
+      end
+
+      # greenShiny = self.pbGetGreenChannel
+      # redShiny = self.pbGetRedChannel
+      # blueShiny = self.pbGetBlueChannel
+    
+      # if dontmodify == 0 || ($PokemonSystem.shinyadvanced != nil && $PokemonSystem.shinyadvanced != 0)
+      canalRed = self.getChannelGradient(shinyR, redShiny, greenShiny, blueShiny, shinyKRS, 0)
+      canalGreen = self.getChannelGradient(shinyG, redShiny, greenShiny, blueShiny, shinyKRS, 1)
+      canalBlue = self.getChannelGradient(shinyB, redShiny, greenShiny, blueShiny, shinyKRS, 2)
+
+      for i in 0..@bitmap.bitmap.width
+        for j in 0..@bitmap.bitmap.height
+          # begin
+          if @bitmap.bitmap.get_pixel(i, j).alpha != 0
+            depth = i * (@bitmap.bitmap.height + 1) + j
+            @bitmap.bitmap.set_pixel(i, j, Color.new(canalRed[depth], canalGreen[depth], canalBlue[depth], @bitmap.bitmap.get_pixel(i, j).alpha))
+          end
+          # rescue TypeError => e
+          #   puts "Caught TypeError: #{e.message}"
+          #   puts "i: #{i}, j: #{j}"
+          #   puts "Canal Red: #{canalRed[depth]}"
+          #   puts "Canal Green: #{canalGreen[depth]}"
+          #   puts "Canal Blue: #{canalBlue[depth]}"
+          #   puts "Depth: #{depth}"
+          # end
+        end
       end
     end
+
+
     # end
     if $PokemonSystem && $PokemonSystem.shiny_cache != 2
       # Save the generated shiny sprite in the Cache folder
@@ -549,6 +626,13 @@ class AnimatedBitmap
       shinyname = "_#{offset+180}_#{shinyR}_#{shinyG}_#{shinyB}"
       for i in 0..shinyKRS.size-1
         shinyname += "_#{shinyKRS[i]}"
+      end
+      if use_pif == 1 and use_kif == 1
+        shinyname += "_ps"
+      end
+      if use_kif == 0
+        checkDirectory("Cache/Shiny/vanilla") # PIF shiny cache
+        shinyname = "_ps"
       end
       cleanname = @filename[0...-4]
       pathexport = "Cache/Shiny/" + originfolder + cleanname + shinyname + ".png"
@@ -1316,12 +1400,14 @@ class GifBitmap
   ###KurayX - KURAYX_ABOUT_SHINIES
   attr_reader :loaded_from_cache
   # Creates a bitmap from a GIF file. Can also load non-animated bitmaps.
-  def initialize(dir, filename, hue = 0, rcode=0, gcode=1, bcode=2)
+  def initialize(dir, filename, hue = 0, rcode=0, gcode=1, bcode=2, pifshiny=0, kifshiny=0)
     @bitmap = nil
     #KurayX - KURAYX_ABOUT_SHINIES
     @rcode = 0
     @gcode = 1
     @bcode = 2
+    @pifshiny = 0
+    @kifshiny = 0
     # @greenorigin = []
     # @redorigin = []
     # @blueorigin = []
@@ -1334,7 +1420,7 @@ class GifBitmap
     filename = "" if !filename
     begin
       #KurayX - KURAYX_ABOUT_SHINIES
-      @bitmap = RPG::Cache.load_bitmap(dir, filename, hue, rcode, gcode, bcode)
+      @bitmap = RPG::Cache.load_bitmap(dir, filename, hue, rcode, gcode, bcode, pifshiny, kifshiny)
       @loaded_from_cache = true
     rescue
       @bitmap = nil

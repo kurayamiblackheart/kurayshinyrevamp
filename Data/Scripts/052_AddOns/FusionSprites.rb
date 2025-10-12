@@ -7,14 +7,14 @@ module GameData
       if back
         #KurayX - KURAYX_ABOUT_SHINIES
         if makeShiny
-          ret = self.back_sprite_bitmap(species, pkmn.spriteform_body, pkmn.spriteform_head, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?,pkmn.shinyKRS?,pkmn.kuraycustomfile?)
+          ret = self.back_sprite_bitmap(species, pkmn.spriteform_body, pkmn.spriteform_head, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?,pkmn.shinyKRS?,pkmn.shinyOmega?,pkmn.kuraycustomfile?)
         else
           ret = self.back_sprite_bitmap(species, pkmn.spriteform_body, pkmn.spriteform_head, false, false, false)
         end
       else
         #KurayX - KURAYX_ABOUT_SHINIES
         if makeShiny
-          ret = self.front_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?,pkmn.shinyKRS?,pkmn.kuraycustomfile?)
+          ret = self.front_sprite_bitmap(species, nil, nil, pkmn.shiny?,pkmn.bodyShiny?,pkmn.headShiny?,pkmn.shinyValue?,pkmn.shinyR?,pkmn.shinyG?,pkmn.shinyB?,pkmn.shinyKRS?,pkmn.shinyOmega?,pkmn.kuraycustomfile?)
         else
           ret = self.front_sprite_bitmap(species, nil, nil, false, false, false)
         end
@@ -39,26 +39,26 @@ module GameData
     MINIMUM_DEX_DIF=20
 
     #KurayBringingBack
-    def self.calculateShinyHueOffset(dex_number, isBodyShiny = false, isHeadShiny = false)
+    def self.calculateShinyHueOffset(dex_number, isBodyShiny = false, isHeadShiny = false, color = :c1)
       if dex_number <= NB_POKEMON
-        if SHINY_COLOR_OFFSETS[dex_number]
-          return SHINY_COLOR_OFFSETS[dex_number]
+        if SHINY_COLOR_OFFSETS[dex_number]&.dig(color)
+          return SHINY_COLOR_OFFSETS[dex_number]&.dig(color)
         end
         body_number = dex_number
-        head_number=dex_number
-
-        else
-        body_number = getBodyID(dex_number)
-        head_number=getHeadID(dex_number,body_number)
-      end
-      if isBodyShiny && isHeadShiny && SHINY_COLOR_OFFSETS[body_number]  && SHINY_COLOR_OFFSETS[head_number]
-        offset = SHINY_COLOR_OFFSETS[body_number] + SHINY_COLOR_OFFSETS[head_number]
-      elsif isHeadShiny && SHINY_COLOR_OFFSETS[head_number]
-        offset = SHINY_COLOR_OFFSETS[head_number]
-      elsif isBodyShiny && SHINY_COLOR_OFFSETS[body_number]
-        offset = SHINY_COLOR_OFFSETS[body_number]
+        head_number = dex_number
       else
-        offset = calculateShinyHueOffsetDefaultMethod(body_number,head_number,dex_number,isBodyShiny,isHeadShiny)
+        body_number = getBodyID(dex_number)
+        head_number = getHeadID(dex_number, body_number)
+      end
+      if isBodyShiny && isHeadShiny && SHINY_COLOR_OFFSETS[body_number]&.dig(color) && SHINY_COLOR_OFFSETS[head_number]&.dig(color)
+        offset = SHINY_COLOR_OFFSETS[body_number]&.dig(color) + SHINY_COLOR_OFFSETS[head_number]&.dig(color)
+      elsif isHeadShiny && SHINY_COLOR_OFFSETS[head_number]&.dig(color)
+        offset = SHINY_COLOR_OFFSETS[head_number]&.dig(color)
+      elsif isBodyShiny && SHINY_COLOR_OFFSETS[body_number]&.dig(color)
+        offset = SHINY_COLOR_OFFSETS[body_number]&.dig(color)
+      else
+        return 0 if color != :v1
+        offset = calculateShinyHueOffsetDefaultMethod(body_number, head_number, dex_number, isBodyShiny, isHeadShiny)
       end
       return offset
     end
@@ -86,7 +86,7 @@ module GameData
 
     #KurayX - KURAYX_ABOUT_SHINIES
     #KuraSprite
-    def self.front_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0],cusFile=nil)
+    def self.front_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0], shinyOmega={},cusFile=nil)
       spriteform_body = nil# if spriteform_body == 0
       spriteform_head = nil# if spriteform_head == 0
       #TODO Remove spriteform mechanic entirely
@@ -108,10 +108,10 @@ module GameData
       if isShiny
         # sprite.shiftColors(colorshifting)
         #KurayBringBackOldShinies
-        if $PokemonSystem.kuraynormalshiny == 1
+        if access_deprecated_kurayshiny() == 1
           sprite.shiftColors(self.calculateShinyHueOffset(dex_number, bodyShiny, headShiny))
         else
-          sprite.pbGiveFinaleColor(shinyR, shinyG, shinyB, shinyValue, shinyKRS)
+          sprite.pbGiveFinaleColor(shinyR, shinyG, shinyB, shinyValue, shinyKRS, shinyOmega)
         end
       end
       return sprite
@@ -119,7 +119,7 @@ module GameData
 
     #KurayX - KURAYX_ABOUT_SHINIES
     #KuraSprite
-    def self.back_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0], cusFile=nil)
+    def self.back_sprite_bitmap(dex_number, spriteform_body = nil, spriteform_head = nil, isShiny = false, bodyShiny = false, headShiny = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0], shinyOmega={}, cusFile=nil)
       if cusFile == nil
         filename = self.sprite_filename(dex_number, spriteform_body, spriteform_head)
       else
@@ -133,10 +133,10 @@ module GameData
       if isShiny
         # sprite.shiftColors(colorshifting)
         #KurayBringBackOldShinies
-        if $PokemonSystem.kuraynormalshiny == 1
+        if access_deprecated_kurayshiny() == 1
           sprite.shiftColors(self.calculateShinyHueOffset(dex_number, bodyShiny, headShiny))
         else
-          sprite.pbGiveFinaleColor(shinyR, shinyG, shinyB, shinyValue, shinyKRS)
+          sprite.pbGiveFinaleColor(shinyR, shinyG, shinyB, shinyValue, shinyKRS, shinyOmega)
         end
       end
       return sprite
@@ -148,10 +148,10 @@ module GameData
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    def self.sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, back = false, egg = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0], cusFile=nil)
+    def self.sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false, back = false, egg = false, shinyValue = 0, shinyR = 0, shinyG = 1, shinyB = 2, shinyKRS=[0, 0, 0, 0, 0, 0, 0, 0, 0], shinyOmega={}, cusFile=nil)
       return self.egg_sprite_bitmap(species, form) if egg
-      return self.back_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB, shinyKRS, cusFile) if back
-      return self.front_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB, shinyKRS, cusFile)
+      return self.back_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB, shinyKRS, shinyOmega, cusFile) if back
+      return self.front_sprite_bitmap(species, form, gender, shiny, shadow, shinyValue, shinyR, shinyG, shinyB, shinyKRS, shinyOmega, cusFile)
     end
 
     def self.getSpecialSpriteName(dexNum)

@@ -404,6 +404,10 @@ class PokemonLoadScreen
       Dir.glob("Cache/Shiny/*").each do |file|
         File.delete(file) if File.file?(file)
       end
+      checkDirectory("Cache/Shiny/vanilla")
+      Dir.glob("Cache/Shiny/vanilla/*").each do |file|
+        File.delete(file) if File.file?(file)
+      end
     end
 
     if ($game_temp.unimportedSprites && $game_temp.unimportedSprites.size > 0)

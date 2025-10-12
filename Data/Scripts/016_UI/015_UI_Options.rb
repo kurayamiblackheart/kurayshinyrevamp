@@ -157,6 +157,8 @@ class PokemonSystem
   attr_accessor :showlevel_nolevelmode
   attr_accessor :evstrain
 
+  attr_accessor :pifimprovedshinies
+
   attr_accessor :rocketballsteal
 
   attr_accessor :trainerexpboost
@@ -294,6 +296,8 @@ class PokemonSystem
     @skipcaughtprompt = 0#0 = false, 1 = true
 
     @noevsmode = 0
+    @pifimprovedshinies = 0# 0 = when shiny, half use improv shinies first then become KIF shinies | 1 = half use improv shinies, half are KIF shinies
+    # 2 = improv shinies overrides KIF shinies (KIF shinies system isn't used) | 3 = improv shinies not used
     @maxivsmode = 0
     @evstrain = 0
     @showlevel_nolevelmode = 0
@@ -464,6 +468,7 @@ class PokemonSystem
     @skipcaughtnickname = saved.skipcaughtnickname if saved.skipcaughtnickname
     @skipcaughtprompt = saved.skipcaughtprompt if saved.skipcaughtprompt
     @noevsmode = saved.noevsmode if saved.noevsmode
+    @pifimprovedshinies = saved.pifimprovedshinies if saved.pifimprovedshinies
     @maxivsmode = saved.maxivsmode if saved.maxivsmode
     @evstrain = saved.evstrain if saved.evstrain
     @showlevel_nolevelmode = saved.showlevel_nolevelmode if saved.showlevel_nolevelmode
@@ -476,7 +481,7 @@ end
 
 def options_as_json(options={})
   {
-    "json_version" => "0.8",
+    "json_version" => "0.9",
     "textspeed" => $PokemonSystem.textspeed,
     "battlescene" => $PokemonSystem.battlescene,
     "frame" => $PokemonSystem.frame,
@@ -596,6 +601,7 @@ def options_as_json(options={})
     "showlevel_nolevelmode" => $PokemonSystem.showlevel_nolevelmode,
     "rocketballsteal" => $PokemonSystem.rocketballsteal,
     "trainerexpboost" => $PokemonSystem.trainerexpboost,
+    "pifimprovedshinies" => $PokemonSystem.pifimprovedshinies,
     "gymrewardeggs" => $PokemonSystem.gymrewardeggs
   }
 end
@@ -767,6 +773,7 @@ def options_load_json(jsonparse)
   $PokemonSystem.rocketballsteal = 0
   $PokemonSystem.trainerexpboost = 50
   $PokemonSystem.gymrewardeggs = 3
+  $PokemonSystem.pifimprovedshinies = 0
   $PokemonSystem.autobattleshortcut = 0
   $PokemonSystem.autobattlershiny = 0
   $PokemonSystem.kurayeggs_fusionpool = 0
@@ -800,6 +807,9 @@ def options_load_json(jsonparse)
   end
   if json_ver >= 8
     $PokemonSystem.gymrewardeggs = jsonparse['gymrewardeggs']
+  end
+  if json_ver >= 9
+    $PokemonSystem.pifimprovedshinies = jsonparse['pifimprovedshinies']
   end
 
 end
@@ -2005,12 +2015,12 @@ class KurayOptSc_1 < PokemonOption_Scene
     )
 
 
-    options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
-                      proc { $PokemonSystem.kuraynormalshiny },
-                      proc { |value| $PokemonSystem.kuraynormalshiny = value },
-                      ["Use Shiny Revamping (shiny Pokemons look better)",
-                      "Don't use Shiny Revamping (shiny Pokemons look worse)"]
-    )
+    # options << EnumOption.new(_INTL("Shiny Revamp"), [_INTL("On"), _INTL("Off")],
+    #                   proc { $PokemonSystem.kuraynormalshiny },
+    #                   proc { |value| $PokemonSystem.kuraynormalshiny = value },
+    #                   ["Use Shiny Revamping (shiny Pokemons look better)",
+    #                   "Don't use Shiny Revamping (shiny Pokemons look worse)"]
+    # )
     options << EnumOption.new(_INTL("Shiny Animation"), [_INTL("On"), _INTL("Off"), _INTL("All")],
                       proc { $PokemonSystem.kurayshinyanim },
                       proc { |value| $PokemonSystem.kurayshinyanim = value },
@@ -2051,6 +2061,14 @@ class KurayOptSc_1 < PokemonOption_Scene
                       ["Shinies only have hue shifting (best performances)",
                       "Shinies have hue and channels shifting (mid performances)",
                       "Most powerful shiny system (low performances)"]
+    )
+    options << EnumOption.new(_INTL("PIF's Improved Shinies"), _INTL("Hybrid"), [_INTL("Half"), _INTL("Vanilla"), _INTL("Off")],
+                      proc { $PokemonSystem.pifimprovedshinies },
+                      proc { |value| $PokemonSystem.pifimprovedshinies = value },
+                      "All shinies use KIF system but half are also PIF shinies (best)",
+                      ["50% shinies are PIF shinies, 50% shinies are KIF shinies (split)",
+                      "KIF's shiny system is disabled",
+                      "PIF's shiny system is disabled"]
     )
     options << SliderOption.new(_INTL("Shiny Gamble Odds"), 0, 1000, $PokemonSystem.raiser,
                       proc { $PokemonSystem.kuraygambleodds },

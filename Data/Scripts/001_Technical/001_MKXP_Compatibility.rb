@@ -56,7 +56,7 @@ def shinyPNGMake(pokemon, pathexport="null")
   if filename && !pokemon.egg? && (!$PokemonSystem.kurayindividcustomsprite || $PokemonSystem.kurayindividcustomsprite == 0)
     exportbitmap = AnimatedBitmap.new(filename).recognizeDims()
     if pokemon.shiny?
-      exportbitmap.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?, pokemon.shinyKRS?)
+      exportbitmap.pbGiveFinaleColor(pokemon.shinyR?, pokemon.shinyG?, pokemon.shinyB?, pokemon.shinyValue?, pokemon.shinyKRS?, pokemon.shinyOmega?)
     end
   else
     getnum = pokemon.species

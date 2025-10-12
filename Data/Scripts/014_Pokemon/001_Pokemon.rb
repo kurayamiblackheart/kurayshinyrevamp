@@ -76,6 +76,11 @@ class Pokemon
 
 
 
+  attr_accessor :shinyimprovpif
+
+  attr_accessor :head_shinyimprovpif
+  attr_accessor :body_shinyimprovpif
+
   # The index of this Pokémon's ability (0, 1 are natural abilities, 2+ are
   # hidden abilities)as defined for its species/form. An ability may not be
   # defined at this index. Is recalculated (as 0 or 1) if made nil.
@@ -384,6 +389,10 @@ class Pokemon
     @shinyKRS=value
   end
 
+  def shinyimprovpif=(value)
+    @shinyimprovpif=value
+  end
+
   #KurayX - KURAYX_ABOUT_SHINIES
   def shinyR=(value)
     @shinyR=value
@@ -416,6 +425,15 @@ class Pokemon
     else
       @shinyValue=rand(0..360)-180
       return @shinyValue
+    end
+  end
+
+  def shinyimprovpif?
+    if @shinyimprovpif
+      return @shinyimprovpif
+    else
+      @shinyimprovpif=rollimproveshiny()
+      return @shinyimprovpif
     end
   end
 
@@ -485,6 +503,11 @@ class Pokemon
     end
   end
 
+  # give more data to shiny nexus without passing 10000 arguments 'cause it's getting annoying
+  def shinyOmega?
+    return { "pif_shiny" => self.shinyimprovpif? }
+  end
+
   def shinyKRS?
     if @shinyKRS
       return @shinyKRS
@@ -538,6 +561,24 @@ class Pokemon
     else
       @body_shinyhue=rand(0..360)-180
       return @body_shinyhue
+    end
+  end
+
+  def head_shinyimprovpif?
+    if @head_shinyimprovpif
+      return @head_shinyimprovpif
+    else
+      @head_shinyimprovpif=rollimproveshiny()
+      return @head_shinyimprovpif
+    end
+  end
+
+  def body_shinyimprovpif?
+    if @body_shinyimprovpif
+      return @body_shinyimprovpif
+    else
+      @body_shinyimprovpif=rollimproveshiny()
+      return @body_shinyimprovpif
     end
   end
 
@@ -654,6 +695,10 @@ class Pokemon
 
   def imported
     return @imported
+  end
+
+  def shinyimprovpif
+    return @shinyimprovpif
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
@@ -2184,7 +2229,7 @@ class Pokemon
   #KurayX
   def as_json(options={})
     {
-      "json_version" => "0.8",
+      "json_version" => "0.9",
       "species" => @species,
       "form" => @form,
       "forced_form" => @forced_form,
@@ -2201,6 +2246,9 @@ class Pokemon
       "veryunique" => @veryunique,
       "kuraycustomfile" => @kuraycustomfile,
       "oldkuraycustomfile" => @oldkuraycustomfile,
+      "shinyimprovpif" => @shinyimprovpif,
+      "head_shinyimprovpif" => @head_shinyimprovpif,
+      "body_shinyimprovpif" => @body_shinyimprovpif,
       "shinyR" => @shinyR,
       "shinyG" => @shinyG,
       "shinyB" => @shinyB,
@@ -2335,6 +2383,10 @@ class Pokemon
       @sprite_scale = jsonparse['sprite_scale']
       @size_category = jsonparse['size_category']
     end
+    if json_ver > 8#V.9
+      @shinyimprovpif = jsonparse['shinyimprovpif']
+      @head_shinyimprovpif = jsonparse['head_shinyimprovpif']
+      @body_shinyimprovpif = jsonparse['body_shinyimprovpif']
   end
 
   def jsonload2(jsonparse)
@@ -2521,6 +2573,7 @@ class Pokemon
     @kuraycustomfile = kurayGetCustomSprite(species_data.id_number)
     @veryunique = createVeryUnique()
     @oldkuraycustomfile = nil
+    @shinyimprovpif = rollimproveshiny()
     @shinyR = kurayRNGforChannels
     @shinyG = kurayRNGforChannels
     @shinyB = kurayRNGforChannels
