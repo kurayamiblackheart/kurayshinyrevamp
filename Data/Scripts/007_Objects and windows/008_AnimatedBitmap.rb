@@ -615,11 +615,12 @@ class AnimatedBitmap
       if use_pif == 1 and use_kif == 1
         shinyname += shiny_cache_name
       end
+      pathimport = "Cache/Shiny/"
       if use_kif == 0
         checkDirectory("Cache/Shiny/vanilla") # PIF shiny cache
         shinyname = shiny_cache_name
+        pathimport = "Cache/Shiny/vanilla/"
       end
-      pathimport = "Cache/Shiny/"
       cleanname = @filename[0...-4]
       pathfilename = originfolder + cleanname + shinyname + ".png"
       if File.exists?(pathimport + pathfilename)
@@ -730,7 +731,11 @@ class AnimatedBitmap
         shinyname = shiny_cache_name
       end
       cleanname = @filename[0...-4]
-      pathexport = "Cache/Shiny/" + originfolder + cleanname + shinyname + ".png"
+      if use_kif == 0
+        pathexport = "Cache/Shiny/vanilla/" + originfolder + cleanname + shinyname + ".png"
+      else
+        pathexport = "Cache/Shiny/" + originfolder + cleanname + shinyname + ".png"
+      end
       if !File.exists?(pathexport)
         self.bitmap_to_png(pathexport)
       end
