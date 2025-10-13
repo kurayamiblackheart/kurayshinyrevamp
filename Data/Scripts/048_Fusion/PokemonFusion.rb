@@ -691,19 +691,32 @@ class PokemonFusionScene
     domepokeg = kurayRNGforChannels
     domepokeb = kurayRNGforChannels
     domepokekrs = kurayKRSmake
-    if pokemon2.shiny?
+    if pokemon2.shiny? && $PokemonSystem.shinyfusedye == 1
       domepokehue = pokemon2.shinyValue?
       domepoker = pokemon2.shinyR?
       domepokeg = pokemon2.shinyG?
       domepokeb = pokemon2.shinyB?
       domepokekrs = pokemon2.shinyKRS?.clone
-    elsif pokemon1.shiny?
+    else
       domepokehue = pokemon1.shinyValue?
       domepoker = pokemon1.shinyR?
       domepokeg = pokemon1.shinyG?
       domepokeb = pokemon1.shinyB?
       domepokekrs = pokemon1.shinyKRS?.clone
     end
+    # if pokemon2.shiny?
+    #   domepokehue = pokemon2.shinyValue?
+    #   domepoker = pokemon2.shinyR?
+    #   domepokeg = pokemon2.shinyG?
+    #   domepokeb = pokemon2.shinyB?
+    #   domepokekrs = pokemon2.shinyKRS?.clone
+    # elsif pokemon1.shiny?
+    #   domepokehue = pokemon1.shinyValue?
+    #   domepoker = pokemon1.shinyR?
+    #   domepokeg = pokemon1.shinyG?
+    #   domepokeb = pokemon1.shinyB?
+    #   domepokekrs = pokemon1.shinyKRS?.clone
+    # end
 
     #KurayX - KURAYX_ABOUT_SHINIES
     @sprites["rsprite2"].setPokemonBitmapFromId(@newspecies, false, pokemon1.shiny? || pokemon2.shiny?, pokemon1.shiny?, pokemon2.shiny?, domepokehue, domepoker, domepokeg, domepokeb, domepokekrs)
@@ -910,13 +923,20 @@ class PokemonFusionScene
         @pokemon1.head_shinyg = @pokemon2.shinyG?
         @pokemon1.head_shinyb = @pokemon2.shinyB?
         @pokemon1.head_shinykrs = @pokemon2.shinyKRS?.clone
-        if $PokemonSystem.shinyfusedye == 1 || !@pokemon1.shiny?
+        if $PokemonSystem.shinyfusedye == 1
           @pokemon1.shinyR = @pokemon2.shinyR?
           @pokemon1.shinyG = @pokemon2.shinyG?
           @pokemon1.shinyB = @pokemon2.shinyB?
           @pokemon1.shinyValue = @pokemon2.shinyValue?
           @pokemon1.shinyKRS = @pokemon2.shinyKRS?.clone
         end
+        # if $PokemonSystem.shinyfusedye == 1 || !@pokemon1.shiny?
+        #   @pokemon1.shinyR = @pokemon2.shinyR?
+        #   @pokemon1.shinyG = @pokemon2.shinyG?
+        #   @pokemon1.shinyB = @pokemon2.shinyB?
+        #   @pokemon1.shinyValue = @pokemon2.shinyValue?
+        #   @pokemon1.shinyKRS = @pokemon2.shinyKRS?.clone
+        # end
       end
       if @pokemon1.shiny?
         @pokemon1.body_shiny = true
