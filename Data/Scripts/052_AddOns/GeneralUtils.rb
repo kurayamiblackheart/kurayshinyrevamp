@@ -583,8 +583,11 @@ end
 
 def find_newer_available_version
   latest_Version = fetch_latest_game_version
+  puts "check for new version..."
   return nil if !latest_Version
+  puts "latest version found: " + latest_Version.to_s
   return nil if is_higher_version(Settings::GAME_VERSION_NUMBER,latest_Version)
+  puts "latest version is bigger than our current version '" + Settings::GAME_VERSION_NUMBER.to_s + "', we returned it for update!"
   return latest_Version
 end
 

@@ -276,7 +276,7 @@ def fetch_latest_game_version
   begin
     download_file(Settings::VERSION_FILE_URL, Settings::REMOTE_VERSION_FILE_PATH,)
     version_file = File.open(Settings::REMOTE_VERSION_FILE_PATH, "r")
-    version = version_file.first
+    version = version_file.readline.strip
     version_file.close
 
     version_format_valid = version.match(GAME_VERSION_FORMAT_REGEX)
