@@ -13,7 +13,7 @@ def hex_to_rgb(hex)
 end
 
 def rollimproveshiny()
-  return rand(0..1)
+  return rand(0..3)
 end
 
 def access_deprecated_kurayshiny()

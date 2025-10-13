@@ -1830,6 +1830,9 @@ class PokemonStorageScene
     cmdExport = -1
     cmdExportAll = -1
     cmdShinyReroll = -1
+    cmdShinyRerollA = -1
+    cmdShinyRerollB = -1
+    cmdShinyRerollC = -1
     cmdShinyChoose = -1
     cmdEvoLock = -1
     cmdShinify = -1
@@ -1863,6 +1866,9 @@ class PokemonStorageScene
     commands[cmdExport = commands.length] = _INTL("Export") if $DEBUG || canExportImport
     commands[cmdExportAll = commands.length] = _INTL("Export All Pokemons") if $DEBUG || canExportImport
     commands[cmdShinyReroll = commands.length] = _INTL("Re-roll Shiny Color") if $DEBUG
+    commands[cmdShinyRerollA = commands.length] = _INTL("Re-roll Shiny Color (PIF Classic)") if $DEBUG
+    commands[cmdShinyRerollB = commands.length] = _INTL("Re-roll Shiny Color (PIF+KIF)") if $DEBUG
+    commands[cmdShinyRerollC = commands.length] = _INTL("Re-roll Shiny Color (KIF)") if $DEBUG
     commands[cmdShinyChoose = commands.length] = _INTL("Set Shiny Color") if $DEBUG
     if $DEBUG && File.file?(RTP.getSaveFolder + "\\Kurayami.krs")
       commands[cmdCarpFill = commands.length] = _INTL("CarpFill")
@@ -1888,7 +1894,13 @@ class PokemonStorageScene
     elsif cmdCarpFill >= 0 && command == cmdCarpFill # Carp Fill
       pbCarpFill(selected, heldpoke)
     elsif cmdShinyReroll >= 0 && command == cmdShinyReroll # Re-roll Shiny Color
-      pbRerollShiny(selected, heldpoke)
+      pbRerollShiny(selected, heldpoke, 0)
+    elsif cmdShinyRerollA >= 0 && command == cmdShinyRerollA # Re-roll Shiny Color
+      pbRerollShiny(selected, heldpoke, 1)
+    elsif cmdShinyRerollB >= 0 && command == cmdShinyRerollB # Re-roll Shiny Color
+      pbRerollShiny(selected, heldpoke, 2)
+    elsif cmdShinyRerollC >= 0 && command == cmdShinyRerollC # Re-roll Shiny Color
+      pbRerollShiny(selected, heldpoke, 3)
     elsif cmdShinyChoose >= 0 && command == cmdShinyChoose # Set Shiny Color
       pbDefineShinycolor(selected, heldpoke)
     elsif cmdShinify >= 0 && command == cmdShinify # Shinify
@@ -2380,10 +2392,10 @@ class PokemonStorageScene
         pbDisplay(_INTL("Changed #{['R', 'G', 'B'][iddoing]} Timid-Black!"))
       end
     end
-    helptext = pbDisplay(_INTL("0 = Nrm Spr | 1 = Shiny Spr"))
+    helptext = pbDisplay(_INTL("0 = Nrm Spr | 1-2-3 = Shiny Spr (1=Forced, 3=KIF only when hybrid)"))
     params = ChooseNumberParams.new
     params.setMaxDigits(1)
-    params.setRange(0, 1)
+    params.setRange(0, 3)
     #Before ChatGPT new
     # params.setRange(0, 2)
     params.setDefaultValue(pokemon.shinyimprovpif?)
@@ -2393,7 +2405,7 @@ class PokemonStorageScene
     qty = @scene.pbChooseNumber(helptext,params)
     #Before ChatGPT new
     # if qty < 3
-    if qty < 2
+    if qty < 4
       if qty > -1
         pokemon.shinyimprovpif=qty
         pbKurayRefresh(overlayvar1, overlayvar2)
@@ -2404,7 +2416,7 @@ class PokemonStorageScene
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
-  def pbRerollShiny(selected, heldpoke)
+  def pbRerollShiny(selected, heldpoke, variantshiny=0)
     overlayvar1 = selected[1]
     overlayvar2 = nil
     pokemon = heldpoke
@@ -2423,6 +2435,13 @@ class PokemonStorageScene
     pokemon.shinyB=kurayRNGforChannels
     pokemon.shinyKRS=kurayKRSmake
     pokemon.shinyimprovpif=rollimproveshiny()
+    if variantshiny == 1# PIF
+      pokemon.shinyimprovpif = 2
+    elsif variantshiny == 2#PIF & KIF
+      pokemon.shinyimprovpif = 1
+    elsif variantshiny == 3# KIF
+      pokemon.shinyimprovpif = 0
+    end
     pbKurayRefresh(overlayvar1, overlayvar2)
     pbDisplay(_INTL("Re-rolled into " + pokemon.shinyValue.to_s + ";" + pokemon.shinyR.to_s + ";" + pokemon.shinyG.to_s + ";" + pokemon.shinyB.to_s + "!"))
   end
@@ -4469,8 +4488,8 @@ class PokemonStorageScreen
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES
-  def pbRerollShiny(selected, heldpoke)
-    @scene.pbRerollShiny(selected, heldpoke)
+  def pbRerollShiny(selected, heldpoke, variantshiny=0)
+    @scene.pbRerollShiny(selected, heldpoke, variantshiny)
   end
 
   #KurayX - KURAYX_ABOUT_SHINIES

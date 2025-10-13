@@ -2062,7 +2062,7 @@ class KurayOptSc_1 < PokemonOption_Scene
                       "Shinies have hue and channels shifting (mid performances)",
                       "Most powerful shiny system (low performances)"]
     )
-    options << EnumOption.new(_INTL("PIF's Improved Shinies"), [_INTL("Hybrid"), _INTL("Half"), _INTL("Vanilla"), _INTL("Off")],
+    options << EnumOption.new(_INTL("PIF's Improved Shinies"), [_INTL("Hybrid"), _INTL("Split"), _INTL("Vanilla"), _INTL("Off")],
                       proc { $PokemonSystem.pifimprovedshinies },
                       proc { |value| $PokemonSystem.pifimprovedshinies = value },
                       ["All shinies use KIF system but half are also PIF shinies (best)",

@@ -529,9 +529,19 @@ class AnimatedBitmap
     body_shiny = false
     head_shiny = false
 
+    force_pif_split = false
     use_pif = 0
     if shinyOmega.has_key?("pif_shiny")
       use_pif = shinyOmega.fetch("pif_shiny", 0)# failsafe that gives back 0 if unfound
+    end
+
+    if use_pif > 1# 2 / 3 = PIF
+      use_pif = 1
+    elsif use_pif == 1# 1 = PIF & KIF
+      use_pif = 1
+      force_pif_split = true
+    else# 0 = KIFd
+      use_pif = 0
     end
 
     if shinyOmega.has_key?("dexNum")
@@ -557,9 +567,12 @@ class AnimatedBitmap
     if shiny_mode == 0
       # hybrid, 50% PIF first, then KIF
       use_kif = 1
+      if use_pif == 3#3 becomes KIF only
+        use_pif = 0
+      end
     elsif shiny_mode == 1
       # split
-      if use_pif == 1
+      if use_pif == 1 && !force_pif_split
         use_kif = 0
       else
         use_kif = 1
@@ -622,7 +635,7 @@ class AnimatedBitmap
     # puts "Loaded from cache: #{loadedfromcache}"
 
     # if use_kif == 0, usedoffset should be changed to PIF's offset system
-    if use_kif == 0
+    if use_pif == 1
       usedoffset = 0
     end
     newbitmap = GifBitmap.new(@path, @filename, usedoffset, shinyR, shinyG, shinyB, use_pif, use_kif)
@@ -635,6 +648,9 @@ class AnimatedBitmap
     # PIF system goes here if use_pif == 1
     if use_pif == 1
       self.shiftAllColors(dexNum, body_shiny, head_shiny)
+      if use_kif == 1
+        @bitmap.bitmap.hue_change(offset)
+      end
     end
 
     # KIF system goes here if use_kif == 1
