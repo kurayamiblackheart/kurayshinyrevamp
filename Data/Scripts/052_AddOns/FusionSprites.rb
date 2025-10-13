@@ -24,11 +24,11 @@ module GameData
     end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    def self.sprite_bitmap_from_pokemon_id(id, back = false, shiny=false, bodyShiny=false,headShiny=false, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2, cusFile=nil)
+    def self.sprite_bitmap_from_pokemon_id(id, back = false, shiny=false, bodyShiny=false,headShiny=false, pokeHue = 0, pokeR = 0, pokeG = 1, pokeB = 2, pokeKRS = [0, 0, 0, 0, 0, 0, 0, 0, 0], pokeOmega = {}, cusFile=nil)
       if back
-        ret = self.back_sprite_bitmap(id,nil,nil,shiny,bodyShiny,headShiny,pokeHue,pokeR,pokeG,pokeB,cusFile)
+        ret = self.back_sprite_bitmap(id,nil,nil,shiny,bodyShiny,headShiny,pokeHue,pokeR,pokeG,pokeB,pokeKRS,pokeOmega,cusFile)
       else
-        ret = self.front_sprite_bitmap(id,nil,nil,shiny,bodyShiny,headShiny,pokeHue,pokeR,pokeG,pokeB,cusFile)
+        ret = self.front_sprite_bitmap(id,nil,nil,shiny,bodyShiny,headShiny,pokeHue,pokeR,pokeG,pokeB,pokeKRS,pokeOmega,cusFile)
       end
       return ret
     end

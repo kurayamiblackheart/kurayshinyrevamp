@@ -28,7 +28,22 @@ class FusionPreviewScreen < DoublePreviewScreen
     if poke1.shiny? || poke2.shiny?
       one_shiny = true
     end
-    @picture1 = draw_window(fusion_left,new_level,20,30,one_shiny,poke1.shinyValue?,poke1.shinyR?,poke1.shinyG?,poke1.shinyB?,poke1.shinyKRS?,poke1.shinyOmega?)
+    use1shinyValue = poke1.shinyValue?
+    use1shinyR = poke1.shinyR?
+    use1shinyG = poke1.shinyG?
+    use1shinyB = poke1.shinyB?
+    use1shinyKRS = poke1.shinyKRS?
+    use1shinyOmega = poke1.shinyOmega?
+    if $PokemonSystem.shinyfusedye == 1 && poke2.shiny?
+      use1shinyValue = poke2.shinyValue?
+      use1shinyR = poke2.shinyR?
+      use1shinyG = poke2.shinyG?
+      use1shinyB = poke2.shinyB?
+      use1shinyKRS = poke2.shinyKRS?
+      use1shinyOmega = poke2.shinyOmega?
+    end
+
+    @picture1 = draw_window(fusion_left,new_level,20,30,one_shiny,use1shinyValue,use1shinyR,use1shinyG,use1shinyB,use1shinyKRS,use1shinyOmega)
     @picture2 = draw_window(fusion_right,new_level,270,30,one_shiny,poke2.shinyValue?,poke2.shinyR?,poke2.shinyG?,poke2.shinyB?,poke2.shinyKRS?,poke2.shinyOmega?)
 
     @sprites["picture1"] = @picture1

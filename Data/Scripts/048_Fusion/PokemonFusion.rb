@@ -691,18 +691,21 @@ class PokemonFusionScene
     domepokeg = kurayRNGforChannels
     domepokeb = kurayRNGforChannels
     domepokekrs = kurayKRSmake
+    domeomega = pokemon1.shinyOmega?
     if pokemon2.shiny? && $PokemonSystem.shinyfusedye == 1
       domepokehue = pokemon2.shinyValue?
       domepoker = pokemon2.shinyR?
       domepokeg = pokemon2.shinyG?
       domepokeb = pokemon2.shinyB?
       domepokekrs = pokemon2.shinyKRS?.clone
+      domeomega = pokemon2.shinyOmega?
     else
       domepokehue = pokemon1.shinyValue?
       domepoker = pokemon1.shinyR?
       domepokeg = pokemon1.shinyG?
       domepokeb = pokemon1.shinyB?
       domepokekrs = pokemon1.shinyKRS?.clone
+      domeomega = pokemon1.shinyOmega?
     end
     # if pokemon2.shiny?
     #   domepokehue = pokemon2.shinyValue?
@@ -719,7 +722,7 @@ class PokemonFusionScene
     # end
 
     #KurayX - KURAYX_ABOUT_SHINIES
-    @sprites["rsprite2"].setPokemonBitmapFromId(@newspecies, false, pokemon1.shiny? || pokemon2.shiny?, pokemon1.shiny?, pokemon2.shiny?, domepokehue, domepoker, domepokeg, domepokeb, domepokekrs)
+    @sprites["rsprite2"].setPokemonBitmapFromId(@newspecies, false, pokemon1.shiny? || pokemon2.shiny?, pokemon1.shiny?, pokemon2.shiny?, domepokehue, domepoker, domepokeg, domepokeb, domepokekrs, domeomega)
     # @sprites["rsprite2"].setPokemonBitmapFromId(@newspecies, false, pokemon1.shiny? || pokemon2.shiny?, pokemon1.shiny?, pokemon2.shiny?)
 
     splicer_bitmap = _INTL("Graphics/Items/{1}",splicerItem)
@@ -929,6 +932,7 @@ class PokemonFusionScene
           @pokemon1.shinyB = @pokemon2.shinyB?
           @pokemon1.shinyValue = @pokemon2.shinyValue?
           @pokemon1.shinyKRS = @pokemon2.shinyKRS?.clone
+          @pokemon1.shinyimprovpif = @pokemon2.shinyimprovpif?
         end
         # if $PokemonSystem.shinyfusedye == 1 || !@pokemon1.shiny?
         #   @pokemon1.shinyR = @pokemon2.shinyR?
@@ -953,6 +957,7 @@ class PokemonFusionScene
         @pokemon1.shinyB = @pokemon2.shinyB?
         @pokemon1.shinyValue = @pokemon2.shinyValue?
         @pokemon1.shinyKRS = @pokemon2.shinyKRS?.clone
+        @pokemon1.shinyimprovpif = @pokemon2.shinyimprovpif?
       end
       if $PokemonSystem.shinyfusedye == 2
         @pokemon1.shinyimprovpif = rollimproveshiny()
