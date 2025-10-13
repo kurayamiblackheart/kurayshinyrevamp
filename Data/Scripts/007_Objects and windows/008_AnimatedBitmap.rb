@@ -443,6 +443,57 @@ class AnimatedBitmap
     return self
   end
 
+  ####### PIF IMPROVED SHINIES #######
+
+  # PIF Anthony's Improved Shinies
+  def shiftCustomColors(rules)
+    @bitmap.bitmap.hue_customcolor(rules)
+  end
+
+  # PIF Anthony's Improved Shinies
+  def shiftAllColors(dex_number, bodyShiny, headShiny)
+    # pratically the same as hue_changecolors but for the animated bitmap
+    if isFusion(dex_number)
+      return if !bodyShiny && !headShiny
+      body_id = getBodyID(dex_number)
+      head_id = getHeadID(dex_number, body_id)
+      # shiny_directory = "Graphics/Battlers/Shiny/#{head_id}.#{body_id}"
+      # shiny_file_path = "#{shiny_directory}/#{head_id}.#{body_id}"
+      offsets = [SHINY_COLOR_OFFSETS[body_id], SHINY_COLOR_OFFSETS[head_id]]
+    else
+      # shiny_directory = "Graphics/Battlers/Shiny/#{dex_number}"
+      # shiny_file_path = "#{shiny_directory}/#{dex_number}"
+      offsets = [SHINY_COLOR_OFFSETS[dex_number]]
+    end
+
+    # Determine the destination folders
+    # shiny_file_path += "_bodyShiny" if bodyShiny
+    # shiny_file_path += "_headShiny" if headShiny
+    # shiny_file_path += ".png"
+    # if File.exist?(shiny_file_path)
+    #   @bitmap.bitmap = Bitmap.new(shiny_file_path)
+    #   return
+    # end
+    offset = offsets.compact.max_by { |o| o.keys.count }
+    return unless offset
+    onetime = true
+    offset.keys.each do |version|
+      value = offset&.dig(version)
+
+      if value.is_a?(String) && onetime
+        onetime = false
+        shiftCustomColors(GameData::Species.calculateCustomShinyHueOffset(dex_number, bodyShiny, headShiny))
+        # Dir.mkdir(shiny_directory) unless Dir.exist?(shiny_directory)
+        # @bitmap.bitmap.save_to_png(shiny_file_path)
+      elsif !value.is_a?(String)
+        shiftColors(GameData::Species.calculateShinyHueOffset(dex_number, bodyShiny, headShiny, version))
+      end
+    end
+  end
+
+  ####### END OF PIF IMPROVED SHINIES #######
+
+
   #KurayX - KURAYX_ABOUT_SHINIES Modified by ChatGPT
   def pbGiveFinaleColor(shinyR, shinyG, shinyB, offset, shinyKRS, shinyOmega)
     # Nexus for shiny generation & displaying both for PIF & KIF.
@@ -472,13 +523,36 @@ class AnimatedBitmap
           shiny_mode = 3
         end
       end
-    end
 
     # 0 = FALSE | 1 = TRUE
+    dexNum = 1
+    body_shiny = false
+    head_shiny = false
+
     use_pif = 0
     if shinyOmega.has_key?("pif_shiny")
       use_pif = shinyOmega.fetch("pif_shiny", 0)# failsafe that gives back 0 if unfound
     end
+
+    if shinyOmega.has_key?("dexNum")
+      dexNum = shinyOmega.fetch("dexNum", 1)# failsafe
+    end
+
+    if shinyOmega.has_key?("body_shiny")
+      body_shiny = shinyOmega.fetch("body_shiny", false)# failsafe
+    end
+    if shinyOmega.has_key?("head_shiny")
+      head_shiny = shinyOmega.fetch("head_shiny", false)# failsafe
+    end
+
+    shiny_cache_name = "_ps"
+    if head_shiny
+      shiny_cache_name += "h"
+    end
+    if body_shiny
+      shiny_cache_name += "b"
+    end
+
     use_kif = 1
     if shiny_mode == 0
       # hybrid, 50% PIF first, then KIF
@@ -526,11 +600,11 @@ class AnimatedBitmap
         shinyname += "_#{shinyKRS[i]}"
       end
       if use_pif == 1 and use_kif == 1
-        shinyname += "_ps"
+        shinyname += shiny_cache_name
       end
       if use_kif == 0
         checkDirectory("Cache/Shiny/vanilla") # PIF shiny cache
-        shinyname = "_ps"
+        shinyname = shiny_cache_name
       end
       pathimport = "Cache/Shiny/"
       cleanname = @filename[0...-4]
@@ -548,6 +622,9 @@ class AnimatedBitmap
     # puts "Loaded from cache: #{loadedfromcache}"
 
     # if use_kif == 0, usedoffset should be changed to PIF's offset system
+    if use_kif == 0
+      usedoffset = 0
+    end
     newbitmap = GifBitmap.new(@path, @filename, usedoffset, shinyR, shinyG, shinyB, use_pif, use_kif)
     @bitmap = newbitmap.copy
     recognizeDims()
@@ -556,7 +633,9 @@ class AnimatedBitmap
     end
 
     # PIF system goes here if use_pif == 1
-
+    if use_pif == 1
+      self.shiftAllColors(dexNum, body_shiny, head_shiny)
+    end
 
     # KIF system goes here if use_kif == 1
     if use_kif == 1
@@ -628,11 +707,11 @@ class AnimatedBitmap
         shinyname += "_#{shinyKRS[i]}"
       end
       if use_pif == 1 and use_kif == 1
-        shinyname += "_ps"
+        shinyname += shiny_cache_name
       end
       if use_kif == 0
         checkDirectory("Cache/Shiny/vanilla") # PIF shiny cache
-        shinyname = "_ps"
+        shinyname = shiny_cache_name
       end
       cleanname = @filename[0...-4]
       pathexport = "Cache/Shiny/" + originfolder + cleanname + shinyname + ".png"

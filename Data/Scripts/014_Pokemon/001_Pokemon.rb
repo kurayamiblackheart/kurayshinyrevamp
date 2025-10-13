@@ -505,7 +505,12 @@ class Pokemon
 
   # give more data to shiny nexus without passing 10000 arguments 'cause it's getting annoying
   def shinyOmega?
-    return { "pif_shiny" => self.shinyimprovpif? }
+    return {
+      "pif_shiny" => self.shinyimprovpif?,
+      "body_shiny" => @body_shiny,
+      "head_shiny" => @head_shiny,
+      "dexNum" => self.dexNum
+    }
   end
 
   def shinyKRS?
@@ -2387,6 +2392,7 @@ class Pokemon
       @shinyimprovpif = jsonparse['shinyimprovpif']
       @head_shinyimprovpif = jsonparse['head_shinyimprovpif']
       @body_shinyimprovpif = jsonparse['body_shinyimprovpif']
+    end
   end
 
   def jsonload2(jsonparse)
