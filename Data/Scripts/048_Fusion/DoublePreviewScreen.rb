@@ -102,7 +102,7 @@ class DoublePreviewScreen
     pbUpdateSpriteHash(@sprites)
   end
 
-  def draw_window(dexNumber, level, x, y, shiny, shinyV, shinyR, shinyG, shinyB, shinyKRS, shinyOmega)
+  def draw_window(dexNumber, level, x, y, shiny, shinyV, shinyR, shinyG, shinyB, shinyKRS, shinyOmega={})
     body_pokemon = getBodyID(dexNumber)
     head_pokemon = getHeadID(dexNumber, body_pokemon)
 

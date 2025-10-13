@@ -495,7 +495,7 @@ class AnimatedBitmap
 
 
   #KurayX - KURAYX_ABOUT_SHINIES Modified by ChatGPT
-  def pbGiveFinaleColor(shinyR, shinyG, shinyB, offset, shinyKRS, shinyOmega)
+  def pbGiveFinaleColor(shinyR, shinyG, shinyB, offset, shinyKRS, shinyOmega={})
     # Nexus for shiny generation & displaying both for PIF & KIF.
     # Any shiny go through this nexus to process the shinifying.
 
