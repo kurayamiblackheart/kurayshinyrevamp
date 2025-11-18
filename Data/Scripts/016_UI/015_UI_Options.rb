@@ -839,6 +839,8 @@ def options_convertjsonver(jsonparse)
       return 7
     when '0.8'
       return 8
+    when '0.9'
+      return 9
     end
   else
     return 0
