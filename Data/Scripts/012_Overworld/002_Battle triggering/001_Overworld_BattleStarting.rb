@@ -380,7 +380,7 @@ def pbKurayRandomize(species)
   species = GameData::Species.get(species).id
   dexnum = getDexNumberForSpecies(species)
   # if dexnum <= NB_POKEMON
-  if $game_switches[SWITCH_RANDOM_STATIC_ENCOUNTERS] && dexnum <= NB_POKEMON
+  if $game_switches[SWITCH_RANDOM_STATIC_ENCOUNTERS] && dexnum <= NB_POKEMON && $PokemonTemp.pokeradar.nil?
     newSpecies = $PokemonGlobal.psuedoBSTHash[dexnum]
     if !newSpecies
       displayRandomizerErrorMessage()
