@@ -258,11 +258,35 @@ class PokemonSystem
     @ch_berserker = 0
 
     @custom_bst = 0
-    @custom_bst_sliders = { :HP => 65, :ATTACK => 35, :DEFENSE => 35,
-      :SPECIAL_ATTACK => 65, :SPECIAL_DEFENSE => 65, :SPEED => 35 }
+    @custom_bst_sliders = {
+      :HP => 67,
+      :HP_BODY => 33,
+      :ATTACK => 33,
+      :ATTACK_BODY => 67,
+      :DEFENSE => 33,
+      :DEFENSE_BODY => 67,
+      :SPECIAL_ATTACK => 67,
+      :SPECIAL_ATTACK_BODY => 33,
+      :SPECIAL_DEFENSE => 67,
+      :SPECIAL_DEFENSE_BODY => 33,
+      :SPEED => 33,
+      :SPEED_BODY => 67
+    }
     @custom_bst_npc = 0
-    @custom_bst_sliders_npc = { :HP => 65, :ATTACK => 35, :DEFENSE => 35,
-      :SPECIAL_ATTACK => 65, :SPECIAL_DEFENSE => 65, :SPEED => 35 }
+    @custom_bst_sliders_npc = {
+      :HP => 65,
+      :HP_BODY => 35,
+      :ATTACK => 35,
+      :ATTACK_BODY => 65,
+      :DEFENSE => 35,
+      :DEFENSE_BODY => 65,
+      :SPECIAL_ATTACK => 65,
+      :SPECIAL_ATTACK_BODY => 35,
+      :SPECIAL_DEFENSE => 65,
+      :SPECIAL_DEFENSE_BODY => 35,
+      :SPEED => 35,
+      :SPEED_BODY => 65
+    }
     @pokeradarplus = 0
     @importnodelete = 0
 	@sb_stat_tracker = 0
@@ -2208,35 +2232,70 @@ class KurayOptSc_2 < PokemonOption_Scene
                       "Sliders determine what % of each stat comes from the head pokemon.",
                       "Sliders determine what % of each stat comes from the better base stat."]
     )
-    options << SliderOption.new(_INTL("    HP"), 0, 100, 5,
-                      proc { $PokemonSystem.custom_bst_sliders[:HP] },
-                      proc { |value| $PokemonSystem.custom_bst_sliders[:HP] = value },
-                      "Percentage of base HP contributed."
+    options << SliderOption.new(_INTL("    HP (Head/Btr)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:HP] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:HP] = value },
+      "Percentage of base HP contributed by Head/Better."
     )
-    options << SliderOption.new(_INTL("    Attack"), 0, 100, 5,
-                      proc { $PokemonSystem.custom_bst_sliders[:ATTACK] },
-                      proc { |value| $PokemonSystem.custom_bst_sliders[:ATTACK] = value },
-                      "Percentage of base Attack contributed."
+    options << SliderOption.new(_INTL("    HP (Body/Wse)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:HP_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:HP_BODY] = value },
+      "Percentage of base HP contributed by Body/Worse."
     )
-    options << SliderOption.new(_INTL("    Defense"), 0, 100, 5,
-                      proc { $PokemonSystem.custom_bst_sliders[:DEFENSE] },
-                      proc { |value| $PokemonSystem.custom_bst_sliders[:DEFENSE] = value },
-                      "Percentage of base Defense contributed."
+
+    options << SliderOption.new(_INTL("    Attack (Head/Btr)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:ATTACK] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:ATTACK] = value },
+      "Percentage of base Attack contributed by Head/Better."
     )
-    options << SliderOption.new(_INTL("    Special Attack"), 0, 100, 5,
-                      proc { $PokemonSystem.custom_bst_sliders[:SPECIAL_ATTACK] },
-                      proc { |value| $PokemonSystem.custom_bst_sliders[:SPECIAL_ATTACK] = value },
-                      "Percentage of base Special Attack contributed."
+    options << SliderOption.new(_INTL("    Attack (Body/Wse)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:ATTACK_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:ATTACK_BODY] = value },
+      "Percentage of base Attack contributed by Body/Worse."
     )
-    options << SliderOption.new(_INTL("    Special Defense"), 0, 100, 5,
-                      proc { $PokemonSystem.custom_bst_sliders[:SPECIAL_DEFENSE] },
-                      proc { |value| $PokemonSystem.custom_bst_sliders[:SPECIAL_DEFENSE] = value },
-                      "Percentage of base Special Defense contributed."
+
+    options << SliderOption.new(_INTL("    Defense (Head/Btr)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:DEFENSE] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:DEFENSE] = value },
+      "Percentage of base Defense contributed by Head/Better."
     )
-    options << SliderOption.new(_INTL("    Speed"), 0, 100, 5,
-                      proc { $PokemonSystem.custom_bst_sliders[:SPEED] },
-                      proc { |value| $PokemonSystem.custom_bst_sliders[:SPEED] = value },
-                      "Percentage of base Speed contributed."
+    options << SliderOption.new(_INTL("    Defense (Body/Wse)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:DEFENSE_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:DEFENSE_BODY] = value },
+      "Percentage of base Defense contributed by Body/Worse."
+    )
+
+    options << SliderOption.new(_INTL("    Sp.Atk (Head/Btr)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:SPECIAL_ATTACK] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:SPECIAL_ATTACK] = value },
+      "Percentage of base Special Attack contributed by Head/Better."
+    )
+    options << SliderOption.new(_INTL("    Sp.Atk (Body/Wse)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:SPECIAL_ATTACK_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:SPECIAL_ATTACK_BODY] = value },
+      "Percentage of base Special Attack contributed by Body/Worse."
+    )
+
+    options << SliderOption.new(_INTL("    Sp.Def (Head/Btr)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:SPECIAL_DEFENSE] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:SPECIAL_DEFENSE] = value },
+      "Percentage of base Special Defense contributed by Head/Better."
+    )
+    options << SliderOption.new(_INTL("    Sp.Def (Body/Wse)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:SPECIAL_DEFENSE_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:SPECIAL_DEFENSE_BODY] = value },
+      "Percentage of base Special Defense contributed by Body/Worse."
+    )
+
+    options << SliderOption.new(_INTL("    Speed (Head/Btr)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:SPEED] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:SPEED] = value },
+      "Percentage of base Speed contributed by Head/Better."
+    )
+    options << SliderOption.new(_INTL("    Speed (Body/Wse)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders[:SPEED_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders[:SPEED_BODY] = value },
+      "Percentage of base Speed contributed by Body/Worse."
     )
     options << EnumOption.new(_INTL("NPC Fusion BaseStats"), [_INTL("Off"), _INTL("Head"), _INTL("Better")],
     proc { $PokemonSystem.custom_bst_npc },
@@ -2245,35 +2304,70 @@ class KurayOptSc_2 < PokemonOption_Scene
     "Sliders determine what % of each stat comes from the head pokemon.",
     "Sliders determine what % of each stat comes from the better base stat."]
     )
-    options << SliderOption.new(_INTL("    HP"), 0, 100, 5,
-        proc { $PokemonSystem.custom_bst_sliders_npc[:HP] },
-        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:HP] = value },
-        "Percentage of base HP contributed."
+    options << SliderOption.new(_INTL("    HP (Head/Btr NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:HP] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:HP] = value },
+      "NPC's base HP from Head/Better."
     )
-    options << SliderOption.new(_INTL("    Attack"), 0, 100, 5,
-        proc { $PokemonSystem.custom_bst_sliders_npc[:ATTACK] },
-        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:ATTACK] = value },
-        "Percentage of base Attack contributed."
+    options << SliderOption.new(_INTL("    HP (Body/Wse NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:HP_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:HP_BODY] = value },
+      "NPC's base HP from Body/Worse."
     )
-    options << SliderOption.new(_INTL("    Defense"), 0, 100, 5,
-        proc { $PokemonSystem.custom_bst_sliders_npc[:DEFENSE] },
-        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:DEFENSE] = value },
-        "Percentage of base Defense contributed."
+
+    options << SliderOption.new(_INTL("    Attack (Head/Btr NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:ATTACK] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:ATTACK] = value },
+      "NPC's base Attack from Head/Better."
     )
-    options << SliderOption.new(_INTL("    Special Attack"), 0, 100, 5,
-        proc { $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_ATTACK] },
-        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_ATTACK] = value },
-        "Percentage of base Special Attack contributed."
+    options << SliderOption.new(_INTL("    Attack (Body/Wse NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:ATTACK_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:ATTACK_BODY] = value },
+      "NPC's base Attack from Body/Worse."
     )
-    options << SliderOption.new(_INTL("    Special Defense"), 0, 100, 5,
-        proc { $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_DEFENSE] },
-        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_DEFENSE] = value },
-        "Percentage of base Special Defense contributed."
+
+    options << SliderOption.new(_INTL("    Defense (Head/Btr NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:DEFENSE] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:DEFENSE] = value },
+      "NPC's base Defense from Head/Better."
     )
-    options << SliderOption.new(_INTL("    Speed"), 0, 100, 5,
-        proc { $PokemonSystem.custom_bst_sliders_npc[:SPEED] },
-        proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPEED] = value },
-        "Percentage of base Speed contributed."
+    options << SliderOption.new(_INTL("    Defense (Body/Wse NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:DEFENSE_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:DEFENSE_BODY] = value },
+      "NPC's base Defense from Body/Worse."
+    )
+
+    options << SliderOption.new(_INTL("    Sp.Atk (Head/Btr NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_ATTACK] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_ATTACK] = value },
+      "NPC's base Sp.Atk from Head/Better."
+    )
+    options << SliderOption.new(_INTL("    Sp.Atk (Body/Wse NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_ATTACK_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_ATTACK_BODY] = value },
+      "NPC's base Sp.Atk from Body/Worse."
+    )
+
+    options << SliderOption.new(_INTL("    Sp.Def (Head/Btr NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_DEFENSE] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_DEFENSE] = value },
+      "NPC's base Sp.Def from Head/Better."
+    )
+    options << SliderOption.new(_INTL("    Sp.Def (Body/Wse NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_DEFENSE_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPECIAL_DEFENSE_BODY] = value },
+      "NPC's base Sp.Def from Body/Worse."
+    )
+
+    options << SliderOption.new(_INTL("    Speed (Head/Btr NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:SPEED] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPEED] = value },
+      "NPC's base Speed from Head/Better."
+    )
+    options << SliderOption.new(_INTL("    Speed (Body/Wse NPC)"), 0, 120, 1,
+      proc { $PokemonSystem.custom_bst_sliders_npc[:SPEED_BODY] },
+      proc { |value| $PokemonSystem.custom_bst_sliders_npc[:SPEED_BODY] = value },
+      "NPC's base Speed from Body/Worse."
     )
     options << EnumOption.new(_INTL("Dominant Fusion Types"), [_INTL("Off"), _INTL("On")],
                       proc { $PokemonSystem.dominant_fusion_types },
